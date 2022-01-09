@@ -4,7 +4,7 @@
         <h3 class="section-title">{{ translate('staticwords.fpro') }}</h3>
        
        <div>
-           <product-slider v-if="products" :products="products" :date="date" :lang="lang" :fallbacklang="fallbacklang" :login="login" :guest_price="guest_price"></product-slider>
+           <product-slider v-if="products" :products="products" :date="date" :lang="lang" :fallbacklang="fallbacklang" :login="login" :guest_price="guest_price" :starbadge="true"></product-slider>
 
             <div v-else>
                 <slider-skelton :item="6"></slider-skelton>

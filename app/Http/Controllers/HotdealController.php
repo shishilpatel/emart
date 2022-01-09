@@ -15,7 +15,7 @@ class HotdealController extends Controller
      */
     public function index()
     {
-        abort_if(!auth()->user()->can('hotdeals.view'), 403, 'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('hotdeals.view'), 403, __('User does not have the right permissions.'));
         $products = Hotdeal::with('pro','simple_product')->whereHas('simple_product')->orwhereHas('pro')->get();
         return view('admin.hotdeal.index', compact('products'));
     }
@@ -27,7 +27,7 @@ class HotdealController extends Controller
      */
     public function create()
     {
-        abort_if(!auth()->user()->can('hotdeals.create'), 403, 'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('hotdeals.create'), 403, __('User does not have the right permissions.'));
         $products = Product::where('status','1')->pluck('name', 'id')->all();
         $simple_products = SimpleProduct::where('status','1')->pluck('product_name', 'id')->all();
         return view("admin.hotdeal.add", compact('products', 'simple_products'));
@@ -41,7 +41,7 @@ class HotdealController extends Controller
      */
     public function store(Request $request)
     {
-        abort_if(!auth()->user()->can('hotdeals.create'), 403, 'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('hotdeals.create'), 403, __('User does not have the right permissions.'));
 
         $input = $request->all();
         $input['start'] = date('Y-m-d H:i:s', strtotime($request->start));
@@ -59,7 +59,7 @@ class HotdealController extends Controller
 
         Hotdeal::create($input);
 
-        return redirect('admin/hotdeal')->with("added", "Deal Has Been Created");
+        return redirect('admin/hotdeal')->with("added", __("Deal has been created"));
     }
     /**
      * Show the form for editing the specified resource.
@@ -70,7 +70,7 @@ class HotdealController extends Controller
     public function edit($id)
     {
 
-        abort_if(!auth()->user()->can('hotdeals.edit'), 403, 'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('hotdeals.edit'), 403, __('User does not have the right permissions.'));
         $products = Product::where('status','1')->pluck('name', 'id')->all();
         $simple_products = SimpleProduct::where('status','1')->pluck('product_name', 'id')->all();
         $hotdeal = Hotdeal::find($id);
@@ -88,7 +88,7 @@ class HotdealController extends Controller
     public function update(Request $request, $id)
     {
 
-        abort_if(!auth()->user()->can('hotdeals.edit'), 403, 'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('hotdeals.edit'), 403, __('User does not have the right permissions.'));
 
         $hotdeal = Hotdeal::find($id);
 
@@ -109,7 +109,7 @@ class HotdealController extends Controller
         $hotdeal->update($input);
 
         return redirect('admin/hotdeal')
-            ->with('updated', 'Hotdeal has been updated');
+            ->with('updated', __('Hotdeal has been updated'));
 
     }
 
@@ -121,7 +121,7 @@ class HotdealController extends Controller
      */
     public function destroy($id)
     {
-        abort_if(!auth()->user()->can('hotdeals.delete'), 403, 'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('hotdeals.delete'), 403, __('User does not have the right permissions.'));
 
         $product = Hotdeal::find($id);
         $value = $product->delete();
@@ -132,7 +132,7 @@ class HotdealController extends Controller
             $obj->offer_price = '';
             $obj->save();
             session()
-                ->flash("deleted", "Deal Has Been Deleted");
+                ->flash("deleted", __("Deal has been deleted !"));
             return redirect("admin/hotdeal");
         }
     }

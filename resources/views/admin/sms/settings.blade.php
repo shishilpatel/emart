@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','SMS Settings | ')
+@section('title',__('SMS Settings | '))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -11,15 +11,16 @@
 @endcomponent
 <div class="contentbar">
     <div class="row">
-        @if ($errors->any())
-        <div class="alert alert-danger" role="alert">
-            @foreach($errors->all() as $error)
-            <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-            @endforeach
-        </div>
-        @endif
+        
         <div class="col-lg-12">
+            @if ($errors->any())
+            <div class="alert alert-danger" role="alert">
+                @foreach($errors->all() as $error)
+                <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button></p>
+                @endforeach
+            </div>
+            @endif
             <div class="card m-b-30">
                 <div class="card-header">
                     <h5 class="box-title">{{ __('SMS Channels') }}</h5>
@@ -68,10 +69,11 @@
                                     <div class="p-2 mb-2 bg-success rounded text-white">
                                         <i class="fa fa-info-circle"></i> {{ __('Important note :') }}
                                         <ul>
-                                            <li>Twillo Only send SMS if user did not opt for DND Services.</li>
-                                            <li>Twillo trail will send sms only to verified no.</li>
-
+                                            <li>{{ __('Twillo Only send SMS if user did not opt for DND Services.') }}</li>
+                                            <li>
+                                                {{__("Twillo trail will send sms only to verified no.")}}
                                             </li>
+
                                         </ul>
                                     </div>
                                 </div>
@@ -115,7 +117,7 @@
                                             <button type="reset" class="btn btn-danger mr-1"><i class="fa fa-ban"></i>
                                                 {{ __("Reset")}}</button>
                                             <button type="submit" class="btn btn-primary"><i
-                                                    class="fa fa-check-circle"></i> Save</button>
+                                                    class="fa fa-check-circle"></i> {{ __("Save") }}</button>
                                         </div>
                                     </div>
 
@@ -130,9 +132,12 @@
                                     <div class="p-2 mb-2 bg-success rounded text-white">
                                         <i class="fa fa-info-circle"></i> {{ __('Important note :') }}
                                         <ul>
-                                            <li>MSG91 Only send SMS if user did not opt for DND Services.</li>
-                                            <li>If msg not delivering to customer than make sure he/she updated
-                                                phonecode in his/her profile.</li>
+                                            <li>
+                                                {{__("MSG91 Only send SMS if user did not opt for DND Services.")}}
+                                            </li>
+                                            <li>
+                                                {{__("If msg not delivering to customer than make sure he/she updated phonecode in his/her profile.")}}
+                                            </li>
 
                                             </li>
                                         </ul>

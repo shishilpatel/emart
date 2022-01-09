@@ -44,6 +44,7 @@ class PaymentController extends Controller
         $payout = round($payout,2);
 
         session()->put('error_url',$error);
+        session()->put('order_id',$order_id);
 
         session()->save();
 
@@ -51,7 +52,7 @@ class PaymentController extends Controller
 
         if($setcurrency == 'INR' && env('PAYPAL_MODE') == 'sandbox'){
 
-            notify()->error('INR is not supported in paypal sandbox mode try with other currency !','Currency not supported !');
+            notify()->error(__('INR is not supported in paypal sandbox mode try with other currency !'),__('Currency not supported !'));
             return redirect(route('order.review'));
 
         }
@@ -123,7 +124,7 @@ class PaymentController extends Controller
             return Redirect::away($redirect_url);
         }
 
-        notify()->error('Unknown error occurred !');
+        notify()->error(__('Unknown error occurred !'));
         return redirect($error);
     }
 

@@ -1,7 +1,5 @@
-
-
-@extends('admin.layouts.master')
-@section('title','Create a new role')
+@extends('admin.layouts.master-soyuz')
+@section('title',__('Create a new role'))
 @section('body')
 
 @component('seller.components.breadcumb',['thirdactive' => 'active'])
@@ -36,8 +34,8 @@
                     <form action="{{ route('roles.store') }}" method="POST" class="needs-validation" novalidate>
                         @csrf
                         <div class="form-group">
-                              <label for="name"  class="text-dark">Role name <span class="required">*</span></label>
-                            <input name="name" type="text" class="form-control @error('name') is-invalid @enderror" id="name" placeholder="Enter role name" value="{{ old('name') }}" required autofocus>
+                              <label for="name"  class="text-dark">{{__('Role name')}} <span class="required">*</span></label>
+                            <input name="name" type="text" class="form-control @error('name') is-invalid @enderror" id="name" placeholder="{{ __('Enter role name') }}" value="{{ old('name') }}" required autofocus>
                     
                             <input type="hidden" name="guard" value="web">
                     
@@ -55,7 +53,7 @@
                            
                             <table class="permissionTable table">
                                 <th>
-                                    Section
+                                    {{__('Section')}}
                                 </th>
                     
                                 <th>
@@ -117,33 +115,7 @@
         </div>
     </div>
   </div>
-
-  @endsection
-  @section('custom-script')
+@endsection
+@section('custom-script')
       <script src="{{ url('/js/checkbox.js') }}"></script>
-  @endsection
-  
-                    
-                    
-                  
-                  
-              
-                 
-                  
-              
-
-
-	
-
-
-
-
-
-
-
-
-
-
-       
-
-
+@endsection

@@ -33,12 +33,12 @@ class UpdateOrderController extends Controller
 
        
        if(!$invoice){
-            notify()->error('Invoice or linked variant not found !','404');
+            notify()->error(__('Invoice or linked variant not found !'),'404');
             return redirect(route("order.index"));
        }
 
        if(in_array($invoice->status,['canceled','delivered','Refund Pending','ret_ref','refunded','return_request'])){
-            notify()->warning('Item already shipped !');
+            notify()->warning(__('Item already shipped !'));
             return redirect(route('admin.order.edit',$invoice->order->order_id));
        }
 
@@ -57,12 +57,12 @@ class UpdateOrderController extends Controller
 
        
         if(!$invoice){
-             notify()->error('Invoice or linked variant not found !','404');
+             notify()->error(__('Invoice or linked variant not found !'),'404');
              return redirect(route("order.index"));
         }
 
         if(in_array($invoice->status,['canceled','delivered','Refund Pending','ret_ref','refunded','return_request'])){
-            notify()->warning('Item already shipped !');
+            notify()->warning(__('Item already shipped !'));
             return redirect(route('admin.order.edit',$invoice->order->order_id));
        }
 
@@ -166,7 +166,7 @@ class UpdateOrderController extends Controller
 
        }
 
-       notify()->success('Item successfully shipped','Success');
+       notify()->success(__('Item successfully shipped'),'Success');
 
         if(Auth::user()->id == $invoice->vender_id && Auth::user()->role_id == 'v'){
             return redirect(route('seller.order.edit',$invoice->order->order_id));

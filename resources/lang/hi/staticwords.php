@@ -281,6 +281,7 @@ return array (
   'SignInwithFacebook' => 'फ़ेसबुक से साइन इन करें',
   'SignInwithGitLab' => 'GitLab के साथ साइन इन करें',
   'SignInwithGoogle' => 'Google के साथ साइन इन करें',
+  'SignInwithTwitter' => '',
   'SignUpwithFacebook' => 'फेसबुक पर विवरण दे',
   'SignUpwithGitLab' => 'Gitlab के साथ साइन अप करें',
   'SignUpwithGoogle' => 'Google के साथ साइन अप करें',

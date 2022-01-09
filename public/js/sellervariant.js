@@ -99,12 +99,12 @@ $('#attr_name').on('change', function() {
       $.each(data, function(i) {
         if(data[i].unit_value != null && data[i].values.toUpperCase() != data[i].unit_value.toUpperCase()) {
           if(getoptiontext == "Color" || getoptiontext == "Colour") {
-            up.append($('<label> <input class="margin-left-8" type="checkbox" name="attr_value[]" value="' + data[i].id + '"><div class="margin-left-minus-15 inline-flex"><div class="color-options"><ul><li title="' + data[i].values + '" class="color varcolor active"><a href="#" title=""><i style="color: ' + data[i].unit_value + '" class="fa fa-circle"></i></a><div class="overlay-image overlay-deactive"></div></li></ul></div></div><span class="tx-color">' + data[i].values + '</span></label>'));
+            up.append($('<label class="mr-3"><input type="checkbox" name="attr_value[]" value="' + data[i].id + '"> <i style="outline-color: red;outline-style: dotted;color: ' + data[i].unit_value + '" class="fa fa-circle"></i><span class="tx-color">' + data[i].values + '</span></label>'));
           } else {
-            up.append($('<input class="margin-left-8" type="checkbox" name="attr_value[]" value="' + data[i].id + '">&nbsp' + data[i].values + data[i].unit_value + '</label>'));
+            up.append($('<label class="mr-3"><input class="mr-3" type="checkbox" name="attr_value[]" value="' + data[i].id + '">&nbsp' + data[i].values + data[i].unit_value + '</label>'));
           }
         } else {
-          up.append($('<label> <input class="margin-left-8" type="checkbox" name="attr_value[]" value="' + data[i].id + '">&nbsp' + data[i].values + '</label>'));
+          up.append($('<label class="mr-3"><input class="mr-3" type="checkbox" name="attr_value[]" value="' + data[i].id + '">&nbsp' + data[i].values + '</label>'));
         }
       });
     }
@@ -125,12 +125,12 @@ $('#attr_name2').on('change', function() {
       $.each(data, function(i) {
         if(data[i].unit_value != null && data[i].values.toUpperCase() != data[i].unit_value.toUpperCase()) {
           if(getoptiontext == "Color" || getoptiontext == "Colour") {
-            up.append($('<div class="row"><div class="col-md-12"><label class="d-inline"> <input required type="radio" name="attr_value2" value="' + data[i].id + '"><i title="' + data[i].values + '" style="color: ' + data[i].unit_value + '" class="border border-primary shadow-sm rounded p-1 fa fa-circle ml-3"></i><span class="tx-color ml-1">' + data[i].values + '</span></div></div>'));
+            up.append($('<label class="mr-3"><input type="radio" name="attr_value2" value="' + data[i].id + '"> <i style="outline-color: red;outline-style: dotted;color: ' + data[i].unit_value + '" class="fa fa-circle"></i> <span class="tx-color">' + data[i].values + '</span></label>'));
           } else {
-            up.append($('<input required class="margin-left-8" type="radio" name="attr_value2" value="' + data[i].id + '">&nbsp' + data[i].values + data[i].unit_value + '</label>'));
+            up.append($('<label class="mr-3"><input required class="mr-3" type="radio" name="attr_value2" value="' + data[i].id + '">&nbsp' + data[i].values + data[i].unit_value + '</label>'));
           }
         } else {
-          up.append($('<label> <input required class="margin-left-8" type="radio" name="attr_value2" value="' + data[i].id + '">&nbsp' + data[i].values + '</label>'));
+          up.append($('<label class="mr-3"><input required class="margin-left-8" type="radio" name="attr_value2" value="' + data[i].id + '">&nbsp' + data[i].values + '</label>'));
         }
       });
     }

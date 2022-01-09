@@ -14,6 +14,7 @@ use App\Product360Frame;
 use App\ProductGallery;
 use App\Seo;
 use App\SimpleProduct;
+use App\SizeChart;
 use App\Store;
 use App\Testimonial;
 use App\User;
@@ -51,19 +52,19 @@ class SimpleProductsController extends Controller
 
     public function index()
     {
-        
-        abort_if(!auth()->user()->can('products.view'), 403, 'User does not have the right permissions.');
 
-        if( in_array('Seller',auth()->user()->getRoleNames()->toArray()) ){
+        abort_if(!auth()->user()->can('products.view'), 403, __('User does not have the right permissions.'));
 
-                $products = SimpleProduct::where('store_id',auth()->user()->store->id)
-                ->with(['store','store.user'])->whereHas('store',function($q){
-                    $q->where('rd','=','0')->where('apply_vender','=','1')->where('status','=','1');
-                })->whereHas('store.user',function($q){
-                    $q->where('status','=','1');
-                })->get();
+        if (in_array('Seller', auth()->user()->getRoleNames()->toArray())) {
 
-        }else{
+            $products = SimpleProduct::where('store_id', auth()->user()->store->id)
+                ->with(['store', 'store.user'])->whereHas('store', function ($q) {
+                $q->where('rd', '=', '0')->where('apply_vender', '=', '1')->where('status', '=', '1');
+            })->whereHas('store.user', function ($q) {
+                $q->where('status', '=', '1');
+            })->get();
+
+        } else {
             $products = SimpleProduct::select('*');
         }
 
@@ -93,42 +94,41 @@ class SimpleProductsController extends Controller
                 ->addColumn('product_name', function ($row) {
                     return $row->product_name;
                 })
-                ->addColumn('price', function($row) use ($currency_code){
-                    
-                    if( in_array('Seller',auth()->user()->getRoleNames()->toArray()) ){
-                        return view('seller.simpleproducts.price', compact('currency_code','row'));
-                    }else{
-                        return view('admin.simpleproducts.price', compact('currency_code','row'));
+                ->addColumn('price', function ($row) use ($currency_code) {
+
+                    if (in_array('Seller', auth()->user()->getRoleNames()->toArray())) {
+                        return view('seller.simpleproducts.price', compact('currency_code', 'row'));
+                    } else {
+                        return view('admin.simpleproducts.price', compact('currency_code', 'row'));
                     }
 
                 })
                 ->addColumn('status', function ($row) {
 
                     if ($row->status == '1') {
-                        return '<a class="btn btn-sm btn-rounded btn-success-rgba">Active</a>';
+                        return '<a class="btn btn-sm btn-rounded btn-success-rgba">' . __('Active') . '</a>';
                     } else {
-                        return '<a class="btn btn-sm btn-rounded btn-danger-rgba">Deactive</a>';
+                        return '<a class="btn btn-sm btn-rounded btn-danger-rgba">' . __("Deactive") . '</a>';
                     }
 
                 })
-                ->addColumn('action', function($row){
-                    
+                ->addColumn('action', function ($row) {
 
-                    if( in_array('Seller',auth()->user()->getRoleNames()->toArray()) ){
+                    if (in_array('Seller', auth()->user()->getRoleNames()->toArray())) {
                         return view('seller.simpleproducts.action', compact('row'));
-                    }else{
+                    } else {
                         return view('admin.simpleproducts.action', compact('row'));
                     }
 
                 })
-                
+
                 ->rawColumns(['image', 'price', 'status', 'action'])
                 ->make(true);
         }
 
-        if( in_array('Seller',auth()->user()->getRoleNames()->toArray()) ){
+        if (in_array('Seller', auth()->user()->getRoleNames()->toArray())) {
             return view('seller.simpleproducts.index');
-        }else{
+        } else {
             return view('admin.simpleproducts.index');
         }
     }
@@ -140,16 +140,23 @@ class SimpleProductsController extends Controller
      */
     public function create()
     {
-        abort_if(!auth()->user()->can('products.create'), 403, 'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('products.create'), 403, __('User does not have the right permissions.'));
         $categories = Category::where('status', '1')->get();
         $brands_all = Brand::where('status', '1')->get();
-        
-        if(in_array('Seller',auth()->user()->getRoleNames()->toArray()) ){
-             $store = auth()->user()->store;
-             return view('seller.simpleproducts.create', compact('categories', 'brands_all', 'store'));
-        }else{
+
+        $template_size_chart = SizeChart::whereHas('sizeoptions')
+            ->whereHas('sizeoptions.values')
+            ->with('sizeoptions')
+            ->where('status', '=', '1')
+            ->where('user_id', auth()->id())
+            ->get();
+
+        if (in_array('Seller', auth()->user()->getRoleNames()->toArray())) {
+            $store = auth()->user()->store;
+            return view('seller.simpleproducts.create', compact('categories', 'brands_all', 'store', 'template_size_chart'));
+        } else {
             $stores = Store::with('user')->whereHas('user')->get();
-            return view('admin.simpleproducts.create', compact('categories', 'brands_all', 'stores'));
+            return view('admin.simpleproducts.create', compact('categories', 'brands_all', 'stores', 'template_size_chart'));
         }
     }
 
@@ -159,8 +166,8 @@ class SimpleProductsController extends Controller
 
         $product = SimpleProduct::with('productGallery')->where('id', '=', $id)->where('slug', $slug)->where('status', '1')->firstOrfail();
 
-        if(!$product->productGallery()->count()){
-            notify()->error('Product is not setup completely !','Missing gallery images !');
+        if (!$product->productGallery()->count()) {
+            notify()->error(__('Product is not setup completely !'), __('Missing gallery images !'));
             return redirect()->intended('/');
         }
 
@@ -227,10 +234,9 @@ class SimpleProductsController extends Controller
 
         $reviewcount = $product->reviews->where('status', "1")->WhereNotNull('review')->count();
 
-        
         $cashback_settings = $product->cashback_settings;
 
-        return view('front.digitalproduct', compact('cashback_settings','product', 'conversion_rate', 'enable_hotdeal', 'testimonials', 'enable_testimonial_widget', 'hotdeals', 'reviewcount', 'qualityprogress', 'priceprogress', 'valueprogress'));
+        return view('front.digitalproduct', compact('cashback_settings', 'product', 'conversion_rate', 'enable_hotdeal', 'testimonials', 'enable_testimonial_widget', 'hotdeals', 'reviewcount', 'qualityprogress', 'priceprogress', 'valueprogress'));
     }
 
     /**
@@ -241,7 +247,7 @@ class SimpleProductsController extends Controller
      */
     public function store(Request $request)
     {
-        abort_if(!auth()->user()->can('products.create'), 403, 'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('products.create'), 403, __('User does not have the right permissions.'));
 
         $request->validate([
             'product_name' => 'required|string',
@@ -281,14 +287,34 @@ class SimpleProductsController extends Controller
 
         $input['product_detail'] = clean($request->product_detail);
 
-        if($request->type == 'ex_product'){
+        if (isset($request->other_cats)) {
+
+            $other_categories = $request->other_cats;
+
+            $duplicate_element_index = array_search($request->category_id, $other_categories);
+
+            if ($duplicate_element_index !== false) {
+                unset($other_categories[$duplicate_element_index]);
+            }
+
+            $other_categories = array_values($other_categories);
+
+            $input['other_cats'] = $other_categories;
+
+        } else {
+
+            $input['other_cats'] = null;
+
+        }
+
+        if ($request->type == 'ex_product') {
             $input['exteral_product_link'] = $request->exteral_product_link;
         }
 
         if (!is_dir(public_path() . '/images/simple_products')) {
             mkdir(public_path() . '/images/simple_products');
 
-            $text = '<?php echo "<h1>Access denined !</h1>" ?>';
+            $text = '<?php echo "<h1>' . __('Access denined !') . '</h1>" ?>';
 
             @file_put_contents(public_path() . '/images/simple_products/index.php', $text);
 
@@ -297,72 +323,70 @@ class SimpleProductsController extends Controller
         if (!is_dir(public_path() . '/images/simple_products/gallery')) {
             mkdir(public_path() . '/images/simple_products/gallery');
 
-            $text = '<?php echo "<h1>Access denined !</h1>" ?>';
+            $text = '<?php echo "<h1>' . __('Access denined !') . '</h1>" ?>';
 
             @file_put_contents(public_path() . '/images/simple_products/gallery/index.php', $text);
 
         }
 
-        if( in_array('Seller',auth()->user()->getRoleNames()->toArray()) ){
+        if (in_array('Seller', auth()->user()->getRoleNames()->toArray())) {
 
             if ($request->file('thumbnail')) {
 
                 $request->validate([
-                    'thumbnail' => 'required|mimes:jpeg,jpg,png,webp,gif,bmp|max:300'
+                    'thumbnail' => 'required|mimes:jpeg,jpg,png,webp,gif,bmp|max:300',
                 ]);
 
                 $image = $request->file('thumbnail');
                 $input['thumbnail'] = 'thum_dgp_' . uniqid() . '.' . $image->getClientOriginalExtension();
                 $destinationPath = public_path('/images/simple_products');
                 $img = Image::make($image->path());
-    
+
                 $img->resize(300, 300, function ($constraint) {
                     $constraint->aspectRatio();
                 });
-    
+
                 $img->save($destinationPath . '/' . $input['thumbnail']);
-    
+
             }
-    
+
             if ($request->file('hover_thumbnail')) {
 
                 $request->validate([
-                    'hover_thumbnail' => 'required|mimes:jpeg,jpg,png,webp,gif,bmp|max:300'
+                    'hover_thumbnail' => 'required|mimes:jpeg,jpg,png,webp,gif,bmp|max:300',
                 ]);
-    
+
                 $image = $request->file('hover_thumbnail');
                 $input['hover_thumbnail'] = 'hover_thum_dgp_' . uniqid() . '.' . $image->getClientOriginalExtension();
                 $destinationPath = public_path('/images/simple_products');
                 $img = Image::make($image->path());
-    
+
                 $img->resize(300, 300, function ($constraint) {
                     $constraint->aspectRatio();
                 });
-    
+
                 $img->save($destinationPath . '/' . $input['hover_thumbnail']);
-    
+
             }
-            
+
             if ($request->file('product_file')) {
 
                 $request->validate([
                     'product_file' => 'required|max:50000',
                 ]);
-    
+
                 $input['product_file'] = time() . 'product_file.' . $request->product_file->getClientOriginalExtension();
-    
+
                 $request->product_file->move(storage_path('digitalproducts/files/'), $input['product_file']);
             }
-        }else{
-
-            
+        } else {
 
             if ($request->thumbnail != null) {
 
-                if(!str_contains($request->thumbnail, '.png') && !str_contains($request->thumbnail, '.jpg') && !str_contains($request->thumbnail, '.jpeg') && !str_contains($request->thumbnail, '.webp') && !str_contains($request->thumbnail, '.gif')){
-                    
+                if (!str_contains($request->thumbnail, '.png') && !str_contains($request->thumbnail, '.jpg') && !str_contains($request->thumbnail, '.jpeg') && !str_contains($request->thumbnail, '.webp') && !str_contains($request->thumbnail, '.gif')) {
+
                     return back()->withInput()->withErrors([
-                        'thumbnail' => 'Invalid image type for thumbnail'
+                        'thumbnail' => __('Invalid image type for thumbnail'),
                     ]);
 
                 }
@@ -370,10 +394,10 @@ class SimpleProductsController extends Controller
             }
 
             if ($request->hover_thumbnail != null) {
-                if(!str_contains($request->hover_thumbnail, '.png') && !str_contains($request->hover_thumbnail, '.jpg') && !str_contains($request->hover_thumbnail, '.jpeg') && !str_contains($request->hover_thumbnail, '.webp') && !str_contains($request->hover_thumbnail, '.gif')){
+                if (!str_contains($request->hover_thumbnail, '.png') && !str_contains($request->hover_thumbnail, '.jpg') && !str_contains($request->hover_thumbnail, '.jpeg') && !str_contains($request->hover_thumbnail, '.webp') && !str_contains($request->hover_thumbnail, '.gif')) {
 
                     return back()->withInput()->withErrors([
-                        'hover_thumbnail' => 'Invalid image type for hover thumbnail'
+                        'hover_thumbnail' => __('Invalid image type for hover thumbnail'),
                     ]);
 
                 }
@@ -381,21 +405,17 @@ class SimpleProductsController extends Controller
 
             if ($request->product_file != null) {
 
-                if(!str_contains($request->product_file, '.docx') && str_contains(!$request->product_file, '.pdf') && !str_contains($request->product_file, '.txt') && !str_contains($request->product_file, '.doc')){
+                if (!str_contains($request->product_file, '.docx') && str_contains(!$request->product_file, '.pdf') && !str_contains($request->product_file, '.txt') && !str_contains($request->product_file, '.doc')) {
 
                     return back()->withInput()->withErrors([
-                        'product_file' => 'Invalid file type for product file'
+                        'product_file' => __('Invalid file type for product file'),
                     ]);
 
                 }
-                
+
             }
 
-            
-
         }
-
-        
 
         $input['status'] = $request->status ? 1 : 0;
         $input['free_shipping'] = $request->free_shipping ? 1 : 0;
@@ -403,7 +423,6 @@ class SimpleProductsController extends Controller
         $input['cancel_avbl'] = $request->cancel_avbl ? 1 : 0;
         $input['cod_avbl'] = $request->cod_avbl ? 1 : 0;
         $input['child_id'] = $request->child_id ?? null;
-
 
         if ($request->return_avbl == 0) {
             $input['policy_id'] = null;
@@ -416,24 +435,32 @@ class SimpleProductsController extends Controller
 
                 $cit = $commission->rate * $input['tax'] / 100;
                 $price = $input['actual_selling_price'] + $commission->rate + $cit;
-                $offer = $input['actual_offer_price'] + $commission->rate + $cit;
+
+                if ($request->actual_offer_price) {
+                    $offer = $input['actual_offer_price'] + $commission->rate + $cit;
+                    $input['offer_price'] = $offer;
+                }
 
                 $input['price'] = $price;
-                $input['offer_price'] = $offer;
+
                 $input['commission_rate'] = $commission->rate + $cit;
 
             } else {
 
                 $taxrate = $commission->rate;
-                $price1 = $input['actual_selling_price'];
-                $price2 = $input['actual_offer_price'];
+                $price1 = $request['actual_selling_price'];
+                $price2 = $request['actual_offer_price'];
                 $tax1 = $price1 * (($taxrate / 100));
                 $tax2 = $price2 * (($taxrate / 100));
                 $price = $input['actual_selling_price'] + $tax1;
-                $offer = $input['actual_offer_price'] + $tax2;
+
+                if ($request->actual_offer_price) {
+                    $offer = $input['actual_offer_price'] + $tax2;
+                    $input['offer_price'] = $offer;
+                }
 
                 $input['price'] = $price;
-                $input['offer_price'] = $offer;
+
                 if (!empty($tax2)) {
                     $input['commission_rate'] = $tax2;
                 } else {
@@ -449,10 +476,14 @@ class SimpleProductsController extends Controller
 
                     $cit = $comm->rate * $input['tax'] / 100;
                     $price = $input['actual_selling_price'] + $comm->rate + $cit;
-                    $offer = $input['actual_offer_price'] + $comm->rate + $cit;
+
+                    if ($request->actual_offer_price) {
+                        $offer = $input['actual_offer_price'] + $comm->rate + $cit;
+                        $input['offer_price'] = $offer;
+                    }
 
                     $input['price'] = $price;
-                    $input['offer_price'] = $offer;
+
                     $input['commission_rate'] = $comm->rate + $cit;
 
                 } else {
@@ -463,10 +494,13 @@ class SimpleProductsController extends Controller
                     $tax1 = $price1 * (($taxrate / 100));
                     $tax2 = $price2 * (($taxrate / 100));
                     $price = $input['actual_selling_price'] + $tax1;
-                    $offer = $input['actual_offer_price'] + $tax2;
+
+                    if ($request->actual_offer_price) {
+                        $offer = $input['actual_offer_price'] + $tax2;
+                        $input['offer_price'] = $offer;
+                    }
 
                     $input['price'] = $price;
-                    $input['offer_price'] = $offer;
 
                     if (!empty($tax2)) {
                         $input['commission_rate'] = $tax2;
@@ -477,16 +511,16 @@ class SimpleProductsController extends Controller
             }
         }
 
-        if($request->actual_offer_price != 0 || $request->actual_offer_price){
-            $input['tax_rate'] = sprintf("%.2f",$request->actual_offer_price * $request->tax / 100);
-            $input['offer_price'] = sprintf("%2.f",$input['offer_price'] + $input['tax_rate']);
+        if ($request->actual_offer_price != 0 || $request->actual_offer_price) {
+            $input['tax_rate'] = sprintf("%.2f", $request->actual_offer_price * $request->tax / 100);
+            $input['offer_price'] = sprintf("%2.f", $input['offer_price'] + $input['tax_rate']);
 
-            $taxrate = sprintf("%.2f",$request->actual_selling_price * $request->tax / 100);
-            $input['price'] = sprintf("%2.f",$input['price'] + $taxrate);
+            $taxrate = sprintf("%.2f", $request->actual_selling_price * $request->tax / 100);
+            $input['price'] = sprintf("%2.f", $input['price'] + $taxrate);
 
-        }else{
-            $input['tax_rate'] = sprintf("%.2f",$request->actual_selling_price * $request->tax / 100);
-            $input['price'] = sprintf("%2.f",$input['price'] + $input['tax_rate']);
+        } else {
+            $input['tax_rate'] = sprintf("%.2f", $request->actual_selling_price * $request->tax / 100);
+            $input['price'] = sprintf("%2.f", $input['price'] + $input['tax_rate']);
         }
 
         $input['actual_offer_price'] = $request->offer_price ?? 0;
@@ -532,7 +566,7 @@ class SimpleProductsController extends Controller
      */
     public function edit($id)
     {
-        abort_if(!auth()->user()->can('products.edit'), 403, 'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('products.edit'), 403, __('User does not have the right permissions.'));
 
         $product = SimpleProduct::find($id);
 
@@ -543,15 +577,25 @@ class SimpleProductsController extends Controller
 
         $categories = Category::where('status', '1')->get();
         $brands_all = Brand::where('status', '1')->get();
-        
-        $cashback_settings = $product->cashback_settings;
-        if( in_array('Seller',auth()->user()->getRoleNames()->toArray()) ){
-            $store = auth()->user()->store;
-            return view('seller.simpleproducts.edit', compact('categories', 'product', 'brands_all', 'store','cashback_settings'));
 
-        }else{
+        $cashback_settings = $product->cashback_settings;
+
+        $template_size_chart = SizeChart::whereHas('sizeoptions')
+            ->whereHas('sizeoptions.values')
+            ->with('sizeoptions')
+            ->where('status', '=', '1')
+            ->where('user_id', auth()->id())
+            ->get();
+
+        if (in_array('Seller', auth()->user()->getRoleNames()->toArray())) {
+
+            $store = auth()->user()->store;
+            return view('seller.simpleproducts.edit', compact('categories', 'product', 'brands_all', 'store', 'cashback_settings', 'template_size_chart'));
+
+        } else {
+
             $stores = Store::with('user')->whereHas('user')->get();
-            return view('admin.simpleproducts.edit', compact('categories', 'product', 'brands_all', 'stores','cashback_settings'));
+            return view('admin.simpleproducts.edit', compact('categories', 'product', 'brands_all', 'stores', 'cashback_settings', 'template_size_chart'));
 
         }
     }
@@ -565,7 +609,7 @@ class SimpleProductsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        abort_if(!auth()->user()->can('products.edit'), 403, 'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('products.edit'), 403, __('User does not have the right permissions.'));
 
         $product = SimpleProduct::find($id);
 
@@ -581,7 +625,6 @@ class SimpleProductsController extends Controller
             'subcategory_id' => 'required',
             'product_detail' => 'required|max:10000',
             'category_id' => 'required',
-            'product_tags' => 'required|string',
             'actual_selling_price' => 'numeric|required',
             'tax' => 'required',
             'tax_name' => 'required',
@@ -610,6 +653,12 @@ class SimpleProductsController extends Controller
 
         $input['product_detail'] = clean($request->product_detail);
 
+        if ($request->other_cats) {
+            $input['other_cats'] = $request->other_cats;
+        } else {
+            $input['other_cats'] = null;
+        }
+
         if (!is_dir(public_path() . '/images/simple_products')) {
             mkdir(public_path() . '/images/simple_products');
 
@@ -619,80 +668,80 @@ class SimpleProductsController extends Controller
 
         }
 
-        if( in_array('Seller',auth()->user()->getRoleNames()->toArray()) ){
-            
+        if (in_array('Seller', auth()->user()->getRoleNames()->toArray())) {
+
             if ($request->file('thumbnail')) {
 
                 $request->validate([
                     'thumbnail' => 'required|mimes:jpeg,jpg,png,webp,gif,bmp|max:300',
                 ]);
-    
+
                 $image = $request->file('thumbnail');
                 $input['thumbnail'] = 'thum_dgp_' . uniqid() . '.' . $image->getClientOriginalExtension();
                 $destinationPath = public_path('/images/simple_products');
                 $img = Image::make($image->path());
-    
+
                 if ($product->thumbnail != '' && file_exists(public_path() . '/images/simple_products/' . $product->thumbnail)) {
                     unlink(public_path() . '/images/simple_products/' . $product->thumbnail);
                 }
-    
+
                 $img->resize(300, 300, function ($constraint) {
                     $constraint->aspectRatio();
                 });
-    
+
                 $img->save($destinationPath . '/' . $input['thumbnail']);
-    
+
             }
-    
+
             if ($request->file('hover_thumbnail')) {
-    
+
                 $request->validate([
                     'hover_thumbnail' => 'required|mimes:jpeg,jpg,png,webp,gif,bmp|max:300',
                 ]);
-    
+
                 $image = $request->file('hover_thumbnail');
                 $input['hover_thumbnail'] = 'hover_thum_dgp_' . uniqid() . '.' . $image->getClientOriginalExtension();
                 $destinationPath = public_path('/images/simple_products');
                 $img = Image::make($image->path());
-    
+
                 if ($product->hover_thumbnail != '' && file_exists(public_path() . '/images/simple_products/' . $product->hover_thumbnail)) {
                     unlink(public_path() . '/images/simple_products/' . $product->hover_thumbnail);
                 }
-    
+
                 $img->resize(300, 300, function ($constraint) {
                     $constraint->aspectRatio();
                 });
-    
+
                 $img->save($destinationPath . '/' . $input['hover_thumbnail']);
-    
+
             }
-    
+
             if ($request->file('product_file')) {
-    
+
                 $request->validate([
                     'product_file' => 'required|max:50000',
                 ]);
-    
+
                 if ($product->product_file != '') {
                     try {
                         unlink(storage_path() . '/digitalproducts/files/' . $product->product_file);
                     } catch (\Exception $e) {
-    
+
                     }
                 }
-    
+
                 $input['product_file'] = time() . 'product_file.' . $request->product_file->getClientOriginalExtension();
-    
+
                 $request->product_file->move(storage_path('digitalproducts/files/'), $input['product_file']);
             }
-        }else{
+        } else {
 
             if ($request->thumbnail != null) {
 
-                if(!str_contains($request->thumbnail, '.png') && !str_contains($request->thumbnail, '.jpg') && !str_contains($request->thumbnail, '.jpeg') && !str_contains($request->thumbnail, '.webp') && !str_contains($request->thumbnail, '.gif')){
-                    
+                if (!str_contains($request->thumbnail, '.png') && !str_contains($request->thumbnail, '.jpg') && !str_contains($request->thumbnail, '.jpeg') && !str_contains($request->thumbnail, '.webp') && !str_contains($request->thumbnail, '.gif')) {
+
                     return back()->withInput()->withErrors([
-                        'thumbnail' => 'Invalid image type for thumbnail'
+                        'thumbnail' => 'Invalid image type for thumbnail',
                     ]);
 
                 }
@@ -700,10 +749,10 @@ class SimpleProductsController extends Controller
             }
 
             if ($request->hover_thumbnail != null) {
-                if(!str_contains($request->hover_thumbnail, '.png') && !str_contains($request->hover_thumbnail, '.jpg') && !str_contains($request->hover_thumbnail, '.jpeg') && !str_contains($request->hover_thumbnail, '.webp') && !str_contains($request->hover_thumbnail, '.gif')){
+                if (!str_contains($request->hover_thumbnail, '.png') && !str_contains($request->hover_thumbnail, '.jpg') && !str_contains($request->hover_thumbnail, '.jpeg') && !str_contains($request->hover_thumbnail, '.webp') && !str_contains($request->hover_thumbnail, '.gif')) {
 
                     return back()->withInput()->withErrors([
-                        'hover_thumbnail' => 'Invalid image type for hover thumbnail'
+                        'hover_thumbnail' => 'Invalid image type for hover thumbnail',
                     ]);
 
                 }
@@ -711,14 +760,14 @@ class SimpleProductsController extends Controller
 
             if ($request->product_file != null) {
 
-                if(!str_contains($request->product_file, '.docx') && str_contains(!$request->product_file, '.pdf') && !str_contains($request->product_file, '.txt') && !str_contains($request->product_file, '.doc')){
+                if (!str_contains($request->product_file, '.docx') && str_contains(!$request->product_file, '.pdf') && !str_contains($request->product_file, '.txt') && !str_contains($request->product_file, '.doc')) {
 
                     return back()->withInput()->withErrors([
-                        'product_file' => 'Invalid file type for product file'
+                        'product_file' => 'Invalid file type for product file',
                     ]);
 
                 }
-                
+
             }
 
         }
@@ -763,24 +812,32 @@ class SimpleProductsController extends Controller
 
                 $cit = $commission->rate * $input['tax'] / 100;
                 $price = $input['actual_selling_price'] + $commission->rate + $cit;
-                $offer = $input['actual_offer_price'] + $commission->rate + $cit;
+
+                if ($request->actual_offer_price) {
+                    $offer = $input['actual_offer_price'] + $commission->rate + $cit;
+                    $input['offer_price'] = $offer;
+                }
 
                 $input['price'] = $price;
-                $input['offer_price'] = $offer;
+
                 $input['commission_rate'] = $commission->rate + $cit;
 
             } else {
 
                 $taxrate = $commission->rate;
-                $price1 = $input['actual_selling_price'];
-                $price2 = $input['actual_offer_price'];
-                $tax1   = $price1 * ($taxrate / 100);
-                $tax2   = $price2 * ($taxrate / 100);
-                $price  = $input['actual_selling_price'] + $tax1;
-                $offer  = $input['actual_offer_price'] + $tax2;
+                $price1 = $request['actual_selling_price'];
+                $price2 = $request['actual_offer_price'];
+                $tax1 = $price1 * (($taxrate / 100));
+                $tax2 = $price2 * (($taxrate / 100));
+                $price = $input['actual_selling_price'] + $tax1;
+
+                if ($request->actual_offer_price) {
+                    $offer = $input['actual_offer_price'] + $tax2;
+                    $input['offer_price'] = $offer;
+                }
 
                 $input['price'] = $price;
-                $input['offer_price'] = $offer;
+
                 if (!empty($tax2)) {
                     $input['commission_rate'] = $tax2;
                 } else {
@@ -796,10 +853,14 @@ class SimpleProductsController extends Controller
 
                     $cit = $comm->rate * $input['tax'] / 100;
                     $price = $input['actual_selling_price'] + $comm->rate + $cit;
-                    $offer = $input['actual_offer_price'] + $comm->rate + $cit;
+
+                    if ($request->actual_offer_price) {
+                        $offer = $input['actual_offer_price'] + $comm->rate + $cit;
+                        $input['offer_price'] = $offer;
+                    }
 
                     $input['price'] = $price;
-                    $input['offer_price'] = $offer;
+
                     $input['commission_rate'] = $comm->rate + $cit;
 
                 } else {
@@ -810,10 +871,13 @@ class SimpleProductsController extends Controller
                     $tax1 = $price1 * (($taxrate / 100));
                     $tax2 = $price2 * (($taxrate / 100));
                     $price = $input['actual_selling_price'] + $tax1;
-                    $offer = $input['actual_offer_price'] + $tax2;
+
+                    if ($request->actual_offer_price) {
+                        $offer = $input['actual_offer_price'] + $tax2;
+                        $input['offer_price'] = $offer;
+                    }
 
                     $input['price'] = $price;
-                    $input['offer_price'] = $offer;
 
                     if (!empty($tax2)) {
                         $input['commission_rate'] = $tax2;
@@ -824,17 +888,17 @@ class SimpleProductsController extends Controller
             }
         }
 
-        if($request->actual_offer_price != 0 && $request->actual_offer_price != ''){
-           
-            $input['tax_rate'] = sprintf("%.2f",$request->actual_offer_price * $request->tax / 100);
-            $input['offer_price'] = sprintf("%2.f",$input['offer_price'] + $input['tax_rate']);
+        if ($request->actual_offer_price != 0 && $request->actual_offer_price != '') {
 
-            $taxrate = sprintf("%.2f",$request->actual_selling_price * $request->tax / 100);
-            $input['price'] = sprintf("%2.f",$input['price'] + $taxrate);
+            $input['tax_rate'] = sprintf("%.2f", $request->actual_offer_price * $request->tax / 100);
+            $input['offer_price'] = sprintf("%2.f", $input['offer_price'] + $input['tax_rate']);
 
-        }else{
-            $input['tax_rate'] = sprintf("%.2f",$request->actual_selling_price * $request->tax / 100);
-            $input['price'] = sprintf("%2.f",$input['price'] + $input['tax_rate']);
+            $taxrate = sprintf("%.2f", $request->actual_selling_price * $request->tax / 100);
+            $input['price'] = sprintf("%2.f", $input['price'] + $taxrate);
+
+        } else {
+            $input['tax_rate'] = sprintf("%.2f", $request->actual_selling_price * $request->tax / 100);
+            $input['price'] = sprintf("%2.f", $input['price'] + $input['tax_rate']);
             $input['offer_price'] = 0;
         }
 
@@ -858,7 +922,7 @@ class SimpleProductsController extends Controller
      */
     public function destroy($id)
     {
-        abort_if(!auth()->user()->can('products.delete'), 403, 'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('products.delete'), 403, __('User does not have the right permissions.'));
 
         $product = SimpleProduct::find($id);
 
@@ -888,7 +952,6 @@ class SimpleProductsController extends Controller
 
         $cusers = UserReview::where('simple_pro_id', $id)->where('user', auth()->id())->first();
 
-
         $orders = UserReview::where('simple_pro_id', $id)->first();
 
         if (isset($cusers)) {
@@ -910,7 +973,6 @@ class SimpleProductsController extends Controller
             $obj->save();
 
             $findprovendor = SimpleProduct::find($id);
-
 
             if ($request->review != '') {
                 if ($findprovendor->store->user['role_id'] != 'a') {
@@ -939,116 +1001,115 @@ class SimpleProductsController extends Controller
         }
     }
 
-    public function manageInventory(Request $request,$id){
+    public function manageInventory(Request $request, $id)
+    {
 
         $request->validate([
             'stock' => 'required|numeric',
-            'min_order_qty' => 'required|min:1'
+            'min_order_qty' => 'required|min:1',
         ]);
 
         $product = SimpleProduct::find($id);
 
         $product->update($request->all());
 
-        notify()->success('Product inventory updated !',$product->product_name);
+        notify()->success('Product inventory updated !', $product->product_name);
         return back();
-        
 
     }
 
-    public function wishlist(Request $request){
+    public function wishlist(Request $request)
+    {
 
         $product = SimpleProduct::find($request->proid);
 
-        if(!isset($product)){
+        if (!isset($product)) {
             return response()->json([
                 'msg' => 'Product not found !',
-                'status' => 'fail'
+                'status' => 'fail',
             ]);
         }
 
         $status = inwishlist($product->id);
 
-        if($status == false){
+        if ($status == false) {
 
             Wishlist::create([
                 'user_id' => auth()->id(),
                 'pro_id' => 0,
-                'simple_pro_id' => $product->id
+                'simple_pro_id' => $product->id,
             ]);
 
             return response()->json([
                 'msg' => 'Product added in wishlist !',
-                'status' => 'success'
+                'status' => 'success',
             ]);
 
-        }else{
+        } else {
 
-            $check = Wishlist::where('user_id',auth()->id())->where('simple_pro_id',$product->id)->delete();
+            $check = Wishlist::where('user_id', auth()->id())->where('simple_pro_id', $product->id)->delete();
 
-            if($check){
-                
+            if ($check) {
+
                 return response()->json([
                     'msg' => 'Product removed from wishlist !',
-                    'status' => 'success'
+                    'status' => 'success',
                 ]);
 
-            }else{
+            } else {
 
                 return response()->json([
                     'msg' => 'Please try again !',
-                    'status' => 'fail'
+                    'status' => 'fail',
                 ]);
 
             }
 
         }
 
-
     }
 
-    public function deletegalleryImage(Request $request){
-
+    public function deletegalleryImage(Request $request)
+    {
 
         $image = ProductGallery::withTrashed()->find($request->id);
 
-        if($image){
+        if ($image) {
 
-            if(file_exists(public_path() . '/images/simple_products/gallery/' . $image->image)){
+            if (file_exists(public_path() . '/images/simple_products/gallery/' . $image->image)) {
                 try {
                     unlink(public_path() . '/images/simple_products/gallery/' . $image->image);
                 } catch (\Exception $e) {
                     \Log::error('Deleting gallery image');
                 }
             }
-    
+
             $image->forcedelete();
 
-            if($request->wantsJson()){
+            if ($request->wantsJson()) {
                 return response()->json([
                     'msg' => 'Image deleted from gallery !',
-                    'status' => 'success'
+                    'status' => 'success',
                 ]);
             }
 
-        }else{
+        } else {
 
-            if($request->wantsJson()){
+            if ($request->wantsJson()) {
 
                 return response()->json([
                     'msg' => 'Image could not be deleted !',
-                    'status' => 'fail'
+                    'status' => 'fail',
                 ]);
-                
+
             }
 
         }
 
-       
-
     }
 
-    public function upload360(Request $request,$id){
+    public function upload360(Request $request, $id)
+    {
 
         if (!is_dir(public_path() . '/images/simple_products/360_images')) {
             mkdir(public_path() . '/images/simple_products/360_images');
@@ -1061,9 +1122,8 @@ class SimpleProductsController extends Controller
 
         $request->validate([
             '360_image' => 'required',
-            '360_image.*' => 'mimes:png,jpg,jpeg,gif,bmp,webp'
+            '360_image.*' => 'mimes:png,jpg,jpeg,gif,bmp,webp',
         ]);
-
 
         $product = SimpleProduct::findorfail($id);
 
@@ -1071,7 +1131,7 @@ class SimpleProductsController extends Controller
 
         if ($request->hasFile('360_image')) {
 
-            foreach($request->file('360_image') as $photo){
+            foreach ($request->file('360_image') as $photo) {
 
                 $image = $photo;
                 $filename = 'image_360_' . uniqid() . '.' . $image->getClientOriginalExtension();
@@ -1081,19 +1141,20 @@ class SimpleProductsController extends Controller
                 $img->save($destinationPath . '/' . $filename);
 
                 $product->frames()->create([
-                    'image' => $filename
+                    'image' => $filename,
                 ]);
-                
+
             }
 
         }
 
-        notify()->success('Image uploaded successfully !','Success');
+        notify()->success('Image uploaded successfully !', 'Success');
         return back();
 
     }
 
-    public function importImages(Request $request){
+    public function importImages(Request $request)
+    {
 
         $validator = Validator::make(
             [
@@ -1111,121 +1172,126 @@ class SimpleProductsController extends Controller
             return back()->withErrors('Invalid file !');
         }
 
-        $filename = 'simple_product_images_'.time() . '.' . $request->image->getClientOriginalExtension();
+        $filename = 'simple_product_images_' . time() . '.' . $request->image->getClientOriginalExtension();
 
-        Storage::disk('local')->put('/excel/'.$filename,file_get_contents($request->image->getRealPath()));
+        Storage::disk('local')->put('/excel/' . $filename, file_get_contents($request->image->getRealPath()));
 
-        $images = fastexcel()->import(storage_path().'/app/excel/'.$filename);
+        $images = fastexcel()->import(storage_path() . '/app/excel/' . $filename);
 
-        if(count($images)){
+        if (count($images)) {
 
-            $images->each(function($image){
-                
+            $images->each(function ($image) {
 
-               ProductGallery::create([
-                   
+                ProductGallery::create([
+
                     'product_id' => $image['product_id'],
-                    'image' => $image['image']
+                    'image' => $image['image'],
 
-               ]);
+                ]);
 
             });
 
-            Storage::delete('/excel/'.$filename);
+            try {
+
+                unlink(storage_path() . '/excel/' . $filename);
+
+            } catch (\Exception $e) {
+
+            }
 
             notify()->success('Images Imported successfully');
 
             return back();
 
-        }else{
+        } else {
             return back()->withErrors('File is empty !');
         }
 
     }
 
-    public function delete360(Request $request){
+    public function delete360(Request $request)
+    {
 
         $image = Product360Frame::find($request->id);
 
-        if($image){
+        if ($image) {
 
-            if(file_exists(public_path() . '/images/simple_products/360_images/' . $image)){
+            if (file_exists(public_path() . '/images/simple_products/360_images/' . $image)) {
                 try {
                     unlink(storage_path() . '/images/simple_products/360_images/' . $image);
                 } catch (\Exception $e) {
                     \Log::error('Deleting 360 deg. image');
                 }
             }
-    
+
             $image->delete();
 
-            if($request->wantsJson()){
+            if ($request->wantsJson()) {
                 return response()->json([
                     'msg' => 'Image deleted from frames !',
-                    'status' => 'success'
+                    'status' => 'success',
                 ]);
             }
 
-        }else{
+        } else {
 
-            if($request->wantsJson()){
+            if ($request->wantsJson()) {
 
                 return response()->json([
                     'msg' => 'Image could not be deleted !',
-                    'status' => 'fail'
+                    'status' => 'fail',
                 ]);
-                
+
             }
 
         }
 
     }
 
-    public function front360(){
+    public function front360()
+    {
 
-        if(request()->ajax()){
+        if (request()->ajax()) {
 
             $product = SimpleProduct::find(request()->id);
 
-            $frames = $product->frames->map(function($image){
+            $frames = $product->frames->map(function ($image) {
 
-                $content[] = url('/images/simple_products/360_images/'.$image->image);
+                $content[] = url('/images/simple_products/360_images/' . $image->image);
                 return $content;
 
             });
 
-            return response()->json($frames,200);
+            return response()->json($frames, 200);
 
         }
 
     }
 
-    public function preorderSettings(Request $request,$id){
+    public function preorderSettings(Request $request, $id)
+    {
 
         $product = SimpleProduct::findorfail($id);
 
         $input = $request->all();
 
-        if($request->pre_order){
+        if ($request->pre_order) {
 
             $input['pre_order'] = 1;
-            $request->preorder_type == 'full' ? $input['partial_payment_per'] = NULL : $input['partial_payment_per'] = $request->partial_payment_per;
+            $request->preorder_type == 'full' ? $input['partial_payment_per'] = null : $input['partial_payment_per'] = $request->partial_payment_per;
 
-
-            
-        }else{
-            
+        } else {
 
             $input['pre_order'] = 0;
-            $input['preorder_type'] = NULL;
-            $input['partial_payment_per'] = NULL;
-            $input['product_avbl_date'] = NULL;
+            $input['preorder_type'] = null;
+            $input['partial_payment_per'] = null;
+            $input['product_avbl_date'] = null;
 
         }
 
         $product->update($input);
 
-        return back()->with('added',__("Preorder configuration has been updated successfully !"));
+        return back()->with('added', __("Preorder configuration has been updated successfully !"));
 
     }
 }

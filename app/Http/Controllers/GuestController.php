@@ -1,43 +1,42 @@
 <?php
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\AddSubVariant;
+use App\Allcity;
 use App\Allcountry;
 use App\Allstate;
-use App\Allcity;
-use Session;
-use Crypt;
-use Response;
-use App\User;
-use DB;
-use Auth;
-use App\Faq;
-use App\Wishlist;
-use Redirect;
-use Illuminate\Support\MessageBag;
 use App\Cart;
-use App\Product;
-use App\AddSubVariant;
 use App\Coupan;
-use Hash;
+use App\Faq;
 use App\Page;
+use App\Product;
+use App\User;
+use App\Wishlist;
+use Auth;
+use Crypt;
+use DB;
+use Hash;
+use Illuminate\Http\Request;
+use Illuminate\Support\MessageBag;
+use Redirect;
+use Response;
+use Session;
 
 class GuestController extends Controller
 {
 
-    
+    public function adminLoginAs($id)
+    {
 
-    public function adminLoginAs($id){
-        
         $userid = Crypt::decrypt($id);
         $user = User::find($userid);
 
-        if(isset($user)){
+        if (isset($user)) {
             Auth::login($user);
-            notify()->success('Logged in as '.Auth::user()->name);
+            notify()->success('Logged in as ' . Auth::user()->name);
             return redirect('/');
-        }else{
-            return back()->with('warning','404 User Not found !');
+        } else {
+            return back()->with('warning', __('User not found !'));
         }
     }
 
@@ -53,30 +52,25 @@ class GuestController extends Controller
 
     public function dosellerlogin(Request $request)
     {
-        if (Auth::attempt(['email' => $request->get('email') , 'password' => $request->get('password') ,
+        if (Auth::attempt(['email' => $request->get('email'), 'password' => $request->get('password'),
 
-        ], $request->remember))
-        {
+        ], $request->remember)) {
 
-            if(!auth()->user()->can('login.can')){
+            if (!auth()->user()->can('login.can')) {
                 Auth::logout();
-                $errors = new MessageBag(['email' => 'Login access blocked !']);
+                $errors = new MessageBag(['email' => __('Login access blocked !')]);
                 return back()->withErrors($errors)->withInput($request->except('password'));
             }
 
-            if (auth()->user()->getRoleNames() && auth()->user()->getRoleNames()->contains('Seller')) 
-            {
-                notify()->success('Welcome '.Auth::user()->name);
+            if (auth()->user()->getRoleNames() && auth()->user()->getRoleNames()->contains('Seller')) {
+                notify()->success(__('Welcome :user',['user' => Auth::user()->name]));
                 return redirect()->intended(route('seller.dboard'));
-            }else
-            {
+            } else {
                 Auth::logout();
-                return Redirect::back()->withErrors(['email' => 'ONLY Seller login allow !'])->withInput($request->except('password'));
+                return Redirect::back()->withErrors(['email' => __('ONLY Seller login allow !')])->withInput($request->except('password'));
             }
-        }
-        else
-        {
-            $errors = new MessageBag(['email' => ['email' => 'Email or password is invalid or your account is deactive/ unverified.']]);
+        } else {
+            $errors = new MessageBag(['email' => ['email' => __('These credentials do not match our records.')]]);
             return Redirect::back()->withErrors($errors)->withInput($request->except('password'));
             return Redirect::back();
         }
@@ -84,36 +78,33 @@ class GuestController extends Controller
 
     public function referfromcheckoutwindow(Request $request)
     {
-        require_once ('price.php');
+        require_once 'price.php';
         return view('front.referfromchwindow', compact('conversion_rate'));
     }
 
     public function adminLogin(Request $request)
     {
 
-        if (Auth::attempt(['email' => $request->get('email') , 'password' => $request->get('password') ,'is_verified' => 1, 'status' => 1
+        if (Auth::attempt(['email' => $request->get('email'), 'password' => $request->get('password'), 'is_verified' => 1, 'status' => 1,
 
-        ], $request->remember))
-        {
-            if(!auth()->user()->can('login.can')){
+        ], $request->remember)) {
+            if (!auth()->user()->can('login.can')) {
                 Auth::logout();
-                $errors = new MessageBag(['email' => 'Login access blocked !']);
+                $errors = new MessageBag(['email' => __('Login access blocked !')]);
                 return back()->withErrors($errors)->withInput($request->except('password'));
             }
-            
-            if(!auth()->user()->getRoleNames()->contains('Seller') && !auth()->user()->getRoleNames()->contains('Customer') && !auth()->user()->getRoleNames()->contains('Blocked') ){
-            
-                notify()->success('Welcome '.Auth::user()->name);
+
+            if (!auth()->user()->getRoleNames()->contains('Seller') && !auth()->user()->getRoleNames()->contains('Customer') && !auth()->user()->getRoleNames()->contains('Blocked')) {
+
+                notify()->success(__('Welcome :user',['user' => Auth::user()->name]));
                 return redirect()->intended(route('admin.main'));
-            }else{
+            } else {
                 Auth::logout();
-                $errors = new MessageBag(['email' => 'ONLY Admin login allow !']);
+                $errors = new MessageBag(['email' => __('ONLY Admin login allow !')]);
                 return back()->withErrors($errors)->withInput($request->except('password'));
             }
-        }
-        else
-        {
-            $errors = new MessageBag(['email' => ['Email or password is invalid or your account is deactive/ unverified']]);
+        } else {
+            $errors = new MessageBag(['email' => ['These credentials do not match our records.']]);
             return Redirect::back()->withErrors($errors)->withInput($request->except('password'));
             return Redirect::back();
         }
@@ -138,11 +129,9 @@ class GuestController extends Controller
 
         Auth::login($newGuest);
 
-        if (Session::has('cart'))
-        {
+        if (Session::has('cart')) {
 
-            foreach (Session::get('cart') as $key => $c)
-            {
+            foreach (Session::get('cart') as $key => $c) {
 
                 $venderid = Product::findorFail($c['pro_id']);
 
@@ -164,7 +153,7 @@ class GuestController extends Controller
         }
 
         Session::forget('cart');
-        notify()->success('Create address to continue !');
+        notify()->success(__('Create address to continue !'));
         return redirect('/checkout');
     }
 
@@ -183,11 +172,9 @@ class GuestController extends Controller
 
         Auth::login($newGuest);
 
-        if (Session::has('cart'))
-        {
+        if (Session::has('cart')) {
 
-            foreach (Session::get('cart') as $key => $c)
-            {
+            foreach (Session::get('cart') as $key => $c) {
 
                 $venderid = Product::findorFail($c['pro_id']);
 
@@ -208,23 +195,23 @@ class GuestController extends Controller
 
         }
 
-        if(session()->has('coupanapplied')){
+        if (session()->has('coupanapplied')) {
 
-            $cpn = Coupan::firstWhere('code','=',session()->get('coupanapplied')['code']);
+            $cpn = Coupan::firstWhere('code', '=', session()->get('coupanapplied')['code']);
 
-            if(isset($cpn)){
+            if (isset($cpn)) {
 
                 $applycoupan = new CouponApplyController;
 
-                if(session()->get('coupanapplied')['appliedOn'] == 'category'){
+                if (session()->get('coupanapplied')['appliedOn'] == 'category') {
                     $applycoupan->validCouponForCategory($cpn);
                 }
 
-                if(session()->get('coupanapplied')['appliedOn'] == 'cart'){
+                if (session()->get('coupanapplied')['appliedOn'] == 'cart') {
                     $applycoupan->validCouponForCart($cpn);
                 }
 
-                if(session()->get('coupanapplied')['appliedOn'] == 'product'){
+                if (session()->get('coupanapplied')['appliedOn'] == 'product') {
                     $applycoupan->validCouponForProduct($cpn);
                 }
 
@@ -234,7 +221,7 @@ class GuestController extends Controller
         }
 
         Session::forget('cart');
-        notify()->success('Create address to continue !');
+        notify()->success(__('Create address to continue !'));
         return redirect('/checkout');
     }
 
@@ -243,38 +230,31 @@ class GuestController extends Controller
 
         //do login and send cart item to db cart
         if (Auth::attempt(array(
-            'email' => $request->get('email') ,
-            'password' => $request->get('password')
-        )))
-        {
+            'email' => $request->get('email'),
+            'password' => $request->get('password'),
+        ))) {
 
-            session(['email' => $request->get('email') ]);
+            session(['email' => $request->get('email')]);
 
-            if (!empty(Session::get('cart')))
-            {
+            if (!empty(Session::get('cart'))) {
 
                 $SessionCart = Session::get('cart');
 
-                foreach (Session::get('cart') as $key => $c)
-                {
+                foreach (Session::get('cart') as $key => $c) {
 
                     $venderid = Product::findorFail($c['pro_id']);
 
-                    if (count(Auth::user()->cart) > 0)
-                    {
+                    if (count(Auth::user()->cart) > 0) {
 
                         $x = Cart::where('variant_id', $SessionCart[$key]['variantid'])->first();
 
-                        if (isset($x))
-                        {
+                        if (isset($x)) {
 
                             $findvar = AddSubVariant::find($c['variantid']);
 
-                            if ($findvar->max_order_qty == '')
-                            {
+                            if ($findvar->max_order_qty == '') {
 
-                                if ($findvar->stock > 0)
-                                {
+                                if ($findvar->stock > 0) {
 
                                     $newqty = $x->qty + $c['qty'];
                                     $newofferprice = $c['qty'] * $c['varofferprice'];
@@ -287,9 +267,7 @@ class GuestController extends Controller
 
                             }
 
-                        }
-                        else
-                        {
+                        } else {
 
                             $cart = new Cart;
                             $cart->user_id = Auth::user()->id;
@@ -307,9 +285,7 @@ class GuestController extends Controller
 
                         }
 
-                    }
-                    else
-                    {
+                    } else {
 
                         $cart = new Cart;
                         $cart->user_id = Auth::user()->id;
@@ -331,39 +307,37 @@ class GuestController extends Controller
 
             }
 
-            if(session()->has('coupanapplied')){
+            if (session()->has('coupanapplied')) {
 
-                $cpn = Coupan::firstWhere('code','=',session()->get('coupanapplied')['code']);
-    
-                if(isset($cpn)){
-    
+                $cpn = Coupan::firstWhere('code', '=', session()->get('coupanapplied')['code']);
+
+                if (isset($cpn)) {
+
                     $applycoupan = new CouponApplyController;
-    
-                    if(session()->get('coupanapplied')['appliedOn'] == 'category'){
+
+                    if (session()->get('coupanapplied')['appliedOn'] == 'category') {
                         $applycoupan->validCouponForCategory($cpn);
                     }
-    
-                    if(session()->get('coupanapplied')['appliedOn'] == 'cart'){
+
+                    if (session()->get('coupanapplied')['appliedOn'] == 'cart') {
                         $applycoupan->validCouponForCart($cpn);
                     }
-    
-                    if(session()->get('coupanapplied')['appliedOn'] == 'product'){
+
+                    if (session()->get('coupanapplied')['appliedOn'] == 'product') {
                         $applycoupan->validCouponForProduct($cpn);
                     }
-    
+
                     Session::forget('coupanapplied');
                 }
-    
+
             }
 
             Session::forget('cart');
 
             return redirect()
                 ->intended('/checkout');
-        }
-        else
-        {
-            $errors = new MessageBag(['email' => ['Email or password is invalid.']]);
+        } else {
+            $errors = new MessageBag(['email' => ['These credentials do not match our records.']]);
             return Redirect::back()->withErrors($errors)->withInput($request->except('password'));
             return Redirect::back();
         }
@@ -376,34 +350,31 @@ class GuestController extends Controller
         $findinWishlist = Wishlist::where('pro_id', '=', $request->varid)
             ->first();
 
-        if (isset($findinWishlist))
-        {
+        if (isset($findinWishlist)) {
             return 'InWish';
-        }
-        else
-        {
+        } else {
             return 'NotInWish';
         }
     }
 
     public function showpage($slug)
     {
-        require_once ('price.php');
+        require_once 'price.php';
 
         $page = Page::where('status', '=', '1')->where('slug', '=', $slug)->first();
 
-        if($page){
+        if ($page) {
             return view('front.singlepage', compact('conversion_rate', 'page'));
-        }else{
-            notify()->error('Requested Page Not Found !');
+        } else {
+            notify()->error(__('Requested page not found !'));
             return redirect('/');
         }
-        
+
     }
 
     public function faq()
     {
-        require_once ('price.php');
+        require_once 'price.php';
         $faqs = Faq::where('status', '1')->orderBy('id', 'desc')
             ->paginate(10);
         return view('front.faq', compact('conversion_rate', 'faqs'));
@@ -416,19 +387,16 @@ class GuestController extends Controller
 
         $result = array();
 
-        if (Auth::check())
-        {
+        if (Auth::check()) {
             $queries = DB::table('addresses')->where('user_id', Auth::user()
-                ->id)
-                ->where('pin_code', 'LIKE', '%' . $term . '%')->get();
+                    ->id)
+                    ->where('pin_code', 'LIKE', '%' . $term . '%')->get();
         }
 
         $queries2 = DB::table('allcities')->where('pincode', 'LIKE', '%' . $term . '%')->get();
 
-        if (Auth::check())
-        {
-            foreach ($queries as $q)
-            {
+        if (Auth::check()) {
+            foreach ($queries as $q) {
 
                 $address = strlen($q->address) > 100 ? substr($q->address, 0, 100) . "..." : $q->address;
 
@@ -437,8 +405,7 @@ class GuestController extends Controller
             }
         }
 
-        foreach ($queries2 as $qq)
-        {
+        foreach ($queries2 as $qq) {
 
             $state = Allstate::find($qq->state_id);
             $country = Allcountry::find($state->country_id)->nicename;
@@ -447,18 +414,13 @@ class GuestController extends Controller
 
         }
 
-        if (strlen($term) > 12)
-        {
+        if (strlen($term) > 12) {
 
             return ['Invalid Pincode'];
 
-        }
-        elseif (count($result) == 0)
-        {
+        } elseif (count($result) == 0) {
             return ['Delivery not available for this'];
-        }
-        else
-        {
+        } else {
             return Response::json($result);
         }
 
@@ -466,7 +428,7 @@ class GuestController extends Controller
 
     public function choose_state(Request $request)
     {
-       
+
         $id = $request['catId'];
 
         $country = Allcountry::find($id);
@@ -500,4 +462,3 @@ class GuestController extends Controller
 
     }
 }
-

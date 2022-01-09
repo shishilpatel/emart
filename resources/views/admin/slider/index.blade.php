@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Slider |')
+@section('title',__('Slider |'))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -19,15 +19,16 @@
 @endcomponent
 <div class="contentbar">
   <div class="row">
-    @if ($errors->any())
-    <div class="alert alert-danger" role="alert">
-      @foreach($errors->all() as $error)
-      <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach
-    </div>
-    @endif
+   
     <div class="col-lg-12">
+      @if ($errors->any())
+      <div class="alert alert-danger" role="alert">
+        @foreach($errors->all() as $error)
+        <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button></p>
+        @endforeach
+      </div>
+      @endif
       <div class="card m-b-30">
         <div class="card-header">
           <h5 class="box-title">{{ __('Sliders') }}</h5>
@@ -80,13 +81,13 @@
                       <p><b>Subheading Text:</b> {{ $slider->heading }}</p>
                     @endif
                     @if(isset($slider->buttonname))
-                      <p><b>Button Text:</b> {{ $slider->buttonname }}</p>
+                      <p><b>{{ __('Button Text:') }}</b> {{ $slider->buttonname }}</p>
                     @endif
                 </td>
                 <td>
                   <form action="{{ route('slider.quick.update',$slider->id) }}" method="POST">
                       {{csrf_field()}}
-                      <button @if(env('DEMO_LOCK') == 0) type="submit" @else title="This cannot be done in demo !" disabled="" @endif class="btn btn-rounded {{ $slider->status == 1 ? 'btn-success-rgba' : 'btn-danger-rgba' }}">
+                      <button @if(env('DEMO_LOCK') == 0) type="submit" @else title="{{ __("This cannot be done in demo !") }}" disabled="" @endif class="btn btn-rounded {{ $slider->status == 1 ? 'btn-success-rgba' : 'btn-danger-rgba' }}">
                         {{ $slider->status ==1 ? 'Active' : 'Deactive' }}
                       </button>
                   </form>
@@ -96,7 +97,7 @@
                        <button class="btn btn-round btn-primary-rgba" type="button" id="CustomdropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="feather icon-more-vertical-"></i></button>
                        <div class="dropdown-menu" aria-labelledby="CustomdropdownMenuButton1">
                           
-                           <a class="dropdown-item" href="{{url('admin/slider/'.$slider->id.'/edit')}}"><i class="feather icon-edit mr-2"></i>Edit</a>
+                           <a class="dropdown-item" href="{{url('admin/slider/'.$slider->id.'/edit')}}"><i class="feather icon-edit mr-2"></i>{{ __("Edit") }}</a>
                         
                            <a class="dropdown-item btn btn-link" data-toggle="modal" data-target="#delete{{ $slider->id }}" >
                                <i class="feather icon-delete mr-2"></i>{{ __("Delete") }}</a>
@@ -110,7 +111,7 @@
                        <div class="modal-dialog modal-sm">
                            <div class="modal-content">
                                <div class="modal-header">
-                                   <h5 class="modal-title" id="exampleSmallModalLabel">Delete</h5>
+                                   <h5 class="modal-title" id="exampleSmallModalLabel">{{ __("DELETE") }}</h5>
                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                    <span aria-hidden="true">&times;</span>
                                    </button>
@@ -124,8 +125,8 @@
                                        {{csrf_field()}}
                                        {{method_field("DELETE")}}
               
-                                       <button type="reset" class="btn btn-secondary" data-dismiss="modal">No</button>
-                                       <button type="submit" class="btn btn-primary">Yes</button>
+                                       <button type="reset" class="btn btn-secondary" data-dismiss="modal">{{ __("No") }}</button>
+                                       <button type="submit" class="btn btn-primary">{{ __("YES") }}</button>
                                    </form>
                                </div>
                            </div>
@@ -143,19 +144,8 @@
   </div>
 </div>
 ​
-                      
-
-                             
-         
 
 
 @endsection
-<!-- css for image start -->
-<style>
-    .img-circle{
-   height:100px;
-   width:100px;
-   border-radius:50%;
-}
-</style>
+
 <!-- css for image end -->

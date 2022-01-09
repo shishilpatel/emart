@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Shipping Settings |')
+@section('title',__('Shipping Settings |'))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -39,9 +39,9 @@
                 <td>{{$shipping->price ?? '---'}}</td>
                 <td>
                   @if($shipping->login=='1')
-                      {{'Yes'}}
+                      {{__('Yes')}}
                       @else
-                      {{'No'}}
+                      {{__('No')}}
                     @endif
                   </td><td>
                   <a {{ $shipping->name == 'Free Shipping' || $shipping->name == 'UPS Shipping' ? "disabled" : ""}} href=" {{url('admin/shipping/'.$shipping->id.'/edit')}} " class="btn btn-primary-rgba btn-sm">

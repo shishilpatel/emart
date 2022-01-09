@@ -41,22 +41,15 @@ class FooterController extends Controller
             $data = Footer::create($input);
             $data->save();
             return back()
-                ->with("added", "Footer Has Been Created !");
+                ->with("added", __("Footer has been created !"));
         }
         else
         {
             $footer->update($input);
-            return back()->with("updated", "Footer Has Been Updated !");
+            return back()->with("updated", __("Footer has been updated !"));
         }
 
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Footer  $footer
-     * @return \Illuminate\Http\Response
-     */
 
 }
 

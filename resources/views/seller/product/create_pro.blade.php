@@ -1,6 +1,6 @@
 @extends('admin.layouts.sellermastersoyuz')
 
-@section('title',"$products->name -")
+@section('title',__(":product -",['product' => $products->name]))
 @section('body')
 <div class="box">
     <div class="box-header">
@@ -10,12 +10,14 @@
 
         <ul class="nav nav-tabs" role="tablist" id="myTab">
             <li role="presentation" class="active"><a href="#lis" aria-controls="home" role="tab"
-                    data-toggle="tab">Product</a></li>
+                    data-toggle="tab">{{ __('Product') }}</a></li>
 
 
-            <li role="presentation"><a href="#tags" aria-controls="messages" role="tab" data-toggle="tab">Faq</a></li>
+            <li role="presentation"><a href="#tags" aria-controls="messages" role="tab" data-toggle="tab">{{ __('FAQ\'s') }}</a></li>
 
-            <li role="presentation"><a href="#rel" aria-controls="messages" role="tab" data-toggle="tab">Related</a>
+            <li role="presentation"><a href="#rel" aria-controls="messages" role="tab" data-toggle="tab">
+                {{__('Related')}}
+            </a>
             </li>
 
 

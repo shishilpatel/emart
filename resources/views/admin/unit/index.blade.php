@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','All Units |')
+@section('title',__('All Units |'))
 @section('body')
 
 @component('admin.component.breadcumb',['secondactive' => 'active'])
@@ -42,9 +42,15 @@
                       <thead>
                         <tr>
                           <th>#</th>
-                          <th>Unit Type</th>
-                          <th>Manage Values</th>
-                          <th>Action</th>
+                          <th>
+                            {{__("Unit Type")}}
+                          </th>
+                          <th>
+                            {{__("Manage Values")}}
+                          </th>
+                          <th>
+                            {{__("Action")}}
+                          </th>
                         </tr>
                       </thead>
           
@@ -64,7 +70,9 @@
                               @endisset
                             </p>
                             @if($unit->title != 'Color' && $unit->title != 'Colour' && $unit->title != 'colour' && $unit->title != 'color')
-                              <a href="{{ route('unit.values',$unit->id) }}">Manage Values</a>
+                              <a href="{{ route('unit.values',$unit->id) }}">
+                                {{__("Manage Values")}}
+                              </a>
                             @endif
                           </td>
           
@@ -101,7 +109,7 @@
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h4 class="modal-title" id="myModalLabel">Edit {{ $unit->title }}</h4>
+                  <h4 class="modal-title" id="myModalLabel">{{__("Edit")}} {{ $unit->title }}</h4>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                  
                 </div>
@@ -113,7 +121,7 @@
                         {{ method_field('PUT') }}
                       
                         <div class="form-group">
-                          <label for="">Edit Title:</label>
+                          <label for="">{{ __("Edit Title:") }}</label>
                           <input type="text" name="title" class="form-control" value="{{ $unit->title }}">
                         </div>
 
@@ -138,7 +146,9 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title" id="myModalLabel">Add Unit</h4>
+            <h4 class="modal-title" id="myModalLabel">
+              {{__("Add Unit")}}
+            </h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
            
           </div>
@@ -151,7 +161,7 @@
               <div class="form-group">
                 
                 <label>
-                  Title: <span class="required">*</span>
+                  {{__("Title:")}} <span class="required">*</span>
                 </label>
                 
                 <input type="text" name="title" class="form-control">
@@ -159,7 +169,7 @@
 
                 <div class="form-group">
                 <label for="first-name">
-                  Status:
+                  {{ __('Status:') }}
                 </label>
                 <br>
                 <label class="switch">

@@ -10,16 +10,8 @@ use App\ProductValues;
 use App\VariantImages;
 use File;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Image;
-
-/*==========================================
-=            Author: Media City            =
-Author URI: https://mediacity.co.in
-=            Developer: Media City         =
-=            Copyright (c) 2020            =
-==========================================*/
 
 class SellerAddvariantController extends Controller
 {
@@ -47,14 +39,14 @@ class SellerAddvariantController extends Controller
 
             if ($conversion_rate == null) {
 
-                notify()->warning('Variant already exist ! Kindly Update that');
+                notify()->warning(__('Variant already exist ! Kindly Update that'));
 
                 return back();
             } else {
                 foreach ($conversion_rate as $e => $new) {
 
                     if ($new == 0) {
-                        notify()->warning('Variant already exist ! Kindly Update that');
+                        notify()->warning(__('Variant already exist ! Kindly Update that'));
                         return back();
                     } else {
 
@@ -83,7 +75,7 @@ class SellerAddvariantController extends Controller
         } else {
             if ($all_def->count() < 1) {
 
-                notify()->warning('Atleast one variant should be set to default !');
+                notify()->warning(__('Atleast one variant should be set to default !'));
 
                 return back();
 
@@ -124,7 +116,7 @@ class SellerAddvariantController extends Controller
                 $constraint->aspectRatio();
             });
 
-            $img->save($thumbpath.'/' . $thumb, 95);
+            $img->save($thumbpath . '/' . $thumb, 95);
 
             $varimage->main_image = $name;
 
@@ -148,7 +140,7 @@ class SellerAddvariantController extends Controller
                 $constraint->aspectRatio();
             });
 
-            $img->save($hoverthumbpath.'/'.$hoverthumb, 95);
+            $img->save($hoverthumbpath . '/' . $hoverthumb, 95);
 
         }
 
@@ -273,30 +265,29 @@ class SellerAddvariantController extends Controller
             $vars->delete();
         } else {
 
-            notify()->error('Default variant cannot be deleted !');
+            notify()->error(__('Default variant cannot be deleted !'));
 
             return back();
 
         }
 
-        notify()->success('Variant has been Deleted !');
+        notify()->success(__('Variant has been Deleted !'));
 
         return back();
-        
+
     }
 
     public function update(Request $request, $id)
     {
-        
+
         $request->validate(['min_order_qty' => 'numeric|min:1'], ['min_order_qty.min' => 'Minimum order quantity must be atleast 1']);
 
         $vars = AddSubVariant::find($id);
 
-        if(!$vars){
+        if (!$vars) {
             notify()->error('Product variant not found !');
             return back();
         }
-
 
         $array2 = AddSubVariant::where('pro_id', $vars->pro_id)
             ->get();
@@ -306,7 +297,7 @@ class SellerAddvariantController extends Controller
             ->get();
 
         if ($all_def2->count() < 1) {
-            notify()->warning('Atleast one value should be set to default !');
+            notify()->warning(__('Atleast one value should be set to default !'));
             return back();
         }
 
@@ -330,11 +321,11 @@ class SellerAddvariantController extends Controller
 
                 $msg2 = __("Buy Now Before stock goes again !");
 
-                $getusers->each(function ($user) use($vars,$proname,$msg2) {
-                    try{
+                $getusers->each(function ($user) use ($vars, $proname, $msg2) {
+                    try {
                         Mail::to($user->email)->send(new ProductStockNotifications($vars, $msg2, $proname));
                         \DB::table('product_stock_subscription')->where('email', '=', $user->email)->delete();
-                    }catch(\Exception $e){
+                    } catch (\Exception $e) {
                         Log::error('Failed to sent product stock mail');
                     }
                 });
@@ -415,7 +406,7 @@ class SellerAddvariantController extends Controller
 
             /** Storing Second thumbnail for Hover ONLY FOR IMAGE 2 */
 
-            if ($varimage->image2 != '' && file_exists(public_path().'/variantimages/hoverthumbnail/' . $varimage->image2)) {
+            if ($varimage->image2 != '' && file_exists(public_path() . '/variantimages/hoverthumbnail/' . $varimage->image2)) {
                 unlink(public_path() . '/variantimages/hoverthumbnail/' . $varimage->image2);
             }
 
@@ -482,7 +473,7 @@ class SellerAddvariantController extends Controller
 
             if ($varimage->image4 == $varimage->main_image) {
 
-                if ($varimage->main_image !='' && file_exists($thumbpath . '/' . $varimage->main_image)) {
+                if ($varimage->main_image != '' && file_exists($thumbpath . '/' . $varimage->main_image)) {
                     unlink($thumbpath . '/' . $varimage->main_image);
                 }
 
@@ -583,7 +574,7 @@ class SellerAddvariantController extends Controller
         $newstock = ($current_stock) + ($addstock);
 
         if ($newstock < 0) {
-            notify()->error('Stock cannot be less than 0 !');
+            notify()->error(__('Stock cannot be less than 0 !'));
             return back();
         }
 
@@ -603,7 +594,7 @@ class SellerAddvariantController extends Controller
         } else {
 
             if ($all_def2->count() <= 1) {
-                notify()->warning('Atleast one value should be set to default !');
+                notify()->warning(__('Atleast one value should be set to default !'));
                 return back();
             }
         }
@@ -630,12 +621,12 @@ class SellerAddvariantController extends Controller
 
                     $vars->update($input);
 
-                    notify()->success('Variant has been Updated !');
+                    notify()->success(__('Variant has been Updated !'));
 
                     return redirect()->route('seller.add.var', $vars->pro_id);
                 } else {
 
-                    notify()->success('Linked Variant already exist !');
+                    notify()->success(__('Linked Variant already exist !'));
 
                     return back();
                 }
@@ -657,13 +648,13 @@ class SellerAddvariantController extends Controller
 
                             $vars->update($input);
 
-                            notify()->success('Linked Variant Updated !');
+                            notify()->success(__('Linked Variant Updated !'));
 
                             return redirect()->route('seller.add.var', $vars->pro_id);
 
                         } else {
 
-                            notify()->warning('Linked Variant exist !');
+                            notify()->warning(__('Linked Variant exist !'));
 
                             return back();
                         }
@@ -687,7 +678,7 @@ class SellerAddvariantController extends Controller
 
         $vars->update($input);
 
-        notify()->success('Variant Updated !');
+        notify()->success(__('Variant Updated !'));
 
         return redirect()->route('seller.add.var', $vars->pro_id);
 
@@ -817,7 +808,7 @@ class SellerAddvariantController extends Controller
             return response()
                 ->json(array(
                     'count' => $c,
-                    "msg" => "Atleast one value should set to be default",
+                    "msg" => __("Atleast one value should set to be default"),
                 ));
         }
 
@@ -834,7 +825,7 @@ class SellerAddvariantController extends Controller
 
         return response()
             ->json(array(
-                'msg' => 'Default Variant is changed !',
+                'msg' => __('Default Variant is changed !'),
                 'count' => $c,
                 'id' => $id,
             ));

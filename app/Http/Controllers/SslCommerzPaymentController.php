@@ -19,7 +19,7 @@ class SslCommerzPaymentController extends Controller
         require_once 'price.php';
 
         if(session()->get('currency')['id'] !='BDT'){
-            notify()->error('Sorry ONLY BDT (Takka) currency supported !');
+            notify()->error(__("Sorry ONLY :currency currency supported !",['currency' => 'BDT (Takka)']));
             return redirect(route('order.review'));
         }
 
@@ -32,14 +32,14 @@ class SslCommerzPaymentController extends Controller
 
         if (round($request->actualtotal, 2) != $total) {
 
-            notify()->error('Payment has been modifed !','Please try again !');
+            notify()->error(__('Payment has been modifed !'),__('Please try again !'));
             return redirect(route('order.review'));
 
         }
 
         if (round(Crypt::decrypt($request->amount), 2) < 10) {
 
-            notify()->error('Amount is less than 10 not allowed');
+            notify()->error(__('Amount is less than 10 not allowed'));
             return redirect(route('order.review'));
         }
 
@@ -49,7 +49,7 @@ class SslCommerzPaymentController extends Controller
 
         if (!$address) {
 
-            notify()->error('Payment has been modifed !','Please try again !');
+            notify()->error(__('Payment has been modifed !'),__('Please try again !'));
             return redirect(route('order.review'));
         }
 
@@ -134,7 +134,7 @@ class SslCommerzPaymentController extends Controller
             $failedTranscations->txn_id = $tran_id;
             $failedTranscations->user_id = Auth::user()->id;
             $failedTranscations->save();
-            notify()->error('Payment Failed !');
+            notify()->error(__('Payment Failed !'));
             return redirect(route('order.review'));
         }
 
@@ -148,7 +148,7 @@ class SslCommerzPaymentController extends Controller
         $failedTranscations->user_id = auth()->id();
         $failedTranscations->save();
 
-        notify()->error('Payment failed !');
+        notify()->error(__('Payment Failed !'));
         return redirect(route('order.review'));
 
     }

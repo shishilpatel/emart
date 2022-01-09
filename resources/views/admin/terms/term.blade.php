@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Terms Settings | ')
+@section('title',__('Terms Settings | '))
 @section('body')
 
 @component('admin.component.breadcumb',['secondactive' => 'active'])
@@ -22,15 +22,15 @@
       <div class="col-md-12">
           <div class="card m-b-30">
               <div class="card-header">
-                  <h5 class="card-title">Terms Settings</h5>
+                  <h5 class="card-title">{{ __("Terms Settings") }}</h5>
               </div>
               <div class="card-body">
                   <ul class="nav nav-tabs custom-tab-line mb-3" id="defaultTabLine" role="tablist">
                       <li class="nav-item">
-                          <a class="nav-link active" id="home-tab-line" data-toggle="tab" href="#home-line" role="tab" aria-controls="home-line" aria-selected="true"><i class="feather icon-user mr-2"></i>User term setting</a>
+                          <a class="nav-link active" id="home-tab-line" data-toggle="tab" href="#home-line" role="tab" aria-controls="home-line" aria-selected="true"><i class="feather icon-user mr-2"></i>{{ __("User term setting") }}</a>
                       </li>
                       <li class="nav-item">
-                          <a class="nav-link" id="profile-tab-line" data-toggle="tab" href="#profile-line" role="tab" aria-controls="profile-line" aria-selected="false"><i class="feather icon-users mr-2"></i>Seller term setting</a>
+                          <a class="nav-link" id="profile-tab-line" data-toggle="tab" href="#profile-line" role="tab" aria-controls="profile-line" aria-selected="false"><i class="feather icon-users mr-2"></i>{{ __("Seller term setting") }}</a>
                       </li>
                       
                   </ul>
@@ -40,8 +40,8 @@
                           @csrf
 
                           <div class="form-group">
-                              <label for="title">Title: <span class="required">*</span></label>
-                              <input required placeholder="enter title" id="title" class="form-control" type="text" name="title" value="@if(old('title')) {{ old('title') }} @elseif(isset($userTerm)){{ $userTerm['title'] }}@endif">
+                              <label for="title">{{__("Title:")}} <span class="required">*</span></label>
+                              <input required placeholder="{{ __("Enter title") }}" id="title" class="form-control" type="text" name="title" value="@if(old('title')) {{ old('title') }} @elseif(isset($userTerm)){{ $userTerm['title'] }}@endif">
 
                               @error('title')
                                 <p class="text-danger">{{ $message }}</p>
@@ -49,8 +49,8 @@
                           </div>
 
                           <div class="form-group">
-                              <label>Description: <span class="required">*</span></label>
-                              <textarea placeholder="enter content" class="editor" name="description" id="description" cols="30" rows="10">@if(old('content')) {{ old('content') }} @elseif(isset($userTerm)){!! $userTerm['description'] !!}@endif</textarea>
+                              <label>{{__("Description:")}} <span class="required">*</span></label>
+                              <textarea placeholder="{{__('Enter content')}}" class="editor" name="description" id="description" cols="30" rows="10">@if(old('content')) {{ old('content') }} @elseif(isset($userTerm)){!! $userTerm['description'] !!}@endif</textarea>
 
                               @error('description')
                                 <p class="text-danger">{{ $message }}</p>
@@ -69,8 +69,8 @@
                           @csrf
   
                           <div class="form-group">
-                              <label for="title">Title: <span class="required">*</span></label>
-                              <input required placeholder="enter title" id="title" class="form-control" type="text" name="title" value="@if(old('title')) {{ old('title') }} @elseif(isset($sellerTerm)){{ $sellerTerm['title'] }}@endif">
+                              <label for="title">{{__('Title:')}} <span class="required">*</span></label>
+                              <input required placeholder="{{ __("Enter title") }}" id="title" class="form-control" type="text" name="title" value="@if(old('title')) {{ old('title') }} @elseif(isset($sellerTerm)){{ $sellerTerm['title'] }}@endif">
   
                               @error('title')
                                 <p class="text-danger">{{ $message }}</p>
@@ -78,8 +78,8 @@
                           </div>
   
                           <div class="form-group">
-                              <label>Description: <span class="required">*</span></label>
-                              <textarea placeholder="enter content" class="editor" name="description" id="description" cols="30" rows="10">@if(old('content')) {{ old('content') }} @elseif(isset($sellerTerm)){!! $sellerTerm['description'] !!}@endif</textarea>
+                              <label>{{__("Description:")}} <span class="required">*</span></label>
+                              <textarea placeholder="{{ __('Enter content') }}" class="editor" name="description" id="description" cols="30" rows="10">@if(old('content')) {{ old('content') }} @elseif(isset($sellerTerm)){!! $sellerTerm['description'] !!}@endif</textarea>
   
                               @error('description')
                                 <p class="text-danger">{{ $message }}</p>

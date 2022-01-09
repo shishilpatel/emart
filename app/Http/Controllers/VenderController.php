@@ -16,7 +16,6 @@ use App\Order;
 use App\Product;
 use App\Return_Product;
 use App\SellerPayout;
-use App\SellerSubscription;
 use App\SimpleProduct;
 use App\Store;
 use App\User;
@@ -25,7 +24,6 @@ use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Intervention\Image\ImageManagerStatic as Image;
-use Yajra\DataTables\Facades\DataTables;
 
 class VenderController extends Controller
 {
@@ -158,12 +156,12 @@ class VenderController extends Controller
 
                     $updateSetting->user_id = Auth::user()->id;
                     $updateSetting->save();
-                    notify()->success('Invoice Setting Updated !');
+                    notify()->success(__('Invoice Setting Updated !'));
                     return back();
 
                 } else {
 
-                    notify()->warning('Access denied !');
+                    notify()->warning(__('Access denied !'));
                     return redirect('/');
 
                 }
@@ -238,7 +236,7 @@ class VenderController extends Controller
             }
 
             $cat->update($input);
-            notify()->success('Store details updated !');
+            notify()->success(__('Store details updated !'));
             return back();
         }
 
@@ -257,7 +255,7 @@ class VenderController extends Controller
         $store = Store::find($id);
 
         if(!$store){
-            notify()->error('Your store not found !','404');
+            notify()->error(__('Your store not found !'),'404');
             return back();
         }
 
@@ -306,7 +304,7 @@ class VenderController extends Controller
             
         
         $store->update($input);
-        notify()->success('Store details updated !',$store->name);
+        notify()->success(__('Store details updated !'),$store->name);
         return back();
 
     }
@@ -337,7 +335,7 @@ class VenderController extends Controller
 
         }
 
-        notify()->success('Request for delete store has been submitted !', 'Success');
+        notify()->success(__('Request for delete store has been submitted !'), 'Success');
         return redirect('/');
     }
 
@@ -384,7 +382,7 @@ class VenderController extends Controller
 
         $sellerorders->labels($totalorder->pluck('month'));
 
-        $sellerorders->title('Total Orders In ' . date('Y'))->label('Sales')->dataset('Months', 'area', $totalorder->pluck('count'))->options([
+        $sellerorders->title(__('Total Orders In :year',['year' => date('Y')]))->label(__('Sales'))->dataset(__('Months'), 'area', $totalorder->pluck('count'))->options([
             'fill' => 'true',
             'borderColor' => '#51C1C0',
             'shadow' => true,
@@ -518,17 +516,17 @@ class VenderController extends Controller
         $ifstore = auth()->user()->store;
 
         if (!$ifstore) {
-            notify()->error('Sorry Your store is not created yet ! Please apply for seller account under My account menu !');
+            notify()->error(__('Sorry Your store is not created yet ! Please apply for seller account under My account menu !'));
             return back();
         }
 
         if ($ifstore->user->status == '0') {
-            notify()->error('Your account is deactive please contact admin regarding this !', 'Account Deactive');
+            notify()->error(__('Your account is deactive please contact admin regarding this !', 'Account Deactive'));
             return back();
         }
 
         if ($ifstore->apply_vender == '0' || $ifstore->status == '0') {
-            notify()->error('Sorry Your store is not active yet ! once it will active you can start selling your items');
+            notify()->error(__('Sorry Your store is not active yet ! once it will active you can start selling your items'));
             return redirect('/');
         }
 
@@ -550,7 +548,7 @@ class VenderController extends Controller
             ));
         }
 
-        notify()->success('Active Store');
+        notify()->success(__('Active Store'));
 
         return back();
     }
@@ -661,47 +659,11 @@ class VenderController extends Controller
 
         $user->update($input);
 
-        notify()->success('Your Profile has been updated !');
+        notify()->success(__('Your Profile has been updated !'));
         return back();
 
     }
 
-    public function subscriptions(){
-
-        if(env('ENABLE_SELLER_SUBS_SYSTEM') == 0){
-            notify()->error('Subscription system is currently disabled !');
-            return back();
-        }
-
-        $data = SellerSubscription::with('plan')->whereHas('plan')->where('user_id',auth()->id());
-
-        if(request()->ajax()){
-            return DataTables::of($data)
-                  ->addIndexColumn()
-                  ->addColumn('name',function($row){
-                       return $row->plan->name;
-                  })
-                  ->addColumn('amount',function($row){
-                      return $row->paid_currency.' '.$row->paid_amount;
-                  })
-                  ->addColumn('start_date',function($row){
-                    return date('d-m-Y | h:i A',strtotime($row->start_date));
-                  })
-                  ->addColumn('end_date',function($row){
-                    return date('d-m-Y | h:i A',strtotime($row->end_date));
-                  })
-                  ->addColumn('status',function($row){
-                    if ($row->status == 1) {
-                        return '<span class="badge badge-pill badge-success">Active</span>';
-                    } else {
-                        return '<span class="badge badge-pill badge-danger">Deactive</span>';
-                    }
-                  })
-                  ->rawColumns(['status'])
-                  ->make(true);
-        }
-
-        return view('seller.subscription.list');
-    }
+    
 
 }

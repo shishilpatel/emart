@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Add a new zone | ')
+@section('title',__('Add a new zone | '))
 @section('body')
 
 @component('admin.component.breadcumb',['secondactive' => 'active'])
@@ -36,14 +36,14 @@
                   <div class="row">
                         <div class="form-group col-md-6">
                           <label>
-                            Zone Name: <span class="required">*</span>
+                            {{__("Zone Name:")}} <span class="required">*</span>
                           </label>
-                          <input required placeholder="Ex. North Zone" value="" type="text" class="form-control" name="title">
+                          <input required placeholder="{{ __("Ex. North Zone") }}" value="" type="text" class="form-control" name="title">
                         </div>
                         
                         <div class="form-group col-md-6">
                             <label>
-                              Country: <span class="required">*</span>
+                              {{__("Country")}}: <span class="required">*</span>
                             </label>
                             <select name="country_id" class="form-control select2 " id="country_id">
                             <option value="0">Please Choose</option>
@@ -60,7 +60,6 @@
                               </option>
                               @endforeach
                             </select>
-                             <p class="mt-1">Please Choose Category</p>
                         </div>
                            
                         
@@ -70,18 +69,18 @@
   
                         <div class="form-group col-md-6">
                           <label>
-                            Select Zone: <span class="required">*</span>
+                            {{__("Select Zone:")}} <span class="required">*</span>
                           </label>
                           <select name="name[]" multiple="multiple" class="js-example-basic-single" id="upload_id" >
                           </select>
-                          <p class="mt-2">(Select States for Zone)</p>
+                          <p class="mt-2">({{__("Select States for Zone")}})</p>
                        
                          <a   onclick="SelectAllCountry2()" id="btn_sel" class="hide btn btn-success " isSelected="no"> 
-                          <span>Select All  </span><i class="feather icon-check-square"></i>
+                          <span>{{__("Select All")}}  </span><i class="feather icon-check-square"></i>
                          </a>
 
                          <a onclick="RemoveAllCountry2()" id="btn_rem"class="hide btn btn-danger" isSelected="yes"> 
-                          <span>Remove All  </span><i class="feather icon-trash-2"></i>
+                          <span>{{__("Remove All")}}  </span><i class="feather icon-trash-2"></i>
                          </a>
 
                         </div>
@@ -92,17 +91,17 @@
                                
                         <div class="form-group col-md-6">
                           <label>
-                            Code: <span class="required">*</span>
+                            {{__("Code")}}: <span class="required">*</span>
                           </label>
                           
                         
                             <input type="text" id="first-name" name="code" class="form-control">
-                            <p class="txt-desc">Please Enter code</p>
+                            <p class="txt-desc">{{ __("Please Enter code") }}</p>
                          
                         </div>
                         <div class="form-group col-md-6">
                           <label>
-                            Status:
+                            {{ __('Status:') }}
                           </label><br>
 
                           <label class="switch">
@@ -114,7 +113,9 @@
                          
                            
                            <input type="hidden" name="status" value="1" id="status3">
-                           <p class="txt-desc">Please Choose Status </p>
+                           <p class="txt-desc">
+                             {{__("Please Choose Status")}}
+                           </p>
                           
                         </div>
                 <!-- /.box-body -->
@@ -132,10 +133,8 @@
 </div>
 @endsection
 @section('custom-script')
-  <script>var baseUrl = "<?= url('/') ?>";</script>
+  <script>var baseUrl = @json(url('/'));</script>
   <script src="{{ url('js/zone.js') }}"></script> 
-
-
 @endsection  
                   
                   

@@ -9,7 +9,7 @@
     content="{{substr(strip_tags($product->product_detail), 0, 100)}}{{strlen(strip_tags( $product->product_detail))>100 ? '...' : ""}}" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="{{ url()->full() }}" />
-  <meta property="og:image" content="{{ url('images/digital-products/'.$product->thumbnail) }}" />
+  <meta property="og:image" content="{{ url('images/simple_products/'.$product->thumbnail) }}" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:description"
     content="{{substr(strip_tags($product->product_detail), 0, 100)}}{{strlen(strip_tags( $product->product_detail))>100 ? '...' : ""}}" />
@@ -219,21 +219,23 @@
               <div class="owl-carousel sidebar-carousel custom-carousel owl-theme outer-top-ss">
 
                 @foreach($hotdeals as $deal)
+
+                
                 
                   <div class="item hot-deals-item">
                       <div class="products">
                         <div class="hot-deal-wrapper">
                           <div class="image">
-                            <a href="{{ $deal['producturl'] }}" title="{{ $deal['productname'][session()->get('changed_language')] ?? $deal['productname'][config('fallback_locale')] }}">
+                            <a href="{{ $deal['producturl'] }}" title="{{ $deal['productname'][session()->get('changed_language')] ?? $deal['productname'][config('translatable.fallback_locale')] }}">
                               
                               
                               <img class="owl-lazy"
                                 data-src="{{ $deal['thumbnail'] }}"
-                                alt="{{ $deal['productname'][session()->get('changed_language')] ?? $deal['productname'][config('fallback_locale')] }}">
+                                alt="{{ $deal['productname'][session()->get('changed_language')] ?? $deal['productname'][config('translatable.fallback_locale')] }}">
 
                               <img class="owl-lazy hover-image"
                                 src="{{ $deal['hover_thumbnail'] }}"
-                                alt="{{ $deal['productname'][session()->get('changed_language')] ?? $deal['productname'][config('fallback_locale')] }}" />
+                                alt="{{ $deal['productname'][session()->get('changed_language')] ?? $deal['productname'][config('translatable.fallback_locale')] }}" />
 
                             </a>
                           </div>
@@ -256,8 +258,8 @@
 
                         <div class="product-info text-left m-t-20">
                           <h3 class="name"><b><a href="{{ $deal['producturl'] }}"
-                                title="{{ $deal['productname'][session()->get('changed_language')] ?? $deal['productname'][config('fallback_locale')] }}">
-                                {{ $deal['productname'][session()->get('changed_language')] ?? $deal['productname'][config('fallback_locale')] }}</a></b></h3>
+                                title="{{ $deal['productname'][session()->get('changed_language')] ?? $deal['productname'][config('translatable.fallback_locale')] }}">
+                                {{ $deal['productname'][session()->get('changed_language')] ?? $deal['productname'][config('translatable.fallback_locale')] }}</a></b></h3>
                          
                           @if($deal['rating'] != '0')
                           <div class="">
@@ -310,7 +312,7 @@
 
                                 if(!empty(Session::has('cart'))){
                                   foreach (Session::get('cart') as $scart) {
-                                    if($deal['product_type'] == 'variant' && $deal->id == $scart['variantid']){
+                                    if($deal['product_type'] == 'variant' && $deal['variantid'] == $scart['variantid']){
                                       $in_session = 1;
                                     }
                                   }
@@ -463,7 +465,7 @@
 
               <div id="details-container"></div>
 
-              <div class="product-info">
+              <div class="product-info product-x">
                 <div class="stock-container info-container">
                   <div class="row">
                     <div class="col-lg-8">
@@ -524,7 +526,7 @@
 
                         $count = ($count * 3) * 5;
 
-                        if ($count != "") {
+                        if ($count != "" && $count != 0) {
                           $rat = $sub_total / $count;
 
                           $ratings_var = ($rat * 100) / 5;
@@ -949,20 +951,34 @@
 
 
                   <!-- ============================ small-screen start ========================================= -->
-
-                  <!-- ============================ small-screen end ========================================= -->
-                  @if(isset($product->key_features))
                   <hr>
-                  <div class="description-container">
-                    <div class="description-heading">{{ __('staticwords.Highlight') }}</div>
-                    <div class="description-list">
-                      {!! $product->key_features !!}
-                    </div>
-                    <div class="report-text"><a href="#reportproduct" data-toggle="modal" title="">
-                        <img alt="commenticon"
-                          src="{{url('/images/comment.png')}}">{{ __('staticwords.rprotext') }}.</a></div>
-                  </div><!-- /.description-container -->
-                  @endif
+                  <!-- ============================ small-screen end ========================================= -->
+                  
+                  <div class="row">
+                    @if(isset($product->key_features))
+                    
+                      <div class="col-md-6 description-container">
+                        <div class="description-heading">{{ __('staticwords.Highlight') }}</div>
+                        <div class="description-list">
+                          {!! $product->key_features !!}
+                        </div>
+                        <div class="report-text"><a href="#reportproduct" data-toggle="modal" title="">
+                            <img alt="commenticon"
+                              src="{{url('/images/comment.png')}}">{{ __('staticwords.rprotext') }}.</a></div>
+                      </div><!-- /.description-container -->
+
+                      @if(isset($product->sizechart) && $product->size_chart != '' && $product->sizechart->status == 1)
+                        <div class="col-md-6">
+                          <h6 class="ml-3 float-right">
+                            <a class="text-primary" data-toggle="modal" data-target="#previewModal" role="button">
+                              <i class="fa fa-bar-chart"></i> {{__("View size chart")}}
+                            </a>
+                          </h6>
+                        </div>
+                      @endif
+
+                    @endif
+                  </div>
 
                 </div><!-- /.product-info -->
               </div><!-- /.col-sm-7 -->
@@ -1180,8 +1196,8 @@
                     </div>
 
                     <hr>
-                    <a title="View all reviews" class="font-weight-bold pull-right"
-                      href="{{ route('allreviews',$product->id) }}">{{ __('staticwords.vall') }}</a>
+                    <a title="{{ __("View all reviews") }}" class="font-weight-bold pull-right"
+                      href="{{ route('allreviews',['id' => $product->id, 'type' => 's']) }}">{{ __('staticwords.vall') }}</a>
                     <h5 class="title">{{ __('staticwords.recReviews') }}</h5>
 
                     <hr>
@@ -1936,8 +1952,6 @@
 
                   @endforelse
 
-
-
                 </div>
               </div>
             </div>
@@ -2507,6 +2521,31 @@
     </div>
   </div>
 
+  <!-- Size chart modal -->
+  @if(isset($product->sizechart) && $product->size_chart != '' && $product->sizechart->status == 1)
+  <div class="modal fade" id="previewModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="p-2 modal-title">
+                {{__('Preview')}}
+            </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body previewTable">
+            @include('admin.sizechart.previewtable',['template' => $product->sizechart]) 
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger-rgba" data-dismiss="modal">Close</button>
+        </div>
+        </div>
+    </div>
+  </div>
+@endif
+<!-- size chart model end -->
+
 
   @endsection
   @section('script')
@@ -2519,7 +2558,7 @@
   <script>
     var baseUrl = @json(url('/'));
   </script>
-  <script src='//unpkg.com/spritespin@x.x.x/release/spritespin.js' type='text/javascript'></script>
+  <script src='https://unpkg.com/spritespin@x.x.x/release/spritespin.js' type='text/javascript'></script>
   <script src="{{ url('js/detailpage.js') }}"></script>
   <script>
     var owl = $("#productgalleryItems");

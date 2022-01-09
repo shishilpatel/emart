@@ -31,7 +31,7 @@ class MolliePaymentController extends Controller
 
         if (round($request->actualtotal, 2) != $total) {
 
-            notify()->error('Payment has been modifed !','Please try again !');
+            notify()->error(__('Payment has been modifed !'),__('Please try again !'));
             return redirect(route('order.review'));
         }
 

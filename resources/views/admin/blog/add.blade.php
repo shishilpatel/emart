@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Create a Blog post')
+@section('title',__('Create a Blog post'))
 @section('body')
 
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
@@ -19,8 +19,7 @@
 <div class="col-md-6">
   <div class="widgetbar">
 
-  <a href="{{ url('admin/blog') }}" class="btn btn-primary-rgba mr-2"><i
-      class="feather icon-arrow-left mr-2"></i>Back</a>
+  <a href="{{ url('admin/blog') }}" class="btn btn-primary-rgba mr-2"><i class="feather icon-arrow-left mr-2"></i> {{ __("Back") }}</a>
 </div>
 </div>
 @endslot
@@ -34,7 +33,7 @@
         <div class="alert alert-danger" role="alert">
           @foreach($errors->all() as $error)
           <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true" style="color:red;">&times;</span></button></p>
+              <span aria-hidden="true">&times;</span></button></p>
           @endforeach
         </div>
       @endif
@@ -48,33 +47,32 @@
             {{csrf_field()}}
             <div class="form-group">
               <label class="control-label" for="first-name">
-                Heading <span class="required">*</span>
+                {{__('Heading')}} <span class="required">*</span>
               </label>
 
 
-              <input placeholder="Enter heading" type="text" id="first-name" name="heading" value="{{old('heading')}}"
+              <input placeholder="{{ __("Enter heading") }}" type="text" id="first-name" name="heading" value="{{old('heading')}}"
                 class="form-control col-md-12">
 
 
 
             </div>
             <div class="form-group">
-              <label class="control-label" for="first-name"> Description <span class="required">*</span>
+              <label class="control-label" for="first-name"> {{__('Description')}} <span class="required">*</span>
               </label>
 
               <textarea cols="2" id="editor1" name="des" rows="5">
               {{old('des')}}
              </textarea>
-              <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>(Please Enter
-                Description)</small>
+              <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>({{ __("Please Enter Description") }})</small>
 
 
             </div>
             <div class="form-group">
-              <label class="control-label" for="first-name"> Author Name <span class="required">*</span>
+              <label class="control-label" for="first-name"> {{__('Author Name')}} <span class="required">*</span>
               </label>
 
-              <input placeholder="Enter author name" type="text" id="first-name" name="user" value="{{old('user')}}"
+              <input placeholder="{{ __("Enter author name") }}" type="text" id="first-name" name="user" value="{{old('user')}}"
                 class="form-control col-md-12">
 
 
@@ -82,20 +80,20 @@
 
             </div>
             <div class="form-group">
-              <label class="control-label" for="first-name"> About Author (optional)
+              <label class="control-label" for="first-name"> {{__('About Author (optional)')}}
               </label>
 
-              <textarea placeholder="Write something about author" type="text" id="first-name" name="about"
+              <textarea placeholder="{{ __("Write something about author") }}" type="text" id="first-name" name="about"
                 value="{{old('about')}}" class="form-control col-md-12"></textarea>
 
 
 
             </div>
             <div class="form-group">
-              <label class="control-label" for="first-name"> Designation (optional)
+              <label class="control-label" for="first-name"> {{__("Designation (optional)")}}
               </label>
 
-              <input placeholder="Author Designation eg. Admin, CEO" type="text" id="first-name" name="post"
+              <input placeholder="{{ __("Author Designation eg. Admin, CEO") }}" type="text" id="first-name" name="post"
                 value="{{old('post')}}" class="form-control col-md-12">
               <p class="txt-desc">
 
@@ -103,7 +101,7 @@
 
             </div>
             <div class="form-group">
-              <label class="control-label" for="first-name"> Image <span class="required">*</span>
+              <label class="control-label" for="first-name"> {{__("Image")}} <span class="required">*</span>
               </label>
               <div class="input-group">
 
@@ -111,16 +109,15 @@
                     class="form-control">
                 <div class="input-group-append">
                     <span data-input="image"
-                        class="bg-primary text-light midia-toggle input-group-text">Browse</span>
+                        class="bg-primary text-light midia-toggle input-group-text">{{ __("Browse") }}</span>
                 </div>
               </div>
-              <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>(Choose Image for blog
-                post)</small>
+              <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>({{__("Choose Image for blog post")}})</small>
 
             </div>
             <div class="form-group">
               <label>
-                Status:
+                {{ __('Status:') }}
               </label><br>
               <label class="switch">
                 <input class="slider tgl tgl-skewed" type="checkbox" id="status" checked="checked">
@@ -128,15 +125,14 @@
               </label>
               <br>
               <input type="hidden" name="status" value="1" id="status3">
-              <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>(Choose status for your
-                post)</small>
+              <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>({{__("Choose status for your post")}})</small>
 
             </div>
             <div class="form-group">
               <button type="reset" class="btn btn-danger"><i class="fa fa-ban"></i>
-                Reset</button>
+                {{ __("Reset") }}</button>
               <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i>
-                Create</button>
+                {{ __('Create') }}</button>
             </div>
 
             <div class="clear-both"></div>
@@ -153,7 +149,7 @@
 @section('custom-script')
   <script>
       $(".midia-toggle").midia({
-          base_url: '{{ url('') }}',
+          base_url: @json(url('/')),
           directory_name: 'blog'
       });
   </script>

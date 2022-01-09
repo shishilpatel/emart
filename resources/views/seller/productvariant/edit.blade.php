@@ -1,5 +1,5 @@
-@extends("admin.layouts.sellermaster")
-@section('title','Edit Product Variant -')
+@extends("admin.layouts.sellermastersoyuz")
+@section('title',__("Edit Product Variant"))
 @section('body')
 
 @component('seller.components.breadcumb',['secondactive' => 'active'])
@@ -29,23 +29,25 @@
         <div class="col-md-12">
             <div class="card m-b-30">
                 <div class="card-header">
-                    <h5 class="card-title">   Edit Product Variant For <b>{{ $vars->products->name }}</b></h5>
+                    <h5 class="card-title"> {{__('Edit Product Variant For')}} <b>{{ $vars->products->name }}</b></h5>
                 </div>
                 <div class="card-body">
                     <form action="{{ route('seller.updt.var',$vars->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                     <ul class="nav nav-tabs custom-tab-line mb-3" id="defaultTabLine" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="home-tab-line" data-toggle="tab" href="#home-line" role="tab" aria-controls="home-line" aria-selected="true"><i class="feather icon-edit mr-2"></i>Edit Variant</a>
+                            <a class="nav-link active" id="home-tab-line" data-toggle="tab" href="#home-line" role="tab" aria-controls="home-line" aria-selected="true"><i class="feather icon-edit mr-2"></i>{{ __('Edit Variant') }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="profile-tab-line" data-toggle="tab" href="#profile-line" role="tab" aria-controls="profile-line" aria-selected="false"><i class="feather icon-database mr-2"></i>Edit Pricing & Weight</a>
+                            <a class="nav-link" id="profile-tab-line" data-toggle="tab" href="#profile-line" role="tab" aria-controls="profile-line" aria-selected="false"><i class="feather icon-database mr-2"></i>
+                            {{ __('Edit Pricing & Weight') }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="contact-tab-line" data-toggle="tab" href="#contact-line" role="tab" aria-controls="contact-line" aria-selected="false"><i class="feather icon-trending-up mr-2"></i>Manage Stock</a>
+                            <a class="nav-link" id="contact-tab-line" data-toggle="tab" href="#contact-line" role="tab" aria-controls="contact-line" aria-selected="false"><i class="feather icon-trending-up mr-2"></i>
+                            {{ __('Manage Stock') }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="image-tab-line" data-toggle="tab" href="#image-line" role="tab" aria-controls="image-line" aria-selected="false"><i class="feather icon-image mr-2"></i>Edit Images</a>
+                            <a class="nav-link" id="image-tab-line" data-toggle="tab" href="#image-line" role="tab" aria-controls="image-line" aria-selected="false"><i class="feather icon-image mr-2"></i>{{ __('Edit Images') }}</a>
                         </li>
                     </ul>
                     <div class="tab-content" id="defaultTabContentLine">
@@ -197,27 +199,28 @@
     
                             <div class="col-md-12 mt-3 form-group">
      
-                                <label>Set Default: <input {{ $vars->def ==1 ? "checked" : "" }} type="checkbox" name="def"></label>
+                                <label>{{__('Set Default')}}: <input {{ $vars->def ==1 ? "checked" : "" }} type="checkbox" name="def"></label>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="profile-line" role="tabpanel" aria-labelledby="profile-tab-line">
                             
                                 <div >
-                                    <label for="">Edit Additional Price For This Variant:</label>
+                                    <label for="">{{ __('Edit Additional Price For This Variant') }}:</label>
                                     <div class="row">
                                         <div class="col-md-5">
                                             <input required placeholder="Enter Price ex 499.99" value="{{ $vars->price }}" step=0.01 type="text" class="form-control editprice"  name="price" >
                                         </div>
                                     </div>
-                                    <small >Please enter Price In Positive or Negative
+                                    <small >{{ __('Please enter Price In Positive or Negative') }}
                                     </small>
                                    
                                     <div class="row">
                                         <div class="col-md-7">
                                             <p class="p-3 mb-2 bg-primary-rgba text-primary mt-2">
-                                                <b>Ex. </b>If for this product price is 100 and you enter +10 than price will be 110
-                                                <br> OR <br>
-                                                If for this product price is 100 and you enter -10 than price will be 90
+                                                <b> {{__('Ex.')}} </b>
+                                                {{__('If for this product price is 100 and you enter +10 than price will be 110')}}
+                                                <br> {{__("OR")}} <br>
+                                                {{__('If for this product price is 100 and you enter -10 than price will be 90')}}
                                             </p>
                                         </div>
                                     </div>
@@ -226,7 +229,7 @@
                                    
                                 </div>
                                 <div>
-                                    <label for="weight">Weight:</label>
+                                    <label for="weight">{{ __('Weight') }}:</label>
                                     <div class="row">
                                        
                                         <div class="col-md-4">
@@ -236,7 +239,9 @@
                                         </div>
                                         <div class="col-md-4">
                                             <select name="w_unit" class="select2 form-control">
-                                                <option value="">Please Choose</option>
+                                                <option value="">
+                                                    {{__('Please Choose')}}
+                                                </option>
                                                 @php
                                                 $unit = App\Unit::find(1);
                                                 @endphp
@@ -257,11 +262,12 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="">Edit Stock: <small><b>[ Current Stock: {{ $vars->stock }}</b>
+                                        <label for="">{{__("Edit Stock")}}: <small><b>[ {{__("Current Stock")}}: {{ $vars->stock }}</b>
                                                 ]</small></label>
                                         <input data-placement="bottom" id="stock" data-toggle="popover" data-trigger="focus"
                                             data-title="Need help?"
-                                            data-content="It will add stock in existing stock. For example you enter 10 and existing stock is 20 than total stock will be 30."
+                                            data-content="
+                                            {{__("It will add stock in existing stock. For example you enter 10 and existing stock is 20 than total stock will be 30.") }}"
                                             type="text" value="" name="stock" class="form-control">
         
                                     </div>
@@ -269,7 +275,7 @@
         
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="">Edit Min Order Qty:</label>
+                                        <label for="">{{ __('Edit Min Order Qty') }}:</label>
                                         <input type="text" value="{{ $vars->min_order_qty }}" name="min_order_qty"
                                             class="form-control">
                                     </div>
@@ -277,7 +283,7 @@
         
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="">Edit Max Order Qty:</label>
+                                        <label for="">{{__("Edit Max Order Qty")}}:</label>
                                         <input type="text" value="{{ $vars->max_order_qty }}" name="max_order_qty"
                                             class="form-control">
                                     </div>
@@ -298,7 +304,7 @@
                                             width="150" height="150" src="{{ url('images/imagechoosebg.png') }}" alt="">
                                         @endif
                                     
-                                        <h6 class="mt-2">Image 1</h6>
+                                        <h6 class="mt-2">{{ __("Image 1") }}</h6>
                                     <div class="card-footer">
                                         <div class="input-group mb-3">
                                             
@@ -313,7 +319,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <button cusid="{{ $vars->variantimages['id'] }}" id="btn-single"
-                                                    value="{{ $vars->variantimages['image1'] }}" title="Delete this?"
+                                                    value="{{ $vars->variantimages['image1'] }}" title="{{ __("Delete this?") }}"
                                                     class="btn btn-sm btn-block btn-danger btn-ema {{ $vars->variantimages['image1'] != $vars->variantimages['main_image'] ? '' : 'd-none' }}"
                                                     type="button">
                                                     <i class="fa fa-trash-o"></i>
@@ -322,7 +328,7 @@
 
                                             <div class="col-md-12">
                                                 <button disabled="disabled" id="btn-dis1"
-                                                    title="You cannot delete Default Image"
+                                                    title="{{ __('You cannot delete Default Image') }}"
                                                     class="btn btn-sm btn-block btn-danger btn-ema {{ $vars->variantimages['image1'] == $vars->variantimages['main_image'] ? "" : 'd-none' }}"
                                                     type="button">
                                                     <i class="fa fa-trash-o"></i>
@@ -353,7 +359,7 @@
                                             width="150" height="150" src="{{ url('images/imagechoosebg.png') }}" alt="">
                                         @endif
 
-                                        <h6 class="mt-2">Image 2</h6>
+                                        <h6 class="mt-2">{{ __('Image 2') }}</h6>
                                         <div class="card-footer">
                                             <div class="input-group mb-3">
                                                 
@@ -406,7 +412,7 @@
                                             class="mx-auto d-block">
                                         @endif
 
-                                        <h6 class="mt-2">Image 3</h6>
+                                        <h6 class="mt-2">{{ __('Image 3') }}</h6>
                                         <div class="card-footer">
                                             <div class="input-group mb-3">
                                                 
@@ -421,7 +427,7 @@
     
                                                 <div class="col-md-12">
                                                     <button cusid="{{ $vars->variantimages['id'] }}" id="btn-single3"
-                                                        value="{{ $vars->variantimages['image3'] }}" title="Delete this?"
+                                                        value="{{ $vars->variantimages['image3'] }}" title="{{ __('Delete this?') }}"
                                                         class="btn btn-sm btn-block btn-danger btn-ema {{ $vars->variantimages['image3'] != $vars->variantimages['main_image'] ? '' : 'd-none' }}"
                                                         type="button">
                                                         <i class="fa fa-trash-o"></i>
@@ -430,7 +436,7 @@
     
                                                 <div class="col-md-12">
                                                     <button id="btn-dis3" disabled="disabled"
-                                                        title="You cannot delete Default Image !"
+                                                        title="{{ __('You cannot delete Default Image !') }}"
                                                         class="btn btn-sm btn-block btn-danger {{ $vars->variantimages['image3'] == $vars->variantimages['main_image'] ? '' : 'd-none' }}"
                                                         type="button">
                                                         <i class="fa fa-trash-o"></i>
@@ -456,7 +462,7 @@
                                         class="mx-auto d-block">
                                     @endif
 
-                                    <h6 class="mt-2">Image 4</h6>
+                                    <h6 class="mt-2">{{ __('Image 4') }}</h6>
                                     <div class="card-footer">
                                         <div class="input-group mb-3">
                                             
@@ -474,7 +480,7 @@
 
                                             <div class="col-md-12">
                                                 <button cusid="{{ $vars->variantimages['id'] }}" id="btn-single4"
-                                                    value="{{ $vars->variantimages['image4'] }}" title="Delete this?"
+                                                    value="{{ $vars->variantimages['image4'] }}" title="{{  __('Delete this?')}}"
                                                     class="btn btn-sm btn-block btn-danger btn-ema {{ $vars->variantimages['image4'] != $vars->variantimages['main_image'] ? '' : 'd-none' }}"
                                                     type="button">
                                                     <i class="fa fa-trash-o"></i>
@@ -483,7 +489,7 @@
 
                                             <div class="col-md-12">
                                                 <button id="btn-dis4" disabled="disabled"
-                                                    title="You cannot delete Default Image !"
+                                                    title="{{ __('You cannot delete Default Image !') }}"
                                                     class="btn btn-sm btn-block btn-danger {{ $vars->variantimages['image4'] == $vars->variantimages['main_image'] ? "" : 'd-none' }}"
                                                     type="button">
                                                     <i class="fa fa-trash-o"></i>
@@ -514,7 +520,9 @@
                                             @endif
 
 
-                                            <h6 class="mt-2">Image 5</h6>
+                                            <h6 class="mt-2">
+                                                {{ __('Image 5') }}
+                                            </h6>
                                     <div class="card-footer">
                                         <div class="input-group mb-3">
                                             
@@ -541,7 +549,7 @@
 
                                             <div class="col-md-12">
                                                 <button id="btn-dis5" disabled="disabled"
-                                                    title="You cannot delete Default Image !"
+                                                    title="{{ __('You cannot delete Default Image !') }}"
                                                     class="btn btn-sm btn-block btn-danger {{ $vars->variantimages['image5'] == $vars->variantimages['main_image'] ? '' : 'd-none' }}"
                                                     type="button">
                                                     <i class="fa fa-trash-o"></i>
@@ -576,7 +584,9 @@
                                             class="mx-auto d-block">
                                         @endif
 
-                                        <h6 class="mt-2">Image 6</h6>
+                                        <h6 class="mt-2">
+                                            {{__('Image 6')}}
+                                        </h6>
                                         <div class="card-footer">
                                             <div class="input-group mb-3">
                                                 
@@ -594,7 +604,7 @@
 
                                                 <div class="col-md-12">
                                                     <button cusid="{{ $vars->variantimages['id'] }}" id="btn-single6"
-                                                        value="{{ $vars->variantimages['image6'] }}" title="Delete this?"
+                                                        value="{{ $vars->variantimages['image6'] }}" title="{{ __('Delete this?') }}"
                                                         class="btn btn-sm btn-block btn-danger btn-ema {{ $vars->variantimages['image6'] != $vars->variantimages['main_image'] ? '' : 'd-none' }}"
                                                         type="button">
                                                         <i class="fa fa-trash-o"></i>
@@ -603,7 +613,7 @@
 
                                                 <div class="col-md-12">
                                                     <button id="btn-dis6" disabled="disabled"
-                                                        title="You cannot delete Default Image !"
+                                                        title="{{ __('You cannot delete Default Image ') }}!"
                                                         class="btn btn-sm btn-block btn-danger {{ $vars->variantimages['image6'] == $vars->variantimages['main_image'] ? '' : 'd-none' }}"
                                                         type="button">
                                                         <i class="fa fa-trash-o"></i>
@@ -624,7 +634,7 @@
                                    
                                     <div class="row">
                                         <div class="col-md-8">
-                                            <label>Select Default Image: </label>
+                                            <label>{{ __('Select Default Image') }}: </label>
                                             <select name="defimage" id="defimage" class="form-control select2">
 
                                                 @if($vars->variantimages && $vars->variantimages['image1'] != null)
@@ -672,13 +682,6 @@
 
             
             
-                                        
-
-                                        
-                                            
-
-
-
 
 
                             </div>
@@ -687,8 +690,8 @@
                     <div class=" form-group mt-3">
                         
                         <button @if(env('DEMO_LOCK')==0) type="submit" onclick="formty()" @else disabled="disabled"
-                            title="This action is disabled in demo !" @endif class="float-right btn btn-primary-rgba">
-                            <i class="feather icon-save"></i> Update Variant
+                            title="{{ __('This action is disabled in demo !') }}" @endif class="float-right btn btn-primary-rgba">
+                            <i class="feather icon-save"></i> {{__('Update Variant')}}
                         </button>
     
                         
@@ -701,8 +704,6 @@
     </div>
    </div>
 </div>
-
-
 
 @endsection     
                                           

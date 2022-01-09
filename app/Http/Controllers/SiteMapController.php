@@ -9,7 +9,7 @@ class SiteMapController extends Controller
     public function sitemapGenerator(){
 
         SitemapGenerator::create(url('/'))->writeToFile('sitemap.xml');
-        return back()->with('added','Sitemap generated successfully !');
+        return back()->with('added',__('Sitemap generated successfully !'));
 
     }
 

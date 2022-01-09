@@ -14,8 +14,8 @@ use App\Footer;
 use App\FooterMenu;
 use App\Genral;
 use App\Jobs\GuestCartPriceChange;
-use App\Language;
 use App\Location;
+use App\Mostsearched;
 use App\multiCurrency;
 use App\Seo;
 use App\Social;
@@ -25,7 +25,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -127,7 +126,8 @@ class AppServiceProvider extends ServiceProvider
                     'auto' => AutoDetectGeo::first(),
                     'widget3items' => $widget3items ?? '',
                     'widget4items' => $widget4items ?? '',
-                    'vendor_system' => $vendor_system ?? ''
+                    'vendor_system' => $vendor_system ?? '',
+                    'selected_lang' => selected_lang() ?? config('translatable.fallback_locale')
                 );
 
                 View::composer('front.checkout', function ($view) {
@@ -135,6 +135,9 @@ class AppServiceProvider extends ServiceProvider
                         'cart_table' => Auth::user()->cart,
                     ]);
                 });
+                
+
+                
 
                 View::composer('front.layout.master', function ($view) {
 
@@ -192,6 +195,7 @@ class AppServiceProvider extends ServiceProvider
 
                     $searchCategories = Category::latest()->select('id', 'title')->where('status', '1')->get();
 
+                    $mostsearchwords = Mostsearched::orderBY('keyword','ASC')->where('count','>',50)->groupBy('keyword')->get();
 
                     if ($auto->currency_by_country == 1) {
 
@@ -233,6 +237,7 @@ class AppServiceProvider extends ServiceProvider
                         'searchCategories' => $searchCategories,
                         'total' => $total,
                         'auth' => Auth::user(),
+                        'mostsearchwords' => $mostsearchwords
                     ]);
                 });
 
@@ -240,7 +245,7 @@ class AppServiceProvider extends ServiceProvider
 
                     try {
                         $view->with([
-                            'selected_language' => Language::firstWhere('lang_code','=',session()->get('changed_language') ?? config('translatable.fallback_locale')),
+                            'selected_language' => $data['selected_lang'],
                             'aff_system' => $data['aff_system'],
                             'theme_settings' => $data['theme_settings'],
                             'wallet_system' => $data['wallet_system'],

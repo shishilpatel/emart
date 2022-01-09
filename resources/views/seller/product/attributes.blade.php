@@ -1,6 +1,5 @@
-
 @extends('admin.layouts.sellermastersoyuz')
-@section('title','Available Product Attributes | ')
+@section('title',__('Available Product Attributes'))
 @section('body')
 
 @component('seller.components.breadcumb',['secondactive' => 'active'])
@@ -30,9 +29,15 @@
 					<table id="full_detail_table" class="width100 table table-borderd table-responsive">
 						<thead>
 							<th>#</th>
-							<th>Options</th>
-							<th>Values</th>
-							<th>In Categories</th>
+							<th>
+								{{__('Options')}}
+							</th>
+							<th>
+								{{__('Values')}}
+							</th>
+							<th>
+								{{__('In Categories')}}
+							</th>
 							
 						</thead>
 						<?php $i=0;?>
@@ -72,11 +77,7 @@
 												
 												</div>
 												<span class="tx-color">{{ $t->values }}</span>	
-													 
-			
-											
 													
-												
 													
 												@else
 													{{ $t->values }}{{ $t->unit_value }},
@@ -96,10 +97,15 @@
 									</td>
 									<td>
 										@foreach($pat->cats_id as $cats)
-										 @php
-											 $getcatname = App\Category::where('id',$cats)->first()->title;
-										 @endphp
-											{{$getcatname}},
+										 
+											@php
+												$getcatname = App\Category::where('id',$cats)->first();
+											@endphp
+
+											@if(isset($getcatname))
+												{{$getcatname->title}} {{!$loop->last ? "," : ''}}
+											@endif
+
 										@endforeach
 									</td>
 									

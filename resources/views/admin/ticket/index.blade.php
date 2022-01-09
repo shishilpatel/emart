@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','View All Support Tickets -')
+@section('title',__('View All Support Tickets | '))
 @section('body')
 
 @component('admin.component.breadcumb',['secondactive' => 'active'])
@@ -31,11 +31,21 @@
 						<thead>
 							<tr>
 								<th>#</th>
-								<th>Ticket No.</th>
-								<th>Issue Title</th>
-								<th>From</th>
-								<th>Status</th>
-								<th>Action</th>
+								<th>
+									{{__("Ticket No.")}}
+								</th>
+								<th>
+									{{__("Issue Title")}}
+								</th>
+								<th>
+									{{__("From")}}
+								</th>
+								<th>
+									{{__("Status")}}
+								</th>
+								<th>
+									{{__("Action")}}
+								</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -51,11 +61,7 @@
     </div>
 
 </div>
-                 
-                  
-              
                
-                  
 
 @endsection     
                         

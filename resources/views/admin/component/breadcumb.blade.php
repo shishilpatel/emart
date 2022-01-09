@@ -4,7 +4,7 @@
             <h4 class="page-title">{{ $heading ?? '' }}</h4>
             <div class="breadcrumb-list">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ __('Dashboard') }}</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url('/myadmin') }}">{{ __('Dashboard') }}</a></li>
                     @if(isset($menu1))
                         <li class="breadcrumb-item {{ $secondaryactive ?? ''}}">{{ $menu1 ?? '' }}</li>
                     @endif

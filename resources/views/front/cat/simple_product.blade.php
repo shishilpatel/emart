@@ -1,8 +1,19 @@
-<div class="col-sm-6 col-md-4 col-lg-3 col-6 kalpana" id="updatediv">
+<div class="col-sm-6 col-md-4 col-lg-3 col-6 mb-3" id="updatediv">
     
-    <div class="item">
+    <div class="shadow-sm border h-100 p-2 rounded item">
         <div class="products">
             <div class="product">
+
+                @if($simple_pro['sale_tag'] !== NULL && $simple_pro['sale_tag'] != '')
+                    <div class="ribbon ribbon-top-right">
+                        <span style="background : {{ $simple_pro['sale_tag_color'] }} ; color : {{ $simple_pro['sale_tag_text_color'] }}">
+                            
+                            {{ $simple_pro['sale_tag'] }}
+
+                        </span>
+                    </div>
+                @endif
+
                 <div class="product-image">
                     <div class="image {{ $simple_pro->stock == 0 ? "pro_img-box" : ""}}">
 
@@ -38,12 +49,7 @@
                     @if($simple_pro->pre_order == 1 && $simple_pro->product_avbl_date > date('Y-m-d h:i:s'))
                         <h6 align="center" class="preordertext"><span>{{ __('Available for preorder') }}</span></h6>
                     @endif
-
-                    @if($simple_pro->sale_tag != "")
-                        <div style="background: {{ $simple_pro->sale_tag_color }};" class="tag">
-                            <span style="color: {{ $simple_pro->sale_tag_text_color }};">{{ filter_var($simple_pro->sale_tag) }}</span>
-                        </div>
-                    @endif
+                    
                 </div>
                 <!-- /.product-image -->
 
@@ -66,25 +72,26 @@
                         @endif
 
                         <div class="product-price"> 
-                           
-                            @if($simple_pro->offer_price != 0)
+                            @if($price_login == 0 || auth()->check())
+                                @if($simple_pro->offer_price != 0)
 
-                                <span class="price">
-                                    <i class="{{session()->get('currency')['value']}}"></i>
-                                    {{ price_format($simple_pro->offer_price * $conversion_rate) }}
-                                </span>
-                                <span class="price-before-discount">
-                                    <i class="{{session()->get('currency')['value']}}"></i>
-                                    {{ price_format($simple_pro->price * $conversion_rate) }}
-                                </span>
+                                    <span class="price">
+                                        <i class="{{session()->get('currency')['value']}}"></i>
+                                        {{ price_format($simple_pro->offer_price * $conversion_rate) }}
+                                    </span>
+                                    <span class="price-before-discount">
+                                        <i class="{{session()->get('currency')['value']}}"></i>
+                                        {{ price_format($simple_pro->price * $conversion_rate) }}
+                                    </span>
 
-                            @else
+                                @else
 
-                                <span class="price">
-                                    <i class="{{session()->get('currency')['value']}}"></i>
-                                    {{ price_format($simple_pro->price * $conversion_rate) }}
-                                </span>
+                                    <span class="price">
+                                        <i class="{{session()->get('currency')['value']}}"></i>
+                                        {{ price_format($simple_pro->price * $conversion_rate) }}
+                                    </span>
 
+                                @endif
                             @endif
 
                         </div>

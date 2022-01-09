@@ -24,15 +24,18 @@
 
 <div class="contentbar">
   <div class="row">
-    @if ($errors->any())
-    <div class="alert alert-danger" role="alert">
-      @foreach($errors->all() as $error)
-      <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach
-    </div>
-    @endif
+   
     <div class="col-lg-12">
+
+      @if ($errors->any())
+      <div class="alert alert-danger" role="alert">
+        @foreach($errors->all() as $error)
+        <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button></p>
+        @endforeach
+      </div>
+      @endif
+
       <div class="card m-b-30">
         <div class="card-header">
           <h5 class="box-title">{{ __('Edit Shipping') }}</h5>
@@ -51,7 +54,7 @@
               <label class="control-label" for="first-name">
               {{ __('Shipping Title') }} <span class="text-danger">*</span>
               </label>
-              <input disabled="disabled" placeholder="Please enter shipping title" type="text" name="name"
+              <input disabled="disabled" placeholder="{{ __("Please enter shipping title") }}" type="text" name="name"
                 class="form-control" value="{{$shipping->name}}">
             </div>
 
@@ -64,7 +67,7 @@
             {{ __('Price') }} <span class="text-danger">*</span>
             </label>
             
-              <input placeholder="Please enter price" type="text" name="price" class="form-control"
+              <input placeholder="{{ __("Please enter price") }}" type="text" name="price" class="form-control"
                 value="{{$shipping->price}}">
            
           </div>
@@ -93,7 +96,7 @@
                   <input class="slider" type="checkbox" name="whole_order"  {{ $shipping->whole_order == '1' ? "checked" : "" }} />
                   <span class="knob"></span>
               </label>
-              <small>(Please Choose Status) </small>
+              <small>({{__("Please Choose Status")}}) </small>
               
             </div>
           @endif

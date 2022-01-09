@@ -43,7 +43,7 @@ use PayPal\Api\RedirectUrls;
 use PayPal\Api\Transaction;
 use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Rest\ApiContext;
-use PaytmWallet;
+use Anand\LaravelPaytmWallet\Facades\PaytmWallet;
 use Razorpay\Api\Api;
 use Redirect;
 use Session;
@@ -70,7 +70,7 @@ class WalletController extends Controller
 
     public function adminWalletSettings(Request $request)
     {
-        abort_if(!auth()->user()->can('wallet.manage'), 403, 'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('wallet.manage'), 403, __('User does not have the right permissions.'));
 
         $activeuser = UserWallet::query();
 
@@ -132,16 +132,16 @@ class WalletController extends Controller
     public function updateWalletSettings(Request $request)
     {
 
-        abort_if(!auth()->user()->can('wallet.manage'), 403, 'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('wallet.manage'), 403, __('User does not have the right permissions.'));
 
         $this->wallet->wallet_enable = $request->wallet_enable;
 
         $q = $this->wallet->save();
 
         if ($q) {
-            return response()->json(['msg' => 'Wallet Settings Updated !', 'code' => 200]);
+            return response()->json(['msg' => __('Wallet Settings Updated !'), 'code' => 200]);
         } else {
-            return response()->json(['msg' => 'Something Went Wrong !', 'code' => 400]);
+            return response()->json(['msg' => __('Something Went Wrong !'), 'code' => 400]);
         }
     }
 
@@ -177,7 +177,7 @@ class WalletController extends Controller
                     return view('user.wallet', compact('conversion_rate'));
                 }
             } else {
-                notify()->error('Sorry your wallet is not active !');
+                notify()->error(__('Sorry your wallet is not active !'));
                 return back();
             }
 
@@ -217,7 +217,7 @@ class WalletController extends Controller
         $transaction->setAmount($amount)->setItemList($item_list)->setDescription('Adding money in wallet');
         $redirect_urls = new RedirectUrls();
         $redirect_urls->setReturnUrl(URL::to('wallet/success/using/paypal'))
-            ->setCancelUrl(URL::to('/userwallet'));
+            ->setCancelUrl(URL::to('/mywallet'));
         $payment = new Payment();
         $payment->setIntent('Sale')
             ->setPayer($payer)->setRedirectUrls($redirect_urls)->setTransactions(array(
@@ -230,7 +230,7 @@ class WalletController extends Controller
         } catch (\PayPal\Exception\PPConnectionException $ex) {
             if (\Config::get('app.debug')) {
 
-                notify()->error('Connection timeout !');
+                notify()->error(__('Connection timeout !'));
                 $failedTranscations = new FailedTranscations;
                 $failedTranscations->order_id = null;
                 $failedTranscations->txn_id = 'PAYPAL_FAILED_' . Str::uuid();
@@ -262,7 +262,7 @@ class WalletController extends Controller
             /** redirect to paypal **/
             return Redirect::away($redirect_url);
         }
-        notify()->error('Unknown error occurred !');
+        notify()->error(__('Unknown error occurred !'));
         return redirect()->route('user.wallet.show');
 
     }
@@ -336,11 +336,11 @@ class WalletController extends Controller
 
                     }
 
-                    notify()->success('Amount added successfully !');
+                    notify()->success(__('Amount added successfully !'));
                     return redirect()->route('user.wallet.show');
 
                 } else {
-                    notify()->error('Your wallet is not active yet ! contact support system !');
+                    notify()->error(__('Your wallet is not active yet ! contact support system !'));
                     return back();
                 }
 
@@ -387,7 +387,7 @@ class WalletController extends Controller
 
                 }
 
-                notify()->success('Amount added successfully !');
+                notify()->success(__('Amount added successfully !'));
                 return redirect()->route('user.wallet.show');
             }
 
@@ -460,11 +460,11 @@ class WalletController extends Controller
 
                         }
 
-                        notify()->success('Amount added successfully !');
+                        notify()->success(__('Amount added successfully !'));
                         return redirect()->route('user.wallet.show');
 
                     } else {
-                        notify()->error('Your wallet is not active yet ! contact support system !');
+                        notify()->error(__('Your wallet is not active yet ! contact support system !'));
                         return back();
                     }
 
@@ -510,7 +510,7 @@ class WalletController extends Controller
 
                     }
 
-                    notify()->success('Amount added successfully !');
+                    notify()->success(__('Amount added successfully !'));
                     return redirect()->route('user.wallet.show');
                 }
 
@@ -623,11 +623,11 @@ class WalletController extends Controller
 
                         }
 
-                        notify()->success('Amount added successfully !');
+                        notify()->success(__('Amount added successfully !'));
                         return redirect()->route('user.wallet.show');
 
                     } else {
-                        notify()->error('Your wallet is not active yet ! contact support system !');
+                        notify()->error(__('Your wallet is not active yet ! contact support system !'));
                         return back();
                     }
 
@@ -673,7 +673,7 @@ class WalletController extends Controller
 
                     }
 
-                    notify()->success('Amount added successfully !');
+                    notify()->success(__('Amount added successfully !'));
                     return redirect()->route('user.wallet.show');
                 }
 
@@ -709,7 +709,7 @@ class WalletController extends Controller
             $stripe = Stripe::make(env('STRIPE_SECRET'));
 
             if ($stripe == '' || $stripe == null) {
-                notify()->error("Stripe Key Not Found Please Contact your Site Admin !");
+                notify()->error(__("Stripe Key Not Found Please Contact your Site Admin !"));
                 return redirect()->route('user.wallet.show');
             }
 
@@ -728,7 +728,7 @@ class WalletController extends Controller
                 ]);
 
                 if (!isset($token['id'])) {
-                    notify()->error('The Stripe Token was not generated correctly !');
+                    notify()->error(__('The Stripe Token was not generated correctly !'));
                     return redirect()->route('user.wallet.show');
                 }
 
@@ -786,11 +786,11 @@ class WalletController extends Controller
 
                             }
 
-                            notify()->success('Amount added successfully !');
+                            notify()->success(__('Amount added successfully !'));
                             return redirect()->route('user.wallet.show');
 
                         } else {
-                            notify()->error('Your wallet is not active yet ! contact support system !');
+                            notify()->error(__('Your wallet is not active yet ! contact support system !'));
                             return back();
                         }
 
@@ -836,7 +836,7 @@ class WalletController extends Controller
 
                         }
 
-                        notify()->success('Amount added successfully !');
+                        notify()->success(__('Amount added successfully !'));
                         return redirect()->route('user.wallet.show');
                     }
 
@@ -879,7 +879,7 @@ class WalletController extends Controller
             }
 
         } else {
-            notify()->error("All fields are required !");
+            notify()->error(__("All fields are required !"));
             return redirect()->route('user.wallet.show');
         }
     }
@@ -955,11 +955,11 @@ class WalletController extends Controller
 
                     }
 
-                    notify()->success('Amount added successfully !');
+                    notify()->success(__('Amount added successfully !'));
                     return redirect()->route('user.wallet.show');
 
                 } else {
-                    notify()->error('Your wallet is not active yet ! contact support system !');
+                    notify()->error(__('Your wallet is not active yet ! contact support system !'));
                     return redirect('/');
                 }
 
@@ -1005,7 +1005,7 @@ class WalletController extends Controller
 
                 }
 
-                notify()->success('Amount added successfully !');
+                notify()->success(__('Amount added successfully !'));
                 return redirect()->route('user.wallet.show');
             }
 
@@ -1060,7 +1060,7 @@ class WalletController extends Controller
                     ]);
 
                 } else {
-                    notify()->error('Your wallet is not active yet ! contact support system !');
+                    notify()->error(__('Your wallet is not active yet ! contact support system !'));
                     return redirect('/');
                 }
 
@@ -1107,7 +1107,7 @@ class WalletController extends Controller
 
             }
 
-            notify()->success('Amount added successfully !');
+            notify()->success(__('Amount added successfully !'));
 
             return redirect()->route('user.wallet.show');
 
@@ -1177,7 +1177,7 @@ class WalletController extends Controller
 
         if (round($request->actualtotal, 2) != round($total, 2)) {
 
-            notify()->error('Payment has been modifed !', 'Please try again !');
+            notify()->error(__('Payment has been modifed !', 'Please try again !'));
             return redirect(route('order.review'));
 
         }
@@ -1605,7 +1605,8 @@ class WalletController extends Controller
 
             $wallet = UserWallet::where('user_id', Auth::user()->id)->first();
 
-            $newmsg = "Order #$inv_cus->order_prefix $neworder->order_id placed successfully !";
+            $newmsg = __('Order #:orderid placed successfully !',['orderid' => $inv_cus->order_prefix.$neworder->order_id]);
+
             notify()->success("$newmsg");
             return redirect()->route('order.done', ['orderid' => $neworder->order_id]);
 

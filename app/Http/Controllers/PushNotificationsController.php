@@ -33,7 +33,7 @@ class PushNotificationsController extends Controller
         ]);
 
         if(env('ONESIGNAL_APP_ID') =='' && env('ONESIGNAL_REST_API_KEY') == ''){
-            notify()->error('Please update onesignal keys in settings !','Keys not found !');
+            notify()->error(__('Please update onesignal keys in settings !'),__('Keys not found !'));
             return back()->withInput();
         }
 
@@ -73,7 +73,7 @@ class PushNotificationsController extends Controller
 
             Notification::send($users, new OfferPushNotifications($data));
 
-            notify()->success('Notification pushed successfully !');
+            notify()->success(__('Notification pushed successfully !'));
             return back();
 
         } catch (\Exception $e) {
@@ -91,8 +91,8 @@ class PushNotificationsController extends Controller
             'ONESIGNAL_APP_ID' => 'required|string',
             'ONESIGNAL_REST_API_KEY' => 'required|string'
         ],[
-            'ONESIGNAL_APP_ID.required' => 'OneSignal app id is required',
-            'ONESIGNAL_REST_API_KEY.required' => 'Onesignal rest api key is required'
+            'ONESIGNAL_APP_ID.required' => __('OneSignal app id is required'),
+            'ONESIGNAL_REST_API_KEY.required' => __('Onesignal rest api key is required')
         ]);
 
         $env_keys_save = DotenvEditor::setKeys([
@@ -102,7 +102,7 @@ class PushNotificationsController extends Controller
 
         $env_keys_save->save();
 
-        notify()->success('Keys updated successfully !','OneSignal');
+        notify()->success(__('Keys updated successfully !'),'OneSignal');
         return back();
     }
 }

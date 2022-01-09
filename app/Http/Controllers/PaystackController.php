@@ -15,7 +15,7 @@ class PaystackController extends Controller
        
 
         if (Session::get('currency')['id'] != 'NGN') {
-            notify()->error('Paystack only support NGN currency.');
+            notify()->error(__('Paystack only support NGN currency.'));
             return redirect(route('order.review'));
         }
 

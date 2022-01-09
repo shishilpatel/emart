@@ -17,16 +17,16 @@
                     <div class="delete-icon"></div>
                   </div>
                   <div class="modal-body text-center">
-                    <h4 class="modal-heading">Are You Sure ?</h4>
-                    <p>Do you really want to delete this order <b>{{ $order_id }}</b>? This process cannot be undone.</p>
+                    <h4 class="modal-heading">{{ __("Are You Sure ?") }}</h4>
+                    <p>{{__("Do you really want to delete this order")}} <b>{{ $order_id }}</b>{{__("? This process cannot be undone.") }}</p>
                   </div>
                   <div class="modal-footer">
                   <form method="POST" action="{{ route('order.delete',$id) }}">
                         @csrf
                         {{ method_field("DELETE") }}
 
-                      <button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">No</button>
-                      <button type="submit" class="btn btn-danger">Yes</button>
+                      <button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">{{ __("NO") }}</button>
+                      <button type="submit" class="btn btn-danger">{{ __("YES") }}</button>
                     </form>
                   </div>
                 </div>

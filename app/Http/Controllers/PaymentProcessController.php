@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Address;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Nwidart\Modules\Facades\Module;
 
 class PaymentProcessController extends Controller
 
@@ -26,7 +27,7 @@ class PaymentProcessController extends Controller
         $amount         = round(Crypt::decrypt($request->amount),2);
         $actualtotal    = $request->actualtotal;
         $order_id       = uniqid();
-        $purpose        = __("Payment for order $order_id");
+        $purpose        = __("Payment for order :orderid",['orderid' => $order_id]);
         $address        = Address::findorfail(session()->get('address'));
         $currency       = session()->get('currency')['id'];
         $payment_method = $request->payment_method;
@@ -48,7 +49,7 @@ class PaymentProcessController extends Controller
 
         if (round($actualtotal, 2) != $total) {
 
-            notify()->error('Payment has been modifed !','Please try again !');
+            notify()->error(__('Payment has been modifed !'),__('Please try again !'));
             return redirect(route('order.review'));
 
         }
@@ -69,19 +70,22 @@ class PaymentProcessController extends Controller
         }
 
         if($payment_method == 'Cashfree'){
-            $paytm = new CashfreeController;
-            return $paytm->payProcess($order_id,$amount,$name,$email,$phone,$purpose,$error = route("order.review"));
+            $cf = new CashfreeController;
+            return $cf->pay($order_id,$amount,$name,$email,$phone,$purpose,$error = route("order.review"));
         }
 
         if($payment_method == 'Payu'){
-            $paytm = new PayuController;
-            return $paytm->payment($order_id,$amount,$name,$email,$phone,$purpose,$error = route("order.review"));
+            $payu = new PayuController;
+            return $payu->payment($order_id,$amount,$name,$email,$phone,$purpose,$error = route("order.review"));
         }
 
-        if($payment_method == 'Paystack'){
-            $paystack = new PaystackController;
-            return $paystack->pay($order_id,$amount,$name,$email,$phone,$purpose,$error = route("order.review"));
+        // Addon DPO Payment
+
+        if($payment_method == 'DPOPayment' && Module::has('DPOPayment') && Module::find('DPOPayment')->isEnabled()){
+            $dpo = new \Modules\DPOPayment\Http\Controllers\DPOPaymentController;
+            return $dpo->createToken($order_id,$amount,$name,$email,$phone,$purpose,$error = route("order.review"));
         }
+
 
     }
 }

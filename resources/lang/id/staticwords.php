@@ -281,6 +281,7 @@ return array (
   'SignInwithFacebook' => 'Masuk dengan Facebook',
   'SignInwithGitLab' => 'Masuk dengan GitLab',
   'SignInwithGoogle' => 'Masuk dengan Google',
+  'SignInwithTwitter' => '',
   'SignUpwithFacebook' => 'Daftar dengan Facebook',
   'SignUpwithGitLab' => 'Daftar dengan Gitlab',
   'SignUpwithGoogle' => 'Daftar dengan Google',

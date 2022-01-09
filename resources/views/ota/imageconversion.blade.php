@@ -30,14 +30,12 @@
                     class="needs-validation" novalidate>
                     @csrf
                     <blockquote class="text-justify text-dark font-weight-normal">
-                        <p class="font-weight-bold text-primary"><i class="fa fa-check-circle"></i> Before update make
-                            sure you take your database backup and script backup from server so in case if anything goes
-                            wrong you can restore it.</p>
-                        <p class="font-weight-bold text-danger"><i class="fa fa-warning"></i> <u>ONLY RUN If you're upgrading your script from version 1.2 else it may break your application.</u></p>
+                        <p class="font-weight-bold text-primary"><i class="fa fa-check-circle"></i> {{__('Before update make sure you take your database backup and script backup from server so in case if anything goes wrong you can restore it')}}.</p>
+                        <p class="font-weight-bold text-danger"><i class="fa fa-warning"></i> <u>{{__("ONLY RUN If you're upgrading your script from version 1.2 else it may break your application")}}.</u></p>
                         <hr>
                         <div class="rounded alert alert-danger">
                             <i class="fa fa-info-circle"></i>
-                            Important Note:
+                            {{__("Important Note")}}:
                             <ul>
                                 <li>
                                     Image conversion only require if you upgrading from <b>version 1.2</b>

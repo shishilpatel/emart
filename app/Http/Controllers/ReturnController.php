@@ -62,7 +62,7 @@ class ReturnController extends Controller
                                 if ($today <= $endOn) {
                                     return view('user.returnorderwindow', compact('inv_cus', 'findvar', 'order', 'productname', 'conversion_rate'));
                                 } else {
-                                    notify()->error('Return Policy ended !');
+                                    notify()->error(__('Return Policy ended !'));
                                     return redirect()->route('user.view.order', $order->order->order_id);
                                 }
 
@@ -73,7 +73,7 @@ class ReturnController extends Controller
                             /*checked*/
 
                         } else {
-                            notify()->error('Return policy not applicable on this product !');
+                            notify()->error(__('Return policy not applicable on this product !'));
                             return redirect()->route('user.view.order', $order->order->order_id);
                         }
 
@@ -99,17 +99,17 @@ class ReturnController extends Controller
                     }
 
                 } else {
-                    notify()->warning('Order not delivered yet or already returned !');
+                    notify()->warning(__('Order not delivered yet or already returned !'));
                     return redirect()->route('user.view.order', $order->order->order_id);
                 }
 
             } else {
-                notify()->error('Order not found or already returned !');
+                notify()->error(__('Order not found or already returned !'));
                 return redirect()->route('user.view.order', $order->order->order_id);
             }
 
         } else {
-            notify()->error('401 | Unauthorized Action !');
+            notify()->error(__('401 | Unauthorized Action !'));
             return redirect()->route('user.view.order', $order->order->order_id);
         }
     }
@@ -272,7 +272,7 @@ class ReturnController extends Controller
 
                                 }
 
-                                notify()->success('Return requested successully ! you will be notifed via email once we get the product and refund will proceed at same day !');
+                                notify()->success(__('Return requested successully ! you will be notifed via email once we get the product and refund will proceed at same day !'));
 
                                 return redirect()->route('user.view.order', $order->order->order_id);
 
@@ -387,7 +387,7 @@ class ReturnController extends Controller
                                 }
                                 /*end*/
 
-                                notify()->success('Return Requested Successully ! You will be notifed via email once we get the product and refund will proceed at same day !');
+                                notify()->success(__('Return Requested Successully ! You will be notifed via email once we get the product and refund will proceed at same day !'));
 
                                 return redirect()->route('user.view.order', $order->order->order_id);
                             }
@@ -503,28 +503,28 @@ class ReturnController extends Controller
                             }
                             /*end*/
 
-                            notify()->success('Return Requested Successully ! You will be notifed via email once we get the product and refund will proceed at same day !');
+                            notify()->success(__('Return Requested Successully ! You will be notifed via email once we get the product and refund will proceed at same day !'));
 
                             return redirect()->route('user.view.order', $order->order->order_id);
                         }
 
                     } else {
-                        notify()->warning('Product is not delivered yet !');
+                        notify()->warning(__('Product is not delivered yet !'));
                         return redirect()->route('user.view.order', $order->order->order_id);
                     }
 
                 } else {
-                    notify()->error('404 | Order Not found !');
+                    notify()->error(__('404 | Order Not found !'));
                     return redirect()->route('user.view.order', $order->order->order_id);
                 }
 
             } else {
-                notify()->error('401 | Unauthorized action !');
+                notify()->error(__('401 | Unauthorized action !'));
                 return redirect()->route('user.view.order', $order->order->order_id);
             }
 
         } else {
-            notify()->error('401 | Unauthorized action !');
+            notify()->error(__('401 | Unauthorized action !'));
             return back();
         }
 

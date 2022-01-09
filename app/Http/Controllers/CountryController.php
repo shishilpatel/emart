@@ -2,18 +2,8 @@
 namespace App\Http\Controllers;
 
 use App\Country;
-use Illuminate\Http\Request;
-use DB;
-use App\Allcountry;
 use DataTables;
-use Log;
-
-/*==========================================
-=            Author: Media City            =
-    Author URI: https://mediacity.co.in
-=            Author: Media City            =
-=            Copyright (c) 2020            =
-==========================================*/
+use Illuminate\Http\Request;
 
 class CountryController extends Controller
 {
@@ -30,8 +20,7 @@ class CountryController extends Controller
 
         $countries = Country::all();
 
-        if ($request->ajax())
-        {
+        if ($request->ajax()) {
 
             return Datatables::of($data)->addIndexColumn()
                 ->addColumn('action', 'admin.country.actionbtn')
@@ -65,14 +54,14 @@ class CountryController extends Controller
 
         ], [
 
-        "country.required" => "Country Name is required", "country.min" => "Country code (ISO3) have 3 digit only", "country.max" => 'Country code (ISO3) have 3 digit only '
+            "country.required" => __("Country name is required"), "country.min" => __("Country code (ISO3) have 3 digit only"), "country.max" => __('Country code (ISO3) have 3 digit only '),
 
         ]);
 
-        $country = \DB::table('allcountry')->where('iso3',$request->country)->first();
+        $country = \DB::table('allcountry')->where('iso3', $request->country)->first();
 
-        if(!isset($country)){
-            return back()->with('warning','No country found with this CODE !')->withInput();
+        if (!isset($country)) {
+            return back()->with('warning', __('No country found with this CODE !'))->withInput();
         }
 
         $obj = new Country;
@@ -80,9 +69,8 @@ class CountryController extends Controller
         $obj->country = $request->country;
 
         $value = $obj->save();
-        if ($value)
-        {
-            session()->flash("added", "Country Has Been Added !");
+        if ($value) {
+            session()->flash("added", __("Country has been added !"));
             return back();
         }
 
@@ -122,24 +110,23 @@ class CountryController extends Controller
     {
         $allcountry = Country::all();
 
-        $country = \DB::table('allcountry')->where('iso3',$request->country)->first();
+        $country = \DB::table('allcountry')->where('iso3', $request->country)->first();
 
-        if(!isset($country)){
-            return back()->with('warning','No country found with this CODE !')->withInput();
+        if (!isset($country)) {
+            return back()->with('warning', __('No country found with this CODE !'))->withInput();
         }
 
-        
         $obj = Country::findorFail($id);
-        
-        $request->validate( [
 
-            "country" => 'required|min:3|max:3|unique:countries,country,'.$obj->id,
+        $request->validate([
+
+            "country" => 'required|min:3|max:3|unique:countries,country,' . $obj->id,
 
         ], [
 
-            "country.required" => "Country Name is required", 
-            "country.min" => "Country code (ISO3) have 3 digit only", 
-            "country.max" => 'Country code (ISO3) have 3 digit only '
+            "country.required"  => __("Country name is required"),
+            "country.min"       => __("Country code (ISO3) have 3 digit only"),
+            "country.max"       => __('Country code (ISO3) have 3 digit only'),
 
         ]);
 
@@ -147,9 +134,8 @@ class CountryController extends Controller
 
         $value = $obj->save();
 
-        if ($value)
-        {
-            session()->flash("category_message", "Country Has Been Updated !");
+        if ($value) {
+            session()->flash("category_message", __("Country has been updated !"));
             return redirect("admin/country/" . $id . "/edit");
         }
 
@@ -166,11 +152,9 @@ class CountryController extends Controller
         $daa = new Country;
         $obj = $daa->findorFail($id);
         $value = $obj->delete();
-        if ($value)
-        {
-            session()->flash("deleted", "Country Has Been deleted");
+        if ($value) {
+            session()->flash("deleted", __("Country has been deleted"));
             return redirect("admin/country");
         }
     }
 }
-

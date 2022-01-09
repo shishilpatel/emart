@@ -30,7 +30,7 @@ class CustomLoginController extends Controller
 
             if(!auth()->user()->can('login.can')){
                 FacadesAuth::logout();
-                $errors = new MessageBag(['email' => 'Login access blocked !']);
+                $errors = new MessageBag(['email' => __('Login access blocked !')]);
                 return Redirect::back()->withErrors($errors)->withInput($request->except('password'));
             }
 
@@ -43,7 +43,7 @@ class CustomLoginController extends Controller
 
         } else {
             
-            $errors = new MessageBag(['email' => 'Email or password is invalid or your account is deactive/ unverified !']);
+            $errors = new MessageBag(['email' => 'These credentials do not match our records.']);
             return Redirect::back()->withErrors($errors)->withInput($request->except('password'));
 
         }

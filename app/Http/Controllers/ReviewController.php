@@ -19,7 +19,7 @@ class ReviewController extends Controller
 
     public function index()
     {
-        abort_if(!auth()->user()->can('review.view'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('review.view'),403,__('User does not have the right permissions.'));
 
         $reviews = UserReview::all();
         
@@ -35,7 +35,7 @@ class ReviewController extends Controller
      */
     public function store(Request $request)
     {
-        abort_if(!auth()->user()->can('review.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('review.create'),403,__('User does not have the right permissions.'));
 
          $data = $this->validate($request,[
             "review"=>"required",
@@ -43,8 +43,8 @@ class ReviewController extends Controller
             
         ],[
 
-            "review.required"=>"Review Fild is Required",
-            "gest_review.required"=>"Gest Review Fild is Required",
+            "review.required"=> __("Review field is required"),
+            "gest_review.required"=> __("Guest review field is required"),
             
           ]);
 
@@ -56,20 +56,9 @@ class ReviewController extends Controller
          
          $value=$obj->save();
          if($value){
-            session()->flash("added","Review has been inserted");
+            session()->flash("added",__("Review has been inserted"));
             return redirect("review/create");
          }      
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function show(\App\Category $category)
-    {
-        //
     }
 
     /**
@@ -80,7 +69,7 @@ class ReviewController extends Controller
      */
     public function edit($id)
     {
-        abort_if(!auth()->user()->can('review.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('review.edit'),403,__('User does not have the right permissions.'));
 
         $review = UserReview::findOrFail($id);
         
@@ -98,7 +87,7 @@ class ReviewController extends Controller
     public function update(Request $request, $id)
     {
         
-        abort_if(!auth()->user()->can('review.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('review.edit'),403,__('User does not have the right permissions.'));
          
          $update = new UserReview;
          $obj = $update->find($id);
@@ -107,7 +96,7 @@ class ReviewController extends Controller
          
          $value=$obj->save();
          if($value){
-            session()->flash("updated","Review has been Update");
+            session()->flash("updated",__("Review has been upated"));
             return redirect("admin/review/");
          }
     }
@@ -126,11 +115,11 @@ class ReviewController extends Controller
      */
     public function destroy($id)
     {
-        abort_if(!auth()->user()->can('review.delete'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('review.delete'),403,__('User does not have the right permissions.'));
         $cat = UserReview::find($id);
         $value = $cat->delete();
          if($value){
-            session()->flash("deleted","Review Has Been Deleted");
+            session()->flash("deleted",__("Review has been deleted"));
             return back();
          }
     }

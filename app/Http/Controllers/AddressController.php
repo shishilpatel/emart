@@ -1,31 +1,22 @@
 <?php
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Address;
+use App\Allcity;
+use App\Allcountry;
+use App\Allstate;
+use App\Country;
 use App\User;
 use Auth;
-use App\Address;
-use App\Allstate;
-use App\Allcity;
-use App\Country;
-use App\Allcountry;
-use Illuminate\Support\Facades\Input;
-use App\PinCod;
+use Illuminate\Http\Request;
 use Session;
-
-/*==========================================
-=            Author: Media City            =
-    Author URI: https://mediacity.co.in
-=            Author: Media City            =
-=            Copyright (c) 2020            =
-==========================================*/
 
 class AddressController extends Controller
 {
     public function getaddressView()
     {
-        require_once ('price.php');
-         $user = Auth::user();
+        require_once 'price.php';
+        $user = Auth::user();
         $country = Country::all();
         $city = Allcity::where('state_id', $user->state_id)->get();
         return view('user.manageaddress', compact('conversion_rate', 'city', 'user', 'country'));
@@ -35,8 +26,7 @@ class AddressController extends Controller
     {
         $flag = $request->flag;
 
-        if ($flag == 1)
-        {
+        if ($flag == 1) {
 
             $id = Session::get('address');
             $address = Address::findorFail($id);
@@ -65,8 +55,7 @@ class AddressController extends Controller
         $result = array();
         $query = Allcity::where('pincode', 'LIKE', '%' . $search . '%')->get();
 
-        foreach ($query as $q)
-        {
+        foreach ($query as $q) {
             $findcity = Allcity::where('id', $q->id)
                 ->first();
             $findstate = Allstate::where('id', $q->state_id)
@@ -87,13 +76,11 @@ class AddressController extends Controller
         $alladdress = Address::where('user_id', Auth::user()->id)
             ->get();
 
-        foreach ($alladdress as $value)
-        {
-            if ($value->name == $request->name && $value->address == $request->address && $value->city_id == $request->city_id && $value->state_id == $request->state_id && $value->country_id == $request->country_id && $request->pin_code == $value->pin_code)
-            {
-                notify()->error('Same Address Already Stored !');
+        foreach ($alladdress as $value) {
+            if ($value->name == $request->name && $value->address == $request->address && $value->city_id == $request->city_id && $value->state_id == $request->state_id && $value->country_id == $request->country_id && $request->pin_code == $value->pin_code) {
+                notify()->error(__(__('Same address already stored !')));
                 return redirect('/checkout');
-                    
+
             }
         }
 
@@ -107,27 +94,23 @@ class AddressController extends Controller
             ->where('defaddress', '=', 1)
             ->first();
 
-        if (isset($request->setdef))
-        {
+        if (isset($request->setdef)) {
 
-            if (isset($findalladdress))
-            {
+            if (isset($findalladdress)) {
                 Address::where('user_id', Auth::user()->id)
                     ->where('defaddress', '=', 1)
                     ->update(['defaddress' => 0]);
             }
 
             $input['defaddress'] = 1;
-        }
-        else
-        {
+        } else {
             $input['defaddress'] = 0;
         }
 
         $input['user_id'] = Auth::user()->id;
         $input['address'] = strip_tags($request->address);
         $new_address->create($input);
-        notify()->success('Address added successfully !');
+        notify()->success(__(__('Address added successfully !')));
         return back();
     }
 
@@ -147,35 +130,29 @@ class AddressController extends Controller
         $alladdress = Address::where('user_id', Auth::user()->id)
             ->get();
 
-        foreach ($alladdress as $value)
-        {
-            if ($value->name == $request->name && $value->address == $request->address && $value->city_id == $request->city_id && $value->state_id == $request->state_id && $value->country_id == $request->country_id && $request->pin_code == $value->pin_code)
-            {
-                notify()->error('Same Address Already Stored !');
+        foreach ($alladdress as $value) {
+            if ($value->name == $request->name && $value->address == $request->address && $value->city_id == $request->city_id && $value->state_id == $request->state_id && $value->country_id == $request->country_id && $request->pin_code == $value->pin_code) {
+                notify()->error(__('Same address already stored !'));
                 return redirect('/checkout');
             }
         }
 
-        if (isset($request->setdef))
-        {
+        if (isset($request->setdef)) {
 
-            if (isset($findalladdress))
-            {
+            if (isset($findalladdress)) {
                 Address::where('user_id', Auth::user()->id)
                     ->where('defaddress', '=', 1)
                     ->update(['defaddress' => 0]);
             }
 
             $input['defaddress'] = 1;
-        }
-        else
-        {
+        } else {
             $input['defaddress'] = 0;
         }
 
         $input['user_id'] = Auth::user()->id;
         $new_address->create($input);
-        notify()->success('Address added successfully !');
+        notify()->success(__('Address added successfully !'));
         return redirect('/checkout');
     }
 
@@ -184,17 +161,15 @@ class AddressController extends Controller
 
         #validation
         $input = $request->all();
-        require_once ('price.php');
+        require_once 'price.php';
 
         $flag = 0;
         $alladdress = Address::where('user_id', Auth::user()->id)
             ->get();
 
-        foreach ($alladdress as $value)
-        {
+        foreach ($alladdress as $value) {
 
-            if ($value->name == $request->name && $value->address == $request->address && $value->city_id == $request->city_id && $value->state_id == $request->state_id && $value->country_id == $request->country_id && $request->pin_code == $value->pin_code)
-            {
+            if ($value->name == $request->name && $value->address == $request->address && $value->city_id == $request->city_id && $value->state_id == $request->state_id && $value->country_id == $request->country_id && $request->pin_code == $value->pin_code) {
                 $request->name;
                 $sentfromlastpage = 1;
                 $flag = 1;
@@ -203,15 +178,11 @@ class AddressController extends Controller
         }
 
         ##end
-        
 
-        if ($flag == 1)
-        {
-            notify()->error('Same address already stored !');
+        if ($flag == 1) {
+            notify()->error(__('Same address already stored !'));
             return view('front.checkout', compact('conversion_rate', 'sentfromlastpage'));
-        }
-        else
-        {
+        } else {
 
             $new_address = new Address;
 
@@ -219,20 +190,16 @@ class AddressController extends Controller
                 ->where('defaddress', '=', 1)
                 ->first();
 
-            if (isset($request->setdef))
-            {
+            if (isset($request->setdef)) {
 
-                if (isset($findalladdress))
-                {
+                if (isset($findalladdress)) {
                     Address::where('user_id', Auth::user()->id)
                         ->where('defaddress', '=', 1)
                         ->update(['defaddress' => 0]);
                 }
 
                 $input['defaddress'] = 1;
-            }
-            else
-            {
+            } else {
                 $input['defaddress'] = 0;
             }
 
@@ -240,7 +207,7 @@ class AddressController extends Controller
             $input['address'] = strip_tags($request->address);
             $new_address->create($input);
             $sentfromlastpage = 1;
-            notify()->success('Address added successfully ! !');
+            notify()->success(__('Address added successfully !'));
             return view('front.checkout', compact('conversion_rate', 'sentfromlastpage'));
         }
 
@@ -258,27 +225,21 @@ class AddressController extends Controller
 
         $match = 0;
 
-        foreach ($alladdress as $value)
-        {
+        foreach ($alladdress as $value) {
 
-            if ($value->id != $new_address->id)
-            {
-                if ($value->name == $request->name || $value->address == $request->address || $value->city_id == $request->city_id || $value->state_id == $request->state_id || $value->country_id == $request->country_id && $request->pin_code == $value->pin_code)
-                {
+            if ($value->id != $new_address->id) {
+                if ($value->name == $request->name || $value->address == $request->address || $value->city_id == $request->city_id || $value->state_id == $request->state_id || $value->country_id == $request->country_id && $request->pin_code == $value->pin_code) {
                     $match = 1;
                     break;
                 }
-            }
-            else
-            {
+            } else {
                 $match = 0;
                 break;
             }
 
         }
 
-        if ($match == 0)
-        {
+        if ($match == 0) {
             $input['user_id'] = Auth::user()->id;
             $new_address->update($input);
         }
@@ -287,11 +248,9 @@ class AddressController extends Controller
             ->where('defaddress', '=', 1)
             ->first();
 
-        if (isset($request->setdef))
-        {
+        if (isset($request->setdef)) {
 
-            if (isset($findalladdress) && $findalladdress->id != $id)
-            {
+            if (isset($findalladdress) && $findalladdress->id != $id) {
                 Address::where('user_id', Auth::user()->id)
                     ->where('defaddress', '=', 1)
                     ->update(['defaddress' => 0]);
@@ -300,16 +259,14 @@ class AddressController extends Controller
 
             $input['defaddress'] = 1;
 
-        }
-        else
-        {
+        } else {
             $input['defaddress'] = 0;
         }
 
         $input['user_id'] = Auth::user()->id;
         $input['address'] = strip_tags($request->address);
         $new_address->update($input);
-        notify()->success('Address updated successfully !');
+        notify()->success(__('Address updated successfully !'));
         return back();
 
     }
@@ -318,18 +275,14 @@ class AddressController extends Controller
     {
         $findaddress = Address::findorFail($id);
 
-        if ($findaddress->defaddress == 1)
-        {   
-            notify()->error('Default address cannot be deleted !');
+        if ($findaddress->defaddress == 1) {
+            notify()->error(__('Default address cannot be deleted !'));
             return back();
-        }
-        else
-        {
+        } else {
             $findaddress->delete();
-            notify()->success('Address deleted !');
+            notify()->success(__('Address deleted !'));
             return back();
         }
     }
 
 }
-

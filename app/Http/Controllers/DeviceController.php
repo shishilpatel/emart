@@ -18,9 +18,9 @@ class DeviceController extends Controller
             ->addIndexColumn()
             ->addColumn('username',function($row){
 
-                $html = '<b> <span class="text-dark">Name:</span> </b>'.$row->username;
+                $html = '<b> <span class="text-dark">'.__('Name:').'</span> </b>'.$row->username;
                 $html .= '<br>';
-                $html .= '<b> <span class="text-dark">Email:</span> </b>'.$row->useremail;
+                $html .= '<b> <span class="text-dark">'.__('Email').':</span> </b>'.$row->useremail;
                 return $html;
 
             })

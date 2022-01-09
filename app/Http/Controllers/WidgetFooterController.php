@@ -5,13 +5,6 @@ namespace App\Http\Controllers;
 use App\widget_footer;
 use Illuminate\Http\Request;
 
-/*==========================================
-=            Author: Media City            =
-    Author URI: https://mediacity.co.in
-=            Author: Media City            =
-=            Copyright (c) 2020            =
-==========================================*/
-
 class WidgetFooterController extends Controller
 {
     /**
@@ -49,7 +42,7 @@ class WidgetFooterController extends Controller
         
             $data->save();
 
-            return back()->with("added","widget footer Has Been created !");
+            return back()->with("added",__("Widget footer has been created !"));
         
         
          
@@ -93,7 +86,7 @@ class WidgetFooterController extends Controller
          
              $menu->update($input);
 
-             return redirect('admin/widget_footer')->with("updated","widget footer Has Been updated !");
+             return redirect('admin/widget_footer')->with("updated",__("Widget footer has been updated !"));
             
     }
 
@@ -109,6 +102,6 @@ class WidgetFooterController extends Controller
           
         $menu->delete();
 
-        return redirect('admin/widget_footer')->with("deleted","widget footer Has Been deleted !");
+        return redirect('admin/widget_footer')->with("deleted",__("Widget footer has been deleted !"));
     }
 }

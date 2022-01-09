@@ -140,7 +140,7 @@ class SellerCancelOrderController extends Controller
 
             }
 
-            return back()->with('updated','Order Status has been Updated !');
+            return back()->with('updated',__('Order Status has been Updated !'));
 
 
 
@@ -338,8 +338,8 @@ class SellerCancelOrderController extends Controller
                         }
 
                     } elseif ($order->payment_method == 'PayU') {
-                        Session::flash('warning', 'Error In PAYU SIDE Will added soon when PAYU solve it use bank transfer method till that');
-                        return back()->with('failure', 'Error In PAYU SIDE Will added soon when PAYU solve it use bank transfer method till that');
+                        Session::flash('warning', __('Error In PAYU SIDE Will added soon when PAYU solve it use bank transfer method till that'));
+                        return back()->with('failure', __('Error In PAYU SIDE Will added soon when PAYU solve it use bank transfer method till that'));
                     }
                     elseif ($order->payment_method == 'Paytm') {
                         $refund = PaytmWallet::with('refund');
@@ -533,14 +533,14 @@ class SellerCancelOrderController extends Controller
                     Mail::to($e)->send(new FullOrderCancelMail($inv_cus, $order->order_id, $mstatus));
                 }
                 /*End*/
-                Session::flash('updated', 'Following Order is Cancelled Successfully !');
-                return back()->with('success', 'Following Order is Cancelled Successfully !');
+                Session::flash('updated', __('Following Order is Cancelled Successfully !'));
+                return back()->with('success', __('Following Order is Cancelled Successfully !'));
 
             }
 
         } else {
-            Session::flash('warning', '401 Unauthorized Action !');
-            return back()->with('failure', '401 Unauthorized Action !');
+            Session::flash('warning', __('Unauthorized action !'));
+            return back()->with('failure', __('Unauthorized action !'));
         }
     }
 }

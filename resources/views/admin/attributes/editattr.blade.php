@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Edit Option - $proattr->attr_name -')
+@section('title',__('Edit Option - :option | ',['option' => $proattr->attr_name]))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -19,18 +19,19 @@
 @endcomponent
 <div class="contentbar">
   <div class="row">
-    @if ($errors->any())
-    <div class="alert alert-danger" role="alert">
-      @foreach($errors->all() as $error)
-      <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach
-    </div>
-    @endif
+    
     <div class="col-lg-12">
+      @if ($errors->any())
+        <div class="alert alert-danger" role="alert">
+          @foreach($errors->all() as $error)
+          <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span></button></p>
+          @endforeach
+        </div>
+      @endif
       <div class="card m-b-30">
         <div class="card-header">
-          <h5 class="box-title">Edit Option {{ $proattr->attr_name }}</h5>
+          <h5 class="box-title">{{ __('Edit Option - :option | ',['option' => $proattr->attr_name]) }}</h5>
         </div>
         <div class="card-body">
         <!-- main content start -->
@@ -52,7 +53,7 @@
                   <div class="form-group">
                       <label class="text-dark">{{ __('Update Category :') }}</label><br>
 					  	<label>
-						<input type="checkbox" class="selectallbox"> Select All
+						<input type="checkbox" class="selectallbox"> {{__("Select All")}}
 						</label><br>
 						@php
 

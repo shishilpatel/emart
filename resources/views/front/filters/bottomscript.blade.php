@@ -247,7 +247,8 @@ function categoryfilter(cid, sid, chid, first, last) {
     },
     success: function(data) {
 
-      
+      seoupdate(data);
+
 
       if($('#updatediv').children().length == 1 || $('#updatediv').children().length == 3) {
         $('#updatediv').html('<div class="mx-auto"><img src="' + url404 + '" alt="404 Not Found" title="No Matching Result Found or there is no product in this category !"><h3>No Matching Result Found or there is no product in this category !</h3></div>');
@@ -335,6 +336,33 @@ function categoryfilter(cid, sid, chid, first, last) {
   });
 }
 
+function seoupdate(data){
+    // --------- Start ----
+
+    /** OG Title */
+
+    $('meta[property="og:title"]').attr('content', data.seosection.title);
+    $('meta[property="og:url"]').attr('content',  data.seosection.seourl);
+    $('meta[property="og:description"]').attr('content', data.seosection.seodes);
+    $('meta[property="og:image"]').attr('content', data.seosection.seoimage);
+
+    /** Twitted cards */
+
+    $('meta[name="twitter:card"]').attr('content', data.seosection.title);
+    document.title = data.seosection.title;
+    $('meta[name="twitter:description"]').attr('content', data.seosection.seodes);
+    document.title = data.seosection.title;
+    $('meta[name="twitter:site"]').attr('content', data.seosection.seourl);
+    document.title = data.seosection.title;
+
+    /** General seo tags **/
+
+    $('meta[name=keywords]').attr('content', data.seosection.title);
+    document.title = data.seosection.title;
+
+  // --------- END ----
+}
+
 function tagfilter($d, tagid) {
   
   var tagcheck = $('#tag' + tagid).attr('class');
@@ -420,6 +448,8 @@ function tagfilter($d, tagid) {
       keyword: keyword
     },
     success: function(data) {
+
+      seoupdate();
       
       $('#updatediv').html(data.product);
 
@@ -524,7 +554,11 @@ function priceslider(cid,sid,chid) {
         keyword: keyword
       },
       success: function(data) {
+
+        seoupdate();
+
         $('#updatediv').html(data.product);
+
         if($('#updatediv').children().length == 1 || $('#updatediv').children().length == 3) {
           $('#updatediv').html('<div class="mx-auto"><img src="' + url404 + '" alt="404 Not Found" title="No Matching Result Found or there is no product in this category !"><h3>No Matching Product Found or there is no product in this category !</h3></div>');
         }
@@ -744,6 +778,7 @@ function getBrandProducts(id) {
         $('.preloader3').fadeIn('fast');
     },
     success: function(data) {
+      seoupdate();
       $('#updatediv').html(data.product);
       if($('#updatediv').children().length == 1 || $('#updatediv').children().length == 3) {
           $('#updatediv').html('<div class="mx-auto"><img src="' + url404 + '" alt="404 Not Found" title="No Matching Result Found or there is no product in this category !"><h3>No Matching Product Found or there is no product in this category !</h3></div>');
@@ -1015,6 +1050,7 @@ function getvariantpro(attrid, variantid) {
         $('.preloader3').fadeIn('fast');
     },
     success: function(data) {
+      seoupdate();
       $('#updatediv').html(data.product);
 
       if($('#updatediv').children().length == 1 || $('#updatediv').children().length == 3) {
@@ -1126,6 +1162,8 @@ function getratingproduct(rating) {
       },
       success: function(data) {
 
+        seoupdate();
+
         $('#updatediv').html(data.product);
         
         if($('#updatediv').children().length == 1 || $('#updatediv').children().length == 3) {
@@ -1162,6 +1200,7 @@ function getratingproduct(rating) {
         $('.preloader3').fadeIn('fast');
       },
       success: function(data) {
+        seoupdate();
         $('#updatediv').html(data.product);
         if($('#updatediv').children().length == 1 || $('#updatediv').children().length == 3) {
           $('#updatediv').html('<div class="mx-auto"><img src="' + url404 + '" alt="404 Not Found" title="No Matching Result Found or there is no product in this category !"><h3>No Matching Product Found or there is no product in this category !</h3></div>');
@@ -1247,6 +1286,7 @@ function getfeaturedpro(featured) {
         $('.preloader3').fadeIn('fast');
     },
     success: function(data) {
+      seoupdate();
       $('#updatediv').html(data.product);
       if($('#updatediv').children().length == 1 || $('#updatediv').children().length == 3) {
           $('#updatediv').html('<div class="mx-auto"><img src="' + url404 + '" alt="404 Not Found" title="No Matching Result Found or there is no product in this category !"><h3>No Matching Product Found or there is no product in this category !</h3></div>');
@@ -1318,6 +1358,7 @@ function excludeoot(value) {
         $('.preloader3').fadeIn('fast');
       },
       success: function(data) {
+        seoupdate();
         $('#updatediv').html(data.product);
         if($('#updatediv').children().length == 1 || $('#updatediv').children().length == 3) {
           $('#updatediv').html('<div class="mx-auto"><img src="' + url404 + '" alt="404 Not Found" title="No Matching Result Found or there is no product in this category !"><h3>No Matching Product Found or there is no product in this category !</h3></div>');
@@ -1364,6 +1405,8 @@ function excludeoot(value) {
         $('.preloader3').fadeIn('fast');
       },
       success: function(data) {
+
+        seoupdate();
         
         $('#updatediv').html(data.product);
         if($('#updatediv').children().length == 1 || $('#updatediv').children().length == 3) {
@@ -1391,7 +1434,7 @@ var observer = new MutationObserver(function(mutations, observer) {
       scrollDirection: 'both',
       threshold: 0,
       afterLoad: function(element) {
-          console.log(element+' loaded successfully !');
+        //no code
       }
 
   });

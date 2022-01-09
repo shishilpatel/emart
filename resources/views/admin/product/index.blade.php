@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','All Products |')
+@section('title',__('All Products |'))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -23,15 +23,16 @@
 @endcomponent
 <div class="contentbar">
   <div class="row">
-    @if ($errors->any())
-    <div class="alert alert-danger" role="alert">
-      @foreach($errors->all() as $error)
-      <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach
-    </div>
-    @endif
+   
     <div class="col-lg-12">
+      @if ($errors->any())
+      <div class="alert alert-danger" role="alert">
+        @foreach($errors->all() as $error)
+        <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button></p>
+        @endforeach
+      </div>
+      @endif
       <div class="card m-b-30">
         <div class="card-header">
           <h5 class="card-title">{{ __('All Products') }}</h5>
@@ -40,13 +41,15 @@
               @csrf
               <div class="form-group">
                 <select required name="action" id="action" class="form-control">
-                  <option value="">Please select action</option>
-                  <option value="deleted">Delete selected</option>
-                  <option value="deactivated">Deactive selected</option>
-                  <option value="activated">Active selected</option>
+                  <option value="">{{ __("Please select action") }}</option>
+                  <option value="deleted">{{ __("Delete selected") }}</option>
+                  <option value="deactivated">{{ __("Deactive selected") }}</option>
+                  <option value="activated">{{ __("Active selected") }}</option>
                 </select>
               </div>
-              <button type="submit" class="ml-2 btn btn-md btn-primary-rgba">Apply</button>
+              <button type="submit" class="ml-2 btn btn-md btn-primary-rgba">
+                {{__('Apply')}}
+              </button>
             </form>
            
 
@@ -110,15 +113,17 @@
             <div class="delete-icon"></div>
           </div>
           <div class="modal-body text-center">
-            <h4 class="modal-heading">Are You Sure ?</h4>
-            <p>Do you really want to delete selected products? This process cannot be undone.</p>
+            <h4 class="modal-heading">{{ __("Are You Sure ?") }}</h4>
+            <p>
+              {{__("Do you really want to delete selected products? This process cannot be undone.")}}
+            </p>
           </div>
           <div class="modal-footer">
            <form id="bulk_delete_form" method="post" action="{{ route('pro.bulk.delete') }}">
               @csrf
               @method('DELETE')
-              <button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">No</button>
-              <button type="submit" class="btn btn-danger">Yes</button>
+              <button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">{{ __("NO") }}</button>
+              <button type="submit" class="btn btn-danger">{{ __("YES") }}</button>
             </form>
           </div>
         </div>

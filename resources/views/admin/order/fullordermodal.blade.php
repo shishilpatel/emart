@@ -7,18 +7,18 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">
-        	UPDATE ORDER: <b>#{{ $inv_cus->order_prefix.$fcorder->getorderinfo->order_id }}</b>
+        	{{__('UPDATE ORDER:')}} <b>#{{ $inv_cus->order_prefix.$fcorder->getorderinfo->order_id }}</b>
         </h4>
       </div> 
       <div class="modal-body">
 
-       	<h4><b>Order Summary</b></h4>
+       	<h4><b>{{ __("Order Summary") }}</b></h4>
 			<hr>
 			<div class="row">
-				<div class="col-md-3"><b>Customer name</b></div>
-				<div class="col-md-3"><b>Cancel Order Date</b></div>
-				<div class="col-md-3"><b>Cancel Order Total</b></div>
-				<div class="col-md-3"><b>REFUND Transcation ID /REF. ID</b></div>
+				<div class="col-md-3"><b>{{ __("Customer name") }}</b></div>
+				<div class="col-md-3"><b>{{ __("Cancel Order Date") }}</b></div>
+				<div class="col-md-3"><b>{{ __("Cancel Order Total") }}</b></div>
+				<div class="col-md-3"><b>{{ __("REFUND Transcation ID /REF. ID") }}</b></div>
 
 					@php
 						$realamount = $fcorder->getorderinfo->order_total;
@@ -27,13 +27,13 @@
 				<div class="col-md-3">{{ $user = App\User::find($fcorder->getorderinfo->user_id)->name }}</div>
 				<div class="col-md-3">{{ date('d-m-Y @ h:i A',strtotime($fcorder->created_at)) }}</div>
 				<div class="col-md-3">
-					<p>Order Total : <i class="{{ $fcorder->getorderinfo->paid_in }}"></i> {{ $realamount }}</p>
+					<p>{{__("Order Total :")}} <i class="{{ $fcorder->getorderinfo->paid_in }}"></i> {{ $realamount }}</p>
 					
 					@if($fcorder->getorderinfo->handlingcharge != 0)
-						<p>Handling Charge : <i class="{{ $fcorder->getorderinfo->paid_in }}"></i> {{ $fcorder->getorderinfo->handlingcharge }}</p>
+						<p>{{__("Handling Charge :")}} <i class="{{ $fcorder->getorderinfo->paid_in }}"></i> {{ $fcorder->getorderinfo->handlingcharge }}</p>
 					@endif
 					@if($fcorder->amount != $realamount)
-						<p>Refunded Amount : <i class="{{ $fcorder->getorderinfo->paid_in }}"></i> {{$fcorder->amount}}</p>
+						<p>{{__("Refunded Amount :")}} <i class="{{ $fcorder->getorderinfo->paid_in }}"></i> {{$fcorder->amount}}</p>
 					@endif
 
 					
@@ -41,7 +41,7 @@
 				<div class="col-md-3"><b>{{ $fcorder->txn_id }}</b></div>
 				
 				<div class="margin-top-15 col-md-3">
-					<p><b>REFUND Method:</b></p>
+					<p><b>{{ __('REFUND Method:') }}</b></p>
 					
 						
 
@@ -51,13 +51,13 @@
 							@elseif($fcorder->method_choosen == 'bank')
 								{{ ucfirst($fcorder->method_choosen) }}
 							@else
-								No Need for COD Orders
+								{{__("No Need for COD Orders")}}
 							@endif
 					
 				</div>
 
 				<div class="margin-top-15 col-md-6">
-					<p><b>Cancelation Reason:</b></p>
+					<p><b>{{ __("Cancelation Reason:") }}</b></p>
 					<blockquote>
 						{{ $fcorder->comment }}
 					</blockquote>
@@ -67,18 +67,18 @@
 					<div class="row">
 						<div class="margin-top-15 col-md-4">
 					
-					<label for="">UPDATE TXN ID OR REF. NO:</label>
+					<label for="">{{ __("UPDATE TXN ID OR REF. NO:") }}</label>
 					<input type="text" name="transaction_id" class="form-control" value="{{ $fcorder->txn_id }}" class="form-control">
 					<br>
 					
-					<label>Amount :</label>
+					<label>{{ __("Amount :") }}</label>
 					<div class="input-group">
 						 <div class="input-group-addon"><i class="{{ $fcorder->getorderinfo->paid_in }}"></i></div>
 					<input {{$fcorder->method_choosen == 'bank' ? "" : "readonly"}} placeholder="0.00" type="text" name="amount" class="form-control" value="{{ $fcorder->amount }}" class="form-control">
 					</div>
 					<small class="help-block">
 						
-						(UPDATE AMOUNT IF CHANGES OR TRANSCATION FEE IS CHARGED)
+						({{__("UPDATE AMOUNT IF CHANGES OR TRANSCATION FEE IS CHARGED")}})
 
 					</small>
 					
@@ -86,30 +86,30 @@
 				</div>
 
 				<div class="margin-top-15 col-md-4">
-					<label for="">UPDATE REFUND STATUS:</label>
+					<label for="">{{ __("UPDATE REFUND STATUS:") }}</label>
 					
 					@if($fcorder->getorderinfo->payment_method !='COD')
 					<select onchange="updatefullorder('{{ $fcorder->id }}')" name="refund_status" class="full_refund_status{{ $fcorder->id }} form-control">
-						<option {{ $fcorder->is_refunded == 'completed' ? "selected" : ""}} value="completed">Completed</option>
-						<option {{ $fcorder->is_refunded == 'pending' ? "selected" : "" }} value="pending">Pending</option>
+						<option {{ $fcorder->is_refunded == 'completed' ? "selected" : ""}} value="completed">{{ __("Completed") }}</option>
+						<option {{ $fcorder->is_refunded == 'pending' ? "selected" : "" }} value="pending">{{ __('Pending') }}</option>
 					</select>
 					@else
 					<select readonly onchange="updatefullorder('{{ $fcorder->id }}')" name="refund_status" class="full_refund_status{{ $fcorder->id }} form-control">
-						<option {{ $fcorder->is_refunded == 'completed' ? "selected" : ""}} value="completed">Completed</option>
+						<option {{ $fcorder->is_refunded == 'completed' ? "selected" : ""}} value="completed">{{ __('Completed') }}</option>
 						
 					</select>
 					@endif
 
 					<br>
 					
-					<label>Transcation Fee:</label>
+					<label>{{ __("Transcation Fee:") }}</label>
 					<div class="input-group">
 						 <div class="input-group-addon"><i class="{{ $fcorder->getorderinfo->paid_in }}"></i></div>
 					<input {{$fcorder->method_choosen == 'bank' ? "" : "readonly"}} placeholder="0.00" type="text" name="txn_fee" class="form-control" value="{{ $fcorder->txn_fee }}" class="form-control">
 				</div>
 					<small class="help-block">
 						
-						(UPDATE TRANSCATION FEE IF CHARGED)
+						({{ __("UPDATE TRANSCATION FEE IF CHARGED") }})
 
 					</small>
 					
@@ -128,15 +128,15 @@
 
 					<div class="well">
 						
-						<p><b>A/C Holder Name: </b>{{$bank->acname}}</p>
-						<p><b>Bank Name: </b>{{ $bank->bankname }}</p>
-						<p><b>Account No: </b>{{ $bank->acno }}</p>
-						<p><b>IFSC Code: </b>{{ $bank->ifsc }}</p>
+						<p><b>{{__("A/C Holder Name:")}} </b>{{$bank->acname}}</p>
+						<p><b>{{__("Bank Name:")}} </b>{{ $bank->bankname }}</p>
+						<p><b>{{__("Account No:")}} </b>{{ $bank->acno }}</p>
+						<p><b>{{__("IFSC Code:")}} </b>{{ $bank->ifsc }}</p>
 
 
 					</div>
 					@else
-						<p>User Deleted bank ac</p>
+						<p>{{ __("User Deleted bank ac") }}</p>
 					@endif
 				</div>
 				@endif
@@ -146,10 +146,10 @@
 			</div>
 			@if($fcorder->getorderinfo->discount !=0)
 			<div class="callout callout-success">
-				Customer Apply <b>{{ $fcorder->getorderinfo->coupon }}</b> on this order.
+				{{__('Customer Apply')}} <b>{{ $fcorder->getorderinfo->coupon }}</b> {{__('on this order.')}}
 			</div>
 			@endif
-			<h4><b>Items ({{ count($fcorder->inv_id) }})</b></h4>
+			<h4><b>{{__("Items")}} ({{ count($fcorder->inv_id) }})</b></h4>
 			
 
 			@if(is_array($fcorder->inv_id))
@@ -212,10 +212,10 @@
 
                     </small></a>
 					<br>
-                    <small class="margin-left-15"><b>Sold By:</b> {{$orivar->products->store->name}}
+                    <small class="margin-left-15"><b>{{ __("Sold By:") }}</b> {{$orivar->products->store->name}}
                     </small>
                     <br>
-                     <small class="margin-left-15"><b>Qty:</b> {{ $inv->qty }}
+                     <small class="margin-left-15"><b>{{ __("Qty:") }}</b> {{ $inv->qty }}
                      </small>
 						</div>
 					</div>
@@ -263,14 +263,14 @@
 
 				<div class="col-md-2">
 					<label>
-						(UPDATE ORDER STATUS)
+						{{__("(UPDATE ORDER STATUS)")}}
 					</label>
 			<select name="order_status[]" class="single_order_status{{ $fcorder->id }} form-control">
 						@if($fcorder->is_refunded == 'pending')
-						<option selected value="Refund Pending">Refund Pending</option>
+						<option selected value="Refund Pending">{{ __("Refund Pending") }}</option>
 						@elseif($fcorder->is_refunded == 'completed')
-						<option {{ $inv->status == 'refunded' ? "selected" : "" }} value="refunded">Refunded</option>
-						<option {{ $inv->status == 'returned' ? "selected" : "" }} value="returned">Returned</option>
+						<option {{ $inv->status == 'refunded' ? "selected" : "" }} value="refunded">{{ __("Refunded") }}</option>
+						<option {{ $inv->status == 'returned' ? "selected" : "" }} value="returned">{{ __("Returned") }}</option>
 						@endif
 					</select>
 					
@@ -285,8 +285,10 @@
 			@endif
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">{{ __('Close') }}</button>
+        <button type="submit" class="btn btn-primary">
+			{{__("Save changes")}}
+		</button>
     </form>
       </div>
     </div>
@@ -299,7 +301,7 @@
 	    <div class="modal-content">
 	      <div class="modal-header">
 	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	        <h4 class="modal-title" id="myModalLabel">Track REFUND FOR ORDER <b>#{{ $inv_cus->order_prefix.$fcorder->getorderinfo->order_id }}</b> | TXN ID : <b>{{  $fcorder->txn_id }}</b></h4>
+	        <h4 class="modal-title" id="myModalLabel">{{__("Track REFUND FOR ORDER")}} <b>#{{ $inv_cus->order_prefix.$fcorder->getorderinfo->order_id }}</b> | {{__("TXN ID :")}} <b>{{  $fcorder->txn_id }}</b></h4>
 	      </div>
 	      <div class="modal-body">
 	       	 <div id="refundAreafull{{ $fcorder->id }}">
@@ -307,8 +309,8 @@
 	       	 </div>
 	      </div>
 	      <div class="modal-footer">
-	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-	        <button onclick="trackrefundFullCOrder('{{ $fcorder->id }}')" type="button" class="btn btn-primary"><i class="fa fa-refresh" aria-hidden="true"></i> REFRESH</button>
+	        <button type="button" class="btn btn-default" data-dismiss="modal">{{ __('Close') }}</button>
+	        <button onclick="trackrefundFullCOrder('{{ $fcorder->id }}')" type="button" class="btn btn-primary"><i class="fa fa-refresh" aria-hidden="true"></i> {{ __('REFRESH') }}</button>
 	      </div>
 	    </div>
 	  </div>

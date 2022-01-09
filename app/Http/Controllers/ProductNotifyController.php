@@ -19,7 +19,7 @@ class ProductNotifyController extends Controller
         $user = User::firstWhere('email',$request->email);
 
         if($checkif){
-            alert()->info('<p class="font-weight-normal">You already subscribed for this product !</p>')->html()->autoclose(8000);
+            alert()->info('<p class="font-weight-normal">'.__('You already subscribed for this product !').'</p>')->html()->autoclose(8000);
             return back();
         }
 
@@ -31,7 +31,7 @@ class ProductNotifyController extends Controller
             ]);
         }
 
-        alert()->success('<p class="font-weight-normal">Added to Notify List !</p>')->html()->autoclose(8000);
+        alert()->success('<p class="font-weight-normal">'.__('Added to Notify List !').'</p>')->html()->autoclose(8000);
         return back();
 
     }

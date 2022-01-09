@@ -15,7 +15,7 @@ class CoupanController extends Controller
      */
     public function index()
     {
-        abort_if(!auth()->user()->can('coupans.view'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('coupans.view'),403,__('User does not have the right permissions.'));
         $coupans = Coupan::orderBy('id', 'DESC')->get();
         return view("admin.coupan.index", compact("coupans"));
     }
@@ -27,7 +27,7 @@ class CoupanController extends Controller
      */
     public function create()
     {
-        abort_if(!auth()->user()->can('coupans.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('coupans.create'),403,__('User does not have the right permissions.'));
 
         $category = Category::all();
         $product = Product::all();
@@ -44,7 +44,7 @@ class CoupanController extends Controller
     public function store(Request $request)
     {
 
-        abort_if(!auth()->user()->can('coupans.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('coupans.create'),403,__('User does not have the right permissions.'));
 
         $input = $request->all();
         $newc = new Coupan;
@@ -79,12 +79,12 @@ class CoupanController extends Controller
 
         $newc->create($input);
 
-        return redirect("admin/coupan")->with("added", "Coupan Has Been Created !");
+        return redirect("admin/coupan")->with("added", __("Coupan has been created !"));
     }
 
     public function edit($id)
     {
-        abort_if(!auth()->user()->can('coupans.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('coupans.edit'),403,__('User does not have the right permissions.'));
         
         $coupan = Coupan::findOrFail($id);
         return view("admin.coupan.edit", compact("coupan"));
@@ -93,7 +93,7 @@ class CoupanController extends Controller
     public function update(Request $request, $id)
     {
         
-        abort_if(!auth()->user()->can('coupans.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('coupans.edit'),403,__('User does not have the right permissions.'));
 
         $newc = Coupan::find($id);
 
@@ -134,26 +134,26 @@ class CoupanController extends Controller
 
         $newc->update($input);
 
-        notify()->success('Coupan Has Been Updated !',$newc->code);
+        notify()->success(__('Coupan has been updated !'),$newc->code);
 
         return redirect("admin/coupan");
     }
 
     public function destroy($id)
     {
-        abort_if(!auth()->user()->can('coupans.delete'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('coupans.delete'),403,__('User does not have the right permissions.'));
 
         $newc = Coupan::find($id);
         if (isset($newc))
         {
             $newc->delete();
             return back()
-                ->with('deleted', 'Coupon has been deleted');
+                ->with('deleted', __('Coupon has been deleted'));
         }
         else
         {
             return back()
-                ->with('warning', '404 | Coupon not found !');
+                ->with('warning', __('404 | Coupon not found !'));
         }
     }
 }

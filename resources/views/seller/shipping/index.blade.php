@@ -1,5 +1,5 @@
 @extends('admin.layouts.sellermastersoyuz')
-@section('title', 'Available Shipping Methods | ')
+@section('title', __('Available Shipping Methods'))
 @section('body')
 
 @component('seller.components.breadcumb',['secondactive' => 'active'])
@@ -226,7 +226,7 @@
 				</h5> 
 			  </div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('Close') }}</button>
 			
 			</div>
 		</div>

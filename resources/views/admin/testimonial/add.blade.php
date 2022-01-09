@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Add Testimonial | ')
+@section('title',__('Add Testimonial | '))
 @section('body')
 
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
@@ -39,26 +39,26 @@
                   <div class="row">
                 <div class="form-group col-md-6">
                   <label>
-                    Name: <span class="required">*</span>
+                    {{__("Name:")}} <span class="required">*</span>
                   </label>
-                  <input placeholder="Enter Name" type="text" id="first-name" name="name" value="{{old('name')}}" class="form-control">
+                  <input placeholder="{{ __("Enter Name") }}" type="text" id="first-name" name="name" value="{{old('name')}}" class="form-control">
                 </div>
                   
                 <div class="form-group col-md-6">
                   <label>
-                    Rating: <span class="required">*</span>
+                    {{__("Rating:")}} <span class="required">*</span>
                   </label>
                   
                  
                     <select name="rating" class="form-control select2">
-                      <option value="0">Please Choose</option>
+                      <option value="0">{{ __("Please Choose") }}</option>
                       <option value="1">1</option>
                       <option value="2">2</option>
                       <option value="3">3</option>
                       <option value="4">4</option>
                       <option value="5">5</option>
                     </select>
-                    <small class="txt-desc">(Please Choose Rating)</small>
+                    <small class="txt-desc">({{__('Please Choose Rating') }})</small>
                   
                 </div>
                  
@@ -66,41 +66,39 @@
                   
                 <div class="form-group col-md-6">
                   <label>
-                    Designation: <span class="required">*</span>
+                    {{__("Designation:")}} <span class="required">*</span>
                   </label>
-                  <input placeholder="Enter Designation" type="text" id="first-name" name="post" value="{{old('post')}}" class="form-control">
+                  <input placeholder="{{ __('Enter Designation') }}" type="text" id="first-name" name="post" value="{{old('post')}}" class="form-control">
                 </div>
                   
                  
                 <div class="form-group col-md-6">
-                  <label> Image: <span class="required">*</span>
+                  <label>{{__("Image:")}} <span class="required">*</span>
                   </label>
                   <div class="input-group mb-2">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-                    </div>
+                    
                     <div class="custom-file">
                       <input type="file" name="image" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
-                      <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                      <label class="custom-file-label" for="inputGroupFile01">{{ __("Choose file") }} </label>
                     </div>
                   </div>
                   
-                  <small class="txt-desc">(Please Choose Client Image)</small>
+                  <small class="txt-desc">({{__("Please Choose Client Image")}})</small>
                 </div>
 
                 <div class="form-group col-md-12">
-                 <label> Description: <span class="required"></span>
+                 <label>{{__("Description:")}} <span class="required"></span>
                  </label>
                 
                   <textarea cols="2" id="editor1" name="des" rows="5" >
                    {{old('des')}}
                   </textarea>
-                  <small class="txt-desc">(Please Enter Description)</small>
+                  <small class="txt-desc">({{__("Please Enter Description")}})</small>
                  </div>
                   
                  <div class="form-group col-md-6">
                     <label>
-                      Status:
+                      {{ __('Status:') }}
                     </label>
                     <br>
                     <label class="switch">
@@ -109,7 +107,7 @@
                     </label>
                     <br>
                     <input type="hidden" name="status" value="0" id="status3">
-                      <small class="txt-desc">(Please Choose Status) </small>
+                      <small class="txt-desc">({{__("Please Choose Status")}}) </small>
                   </div>
 
                  

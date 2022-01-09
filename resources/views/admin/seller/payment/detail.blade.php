@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','View Payout #'.$payout->payoutid.' | ')
+@section('title',__('View Payout # :payout | ',['payout' => $payout->payoutid]))
 @section('body')
 
 @component('seller.components.breadcumb',['thirdactive' => 'active'])
@@ -46,8 +46,10 @@
                               </div>
                               <div class="col-12 col-md-5 col-lg-5">
                                   <div class="invoice-name">
-                                      <h5 class="text-uppercase mb-3">Invoice</h5>
-                                      <p class="mb-1">No :#{{ $inv_cus->prefix.$payout->singleorder->inv_no.$inv_cus->postfix }}</p>
+                                      <h5 class="text-uppercase mb-3">
+                                          {{__("Invoice")}}
+                                      </h5>
+                                      <p class="mb-1">{{__("No")}} :#{{ $inv_cus->prefix.$payout->singleorder->inv_no.$inv_cus->postfix }}</p>
                                       <p class="mb-0">{{ date('d/m/Y',strtotime($payout->created_at)) }}</p>
                                       <h4 class="text-success mb-0 mt-3"><i class="{{ $defCurrency->currency_symbol }}"></i>
                                         @if($payout->paidvia == 'Bank') {{  sprintf("%.2f", $payout->orderamount+$payout->txn_fee-$payout->txn_fee) }} @else {{  sprintf("%.2f", $payout->orderamount) }} @endif</h4>
@@ -59,7 +61,7 @@
                           <div class="row">
                               <div class="col-sm-6 col-md-4 col-lg-4">
                                   <div class="invoice-address">
-                                      <h6 class="mb-3">Form to</h6>
+                                      <h6 class="mb-3">{{ __("From") }}</h6>
                                       <h6 class="text-muted">{{ $genrals_settings->project_name }}</h6>
                                       <ul class="list-unstyled">
                                           <li> {{ $genrals_settings->address }}</li>  
@@ -70,7 +72,7 @@
                               </div>
                               <div class="col-sm-6 col-md-4 col-lg-4">
                                   <div class="invoice-address">
-                                      <h6 class="mb-3">To</h6>
+                                      <h6 class="mb-3">{{ __("To") }}</h6>
                                       <h6 class="text-muted">{{ $payout->vender->name }}</h6>
                                       <ul class="list-unstyled">
                                           <li>{{ $payout->vender->store->address }}</li>  
@@ -84,12 +86,12 @@
                                   <div class="invoice-address">
                                       <div class="card">
                                           <div class="card-body bg-info-rgba text-center">
-                                              <h6>Payment Method</h6>
+                                              <h6>{{ __("Payment Method") }}</h6>
                                               @if($payout->paidvia == 'Paypal')
-                                              <img src="{{ url('images/paypal.png') }}" alt="Paypal">
+                                              <img src="{{ url('images/paypal.png') }}" alt="{{ __("Paypal") }}">
                                               @endif
                                               @if($payout->paidvia == 'Bank')
-                                              <img width="50px" src="{{ url('images/bankt.png') }}" alt="bank_transfer" title="Bank Transfer">
+                                              <img width="50px" src="{{ url('images/bankt.png') }}" alt="bank_transfer" title="{{ __("Bank Transfer") }}">
                                               @endif
                                              
                                               
@@ -105,10 +107,18 @@
                                   <thead>
                                       <tr>
                                           <th scope="col">#</th>                       
-                                          <th scope="col">Image</th>
-                                          <th scope="col">Product</th>
-                                          <th scope="col">HSN</th>
-                                          <th scope="col">Qty.</th>
+                                          <th scope="col">
+                                              {{__("Image")}}
+                                          </th>
+                                          <th scope="col">
+                                              {{__("Product")}}
+                                          </th>
+                                          <th scope="col">
+                                              {{__('HSN')}}
+                                          </th>
+                                          <th scope="col">
+                                              {{__("Qty.")}}
+                                          </th>
                                           
                                       </tr>
                                   </thead>
@@ -149,21 +159,23 @@
                                   <div class="order-note">
                                    
          
-                                    <b>Payout ID:</b>{{ $payout->payoutid}}<br>
+                                    <b>{{ __("Payout ID:") }}</b>{{ $payout->payoutid}}<br>
                                   @if($payout->paidvia == 'Paypal')
-                                    <b>Payment Status:</b> {{ $status }}<br>
-                                    <b>Paypal Batch ID:</b> {{ $payout->txn_id }} <br>
+                                    <b>{{ __('Payment Status:') }}</b> {{ $status }}<br>
+                                    <b>{{ __("Paypal Batch ID:") }}</b> {{ $payout->txn_id }} <br>
                                   @endif
-                                  <b>Transcation ID:</b> {{ $txnid }} <br>
-                                  <b>Payment Method:</b> {{ $payout->paidvia == 'Bank' ? "Bank Transfer [$payout->txn_type]" : $payout->paidvia }}
+                                  <b>{{ __('Transcation ID:') }}</b> {{ $txnid }} <br>
+                                  <b>{{ __("Payment Method:") }}</b> {{ $payout->paidvia == 'Bank' ? "Bank Transfer [$payout->txn_type]" : $payout->paidvia }}
                                   @if($payout->paidvia == 'Bank')
                                   
-                                     <p>Payee Bank Account Detail</p>
-                                     <p><b>A/c no.:</b> {{ $payout->acno }}</p>
-                                     <p><b>Payee Name:</b> {{ $payout->acholder }}</p>
-                                     <p><b>IFSC Code:</b> {{ $payout->ifsccode }}</p>
-                                     <p><b>Bank Name:</b> {{ $payout->bankname }}</p>
-                                     <p><b>Branch: </b></p>
+                                     <p>
+                                         {{__('Payee Bank Account Detail')}}
+                                     </p>
+                                     <p><b>{{ __("A/c no.:") }}</b> {{ $payout->acno }}</p>
+                                     <p><b>{{ __('Payee Name:') }}</b> {{ $payout->acholder }}</p>
+                                     <p><b>{{ __("IFSC Code:") }}</b> {{ $payout->ifsccode }}</p>
+                                     <p><b>{{ __("Bank Name:") }}</b> {{ $payout->bankname }}</p>
+                                     <p><b>{{__("Branch:")}} </b></p>
                                  
                                 @endif  
                                   </div>
@@ -173,25 +185,25 @@
                                       <table class="table table-borderless text-right">
                                           <tbody>
                                               <tr>
-                                                  <td>Sub Total :</td>
+                                                  <td>{{__('Subtotal:')}} </td>
                                                   <td><i class="{{ $defCurrency->currency_symbol }}"></i> @if($payout->paidvia == 'Bank') {{  sprintf("%.2f", $payout->orderamount+$payout->txn_fee) }} @else {{  sprintf("%.2f", $payout->orderamount) }} @endif</td>
                                               </tr>
                                               @if($payout->txn_fee !='')
                                               @if($payout->paidvia =='Paypal')
                                                 <tr>
-                                                  <td>Transcation Charge:</td>
+                                                  <td>{{ __("Transcation Charge:") }}</td>
                                                   <td><i class="{{ $defCurrency->currency_symbol }}"></i> {{ $payout->txn_fee }} <i title="Already paid by admin not included in this total" class="fa fa-info-circle"></i></td>
                                                 </tr>
                                               @else
                                                 <tr>
-                                                  <td>Transcation Charge:</td>
+                                                  <td>{{ __("Transcation Charge:") }}</td>
                                                   <td> - <i class="{{ $defCurrency->currency_symbol }}"></i> {{ $payout->txn_fee }} <i title="Already paid by admin not included in this total" class="fa fa-info-circle"></i></td>
                                                 </tr>
                                               @endif
                                               @endif
                                              
                                               <tr>
-                                                  <td class="f-w-7 font-18"><h5>Total:</h5></td>
+                                                  <td class="f-w-7 font-18"><h5>{{ __("Total:") }}</h5></td>
                                                   <td class="f-w-7 font-18"><h5><i class="{{ $defCurrency->currency_symbol }}"></i> @if($payout->paidvia == 'Bank') {{  sprintf("%.2f", $payout->orderamount+$payout->txn_fee-$payout->txn_fee) }} @else {{  sprintf("%.2f", $payout->orderamount) }} @endif</h5></td>
                                               </tr>
                                           </tbody>
@@ -204,7 +216,7 @@
                           <div class="row">
                               <div class="col-sm-6 col-md-4 col-lg-8">
                                   <div class="invoice-meta-box">
-                                    <h6>Special Note for this order:</h6>
+                                    <h6>{{ __("Special Note for this order:") }}</h6>
                                    <p> @if($payout->paidvia == 'Paypal')
                                     {{__("Payout fee of")}} <i class="cur_sym {{ $defCurrency->currency_symbol }}"></i>{{ $payout->txn_fee }} {{__("is additionally applied by Paypal not included in grand total.")}}
                                     @elseif($payout->paidvia == 'bank')
@@ -217,7 +229,7 @@
                              
                               <div class="col-sm-12 col-md-4 col-lg-4">
                                   <div class="invoice-meta-box text-right">
-                                    <h6 class="mb-3">Contact Us</h6>
+                                    <h6 class="mb-3">{{ __("Contact Us") }}</h6>
                                     <ul class="list-unstyled">
                                         <li><i class="feather icon-aperture mr-2"></i>{{ $genrals_settings->project_name }}</li>  
                                         <li><i class="feather icon-mail mr-2"></i>{{ $genrals_settings->email }}</li>  
@@ -230,12 +242,16 @@
                       <div class="invoice-footer">
                           <div class="row align-items-center">
                               <div class="col-md-6">
-                                  <p class="mb-0">Thank you for your Business.</p>
+                                  <p class="mb-0">
+                                      {{__("Thank you for your Business.")}}
+                                  </p>
                               </div>
                               <div class="col-md-6">
                                   <div class="invoice-footer-btn">
                                   
-                                      <a href="{{ route('seller.print.slip',$payout->id) }}"  class="btn btn-primary-rgba py-1 font-16"><i class="feather icon-printer mr-2"></i>Print</a>
+                                      <a href="{{ route('seller.print.slip',$payout->id) }}"  class="btn btn-primary-rgba py-1 font-16"><i class="feather icon-printer mr-2"></i>
+                                        {{__("Print")}}
+                                    </a>
                                       
                                   </div>
                               </div>

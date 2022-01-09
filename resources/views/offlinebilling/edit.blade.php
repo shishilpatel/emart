@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Edit order #'.$order->order_id.' | ')
+@section('title',__('Edit order # :order',['order' => $order->order_id]))
 @section('body')
 @component('admin.component.breadcumb',['secondaryactive' => 'active'])
 
@@ -42,10 +42,10 @@
                                 <div class="col-md-3">
                                   
                                   <label>
-                                    Invoice Date:
+                                    {{__("Invoice Date:")}}
                                   </label>
                                   <div class='input-group date' id='datetimepicker1'>
-                                    <input placeholder="Enter invoice date" value="{{ $order['invoice_date'] ?? old('invoice_date') }}" name="invoice_date" type='text' class="form-control" />
+                                    <input placeholder="{{ __('Enter invoice date') }}" value="{{ $order['invoice_date'] ?? old('invoice_date') }}" name="invoice_date" type='text' class="form-control" />
                                     <span class="input-group-text">
                                         <span class="feather icon-calendar"></span>
                                     </span>
@@ -56,21 +56,21 @@
                 
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="my-input">Customer Name: <span class="text-danger">*</span></label>
+                                        <label for="my-input">{{ __('Customer Name') }}: <span class="text-danger">*</span></label>
                                         <div class="input-group">
                 
                                             <span class="input-group-text" id="basic-addon1">
                                                 <i class="feather icon-user" aria-hidden="true"></i>
                                             </span>
                                             <input id="customer_search" value="{{ $order['customer_name'] }}" required id="my-input"
-                                                class="form-control" type="text" name="customer_name" placeholder="eg: John doe">
+                                                class="form-control" type="text" name="customer_name" placeholder="{{ __('eg: John doe') }}">
                                             <input type="hidden" value="{{ $order['customer_id'] }}" name="customer_id" id="customer_id">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="my-input">Customer email: <span class="text-danger">*</span></label>
+                                        <label for="my-input">{{__('Customer email')}}: <span class="text-danger">*</span></label>
                                         <div class="input-group">
                 
                                             <span class="input-group-text" id="basic-addon1">
@@ -85,7 +85,7 @@
                 
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="my-input">Customer Contact No: <span class="text-danger">*</span></label>
+                                        <label for="my-input">{{__('Customer Contact No')}}: <span class="text-danger">*</span></label>
                                         <div class="input-group">
                 
                                             <span class="input-group-text" id="basic-addon1">
@@ -104,7 +104,7 @@
                 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="my-input">Customer Shipping Address: <span class="text-danger">*</span></label>
+                                        <label for="my-input">{{__('Customer Shipping Address')}}: <span class="text-danger">*</span></label>
                                         <textarea placeholder="B-123, Los Street, Washington DC, USA" required
                                             class="form-control customer_shipping_address" name="customer_shipping_address" id=""
                                             cols="30" rows="5">{{ $order['customer_shipping_address'] }}</textarea>
@@ -114,7 +114,7 @@
                 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="my-input">Customer Billing Address: <span class="text-danger">*</span></label>
+                                        <label for="my-input">{{__('Customer Billing Address')}}: <span class="text-danger">*</span></label>
                                         <textarea placeholder="B-123, Los Street, Washington DC, USA" required
                                             class="form-control customer_billing_address" name="customer_billing_address" id=""
                                             cols="30" rows="5">{{ $order['customer_billing_address'] }}</textarea>
@@ -126,11 +126,11 @@
                                 <div class="col-md-3">
                 
                                     <label class="control-label" for="">
-                                        Country: 
+                                        {{__('Country')}}: 
                                     </label>
                      
                                     <select onchange="getstate();" data-placeholder="{{ __("Please select country") }}" required name="country_id" class="form-control select2 country_id" id="country_id">
-                                         <option value="">Please Choose</option>
+                                         <option value="">{{ __('Please Choose') }}</option>
                                            @foreach($country as $c)
                                            <?php
                                              $iso3 = $c->country;
@@ -150,11 +150,11 @@
                                 <div class="col-md-3">
                               
                                     <label class="control-label" for="">
-                                        State: 
+                                        {{__('State')}}: 
                                     </label>
                       
                                     <select onchange="getcity();" data-placeholder="{{ __("Please select state") }}" required name="state_id" class="form-control select2 state_id" id="upload_id" >
-                                      <option value="">Please Choose</option>
+                                      <option value="">{{ __('Please Choose') }}</option>
                                       @foreach($order->country->states as $state)
                                         <option {{ $state->id == $order['state_id'] ? "selected" : "" }} value="{{ $state->id }}">{{ $state['name'] }}</option>
                                       @endforeach
@@ -165,7 +165,7 @@
                                 <div class="col-md-3">
                                     
                                      <label class="control-label" for="">
-                                            City: 
+                                            {{__('City')}}: 
                                     </label>
                       
                                 <select data-placeholder="{{ __("Please select city") }}" required name="city_id" id="city_id" class="form-control select2 city_id">
@@ -179,7 +179,7 @@
                 
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="my-input">Pincode: <span class="text-danger">*</span></label>
+                                        <label for="my-input">{{__('Pincode')}}: <span class="text-danger">*</span></label>
                                         <div class="input-group">
                 
                                             <span class="input-group-text" id="basic-addon1">
@@ -212,7 +212,7 @@
                                             {{ __('Payment Method:') }} <span class="text-danger">*</span>
                                         </label>
                                         <input value="{{ $order['payment_method'] }}" required name="payment_method" type="text" class="form-control"
-                                            placeholder="eg:Cash on delivery">
+                                            placeholder="{{ __('eg:Cash on delivery') }}">
                                     </div>
                                 </div>
                 
@@ -261,7 +261,7 @@
                                 {{ __('Transcation ID:') }} </small>
                                 </label>
                             <input value="{{ $order['txn_id'] }}" required name="txn_id" type="text" class="form-control" placeholder="eg: NND7405">
-                            <label class="text-muted"><input {{ $order['order_id'] == $order['txn_id'] ? "checked" : "" }} type="checkbox" name="txn_same_as_orderid"> Same as Order ID</label>
+                            <label class="text-muted"><input {{ $order['order_id'] == $order['txn_id'] ? "checked" : "" }} type="checkbox" name="txn_same_as_orderid"> {{ __('Same as Order ID') }}</label>
                             </div>
                         </div>
                 
@@ -271,13 +271,13 @@
                                     {{ __('Order Status:') }} <span class="text-danger">*</span>
                                 </label>
                                 <select name="order_status" id="" class="form-control select2">
-                                    <option {{ $order['order_status'] == 'pending' ? "selected" : "" }} value="pending">Pending</option>
-                                    <option {{ $order['order_status'] == 'processed' ? "selected" : "" }} value="processed">Processed</option>
-                                    <option {{ $order['order_status'] == 'packed' ? "selected" : "" }} value="packed">Packed</option>
-                                    <option {{ $order['order_status'] == 'shipped' ? "selected" : "" }} value="shipped">Shipped</option>
-                                    <option {{ $order['order_status'] == 'in_transit' ? "selected" : "" }} value="in_transit">In Transit</option>
-                                    <option {{ $order['order_status'] == 'out_for_delivery' ? "selected" : "" }} value="out_for_delivery">Out for Delivery</option>
-                                    <option {{ $order['order_status'] == 'delivered' ? "selected" : "" }} value="delivered">Delivered</option>
+                                    <option {{ $order['order_status'] == 'pending' ? "selected" : "" }} value="pending">{{ __('Pending') }}</option>
+                                    <option {{ $order['order_status'] == 'processed' ? "selected" : "" }} value="processed">{{ __('Processed') }}</option>
+                                    <option {{ $order['order_status'] == 'packed' ? "selected" : "" }} value="packed">{{ __('Packed') }}</option>
+                                    <option {{ $order['order_status'] == 'shipped' ? "selected" : "" }} value="shipped">{{ __('Shipped') }}</option>
+                                    <option {{ $order['order_status'] == 'in_transit' ? "selected" : "" }} value="in_transit">{{ __('In Transit') }}</option>
+                                    <option {{ $order['order_status'] == 'out_for_delivery' ? "selected" : "" }} value="out_for_delivery">{{ __('Out for Delivery') }}</option>
+                                    <option {{ $order['order_status'] == 'delivered' ? "selected" : "" }} value="delivered">{{ __('Delivered') }}</option>
                                 </select>
                             </div>
                         </div>
@@ -295,8 +295,8 @@
                     <div class="card orderDetails" tabindex="1">
                         <div class="card-header">
                             <div class="float-right">
-                                <label class="badge badge-success"> USE <b><u>Ctrl+D</u></b> to quickly add a new row.</label> |
-                                <label class="badge badge-danger"> USE <b><u>Ctrl+E</u></b> to quickly remove a row.</label>
+                                <label class="badge badge-success"> {{__('USE')}} <b><u>Ctrl+D</u></b> {{ __('to quickly add a new row.') }}</label> |
+                                <label class="badge badge-danger"> {{__('USE')}} <b><u>Ctrl+E</u></b> {{ __('to quickly remove a row.') }}</label>
                             </div>
                             
                             <h3 class="card-title">
@@ -312,19 +312,19 @@
                 
                                     <tr>
                                         <th>
-                                            Name of product
+                                            {{__('Name of product')}}
                                         </th>
                                         <th>
-                                            Price:
+                                            {{__('Price:')}}
                                         </th>
                                         <th>
-                                            Qty.
+                                           {{__('Qty.')}}
                                         </th>
                                         <th>
-                                            Origin
+                                            {{__('Origin')}}
                                         </th>
                                         <th>
-                                            Total
+                                            {{__('Total')}}
                                         </th>
                                         <th>
                 
@@ -335,7 +335,7 @@
                                         @foreach($order->orderItems as $orderitem)
                                         <td>
                                         <input value="{{ $orderitem['product_name'] }}" required type="text" class="form-control product_name" name="product_name[]"
-                                                placeholder="eg:Ring (Gold)">
+                                                placeholder="{{ __('eg:Ring (Gold)') }}">
                                         </td>
                 
                                         <td>
@@ -359,7 +359,7 @@
                 
                                         <td>
                 
-                                            <input placeholder="eg: India" required type="text" class="form-control product_origin" name="origin[]"
+                                            <input placeholder="{{ __('eg: India') }}" required type="text" class="form-control product_origin" name="origin[]"
                                         min="1" value="{{ $orderitem['origin'] }}">
                 
                                         </td>
@@ -378,13 +378,13 @@
                                         </td>
                                         @if($loop->last)
                                         <td>
-                                            <button title="Add new" type="button" class="addNew btn btn-primary-rgba rounded btn-sm">
+                                            <button title="{{ __('Add new') }}" type="button" class="addNew btn btn-primary-rgba rounded btn-sm">
                                                 <i class="fa fa-plus"></i>
                                             </button>
                                         </td>
                 
                                         <td>
-                                            <button title="Remove" type="button" class="removeBtn btn btn-danger-rgba rounded btn-sm">
+                                            <button title="{{ __('Remove') }}" type="button" class="removeBtn btn btn-danger-rgba rounded btn-sm">
                                                 <i class="fa fa-times"></i>
                                             </button>
                                         </td>
@@ -471,7 +471,7 @@
                         
                                                                 </span>
                                                         </div>
-                                                    <small class="text-muted">Tax In Ruppes : <span class="tax_in_rupees">{{ $order['total_tax'] }}</span> <i class="{{ $defCurrency->currency_symbol }}" aria-hidden="true"></i></small>
+                                                    <small class="text-muted">{{__('Tax In RuppesTax In Ruppes')}} : <span class="tax_in_rupees">{{ $order['total_tax'] }}</span> <i class="{{ $defCurrency->currency_symbol }}" aria-hidden="true"></i></small>
                                                     </td>
                                                 </tr>
                                                 <tr>

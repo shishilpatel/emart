@@ -10,7 +10,7 @@ class CustomStyleController extends Controller
     public function addStyle()
     {
 
-        abort_if(!auth()->user()->can('site-settings.style-settings'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('site-settings.style-settings'),403,__('User does not have the right permissions.'));
 
         $css = @file_get_contents(public_path().'/css/custom-style.css');
         $js  = @file_get_contents(public_path().'/js/custom-js.js');
@@ -20,7 +20,7 @@ class CustomStyleController extends Controller
 
     public function storeCSS(Request $request)
     {
-        abort_if(!auth()->user()->can('site-settings.style-settings'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('site-settings.style-settings'),403,__('User does not have the right permissions.'));
 
         $this->validate($request, array(
             'css' => 'required'
@@ -32,13 +32,13 @@ class CustomStyleController extends Controller
         
 
         return redirect()->route('customstyle')
-            ->with('added', 'Added Custom CSS !');
+            ->with('added', __('Added Custom CSS !'));
 
     }
 
     public function storeJS(Request $request)
     {
-        abort_if(!auth()->user()->can('site-settings.style-settings'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('site-settings.style-settings'),403,__('User does not have the right permissions.'));
 
         $this->validate($request, array(
             'js' => 'required'
@@ -47,7 +47,7 @@ class CustomStyleController extends Controller
         $js = $request->js;
         file_put_contents(public_path()."/js/custom-js.js", $js . PHP_EOL );
         return redirect()->route('customstyle')
-            ->with('added', 'Added Javascript !');
+            ->with('added', __('Added Javascript !'));
     }
 
 }

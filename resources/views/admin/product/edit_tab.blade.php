@@ -134,24 +134,22 @@
               <div class="card-body">
                 <table class="table table-bordered table-striped">
                   <tr>
-                    <th>Tax Name
+                    <th>{{__("Tax Name")}}
                       <img src="{{(url('images/info.png'))}}" class="height-15" data-toggle="popover"
-                        data-content="You Want to Choose Tax Class Then Apply same Tax Class And Tax Rate .">
+                        data-content="{{ __('You Want to Choose Tax Class Then Apply same Tax Class And Tax Rate.') }}">
                     </th>
-                    <th>Tax Rate</th>
-                    <th>Priority
-                      <img src="{{(url('images/info.png'))}}" class="height-15" data-toggle="popover" data-content="1 Priority Is Higher Priority And All Numeric Number Is Lowest Priority,
-                      Priority Are Accept Is Numeric Number.">
+                    <th>
+                      {{__("Tax Rate")}}
                     </th>
-                    <th>Based On <img src="{{(url('images/info.png'))}}" class="height-15" data-toggle="popover"
-                        data-content="You Want To Choose Billing address.. 
-                   Then Billing Address And Zone Address Are Same Then Tax Will Be Applied,
-                    And You Will Be Choose Store Address then Store Addrss And User Billing Address Is Same Then Tax Will Be Apply  .">
+                    <th>
+                      {{__('Priority')}}
+                      <img src="{{(url('images/info.png'))}}" class="height-15" data-toggle="popover" data-content="{{ __('1 Priority Is Higher Priority And All Numeric Number Is Lowest Priority, Priority Are Accept Is Numeric Number.') }}">
                     </th>
-                    <th>Zone Details<img src="{{(url('images/info.png'))}}" class="height-15" data-toggle="popover"
-                        data-content="You Want To Choose Billing address.. 
-                   Then Billing Address And Zone Address Are Same Then Tax Will Be Applied,
-                    And You Will Be Choose Store Address then Store Addrss And User Billing Address Is Same Then Tax Will Be Apply  .">
+                    <th>{{__('Based On')}} <img src="{{(url('images/info.png'))}}" class="height-15" data-toggle="popover"
+                        data-content="{{ __('You Want To Choose Billing address Then Billing Address And Zone Address Are Same Then Tax Will Be Applied, And You Will Be Choose Store Address then Store Addrss And User Billing Address Is Same Then Tax Will Be Apply') }}">
+                    </th>
+                    <th>{{ __("Zone Details") }}<img src="{{(url('images/info.png'))}}" class="height-15" data-toggle="popover"
+                        data-content="{{ __('You Want To Choose Billing address Then Billing Address And Zone Address Are Same Then Tax Will Be Applied, And You Will Be Choose Store Address then Store Addrss And User Billing Address Is Same Then Tax Will Be Apply.') }}">
                     </th>
                   </tr>
                   @if(isset($protax->priority))
@@ -203,7 +201,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleStandardModalLabel">Add Related Product for <b>{{ $products->name }}</b></h5>
+                <h5 class="modal-title" id="exampleStandardModalLabel">{{__("Add Related Product for")}} <b>{{ $products->name }}</b></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
@@ -211,7 +209,7 @@
             <div class="modal-body">
             <form action="{{ route('rel.store',$products->id) }}" method="POST">
              @csrf
-            <label class="text-dark">Choose Products: <span class="text-danger">*</span></label>
+            <label class="text-dark">{{__("Choose Products:")}} <span class="text-danger">*</span></label>
             <select class="form-control select2" multiple="multiple" name="related_pro[]">
               @foreach($products->subcategory->products as $pro)
               @if($products->id != $pro->id)
@@ -224,8 +222,8 @@
 
             </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary"><i class="fa fa-plus-save"></i> Save changes</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">{{ __('Close') }}</button>
+        <button type="submit" class="btn btn-primary"><i class="fa fa-plus-save"></i>{{ __('Save changes') }}</button>
         </form>
             </div>
            
@@ -242,7 +240,7 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
             aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Add Related Product for <b>{{ $products->name }}</b></h4>
+        <h4 class="modal-title" id="myModalLabel">{{__("Add Related Product for")}} <b>{{ $products->name }}</b></h4>
       </div>
       <div class="modal-body">
 
@@ -261,8 +259,8 @@
 
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">{{ __('Close') }}</button>
+        <button type="submit" class="btn btn-primary">{{ __("Save changes") }}</button>
         </form>
       </div>
     </div>
@@ -279,15 +277,17 @@
         <div class="delete-icon"></div>
       </div>
       <div class="modal-body text-center">
-        <h4 class="modal-heading">Are You Sure ?</h4>
-        <p>Do you really want to delete these products? This process cannot be undone.</p>
+        <h4 class="modal-heading">{{ __("Are You Sure ?") }}</h4>
+        <p>
+          {{__('Do you really want to delete these products? This process cannot be undone.')}}
+        </p>
       </div>
       <div class="modal-footer">
         <form id="bulk_delete_form" method="post" action="{{ route('pro.specs.delete',$products->id) }}">
           @csrf
           {{ method_field('DELETE') }}
-          <button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">No</button>
-          <button type="submit" class="btn btn-danger">Yes</button>
+          <button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">{{ __("NO") }}</button>
+          <button type="submit" class="btn btn-danger">{{ __("YES") }}</button>
         </form>
       </div>
     </div>

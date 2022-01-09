@@ -4044,19 +4044,19 @@ $count = $cart_table->count();
 @endsection
 
 @section('script')
+
 <script src="{{ url('front/vendor/js/card.js') }}"></script>
 <script>
-  var baseUrl = "<?= url('/') ?>";
-</script>
-<script>
-  var carttotal = "<?= $total; ?>";
+  var baseUrl = @json(url('/'));
+  var carttotal = @json($total);
 </script>
 <script src="{{ url('js/orderpincode.js') }}"></script>
- <script src="{{ url('js/ajaxlocationlist.js') }}"></script>
+<script src="{{ url('js/ajaxlocationlist.js') }}"></script>
 <script src="https://js.braintreegateway.com/web/dropin/1.20.0/js/dropin.min.js"></script>
 
 <script>
   var client_token = null;
+
   $(function () {
     $('.bt-btn').on('click', function () {
       $('.bt-btn').addClass('load');
@@ -4167,10 +4167,14 @@ $count = $cart_table->count();
 
 
   });
+
 </script>
 @if(config('bkash.ENABLE') == 1 && Module::has('Bkash') && Module::find('Bkash')->isEnabled())
   
     @include("bkash::front.bkashscript")
  
 @endif
+
+@stack('payment-script')
+
 @endsection

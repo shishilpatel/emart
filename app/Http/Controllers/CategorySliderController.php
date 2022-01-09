@@ -37,13 +37,13 @@ class CategorySliderController extends Controller
         if (isset($data))
         {
             $data->update($input);
-            return back()->with('updated', 'Category Slider has been updated !');
+            return back()->with('updated', __('Category Slider has been updated !'));
         }
         else
         {
             $data2 = new CategorySlider();
             $data2->create($input);
-            return back()->with('added', 'Category Slider has been created !');
+            return back()->with('added', __('Category Slider has been created !'));
         }
     }
 }

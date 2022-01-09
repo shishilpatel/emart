@@ -1,6 +1,5 @@
-
-@extends("admin.layouts.sellermaster")
-@section('title','All Products |')
+@extends("admin.layouts.sellermastersoyuz")
+@section('title',__('All Products'))
 @section('body')
 
 @component('seller.components.breadcumb',['secondactive' => 'active'])
@@ -15,17 +14,18 @@
 @slot('button')
 <div class="col-md-6">
   <div class="widgetbar">
-    @if(env('ENABLE_SELLER_SUBS_SYSTEM') == 1)
-
+    @if(Module::has('SellerSubscription') && Module::find('SellerSubscription')->isEnabled())
  
-    @if(getPlanStatus() == 1 && ((auth()->user()->products()->count() + auth()->user()->store->simple_products->count()) + auth()->user()->store->simple_products->count()) < auth()->user()->activeSubscription->plan->product_create)
-     
+    @if(getPlanStatus() == 1 && ((auth()->user()->products()->count() + auth()->user()->store->simple_products->count())) <= auth()->user()->activeSubscription->plan->product_create)
+   
      <div class="form-inline pull-right">
+
        @if(auth()->user()->activeSubscription->plan->csv_product == 1)
-       <a title="Import products" href="{{ route('seller.import.product') }}" class="btn btn-success-rgba mr-2"><i class="feather icon-download mr-1"></i> Import Products</a>
+        <a title="{{ __('Import products') }}" href="{{ route('seller.import.product') }}" class="btn btn-success-rgba mr-2"><i class="feather icon-download mr-1"></i> {{ __("Import Products") }}</a>
        @endif
        
-       <a href="{{ url('seller/products/create') }}" class="btn btn-primary-rgba mr-2"><i class="feather icon-plus mr-2"></i>Add Product</a>
+       <a href="{{ url('seller/products/create') }}" class="btn btn-primary-rgba mr-2"><i class="feather icon-plus mr-2"></i>{{ __("Add Product") }}</a>
+       
      </div>
      
 
@@ -35,7 +35,7 @@
 
    
    <div class="form-inline pull-right">
-     <a title="Import products" href="{{ route('seller.import.product') }}" class="btn btn-success-rgba mr-2"><i class="feather icon-download mr-1"></i> Import Products</a>
+     <a title="{{ __('Import products') }}" href="{{ route('seller.import.product') }}" class="btn btn-success-rgba mr-2"><i class="feather icon-download mr-1"></i> {{ __('Import products') }}</a>
      <a href="{{ url('seller/products/create') }}" class="btn btn-primary-rgba"><i class="feather icon-plus mr-2"></i>  Add Product</a>
    </div>
 
@@ -68,12 +68,12 @@
                   
                   <div class="form-group ml-2 mb-2">
                     <select required name="action" id="action" class="form-control">
-                      <option value="">Please select action</option>
-                      <option value="deleted">Delete selected</option>
-                      <option value="deactivated">Deactive selected</option>
-                      <option value="activated">Active selected</option>
+                      <option value="">{{ __('Please select action') }} </option>
+                      <option value="deleted">{{ __('Delete selected') }}</option>
+                      <option value="deactivated">{{ __('Deactive selected') }}</option>
+                      <option value="activated">{{ __('Active selected') }}</option>
                     </select>
-                    <button type="submit" class="btn btn-secondary ml-2">Apply</button>
+                    <button type="submit" class="btn btn-secondary ml-2">{{ __('Apply') }}</button>
                   </div>
                   
                  
@@ -91,33 +91,33 @@
                           
                           </th>
                           <th>
-                            S.NO
+                            {{__('S.NO')}}
                           </th>
                           <th>
-                            Image
-                          </th>
-          
-                          <th>
-                            Product Detail
+                            {{__('Image')}}
                           </th>
           
                           <th>
-                            Price ({{ $defCurrency->currency->code }})
+                            {{__('Product Detail')}}
                           </th>
           
                           <th>
-                            Categories & More
+                            {{__('Price')}} ({{ $defCurrency->currency->code }})
                           </th>
           
                           <th>
-                            Status
-                          </th>
-                          <th>
-                            Add / Update on
+                            {{__('Categories & More')}}
                           </th>
           
                           <th>
-                            Actions
+                            {{__('Status')}}
+                          </th>
+                          <th>
+                            {{__("Add / Update on")}}
+                          </th>
+          
+                          <th>
+                            {{__('Actions')}}
                           </th>
                         </thead>
                          
@@ -193,51 +193,4 @@
     });
     
 </script>
-@endsection                  
-                  
-                    
-    
-                  
-          
-                  
-    
-    
-          
-                  
-    
-    
-                  
-                  
-                
-    
-                
-                                      
-
-
-          
-
-            
-          
-              
-
-
-
-
-            
-
-            
-            
-            
-  
-                 
-  
-               
-  
-          
-    
-             
-            
-
-          
-
-
+@endsection

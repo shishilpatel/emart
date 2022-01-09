@@ -19,28 +19,28 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header bg-primary">
-              <h5 class="text-white modal-title">Login</h5>
+              <h5 class="text-white modal-title">{{ __("Login") }}</h5>
             </div>
             <div class="modal-body">
               
              <div style="display:none;" class="rounded alert alert-success">
-              <i class="fa fa-check-circle"></i>  <span class="successmsg">Authorization successfull....</span>
+              <i class="fa fa-check-circle"></i>  <span class="successmsg">{{ __(">Authorization successfull") }}....</span>
              </div>
 
              <div style="display:none;" class="rounded alert alert-danger">
-               <i class="fa fa-warning"></i> <span class="errormsg">Error Message...</span>
+               <i class="fa fa-warning"></i> <span class="errormsg"> {{__("Error Message")}} ...</span>
              </div>
 
               <form id="prelogin" action="javascript:void(0)" class="needs-validation" novalidate method="POST">
                   @csrf
                   <div class="form-group">
-                      <label>Email: <span class="text-danger">*</span></label>
-                      <input type="email" class="form-control" required name="email" placeholder="Enter your email address">
+                      <label>{{__('Email')}}: <span class="text-danger">*</span></label>
+                      <input type="email" class="form-control" required name="email" placeholder="{{ __('Enter your email address') }}">
                   </div>
 
                   <div class="form-group">
                     <label>Password: <span class="text-danger">*</span></label>
-                    <input type="password" class="form-control" required name="password" placeholder="Enter password">
+                    <input type="password" class="form-control" required name="password" placeholder="{{ __('Enter password') }}">
                   </div>
 
                   <div class="form-group">
@@ -69,31 +69,31 @@
                     class="needs-validation" novalidate>
                     @csrf
                     <blockquote class="text-justify text-dark font-weight-normal">
-                        <p class="font-weight-bold text-primary"><i class="fa fa-check-circle"></i> Before update make
+                        <p class="font-weight-bold text-primary"><i class="fa fa-check-circle"></i> {{ __('Before update make
                             sure you take your database backup and script backup from server so in case if anything goes
-                            wrong you can restore it.</p>
+                            wrong you can restore it.') }}</p>
                         <hr>
                         <div class="rounded alert alert-danger">
                             <i class="fa fa-info-circle"></i>
-                            Important Note:
+                            {{__('Important Note')}}:
                             <ul>
-                                <li>Make sure you read the updated docs. before updating to latest version.</li>
-                                <li>Before update make sure you take the backup of existing database and project files In case if anything goes wrong.</li>
-                                <li>Minimum app version should be 1.9 or above to upgrade to latest version.</li>
+                                <li>{{ __('Make sure you read the updated docs. before updating to latest version') }}.</li>
+                                <li>{{ __('Before update make sure you take the backup of existing database and project files In case if anything goes wrong') }}.</li>
+                                <li>{{ __('Minimum app version should be 1.9 or above to upgrade to latest version') }}.</li>
                             </ul>
                         </div>
                         
                         <ul>
-                            <li><b>Q.</b> Will This Update affect my existing data eg. product data, orders?
+                            <li><b>Q.</b> {{ __('Will This Update affect my existing data eg. product data, orders') }}?
                                 <br>
-                                <b>Answer:</b> No it will not affect your existing .
+                                <b>{{ __('Answer') }}:</b> {{__('No it will not affect your existing')}} .
                             </li>
                             <br>
                             
-                            <li><b>Q.</b> Will This Update affect my customization eg. in <b>CSS,JS or in Core code</b>
+                            <li><b>Q.</b> {{__("Will This Update affect my customization eg. in")}} <b>CSS,JS {{ __('or in Core code') }}</b>
                                 ?
                                 <br>
-                                <b>Answer:</b> Yes it will affect your changes if you did changes in code files <br> If you customize <B>CSS or JS</B> using <b>Admin -> Custom Style Setting</b> Than all your change will not affect else it will affect.
+                                <b>{{ __('Answer') }}:</b> {{__("Yes it will affect your changes if you did changes in code files")}} <br> {{__("If you customize")}} <B>CSS or JS</B> {{__("using")}} <b>{{ __('Admin -> Custom Style Setting') }}</b> {{__("Than all your change will not affect else it will affect.")}}
                             </li>
                         </ul>
 
@@ -107,8 +107,9 @@
                     </div>
                     <small class="font-weight-normal text-center">
                         <a target="__blank"
-                            href="https://codecanyon.net/item/emart-laravel-multivendor-ecommerce-advanced-cms/25300293">Read
-                            complete changelog of update by clicking here.</a>
+                            href="https://codecanyon.net/item/emart-laravel-multivendor-ecommerce-advanced-cms/25300293">
+                        {{__('Read complete changelog of update by clicking here.')}}
+                        </a>
                     </small>
                     <hr>
                     <div class="d-flex justify-content-center">
@@ -118,7 +119,7 @@
             </div>
         </div>
         <p class="text-center m-3 text-white">&copy;{{ date('Y') }} | {{ __('emart Updater') }} | <a class="text-white"
-                href="http://mediacity.co.in">{{ __('Mediacity') }}</a></p>
+                href="http://mediacity.co.in">Mediacity</a></p>
     </div>
 
     <div class="corner-ribbon bottom-right sticky green shadow">{{ __('Updater') }} </div>

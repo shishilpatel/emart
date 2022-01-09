@@ -158,6 +158,14 @@ class OtaUpdateController extends Controller
 
         $this->updateToVersion2_9();
 
+        /** Verion 3.0 code */
+
+        $this->updateToVersion3_0();
+
+        /** Verion 3.0 code */
+
+        $this->updateToVersion3_1();
+
         /** Wrap up */
 
         Artisan::call('cache:clear');
@@ -165,7 +173,7 @@ class OtaUpdateController extends Controller
         Artisan::call('cache:clear');
         Artisan::call('view:clear');
 
-        notify()->success('Updated to version ' . config('app.version') . ' successfully !', 'Version ' . config('app.version'));
+        notify()->success(__('Updated to version :version successfully',['version' => config('app.version')]),__('Version :version',['version' => config('app.version')]));
 
         return redirect('/');
 
@@ -480,7 +488,7 @@ class OtaUpdateController extends Controller
 
                 }
 
-                $file = json_encode($lic_json);
+                $file = json_encode($lic_json,JSON_PRETTY_PRINT);
 
                 $filename = 'license.json';
 
@@ -538,6 +546,40 @@ class OtaUpdateController extends Controller
         }
     }
 
+    public function updateToVersion3_0(){
+        
+        try{
+
+            Log::info('OTA 3.0 Update Start');
+
+            Artisan::call('migrate --path=database/migrations/update3_0');
+
+            /** Syncing New Permissions */
+
+            Artisan::call('db:seed --class=UpdatePermissions');
+
+            Log::info('OTA 3.0 Update End');
+
+        }catch(\Exception $e){
+            Log::error("OTA 3.0 ERROR:" . $e->getMessage());
+        }
+    }
+
+    public function updateToVersion3_1(){
+        
+        try{
+
+            Log::info('OTA 3.1 Update Start');
+
+            Artisan::call('migrate --path=database/migrations/update3_1');
+
+            Log::info('OTA 3.1 Update End');
+
+        }catch(\Exception $e){
+            Log::error("OTA 3.1 ERROR:" . $e->getMessage());
+        }
+    }
+
     public function getotaview()
     {
 
@@ -554,13 +596,13 @@ class OtaUpdateController extends Controller
 
                 if (Auth::user()->role_id != 'a') {
                     Auth::logout();
-                    return response()->json(['status' => 'failed', 'msg' => 'No Permission !']);
+                    return response()->json(['status' => 'failed', 'msg' => __('No Permission !')]);
                 }
 
-                return response()->json(['status' => 'success', 'Authorization successfull...']);
+                return response()->json(['status' => 'success', __('Authorization successfull').'...']);
 
             } else {
-                return response()->json(['status' => 'failed', 'msg' => 'Invalid email address or wrong password !']);
+                return response()->json(['status' => 'failed', 'msg' => __('Invalid email address or wrong password !')]);
             }
         }
     }
@@ -599,7 +641,7 @@ class OtaUpdateController extends Controller
                 
                 return response()->json([
                     'status' => 'uptodate',
-                    'msg' => __('Your application is up to date'),
+                    'msg' => __(__('Your application is up to date')),
                 ]);
             }
 
@@ -633,7 +675,7 @@ class OtaUpdateController extends Controller
 
             if ($extract) {
 
-                notify()->success('Quick hot fix update has been merged successfully !');
+                notify()->success(__('Quick hot fix update has been merged successfully !'));
 
                 $version_json = array(
 

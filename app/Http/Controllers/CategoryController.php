@@ -12,7 +12,7 @@ class CategoryController extends Controller
 
     public function index()
     {
-        abort_if(!auth()->user()->can('category.view'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('category.view'),403,__('User does not have the right permissions.'));
         $category = Category::orderBy('position', 'asc')->get();
         return view("admin.category.index", compact("category"));
     }
@@ -25,13 +25,13 @@ class CategoryController extends Controller
 
     public function create()
     {
-        abort_if(!auth()->user()->can('category.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('category.create'),403,__('User does not have the right permissions.'));
         return view("admin.category.add_category");
     }
 
     public function import(Request $request){
 
-        abort_if(!auth()->user()->can('category.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('category.create'),403,__('User does not have the right permissions.'));
 
         $validator = Validator::make(
             [
@@ -75,14 +75,20 @@ class CategoryController extends Controller
 
             });
 
-            Storage::delete('/excel/'.$filename);
+            try{
 
-            notify()->success('Categories imported successfully');
+                unlink(storage_path().'/excel/'.$filename);
+
+            }catch(\Exception $e){
+
+            }
+
+            notify()->success(__('Categories imported successfully'));
 
             return back();
 
         }else{
-            notify()->error('File is empty !');
+            notify()->error(__('File is empty !'));
             return back();
         }
 
@@ -96,10 +102,10 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        abort_if(!auth()->user()->can('category.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('category.create'),403,__('User does not have the right permissions.'));
 
         $request->validate(["title" => "required"], [
-            "title.required" => "Category Name is required"
+            "title.required" => __("Category name is required")
         ]);
 
         $input = array_filter($request->all());
@@ -113,7 +119,7 @@ class CategoryController extends Controller
             if(!str_contains($request->image, '.png') && !str_contains($request->image, '.jpg') && !str_contains($request->image, '.jpeg') && !str_contains($request->image, '.webp') && !str_contains($request->image, '.gif')){
                     
                 return back()->withInput()->withErrors([
-                    'image' => 'Invalid image type for category thumbnail'
+                    'image' => __('Invalid image type for category thumbnail')
                 ]);
 
             }
@@ -126,7 +132,7 @@ class CategoryController extends Controller
 
         $cat->create($input);
 
-        return back()->with("added", "Category Has Been Added !");
+        return back()->with("added", __("Category has been added !"));
     }
 
     /**
@@ -137,7 +143,7 @@ class CategoryController extends Controller
      */
     public function reposition(Request $request)
     {
-        abort_if(!auth()->user()->can('category.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('category.edit'),403,__('User does not have the right permissions.'));
 
         if ($request->ajax()) {
 
@@ -163,7 +169,7 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        abort_if(!auth()->user()->can('category.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('category.edit'),403,__('User does not have the right permissions.'));
 
         $cat = Category::findOrFail($id);
 
@@ -181,13 +187,13 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
 
-        abort_if(!auth()->user()->can('category.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('category.edit'),403,__('User does not have the right permissions.'));
 
         $request->validate( 
             [
                 "title" => "required"
             ],[
-                "title.required" => "Name is needed"
+                "title.required" => __("Title is required !")
             ]
         );
 
@@ -203,7 +209,7 @@ class CategoryController extends Controller
             if(!str_contains($request->image, '.png') && !str_contains($request->image, '.jpg') && !str_contains($request->image, '.jpeg') && !str_contains($request->image, '.webp') && !str_contains($request->image, '.gif')){
                     
                 return back()->withInput()->withErrors([
-                    'image' => 'Invalid image type for category thumbnail'
+                    'image' => __('Invalid image type for category thumbnail')
                 ]);
 
             }
@@ -214,7 +220,7 @@ class CategoryController extends Controller
 
         $category->update($input);
 
-        return redirect('admin/category')->with('updated', 'Category has been updated');
+        return redirect('admin/category')->with('updated', __('Category has been updated'));
 
     }
 
@@ -226,13 +232,13 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        abort_if(!auth()->user()->can('category.delete'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('category.delete'),403,__('User does not have the right permissions.'));
 
         $category = Category::find($id);
 
         if (count($category->products) > 0) {
             return back()
-                ->with('warning', 'Category cant be deleted as its linked to products !');
+                ->with('warning', __('Category can\'t be deleted as its linked to products !'));
         }
 
         if ($category->image != '' && file_exists(public_path() . '/images/category/' . $category->image)) {
@@ -241,7 +247,7 @@ class CategoryController extends Controller
 
         $value = $category->delete();
         if ($value) {
-            session()->flash("deleted", "Category Has Been Deleted");
+            session()->flash("deleted", __("Category has been deleted"));
             return redirect("admin/category");
         }
     }

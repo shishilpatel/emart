@@ -18,7 +18,8 @@
                             <div class="col-md-4">
                                 <a href="{{url('login/facebook')}}" title="{{__('staticwords.SignInwithFacebook')}}"
                                     class="font-size-12 facebook-sign-in"><i class="fa fa-facebook"></i>Sign in with
-                                    Facebook</a>
+                                    {{__("Facebook")}}    
+                                </a>
                             </div>
                             @endif
 
@@ -71,7 +72,7 @@
                     </div>
                     @if(Module::has('MimSms') && Module::find('MimSms')->isEnabled() && env('MIM_SMS_OTP_ENABLE') == 1 && env('DEFAULT_SMS_CHANNEL') == 'mim')
                         @include('mimsms::auth.login')
-                    @elseif(Module::has('Exabytes') && Module::find('Exabytes')->isEnabled() && env('EXABYTES_OTP_ENABLE') == 1 && env('DEFAULT_SMS_CHANNEL') == 'exabytes')
+                    @elseif(Module::has('Exabytes') && Module::find('Exabytes')->isEnabled() && env('DEFAULT_SMS_CHANNEL') == 'exabytes')
                         @include('exabytes::auth.login')
                     @else
                         
@@ -135,9 +136,9 @@
 </div><!-- /.body-content -->
 @endsection
 @section('head-script')
-<script src="{{ url('admin_lt/plugins/flare/Flare.min.js') }}"></script>
-<script src="{{ url('admin_lt/plugins/flare/gl-matrix.js') }}"></script>
-<script src="{{ url('admin_lt/plugins/flare/canvaskit.js') }}"></script>
+<script src="{{ url('admin_new/plugins/flare/Flare.min.js') }}"></script>
+<script src="{{ url('admin_new/plugins/flare/gl-matrix.js') }}"></script>
+<script src="{{ url('admin_new/plugins/flare/canvaskit.js') }}"></script>
 <script src="{{url('front/vendor/js/Event.js')}}"></script>
 <script src="{{ url('front/vendor/js/loginanimation.js') }}"></script>
 <script>
@@ -170,4 +171,5 @@
         }, false);
     })();
 </script>
+@stack('module-script')
 @endsection

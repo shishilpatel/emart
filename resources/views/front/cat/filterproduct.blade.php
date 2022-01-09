@@ -1,12 +1,23 @@
-<div class="col-sm-6 col-md-4 col-lg-3 col-6 kalpana" id="updatediv">
+<div class="col-sm-6 col-md-4 col-lg-3 col-6 mb-3" id="updatediv">
 
-    <div class="item">
+    <div class="shadow-sm border p-2 h-100 rounded item">
         <div class="products">
             <div class="product">
+
+                @if($product['sale_tag'] !== NULL && $product['sale_tag'] != '')
+                    <div class="ribbon ribbon-top-right">
+                        <span style="background : {{ $product['sale_tag_color'] }} ; color : {{ $product['sale_tag_text_color'] }}">
+                            
+                            {{ $product['sale_tag'] }}
+    
+                        </span>
+                    </div>
+                @endif
+
                 <div class="product-image">
                     <div class="image {{ $sub->stock == 0 ? "pro_img-box" : "" }}">
 
-                        <a href="{{$url}}" title="{{$product->name}}">
+                        <a href="{{ $product->getURL($sub) }}" title="{{$product->name}}">
 
                             @if(count($product->subvariants)>0)
 
@@ -37,22 +48,13 @@
 
                         </a>
                     </div>
-                    <!-- /.image -->
-
-                    @if($product->sale_tag != '')
-                        <div style="background: {{ $product->sale_tag_color }}" class="tag hot">
-                            <span style="color: {{ $product->sale_tag_text_color }}">
-                                {{ filter_var($product->sale_tag) }}
-                            </span>
-                        </div>
-                    @endif
                 </div>
                 <!-- /.product-image -->
 
                 <div class="product-info text-left">
 
                     <h3 class="name">
-                        <a href="{{ url($url) }}">{{$product->name}}
+                        <a href="{{ $product->getURL($sub) }}">{{$product->name}}
                             ({{ variantname($sub) }})
                         </a>
                     </h3>
@@ -71,23 +73,27 @@
                     <div class="product-price"> <span class="price">
 
 
-                            @if($convert_price != 0)
+                            @if($price_login == 0 || auth()->check())
+                              
+                                @if($convert_price != 0)
 
-                            <span class="price">
-                                <i class="{{session()->get('currency')['value']}}"></i>
-                                {{price_format($convert_price * $conversion_rate)}}
-                            </span>
-                            <span class="price-before-discount">
-                                <i class="{{session()->get('currency')['value']}}"></i>
-                                {{price_format($show_price * $conversion_rate)}}
-                            </span>
+                                    <span class="price">
+                                        <i class="{{session()->get('currency')['value']}}"></i>
+                                        {{price_format($convert_price * $conversion_rate)}}
+                                    </span>
+                                    <span class="price-before-discount">
+                                        <i class="{{session()->get('currency')['value']}}"></i>
+                                        {{price_format($show_price * $conversion_rate)}}
+                                    </span>
 
-                            @else
+                                    @else
 
-                            <span class="price">
-                                <i class="{{session()->get('currency')['value']}}"></i>
-                                {{price_format($show_price * $conversion_rate)}}
-                            </span>
+                                    <span class="price">
+                                        <i class="{{session()->get('currency')['value']}}"></i>
+                                        {{price_format($show_price * $conversion_rate)}}
+                                    </span>
+
+                                @endif
 
                             @endif
                     </div>

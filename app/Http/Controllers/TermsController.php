@@ -38,13 +38,13 @@ class TermsController extends Controller
 
             $term->save();
 
-            session()->flash('added','Terms has been updated !');
+            session()->flash('added',__('Terms has been updated !'));
 
             return back();
 
 
         }else{
-            session()->flash('warning','404 | Not found !');
+            session()->flash('warning',__('404 | Not found !'));
             return redirect(route('admin.main'));
         }
     }

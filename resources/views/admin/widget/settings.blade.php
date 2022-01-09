@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Widget Settings | ')
+@section('title',__('Widget Settings | '))
 @section('body')
 
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
@@ -25,19 +25,24 @@
         <div class="col-md-12">
             <div class="card m-b-30">
                 <div class="card-header">
-                    <h5 class="card-title">Widget Settings</h5>
+                    <h5 class="card-title">{{ __("Widget Settings") }}</h5>
                 </div>
                 <div class="card-body">
                     <ul class="nav nav-tabs custom-tab-line mb-3" id="defaultTabLine" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="home-tab-line" data-toggle="tab" href="#home-line" role="tab" aria-controls="home-line" aria-selected="true"><i class="feather icon-grid mr-2"></i>Sidebar
-                                Widgets</a>
+                            <a class="nav-link active" id="home-tab-line" data-toggle="tab" href="#home-line" role="tab" aria-controls="home-line" aria-selected="true"><i class="feather icon-grid mr-2"></i>
+                                {{__('Sidebar Widgets')}}    
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="profile-tab-line" data-toggle="tab" href="#profile-line" role="tab" aria-controls="profile-line" aria-selected="false"><i class="feather icon-file-text mr-2"></i>Main Page Widgets</a>
+                            <a class="nav-link" id="profile-tab-line" data-toggle="tab" href="#profile-line" role="tab" aria-controls="profile-line" aria-selected="false"><i class="feather icon-file-text mr-2"></i>
+                                {{__("Main Page Widgets")}}
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="contact-tab-line" data-toggle="tab" href="#contact-line" role="tab" aria-controls="contact-line" aria-selected="false"><i class="feather icon-folder mr-2"></i>Chat Widgets</a>
+                            <a class="nav-link" id="contact-tab-line" data-toggle="tab" href="#contact-line" role="tab" aria-controls="contact-line" aria-selected="false"><i class="feather icon-folder mr-2"></i>
+                                {{__("Chat Widgets")}}
+                            </a>
                         </li>
                     </ul>
                     <div class="tab-content" id="defaultTabContentLine">
@@ -45,14 +50,15 @@
                             <table class="table table-striped table-hover table-bordered">
                                 <thead>
                                     <th>
-                                        Widget Example:
+                                        
+                                        {{__("Widget Example:")}}
         
                                     </th>
                                     <th>
-                                        Widget Name
+                                        {{__('Widget Name')}}
                                     </th>
                                     <th>
-                                        Widget Place
+                                        {{__("Widget Place")}}
                                     </th>
                                 </thead>
         
@@ -96,7 +102,7 @@
                                                     @if($widget->name == 'testimonial' || $widget->name == 'specialoffer' ||
                                                     $widget->name == 'slider' || $widget->name == 'category' || $widget->name ==
                                                     'hotdeals' || $widget->name == 'newsletter')
-                                                    <p><b>Show On Home Page:</b></p>
+                                                    <p><b>{{ __("Show On Home Page:") }}</b></p>
                                                     @endif
         
                                                     <form action="{{ route('widget.home.quick.update',$widget->id) }}"
@@ -112,7 +118,7 @@
                                                 <div class="col-md-6">
         
                                                     @if($widget->name == 'hotdeals' || $widget->name == 'newsletter')
-                                                    <p><b>Show On Product Detail Page:</b></p>
+                                                    <p><b>{{ __("Show On Product Detail Page:") }}</b></p>
                                                     @endif
         
                                                     @if($widget->name == 'newsletter' || $widget->name == 'hotdeals')
@@ -120,7 +126,7 @@
                                                         method="POST">
                                                         {{csrf_field()}}
                                                         <button @if(env("DEMO_LOCK")==0) type="submit" @else
-                                                            title="This action is disabled in demo !" disabled="disabled" @endif
+                                                            title="{{ __("This action is disabled in demo !") }}" disabled="disabled" @endif
                                                             class="btn btn-xs {{ $widget->shop==1 ? "btn-success-rgba" : "btn-danger-rgba" }}">
                                                             {{ $widget->shop ==1 ? 'Yes' : 'No' }}
                                                         </button>
@@ -140,7 +146,9 @@
                             </table>
                         </div>
                         <div class="tab-pane fade" id="profile-line" role="tabpanel" aria-labelledby="profile-tab-line">
-                            <h4>Widget Example:</h4>
+                            <h4>
+                                {{__("Widget Example:")}}
+                            </h4>
                             <hr>
                             <div class="col-md-12">
                                 <img class="img-responsive pagewidth_image" src="{{ url('images/widgetpreview/newpro.png') }}" alt="" />
@@ -153,7 +161,9 @@
                                
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <h5>Select Categories to show:</h5>
+                                            <h5>
+                                                {{__("Select Categories to show:")}}
+                                            </h5>
 
                                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                                 <div class="card">
@@ -196,7 +206,7 @@
                                 <hr>
         
                                 <div class="">
-                                    <h5> Status:</h5>
+                                    <h5> {{ __('Status:') }}</h5>
                                      
                                         <label class="switch">
                                             <input class="slider" type="checkbox" @if(!empty($NewProCat))
@@ -206,7 +216,6 @@
                                         
                                         <input type="hidden" name="status"
                                             value="@if(!empty($NewProCat)) {{ $NewProCat->status }} @endif" id="status3">
-                                        <small class="txt-desc">(Please Choose Status )</small>
                                     </div>
                                 
                                
@@ -220,7 +229,9 @@
                             </form>
                         </div>
                         <div class="tab-pane fade" id="contact-line" role="tabpanel" aria-labelledby="contact-tab-line">
-                            <h4>Chat Widget Settings:</h4>
+                            <h4>
+                                {{__("Chat Widget Settings:")}}
+                            </h4>
                             <hr>
                             <form action="{{ route('wp.setting.update') }}" method="POST">
                                 @csrf
@@ -228,7 +239,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="my-input">Enable Whatsapp Chat Floating Button:</label>
+                                            <label for="my-input">{{ __("Enable Whatsapp Chat Floating Button:") }}</label>
                                             <br>
                                             <label class="switch">
                                                 <input id="status" type="checkbox" name="status"
@@ -238,32 +249,44 @@
                                         </div>
                 
                                         <div class="form-group">
-                                            <label for="my-input">Whatsapp No: (with country code without [+] sign):</label>
+                                            <label for="my-input">
+                                                {{__("Whatsapp No: (with country code without [+] sign):")}}
+                                            </label>
                                             <input name="phone_no" value="{{ $wp->phone_no }}" class="form-control" type="text" name="size" placeholder="eg:01234567890">
                                         </div>
                 
                                         <div class="form-group">
-                                            <label for="my-input">Popmessage Text:</label>
+                                            <label for="my-input">
+                                                {{__("Popmessage Text:")}}
+                                            </label>
                                             <input value="{{ $wp->popupMessage }}" id="my-input" class="form-control" type="text" name="popupMessage" placeholder="eg: Hi ! How can we help you?">
                                         </div>
                 
                                         <div class="form-group">
-                                            <label for="my-input">Button Size:</label>
+                                            <label for="my-input">
+                                                {{__("Button Size:")}}
+                                            </label>
                                             <input value="{{ $wp->size }}" id="my-input" class="form-control" type="text" name="size" placeholder="eg:60px">
                                         </div>
                 
                                         <div class="form-group">
-                                            <label for="my-input">Position:</label>
+                                            <label for="my-input">
+                                                {{__("Position:")}}
+                                            </label>
                                             <input value="{{ $wp->position }}" id="my-input" class="form-control" type="text" name="position" placeholder="eg:left">
                                         </div>
                 
                                         <div class="form-group">
-                                            <label for="my-input">Header title:</label>
+                                            <label for="my-input">
+                                                {{__("Header title:")}}
+                                            </label>
                                             <input value="{{ $wp->headerTitle }}" id="my-input" class="form-control" type="text" name="headerTitle" placeholder="eg:Chat with us !">
                                         </div>
                 
                                         <div class="form-group">
-                                            <label for="my-input">Header color:</label>
+                                            <label for="my-input">
+                                                {{__('Header color:')}}
+                                            </label>
                                             <div  class="input-group initial-color" title="Using input value">
                                                 <input type="text" class="form-control input-lg"  id="my-input" value="{{ $wp->headerColor }}" name="headerColor"  placeholder="#000000"/>
                                                 <span class="input-group-append">
@@ -275,20 +298,20 @@
         
                                     <div class="col-md-6">
                                         <h4><i class="fa fa-facebook-official" aria-hidden="true"></i>
-                                            Messenger Bubble Chat URL:</h4><br>
-                                            <label>MESSENGER CHAT BUBBLE URL :</label><br>
+                                            {{__("Messenger Bubble Chat URL:")}}    
+                                        </h4><br>
+                                            <label>{{ __("MESSENGER CHAT BUBBLE URL :") }}</label><br>
                                         <div class="form-group">
                                            
                                             <small>
-                                                <a target="__blank" title="Get your code" class="text-muted" href="https://app.respond.io/"><i
-                                                    class="fa fa-key"></i> Get Your Code For Messenger Chat Bubble URL Here
-                                                Here</a>
+                                                <a target="__blank" title="{{ __("Get your code") }}" class="text-muted" href="https://app.respond.io/"><i
+                                                    class="fa fa-key"></i> {{ __("Get Your Code For Messenger Chat Bubble URL Here Here") }}</a>
                                             </small>
                                             <br>
                                             <input placeholder="https://app.respond.io/facebook/chat/plugin/XXXX/XXXXXXXXXX"
                                             id="MESSENGER_CHAT_BUBBLE_URL" value="{{ env('MESSENGER_CHAT_BUBBLE_URL') }}"
                                             name="MESSENGER_CHAT_BUBBLE_URL" type="text" class="form-control"
-                                            placeholder="enter MESSENGER CHAT BUBBLE URL">
+                                            placeholder="{{ __("Enter MESSENGER CHAT BUBBLE URL") }}">
                                         </div>
                                        
                                        

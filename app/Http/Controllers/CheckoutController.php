@@ -59,12 +59,12 @@ class CheckoutController extends Controller
                 $avbl_pincode = Allcity::where('pincode', $getpincode)->first();
 
                 if (empty($avbl_pincode->pincode)) {
-                    notify()->error('Delivery not available on selected address pincode !');
+                    notify()->error(__('Delivery not available on selected address pincode !'));
                     return redirect('/checkout');
                 }
 
             } else {
-                notify()->error('Delivery not available on selected address pincode !');
+                notify()->error(__('Delivery not available on selected address pincode !'));
                 return redirect('/checkout');
             }
         }
@@ -205,7 +205,7 @@ class CheckoutController extends Controller
                     if ($max >= $min) {
 
                     } else {
-                        notify()->error('Sorry the product is out of stock !');
+                        notify()->error(__('Sorry the product is out of stock !'));
                         return back();
                     }
                 }
@@ -220,7 +220,7 @@ class CheckoutController extends Controller
                     if ($max >= $min) {
 
                     } else {
-                        notify()->error($cart->simple_product->product_name . ' the product is out of stock now !');
+                        notify()->error(__(':product the product is out of stock now !',['product' => $cart->simple_product->product_name]));
                         return back();
                     }
 
@@ -460,7 +460,7 @@ class CheckoutController extends Controller
 
                     session()->put('billing', ['firstname' => $request->billing_name, 'address' => $request->billing_address, 'email' => $request->billing_email, 'country_id' => $request->billing_country, 'city' => $request->billing_city, 'state' => $request->billing_state, 'total' => $request->total, 'mobile' => $request->billing_mobile, 'pincode' => $request->billing_pincode]);
                 } else {
-                    notify()->error('Please fill all fields to continue !');
+                    notify()->error(__('Please fill all fields to continue !'));
                     return back();
                 }
 
@@ -589,7 +589,7 @@ class CheckoutController extends Controller
         }
 
         $sentfromlastpage = 0;
-        notify()->success('Billing address updated successfully !');
+        notify()->success(__('Billing address updated successfully !'));
 
         return redirect(route('order.review'));
         // return view('front.checkout', compact('conversion_rate', 'sentfromlastpage'));
@@ -793,7 +793,7 @@ class CheckoutController extends Controller
             } catch (\Illuminate\Database\QueryException $e) {
                 $errorCode = $e->errorInfo[1];
                 if ($errorCode == '1062') {
-                    return back()->with("success", "Email Alerdy Exists");
+                    return back()->with("success", __("Email alerdy exists"));
                 }
             }
 
@@ -807,7 +807,7 @@ class CheckoutController extends Controller
         } catch (\Illuminate\Database\QueryException $e) {
             $errorCode = $e->errorInfo[1];
             if ($errorCode == '1062') {
-                return back()->with("success", "Email Already Exists");
+                return back()->with("success", __("Email already exists !"));
             }
         }
 
@@ -828,16 +828,16 @@ class CheckoutController extends Controller
                 'password' => Hash::make($request->password),
             ])->save();
 
-            notify()->success('Password changed successfully !');
+            notify()->success(__('Password changed successfully !'));
             return back();
         } else {
-            notify()->error('Old password is incorrect !');
+            notify()->error(__('Old password is incorrect !'));
             return back();
         }
 
         $user->password = Hash::make($request->password);
         $user->save();
-        return back()->with('success', 'Password Updated Successfully !');
+        return back()->with('success', __('Password updated successfully !'));
     }
 
     public function order()

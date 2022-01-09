@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','All Stores |')
+@section('title',__('All Stores |'))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')

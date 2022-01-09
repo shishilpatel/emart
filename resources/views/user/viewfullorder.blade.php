@@ -114,12 +114,13 @@ $sellerac = App\Store::where('user_id','=', $user->id)->first();
                         class="required">*</span></label>
                     <select class="form-control" required="" name="comment" id="">
                       <option value="">{{ __('staticwords.PleaseChooseReason') }}</option>
-                      <option value="Order Placed Mistakely">{{ __('Order Placed Mistakely') }}</option>
-                      <option value="Shipping cost is too much">{{ __('Shipping cost is too much') }}</option>
-                      <option value="Wrong Product Ordered">{{ __('Wrong Product Ordered') }}</option>
-                      <option value="Product is not match to my expectations">
-                        {{ __('Product is not match to my expectations') }}</option>
-                      <option value="Other">{{ __('My Reason is not listed here') }}</option>
+
+                        @forelse(App\RMA::where('status','=','1')->get() as $rma)
+                          <option value="{{ $rma->reason }}">{{ $rma->reason }}</option>
+                        @empty
+                          <option value="Other">{{ __('My Reason is not listed here') }}</option>
+                        @endforelse
+                        
                     </select>
                   </div>
 
@@ -317,7 +318,7 @@ $sellerac = App\Store::where('user_id','=', $user->id)->first();
                 <button @if(env('DEMO_LOCK')==0) title="Cancel This Order?" data-toggle="modal"
                   data-target="#proceedCanItem{{ $o->id }}" @else disabled="disabled"
                   title="This action is disabled in demo !" @endif
-                  class="pull-right btn btn-sm btn-danger cancel-label">
+                  class="float-right btn btn-sm btn-danger">
                   {{ __('Cancel') }}
                 </button>
                 @else 
@@ -333,7 +334,7 @@ $sellerac = App\Store::where('user_id','=', $user->id)->first();
                       <button @if(env('DEMO_LOCK') == 0) title="Cancel This Order?" data-toggle="modal"
                         data-target="#proceedCanItem{{ $o->id }}" @else disabled="disabled"
                         title="This action is disabled in demo !" @endif
-                        class="pull-right btn btn-sm btn-danger cancel-label">
+                        class="float-right btn btn-sm btn-danger">
                         {{ __('Cancel') }}
                       </button>
                        
@@ -349,19 +350,19 @@ $sellerac = App\Store::where('user_id','=', $user->id)->first();
                 @endif
 
                 @if($o->status == 'refunded')
-                  <span class="font-weight-normal pull-right badge badge-primary refund-label">
+                  <span class="font-weight-normal float-right badge badge-primary refund-label">
                     {{ __('Refunded') }}
                   </span>
                 @elseif($o->status == 'shipped')
-                  <span class="font-weight-normal pull-right badge badge-success refund-label">
+                  <span class="font-weight-normal float-right badge badge-success refund-label">
                     {{ __('Shipped') }}
                   </span>
                 @elseif($o->status == 'Refund Pending')
-                <span class="font-weight-normal pull-right badge badge-success">
+                <span class="font-weight-normal float-right badge badge-success">
                   {{ __('Refund in progress') }}
                 </span>
                 @elseif($o->status == 'returned')
-                <span class="font-weight-normal pull-right badge badge-success">
+                <span class="font-weight-normal float-right badge badge-success">
                   {{ __('Returned') }}
                 </span>
                 @endif
@@ -380,18 +381,18 @@ $sellerac = App\Store::where('user_id','=', $user->id)->first();
                       @endphp
 
                       @if($today == $endOn)
-                        <button disabled="" class="m-l-8 pull-right btn btn-sm btn-danger">
+                        <button disabled="" class="mr-2 float-right btn btn-sm btn-danger">
                           {{ __('Return period is ended !') }}
                         </button>
                       @else
                       <!--END-->
-                        <a class="m-l-8 pull-right btn btn-sm btn-danger" href="{{ route('return.window',Crypt::encrypt($o->id)) }}">
+                        <a class="mr-2 float-right btn btn-sm btn-danger" href="{{ route('return.window',Crypt::encrypt($o->id)) }}">
                           {{ __('Return') }}
                         </a>
                       @endif
 
                     @else 
-                      <button disabled="" class="m-l-8 pull-right btn btn-sm btn-danger">
+                      <button disabled class="mr-2 float-right btn btn-sm btn-danger">
                         {{ __('Return not available !') }}
                       </button>
 
@@ -827,7 +828,7 @@ $sellerac = App\Store::where('user_id','=', $user->id)->first();
                         @if($o->courier_channel != '' && $o->tracking_link != '' && $o->exp_delivery_date != '')
 
                           <p class="mt-2 font-weight-bold">
-                            {{__("Your order has been shipped via")}} {{ $o->courier_channel }} {{ __("you can track your package here with ") }} {{ $o->tracking_link }} {{__('and expected delivery date is '. date("d-M-Y",strtotime($o->exp_delivery_date)) )}}.
+                            {{__("Your order has been shipped via")}} {{ $o->courier_channel }} {{ __("you can track your package here with ") }} {{ $o->tracking_link }} {{__('and expected delivery date is :date',['date' => date("d-M-Y",strtotime($o->exp_delivery_date))] )}}.
                           </p>
 
                         @endif
@@ -937,19 +938,13 @@ $sellerac = App\Store::where('user_id','=', $user->id)->first();
                             class="required">*</span></label>
                         <select class="form-control" required="" name="comment" id="">
                           <option value="">{{ __('staticwords.PleaseChooseReason') }}</option>
-                          <option value="Order Placed Mistakely">{{ __('Order Placed Mistakely') }}</option>
-                          <option value="Shipping cost is too much">
-                            {{ __('Shipping cost is too much') }}
-                          </option>
-                          <option value="Wrong Product Ordered">
-                            {{ __('Wrong Product Ordered') }}
-                          </option>
-                          <option value="Product is not match to my expectations">
-                            {{ __('Product is not match to my expectations') }}
-                          </option>
-                          <option value="Other">
-                            {{ __('My Reason is not listed here') }}
-                          </option>
+                          
+                            @forelse(App\RMA::where('status','=','1')->get() as $rma)
+                              <option value="{{ $rma->reason }}">{{ $rma->reason }}</option>
+                            @empty
+                              <option value="Other">{{ __('My Reason is not listed here') }}</option>
+                            @endforelse
+                            
                         </select>
                       </div>
                       @if($order->payment_method !='COD' && $order->payment_method !='BankTransfer')

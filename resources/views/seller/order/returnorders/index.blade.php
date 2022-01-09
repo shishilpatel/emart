@@ -1,5 +1,5 @@
 @extends('admin.layouts.sellermastersoyuz')
-@section('title','Returned Orders |')
+@section('title',__('Returned Orders '))
 @section('body')
 
 @component('seller.components.breadcumb',['secondactive' => 'active'])
@@ -30,11 +30,11 @@
 					<ul class="nav nav-tabs custom-tab-line mb-3" id="defaultTabLine" role="tablist">
 						<li class="nav-item">
 							<a class="nav-link active" id="home-tab-line" data-toggle="tab" href="#home-line" role="tab" aria-controls="home-line" aria-selected="true"><i class="feather icon-truck mr-2"></i>
-								Return Completed @if($countC>0) <span class="badge badge-success">{{$countC}}</span> @endif</a>
+								{{__('Return Completed')}} @if($countC>0) <span class="badge badge-success">{{$countC}}</span> @endif</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" id="profile-tab-line" data-toggle="tab" href="#profile-line" role="tab" aria-controls="profile-line" aria-selected="false"><i class="feather icon-truck mr-2"></i>
-								Pending Returns @if($countP>0) <span class="badge badge-danger">{{$countP}}</span>@endif</a>
+								{{__('Pending Returns')}} @if($countP>0) <span class="badge badge-danger">{{$countP}}</span>@endif</a>
 						</li>
 						
 					</ul>
@@ -48,16 +48,16 @@
 										#
 									</th>
 									<th>
-										Order ID
+										{{__("Order ID")}}
 									</th>
 									<th>
-										Item
+										{{__('Item')}}
 									</th>
 									<th>
-										Refunded Amount
+										{{__('Refunded Amount')}}
 									</th>
 									<th>
-										Refund Status
+										{{__('Refund Status')}}
 									</th>
 	
 								</thead>
@@ -73,7 +73,9 @@
 											<td><b>#{{ $inv_cus->order_prefix.$order->getorder->order->order_id }}</b>
 													<br>
 													<small>
-														<a title="View Refund Detail" href="{{  route('seller.order.detail',$order->id)  }}">View Detail</a> 
+														<a title="View Refund Detail" href="{{  route('seller.order.detail',$order->id)  }}">
+															{{__('View Detail')}}
+														</a> 
 													</small>
 											</td>
 											<td>
@@ -114,19 +116,19 @@
 										#
 									</th>
 									<th>
-										Order TYPE
+										{{__('Order TYPE')}}
 									</th>
 									<th>
-										OrderID
+										{{__("Order ID")}}
 									</th>
 									<th>
-										Pending Amount
+										{{__("Pending Amount")}}
 									</th>
 									<th>
-										Requested By
+										{{__('Requested By')}}
 									</th>
 									<th>
-										Requested on
+										{{__('Requested on')}}
 									</th>
 									
 								</thead>
@@ -139,18 +141,18 @@
 												<td>
 													@if($order->getorder->order->payment_method != 'COD')
 														<label class="label label-success">
-															PREPAID
+															{{__('PREPAID')}}
 														</label>
 													@else
 														<label class="label label-primary">
-															COD
+															{{__("COD")}}
 														</label>
 													@endif
 												</td>
 												<td><b>#{{ $inv_cus->order_prefix.$order->getorder->order->order_id }}</b>
 													<br>
 													<small>
-														<a href="{{ route('seller.return.order.show',$order->id) }}">{{ __('UPDATE ORDER') }}</a>
+														<a href="{{ route('seller.return.order.show',$order->id) }}">{{ __("UPDATE ORDER") }}</a>
 													</small>
 												</td>
 												<td>
@@ -179,38 +181,4 @@
   </div>
   
   @endsection
-
-                 
   
-               
-  
-          
-              
-              
-             
-              
-             
-            
-                
-              
-    
-                 
-                
-
-                
-    
-            
-            
-    
-             
-            
-          
-
-
-
-
-
-                                
- 
-
-

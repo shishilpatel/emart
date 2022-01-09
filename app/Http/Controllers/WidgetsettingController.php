@@ -80,7 +80,7 @@ class WidgetsettingController extends Controller
         $menu = Widgetsetting::findOrFail($id);
         $input = $request->all();
         $menu->update($input);
-        return redirect('admin/widget')->with('updated', 'Widgetsetting has been updated');
+        return redirect('admin/widget')->with('updated', __('Widget setting has been updated'));
     }
 
     /**

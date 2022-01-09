@@ -21,10 +21,10 @@ class DashboardController extends Controller
     {
         $ds = DashboardSetting::first();
 
-        $ds->lat_ord = $request->lat_ord;
-        $ds->rct_pro = $request->rct_pro;
-        $ds->rct_str = $request->rct_str;
-        $ds->rct_cust = $request->rct_cust;
+        $ds->lat_ord = $request->lat_ord ? 1 : 0;
+        $ds->rct_pro = $request->rct_pro ? 1 : 0;
+        $ds->rct_str = $request->rct_str ? 1 : 0;
+        $ds->rct_cust = $request->rct_cust ? 1 : 0;
 
         $ds->max_item_ord = $request->max_item_ord;
         $ds->max_item_pro = $request->max_item_pro;
@@ -34,7 +34,7 @@ class DashboardController extends Controller
         $ds->save();
         return redirect()
             ->route('admin.dash')
-            ->with('updated', 'Setting Updated !');
+            ->with('updated', __('Setting Updated !'));
 
     }
 
@@ -44,34 +44,34 @@ class DashboardController extends Controller
 
         $fb->fb_page_id = $request->fb_page_id;
         $fb->fb_page_token = $request->fb_page_token;
-        $fb->fb_wid = $request->fb_wid;
+        $fb->fb_wid = $request->fb_wid ? 1 : 0;
 
         $fb->save();
         return redirect()
             ->route('admin.dash')
-            ->with('updated', 'Widget Setting Updated !');
+            ->with('updated', __('Widget Setting Updated !'));
     }
 
     public function twSetting(Request $request, $id)
     {
         $tw = DashboardSetting::first();
         $tw->tw_username = $request->tw_username;
-        $tw->tw_wid = $request->tw_wid;
+        $tw->tw_wid = $request->tw_wid ? 1 : 0;
         $tw->save();
         return redirect()
             ->route('admin.dash')
-            ->with('updated', 'Widget Setting Updated !');
+            ->with('updated', __('Widget Setting Updated !'));
     }
 
     public function insSetting(Request $request, $id)
     {
         $ins = DashboardSetting::first();
         $ins->inst_username = $request->inst_username;
-        $ins->insta_wid = $request->insta_wid;
+        $ins->insta_wid = $request->insta_wid ? 1 : 0;
         $ins->save();
         return redirect()
             ->route('admin.dash')
-            ->with('updated', 'Widget Setting Updated !');
+            ->with('updated', __('Widget Setting Updated !'));
     }
 }
 

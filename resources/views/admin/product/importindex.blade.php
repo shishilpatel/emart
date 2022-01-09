@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Import Product |')
+@section('title',__('Import Product |'))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -13,15 +13,17 @@
 ​
 <div class="contentbar">
 	<div class="row">
-		@if ($errors->any())
-		<div class="alert alert-danger" role="alert">
-			@foreach($errors->all() as $error)
-			<p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-					<span aria-hidden="true" style="color:red;">&times;</span></button></p>
-			@endforeach
-		</div>
-		@endif
+		
 		<div class="col-lg-12">
+			@if ($errors->any())
+			<div class="alert alert-danger" role="alert">
+				@foreach($errors->all() as $error)
+				<p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span></button></p>
+				@endforeach
+			</div>
+			@endif
+
 			<div class="card m-b-30">
 				<div class="card-header">
 					<h5 class="box-title">{{ __('Import Product') }}</h5>
@@ -48,38 +50,30 @@
 							<div class="tab-pane fade show active" id="importvariant" role="tabpanel"
 								aria-labelledby="location-tab">
 								<!-- ===  Progessive Web App Requirements form start ======== -->
-								<a href="{{ url('files/ProductCSV.xlsx') }}" class="btn btn-md btn-success-rgba"> <i class="feather icon-download"></i> Download
-									Example For xls/csv File</a>
+								<a href="{{ url('files/ProductCSV.xlsx') }}" class="btn btn-md btn-success-rgba"> <i class="feather icon-download"></i> {{ __("Download Example For xls/csv File") }}</a>
 								<hr>
 								<form action="{{ route('import') }}" method="POST" enctype="multipart/form-data">
 									{{ csrf_field() }}
 
 									<div class="row">
 										<div class="form-group col-md-6">
-											<label class="text-dark" for="file">Choose your xls/csv File :</label>
+											<label class="text-dark" for="file">{{ __("Choose your xls/csv File :") }}</label>
 											<!-- ---------- -->
 											<div class="input-group mb-3">
-												<div class="input-group-prepend">
-													<span class="input-group-text"
-														id="inputGroupFileAddon01">Upload</span>
-												</div>
 												<div class="custom-file">
 													<input type="file" class="custom-file-input" name="file"
 														id="inputGroupFile01" aria-describedby="inputGroupFileAddon01"
 														required>
-													<label class="custom-file-label" for="inputGroupFile01">Choose
-														file</label>
+													<label class="custom-file-label" for="inputGroupFile01">{{__("Choose file") }}</label>
 												</div>
 											</div>
-											<!-- --------- -->
-											<!-- <input required="" type="file" name="file" class="form-control"> -->
 											@if ($errors->has('file'))
 											<span class="invalid-feedback text-danger" role="alert">
 												<strong>{{ $errors->first('file') }}</strong>
 											</span>
 											@endif
 											<p></p>
-											<button type="submit" class="btn btn-primary-rgba mr-2">Import</button>
+											<button type="submit" class="btn btn-primary-rgba mr-2">{{ __('Import') }}</button>
 										</div>
 
 									</div>
@@ -88,20 +82,20 @@
 
 								<div class="box box-danger">
 									<div class="box-header with-border">
-										<label class="text-dark">Instructions</label>
+										<label class="text-dark">{{ __("Instructions") }}</label>
 
 									</div>
 
 									<div class="box-body">
-										<p><b>Follow the instructions carefully before importing the file.</b></p>
-										<p>The columns of the file should be in the following order.</p>
+										<p><b>{{ __('Follow the instructions carefully before importing the file.') }}</b></p>
+										<p>{{ __('The columns of the file should be in the following order.') }}</p>
 
 										<table class="table table-striped">
 											<thead>
 												<tr>
-													<th>Column No</th>
-													<th>Column Name</th>
-													<th>Description</th>
+													<th>{{ __('Column No') }}</th>
+													<th>{{ __('Column Name') }}</th>
+													<th>{{ __('Description') }}</th>
 												</tr>
 											</thead>
 
@@ -379,20 +373,20 @@
 								<!-- Import instructions -->
 								<div class="box box-danger">
 									<div class="box-header with-border">
-										<div class="box-title">Instructions</div>
+										<div class="box-title">{{ __('Instructions') }}</div>
 									</div>
 
 									<div class="box-body">
-										<p><b>Follow the instructions carefully before importing the file.</b></p>
-										<p>The columns of the file should be in the following order.</p>
+										<p><b>{{ __('Follow the instructions carefully before importing the file.') }}</b></p>
+										<p>{{ __('The columns of the file should be in the following order.') }}</p>
 
 										<table class="table table-striped">
 											<thead>
 												<tr>
 													<th>#</th>
-													<th>Column Name</th>
-													<th>Required</th>
-													<th>Description</th>
+													<th>{{ __('Column Name') }}</th>
+													<th>{{ __('Required') }}</th>
+													<th>{{ __('Description') }}</th>
 												</tr>
 											</thead>
 
@@ -464,8 +458,7 @@
 													<td>9.</td>
 													<td>thumbnail</td>
 													<td>Yes</td>
-													<td>Name your thumbnail image eg: thumbnail.jpg <b>(Image must be
-															already put in public/images/simple_products) folder )</b> .
+													<td>Name your image eg: thumbnail.jpg <b>(Image can be uploaded using Media Manager / Simple Products Tab. )</b> .</td>
 													</td>
 												</tr>
 
@@ -473,9 +466,7 @@
 													<td>10.</td>
 													<td>hover_thumbnail</td>
 													<td>Yes</td>
-													<td>Name your hover thumbnail image eg: hover_thumbnail.jpg
-														<b>(Image must be already put in public/images/simple_products)
-															folder )</b> .</td>
+													<td>Name your image eg: hoverthumbnail.jpg <b>(Image can be uploaded using Media Manager / Simple Products Tab. )</b> .</td>
 												</tr>
 
 												<tr>

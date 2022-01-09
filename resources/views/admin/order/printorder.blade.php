@@ -49,7 +49,9 @@
                                         <div class="row">
                                             <div class="col-12 col-md-7 col-lg-7">
                                                 
-                                                <h4>Customer Information</h4>
+                                                <h4>
+													{{__("Customer Information")}}
+												</h4>
                                                 <p><i class="feather icon-user mr-1"></i> {{$user->name}}</p>
                                                 <p ><i class="feather icon-mail"></i> {{ $user->email }}</p>
                                                 <p ><i class="feather icon-phone mr-1"></i> {{$user->mobile}}</p>
@@ -61,10 +63,10 @@
                                                 <div class="invoice-name">
                                                     <h5 class="text-uppercase mb-3">Order Slip</h5>
                                                     
-                                                    <p class="mb-1">Total Qty: {{ $order->qty_total }}</p>
+                                                    <p class="mb-1">{{__("Total Qty:")}} {{ $order->qty_total }}</p>
                                                     <p class="mb-0"> {{ date('d/m/Y @ h:i a', strtotime($order->created_at)) }}</p>
-													<p class="mb-1">Order Id: {{ $inv_cus->order_prefix }}{{ $order->order_id }}</p>
-                                                    <p class="mb-0">TXN ID: {{ $order->transaction_id }}</p>
+													<p class="mb-1">{{__("Order Id:")}} {{ $inv_cus->order_prefix }}{{ $order->order_id }}</p>
+                                                    <p class="mb-0">{{__("TXN ID:")}} {{ $order->transaction_id }}</p>
 
                                                     <h4 class="text-success mb-0 mt-3"> <i class="{{ $order->paid_in }}"></i>{{ round($order->order_total,2) }}</h4>
                                                 </div>
@@ -75,7 +77,9 @@
                                         <div class="row">
                                             <div class="col-sm-6 col-md-4 col-lg-4">
                                                 <div class="invoice-address">
-                                                    <h6 class="mb-3">Shipping Address</h6>
+                                                    <h6 class="mb-3">
+														{{__("Shipping Address")}}
+													</h6>
                                                     <h6 class="text-muted">{{ $address->name }}</h6>
                                                     <ul class="list-unstyled">
                                                         <li>{{ strip_tags($address->address) }},
@@ -98,7 +102,9 @@
                                             </div>
                                             <div class="col-sm-6 col-md-4 col-lg-4">
                                                 <div class="invoice-address">
-                                                    <h6 class="mb-3">Billing Address</h6>
+                                                    <h6 class="mb-3">
+														{{__("Billing Address")}}
+													</h6>
                                                     <h6 class="text-muted">{{ $order->billing_address['firstname'] }}</h6>
                                                     <ul class="list-unstyled">
                                                         <li>{{ strip_tags($order->billing_address['address']) }}
@@ -120,7 +126,9 @@
                                                 <div class="invoice-address">
                                                     <div class="card">
                                                         <div class="card-body bg-info-rgba text-center">
-                                                            <h6>Payment Method</h6>
+                                                            <h6>
+																{{__("Payment Method")}}
+															</h6>
                                                             <p></p>
                                                             <p>{{ ucfirst($order->payment_method) }}</p>
                                                         </div>
@@ -134,13 +142,27 @@
                                             <table class="table table-borderless">
                                                 <thead>
                                                     <tr>
-														<th>Invoice No</th>
-														<th>Item Image</th>
-														<th>Item Info</th>
-														<th>Qty</th>
-														<th>Status</th>
-														<th>Pricing & Tax</th>
-														<th>Total</th>
+														<th>
+															{{__('Invoice No')}}
+														</th>
+														<th>
+															{{__("Item Image")}}
+														</th>
+														<th>
+															{{__("Item Info")}}
+														</th>
+														<th>
+															{{__('Qty')}}
+														</th>
+														<th>
+															{{__("Status")}}
+														</th>
+														<th>
+															{{__("Pricing & Tax")}}
+														</th>
+														<th>
+															{{__("Total")}}
+														</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -237,35 +259,41 @@
 															@elseif($invoice->status == 'shipped')
 															<span >{{ ucfirst($invoice->status) }}</span>
 															@elseif($invoice->status == 'return_request')
-															<span >Return Request</span>
+															<span >{{ __("Return Request") }}</span>
 															@elseif($invoice->status == 'returned')
-															<span >Returned</span>
+															<span >{{ __('Returned') }}</span>
 															@elseif($invoice->status == 'cancel_request')
-															<span>Cancelation Request</span>
+															<span>{{ __("Cancelation Request") }}</span>
 															@elseif($invoice->status == 'canceled')
-															<span >Canceled</span>
+															<span >
+																{{__("Canceled")}}
+															</span>
 															@elseif($invoice->status == 'refunded')
-															<span >Refunded</span>
+															<span >
+																{{__("Refunded")}}
+															</span>
 															@elseif($invoice->status == 'ret_ref')
-															<span >Returned & Refunded</span>
+															<span >
+																{{__("Returned & Refunded")}}
+															</span>
 															@else
 															<span >{{ ucfirst($invoice->status) }}</span>
 															@endif
 														</td>
 									
 														<td width="40%">
-															<p> Total Price : <i class="{{ $invoice->order->paid_in }}"></i>{{ round(($invoice->price*$invoice->qty),2) }}</p>
+															<p>{{__("Total Price:")}} <i class="{{ $invoice->order->paid_in }}"></i>{{ round(($invoice->price*$invoice->qty),2) }}</p>
 									
 															
-															<p>Total Tax : <i
+															<p>{{__("Total Tax:")}} <i
 																class="{{ $invoice->order->paid_in }}"></i>{{ round(($invoice->tax_amount*$invoice->qty),2) }}
 														    </p>
-															<p>Shipping Charges : <i
+															<p>{{ __("Shipping Charges: ") }}<i
 																class="{{ $invoice->order->paid_in }}"></i>{{ round($invoice->shipping,2) }}
 															</p>
 									
 									
-															<small class="help-block">(Price & TAX Multiplied with Quantity)</small>
+															<small class="help-block">({{__("Price & TAX Multiplied with Quantity")}})</small>
 															<p></p>
 									
 									
@@ -279,7 +307,7 @@
 									
 															<br>
 									
-															<small>(Incl. of TAX & Shipping)</small>
+															<small>({{__("Incl. of TAX & Shipping")}})</small>
 														</td>
 													</tr>
 													@endforeach
@@ -292,7 +320,7 @@
                                             <div class="col-md-12 order-2 order-lg-1 col-lg-5 col-xl-6">
                                                 <div class="order-note">
 													
-                                                    <h6>Payment Recieved:
+                                                    <h6>{{__("Payment Recieved:")}}
                                                     {{ ucfirst($order->payment_receive)  }}</h6>
                                                 </div>
                                             </div>
@@ -301,20 +329,24 @@
                                                     <table class="table table-borderless text-right">
                                                         <tbody>
                                                             <tr>
-                                                                <td>Sub Total :</td>
+                                                                <td>{{__("Subtotal:")}} </td>
                                                                 <td><i class="{{ $invoice->order->paid_in }}"></i>{{ round($order->order_total+$order->discount - $order->gift_charge,2) }}</td>
                                                             </tr>
                                                             <tr>
-                                                                <td>Coupon Discount:</td>
+                                                                <td>{{ __('Coupon Discount:') }}</td>
                                                                 <td><i class="{{ $invoice->order->paid_in }}"></i>{{ round($order->discount,2) }}</b>
 																	({{ $order->coupon }})</td>
                                                             </tr>
                                                             <tr>
-                                                                <td>Gift Packaging Charge:</td>
+                                                                <td>
+																	{{__("Gift Packaging Charge:")}}
+																</td>
                                                                 <td>+ <i class="{{ $invoice->order->paid_in }}"></i>{{ round($order->gift_charge,2) }}</td>
                                                             </tr>
                                                             <tr>
-                                                                <td>Handling Charge:</td>
+                                                                <td>
+																	{{__('Handling Charge:')}}
+																</td>
                                                                 <td>+ <i class="{{ $invoice->order->paid_in }}"></i>{{ round($order->handlingcharge,2) }}</td>
                                                             </tr>
                                                             <tr>
@@ -333,7 +365,9 @@
                                     <div class="invoice-footer">
                                         <div class="row align-items-center">
                                             <div class="col-md-6">
-                                                <p class="mb-0">Thank you for your Business.</p>
+                                                <p class="mb-0">
+													{{__("Thank you for your Business.")}}
+												</p>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="invoice-footer-btn">

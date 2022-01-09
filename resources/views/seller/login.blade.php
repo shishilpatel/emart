@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -52,7 +52,7 @@
                                         </div>                                        
                                         <h4 class="text-primary my-4">{{ __('Seller Login') }}</h4>
                                         <div class="form-group">
-                                            <input pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" name="email" type="text" class="form-control @error('email') is-invalid @enderror" id="email" placeholder="Enter email here" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                                            <input pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" name="email" type="text" class="form-control @error('email') is-invalid @enderror" id="email" placeholder="{{ __('Enter email here') }}" value="{{ old('email') }}" required autocomplete="email" autofocus>
 
                                              @error('email')
                                                 <span class="invalid-feedback" role="alert">
@@ -67,7 +67,7 @@
                                              @enderror
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="Enter Password here" required>
+                                            <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="{{ __('Enter Password here') }}" required>
                                             @error('password')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -95,7 +95,7 @@
                                         </div>
 
                                         
-                                        <button type="submit" class="btn btn-block btn-primary-rgba">Log in</button>
+                                        <button type="submit" class="btn btn-block btn-primary-rgba">{{ __('Log in') }}</button>
 
                                     </form>
 
@@ -105,17 +105,17 @@
                                         <tr>
                                           
                                           <td>{{ __("Email") }}</td>
-                                          <td>{{ __("admin@mediacity.co.in") }}</td>
+                                          <td>admin@mediacity.co.in</td>
                                           
                                         </tr>
 
                                         <tr>
                                           <td>{{ __("Password") }}</td>
-                                          <td>{{ __("12345678") }}</td>
+                                          <td>12345678</td>
                                         </tr>
 
                                         <tr>
-                                          <td align="center" colspan="2">
+                                          <td class="text-center" colspan="2">
                                             <button type="button" class="copycred btn btn-sm btn-primary-rgba">
                                                 {{__("Copy")}}
                                             </button>
@@ -148,9 +148,12 @@
     <script src="{{ url('admin_new/assets/js/jquery.slimscroll.js') }}"></script>
     
     <script>
+
+       'use strict';
+
         // Example starter JavaScript for disabling form submissions if there are invalid fields
         (function() {
-          'use strict';
+         
           window.addEventListener('load', function() {
             // Fetch all the forms we want to apply custom Bootstrap validation styles to
             var forms = document.getElementsByClassName('form');
@@ -190,7 +193,6 @@
 
           $("input[name=email]").val('admin@mediacity.co.in');
           $("input[name=password]").val('12345678');
-
 
         });
     </script>

@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Front Category Slider | ')
+@section('title',__('Front Category Slider | '))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -15,7 +15,7 @@
 @slot('button')
 <div class="col-md-6">
   <div class="widgetbar">
-  <a href="{{url('admin/slider')}} " class="float-right btn btn-primary-rgba"><i class="feather icon-arrow-left mr-2"></i>Back</a>
+  <a href="{{url('admin/slider')}} " class="float-right btn btn-primary-rgba"><i class="feather icon-arrow-left mr-2"></i> {{ __("Back") }}</a>
   </div>
 </div>
 @endslot
@@ -23,15 +23,17 @@
 @endcomponent
 <div class="contentbar">
   <div class="row">
-    @if ($errors->any())
-    <div class="alert alert-danger" role="alert">
-      @foreach($errors->all() as $error)
-      <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach
-    </div>
-    @endif
+    
     <div class="col-lg-12">
+      @if ($errors->any())
+      <div class="alert alert-danger" role="alert">
+        @foreach($errors->all() as $error)
+        <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button></p>
+        @endforeach
+      </div>
+      @endif
+
       <div class="card m-b-30">
         <div class="card-header">
           <h5 class="box-title">{{ __('Front Category Slider') }}</h5>
@@ -45,7 +47,8 @@
             <div class="col-md-12 p-3 alert alert-info">
                 
                
-                     <i class="fa fa-info-circle "></i>  Only those category will list here who have atleast one complete product. (Complete product means product with atleast one variant)
+                     <i class="fa fa-info-circle "></i>  
+                     {{__("Only those category will list here who have atleast one complete product. (Complete product means product with atleast one variant)")}}
               
             </div>
           </div>
@@ -105,8 +108,8 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <button type="reset" class="btn btn-danger-rgba mr-1"><i class="fa fa-ban"></i> {{ __("Reset")}}</button>
-                        <button @if(env('DEMO_LOCK') == 0) type="submit" @else title="This action cannot be done in demo !" disabled="disabled" @endif class="btn btn-primary-rgba">
-                        <i class="fa fa-save"></i> Save</button>
+                        <button @if(env('DEMO_LOCK') == 0) type="submit" @else title="{{ __('This action cannot be done in demo !') }}" disabled="disabled" @endif class="btn btn-primary-rgba">
+                        <i class="fa fa-save"></i> {{ __("Save") }}</button>
                     </div>
                 </div>
 
@@ -116,15 +119,7 @@
     </div>
   </div>
 </div>
-            
-          
-  
-         
-                                      
-
-                        
-                 
-        
+       
 
 @endsection
 @section('custom-script')

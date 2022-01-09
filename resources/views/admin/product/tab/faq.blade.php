@@ -1,14 +1,14 @@
   <div class="panel-heading">
-      <a href=" {{url('admin/product_faq/create')}} " class="btn btn-success owtbtn">+ Add Faq</a> 
+      <a href=" {{url('admin/product_faq/create')}} " class="btn btn-success owtbtn">+ {{ __("Add Faq") }}</a> 
     </div>  
         <table id="example1" class="table table-bordered table-striped">
          <thead>
             <tr>
-              <th>Id</th>
-              <th>Product Name</th>
-              <th>Question</th>
-              <th>Answer</th>
-              <th>Action</th>
+              <th>{{ __('ID') }}</th>
+              <th>{{ __("Product Name") }}</th>
+              <th>{{ __("Question") }}</th>
+              <th>{{ __("Answer") }}</th>
+              <th>{{ __('Action') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -22,11 +22,12 @@
               <td>{{$brand->question}}</td>
               <td>{!!$brand->answer!!}</td>
               <td>
-                <!-- <a href="{{url('admin/product_faq/'.$brand->id.'/edit')}}"class="btn btn-info"> Edit</a> -->
                     <form method="post" action="{{url('admin/product_faq/'.$brand->id)}}" class="pull-right">
                           {{csrf_field()}}
                           {{method_field("DELETE")}}
-                          <button class="btn btn-danger abc">Delete</button>
+                          <button class="btn btn-danger abc">
+                            {{__("Delete")}}
+                          </button>
                     </form>
                         
               </td>

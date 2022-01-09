@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Edit Invoice Setting')
+@section('title',__('Edit Invoice Setting'))
 @section('body')
 
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
@@ -24,7 +24,7 @@
     <div class="alert alert-danger" role="alert">
       @foreach($errors->all() as $error)
       <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true" style="color:red;">&times;</span></button></p>
+          <span aria-hidden="true">&times;</span></button></p>
       @endforeach
     </div>
     @endif
@@ -42,13 +42,12 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="control-label" for="first-name">
-                    Order Prefix:
+                    {{__('Order Prefix')}}:
                   </label>
 
                   <input type="text" name="order_prefix" value="{{$Invoice->order_prefix ?? ''}}"
                     class="form-control col-md-12">
-                  <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>(Please Enter Order
-                    Prefix)</small>
+                  <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>({{__("Please Enter Order Prefix")}})</small>
 
                 </div>
               </div>
@@ -56,14 +55,13 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="control-label" for="first-name">
-                    Invoice Prefix:
+                    {{__('Invoice Prefix')}}:
                   </label>
 
 
                   <input type="text" id="first-name" name="prefix" value="{{$Invoice->prefix ?? ''}}"
                     class="form-control col-md-12">
-                  <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>(Please Enter
-                    Prefix)</small>
+                  <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>({{__("Please Enter Prefix")}})</small>
 
                 </div>
               </div>
@@ -71,14 +69,13 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="control-label" for="first-name">
-                    Invoice Postfix:
+                    {{__('Invoice Postfix')}}:
                   </label>
 
 
                   <input type="text" id="first-name" name="postfix" value="{{$Invoice->postfix ?? ''}}"
                     class="form-control col-md-12">
-                  <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>(Please Enter
-                    Postfix)</small>
+                  <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>({{__('Please Enter Postfix')}})</small>
 
                 </div>
               </div>
@@ -86,7 +83,7 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="control-label" for="first-name">
-                    Invoice No. Start From:
+                    {{__('Invoice No. Start From')}}:
                   </label>
 
 
@@ -98,12 +95,14 @@
               </div>
 
               <div class="col-md-12  p-3 mb-2 bg-info-rgba rounded text-info">
-                <i class="fa fa-info-circle mr-1"></i>Note
+                <i class="fa fa-info-circle mr-1"></i>{{__('Note')}}
                 <ul>
-                  <li> Invoice No. is That Like From Where you want to Start Your Invoice No.</li>
-                  <li>If your <b>Prefix:</b> ABC, <b>Postfix:</b> XYZ or <b>Invoice No. Start From
+                  <li>
+                    {{__('Invoice No. is That Like From Where you want to Start Your Invoice No.')}}
+                  </li>
+                  <li>{{__('If your')}} <b>{{__('Prefix')}}:</b> {{__("ABC")}}, <b>{{__("Postfix")}}:</b> {{__('XYZ or')}} <b>Invoice No. Start From
                       :</b> 001</li>
-                  <li>Than your first Invoice no. will be:
+                  <li>{{__("Than your first Invoice no. will be:")}}
                     <b>ABC001XYZ</b>
                     <br>
                   </li>
@@ -114,14 +113,13 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="control-label" for="first-name">
-                    COD Prefix:
+                    {{__('COD Prefix:')}}
                   </label>
 
 
                   <input type="text" id="first-name" name="cod_prefix" value="{{$Invoice->cod_prefix ?? ''}}"
                     class="form-control col-md-12">
-                  <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>(Please Enter COD
-                    Prefix)</small>
+                  <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>({{__("Please Enter COD Prefix")}})</small>
 
 
                 </div>
@@ -131,14 +129,13 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="control-label" for="first-name">
-                    COD Postfix:
+                    {{__('COD Postfix')}}:
                   </label>
 
 
                   <input type="text" id="first-name" name="cod_postfix" value="{{$Invoice->cod_postfix ?? ''}}"
                     class="form-control col-md-12">
-                  <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>(Please Enter COD
-                    Prefix)</small>
+                  <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>({{__("Please Enter COD Prefix")}})</small>
 
 
                 </div>
@@ -147,15 +144,13 @@
               <div class="col-md-12">
                 <div class="form-group">
                   <label class="control-label" for="first-name">
-                    Terms:
+                    {{__('Terms')}}:
                   </label>
 
 
                   <textarea name="terms" class="editor form-control" rows="5"
                     cols="30">{!!$Invoice->terms ?? ''!!}</textarea>
-                  <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>(Enter terms which display
-                    on
-                    invoice bottom)</small>
+                  <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>({{__('Enter terms which display on invoice bottom')}})</small>
 
 
                 </div>
@@ -164,27 +159,21 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="control-label" for="first-name">
-                    Seal:
+                    {{__('Seal:')}}
                   </label>
 
 
                   <div class="input-group mb-3">
-
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-                    </div>
 
 
                     <div class="custom-file">
 
                       <input type="file" name="seal" class="inputfile inputfile-1" id="first-name"
                         aria-describedby="inputGroupFileAddon01">
-                      <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                      <label class="custom-file-label" for="inputGroupFile01">{{ __("Choose file") }} </label>
                     </div>
                   </div>
-                  <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>(It will display on
-                    Invoice at
-                    bottom right)</small>
+                  <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>({{__("It will display on Invoice at bottom right")}})</small>
 
                 </div>
               </div>
@@ -195,11 +184,11 @@
                   $seal = @file_get_contents(public_path().'/images/seal/'.$Invoice->seal);
                   @endphp
                   @if($seal)
-                  <p><b>Preview:</b></p>
+                  <p><b>{{__("Preview")}}:</b></p>
                   <img class="bg-primary-rgba pro-img" src="{{ url('images/seal/'.$Invoice->seal) }}"
-                    title="Current Seal" alt="{{ $Invoice->seal }}" />
+                    title="{{ __("Current Seal") }}" alt="{{ $Invoice->seal }}" />
                   @else
-                  <p>No Image Found !</p>
+                  <p>{{ __('No Image Found !') }}</p>
                   @endif
                 </div>
               </div>
@@ -207,25 +196,19 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="control-label col-md-12" for="first-name">
-                    Sign:
+                    {{__("Sign")}}:
                   </label>
                   <div class="input-group mb-3">
   
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-                    </div>
-  
-  
+                   
                     <div class="custom-file">
   
                       <input type="file" name="sign" class="inputfile inputfile-1" id="inputGroupFile01"
                         aria-describedby="inputGroupFileAddon01">
-                      <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                      <label class="custom-file-label" for="inputGroupFile01">{{ __("Choose file") }} </label>
                     </div>
                   </div>
-                  <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>(It will display on Invoice
-                    at
-                    bottom left)</small>
+                  <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>({{__("It will display on Invoice at bottom left")}})</small>
   
                 </div>
               </div>
@@ -236,11 +219,11 @@
                   $sign = @file_get_contents(public_path().'/images/sign/'.$Invoice->sign);
                   @endphp
                   @if($sign)
-                  <p><b>Preview:</b></p>
-                  <img class="pro-img" src="{{ url('images/sign/'.$Invoice->sign) }}" title="Current Seal"
+                  <p><b>{{__("Preview")}}:</b></p>
+                  <img class="pro-img" src="{{ url('images/sign/'.$Invoice->sign) }}" title="{{ __('Current Seal') }}"
                     alt="{{ $Invoice->sign }}" />
                   @else
-                  <p>No Image Found !</p>
+                  <p>{{ __('No Image Found !') }}</p>
                   @endif
                 </div>
               </div>
@@ -253,11 +236,11 @@
 
         <div class="ln_solid"></div>
         <div class="form-group col-md-12">
-          <button @if(env('DEMO_LOCK')==0) type="reset" @else disabled title="This operation is disabled is demo !"
-            @endif class="btn btn-danger-rgba"><i class="fa fa-ban"></i> Reset</button>
-          <button @if(env('DEMO_LOCK')==0) type="submit" @else disabled title="This operation is disabled is demo !"
+          <button @if(env('DEMO_LOCK')==0) type="reset" @else disabled title="{{ __('This operation is disabled is demo !') }}"
+            @endif class="btn btn-danger-rgba"><i class="fa fa-ban"></i> {{ __("Reset") }}</button>
+          <button @if(env('DEMO_LOCK')==0) type="submit" @else disabled title="{{ __('This operation is disabled is demo !') }}"
             @endif class="btn btn-primary-rgba"><i class="fa fa-check-circle"></i>
-            Update</button>
+            {{ __("Update") }}</button>
         </div>
         <div class="clear-both"></div>
 

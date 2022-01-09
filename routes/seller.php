@@ -17,8 +17,6 @@ Route::group(['middleware' => ['auth', 'is_verified', 'two_fa', 'switch_lang', '
 
         Route::get("sellerdashboard", "VenderController@dashbord")->name('seller.dboard');
 
-        Route::get("subscriptions", "VenderController@subscriptions")->name('seller.my.subscriptions');
-
         Route::get('categories', 'ShippingInfoController@getcategories')->name('seller.get.categories');
 
         Route::get('subcategories', 'ShippingInfoController@getsubcategories')->name('seller.get.subcategories');

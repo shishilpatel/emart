@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Invoice Design | ')
+@section('title',__('Invoice Design | '))
 @section('body')
 
 @component('admin.component.breadcumb',['secondaryactive' => 'active'])
@@ -23,7 +23,7 @@
             <div class="alert alert-danger" role="alert">
                 @foreach($errors->all() as $error)
                 <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true" style="color:red;">&times;</span></button></p>
+                        <span aria-hidden="true">&times;</span></button></p>
                 @endforeach
             </div>
             @endif
@@ -126,12 +126,12 @@
 
                           <div class="form-group col-12">
                             <button @if(env('DEMO_LOCK')==0) type="reset" @else disabled
-                                title="This operation is disabled is demo !" @endif class="btn btn-danger-rgba"><i
-                                    class="fa fa-ban"></i> Reset</button>
+                                title="{{ __('This operation is disabled is demo !') }}" @endif class="btn btn-danger-rgba"><i
+                                    class="fa fa-ban"></i> {{ __("Reset") }}</button>
                             <button @if(env('DEMO_LOCK')==0) type="submit" @else disabled
-                                title="This operation is disabled is demo !" @endif class="btn btn-primary-rgba"><i
+                                title="{{ __('This operation is disabled is demo !') }}" @endif class="btn btn-primary-rgba"><i
                                     class="fa fa-check-circle"></i>
-                                Update</button>
+                                {{ __("Update") }}</button>
                         </div>
 
                        </form>

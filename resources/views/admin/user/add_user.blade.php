@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title',"Create a new user |")
+@section('title',__("Create a new user |"))
 @section('body')
 
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
@@ -25,18 +25,20 @@
 
 @endcomponent
 <div class="contentbar">   
-  @if ($errors->any())  
-  <div class="alert alert-danger" role="alert">
-  @foreach($errors->all() as $error)     
-  <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-  <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach  
-  </div>
-  @endif
+  
            
   <div class="row">
   
       <div class="col-lg-12">
+        @if ($errors->any())  
+          <div class="alert alert-danger" role="alert">
+          @foreach($errors->all() as $error)     
+          <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button></p>
+              @endforeach  
+          </div>
+        @endif
+
           <div class="card m-b-30">
               <div class="card-header">
                 <h5 class="card-title"> {{__("Create a new user")}}</h5>
@@ -48,20 +50,16 @@
             
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label>Username: <span class="required">*</span></label>
-                        <input type="text" class="form-control" placeholder="Enter username" name="name" value="{{ old('name') }}">
-                        <small class="text-muted"><i class="fa fa-question-circle"></i> It will display the username eg.
-                          John</small>
+                        <label>{{__("Username:")}} <span class="required">*</span></label>
+                        <input type="text" class="form-control" placeholder="{{ __("Enter username") }}" name="name" value="{{ old('name') }}">
+                        
                       </div>
                     </div>
             
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label>Useremail: <span class="required">*</span></label>
-                        <input placeholder="Please enter email" type="email" name="email" value="{{ old('email') }} "
-                          class="form-control">
-                        <small class="text-muted"><i class="fa fa-question-circle"></i> Enter valid email address with @
-                          symbol</small>
+                        <label>{{__("Useremail:")}} <span class="required">*</span></label>
+                        <input placeholder="{{ __("Please enter email") }}" type="email" name="email" value="{{ old('email') }}" class="form-control">
                       </div>
                     </div>
             
@@ -69,7 +67,7 @@
             
                       <div class="form-group">
                         <label>
-                          Mobile: <span class="required">*</span>
+                         {{__("Mobile:")}} <span class="required">*</span>
                         </label>
                         
             
@@ -78,11 +76,9 @@
                             <div class="input-group">
                               <input required pattern="[0-9]+" title="Invalid mobile no." placeholder="1" type="text"
                               name="phonecode" value="{{old('phonecode')}}" class="col-md-2 form-control">
-                              <input required pattern="[0-9]+" title="Invalid mobile no." placeholder="Please enter mobile no." type="text"
+                              <input required pattern="[0-9]+" title="Invalid mobile no." placeholder="{{ __("Please enter mobile no.") }}" type="text"
                                 name="mobile" value="{{old('mobile')}}" class="col-md-10 form-control">
                             </div>
-                            <small class="pull-right text-muted"><i class="fa fa-question-circle"></i> Enter valid mobile no. eg.
-                              7894561230</small>
                           </div>
                         </div>
                       </div>
@@ -91,11 +87,11 @@
             
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label>Phone:</label>
-                        <input pattern="[0-9]+" title="Invalid Phone no." placeholder="Please enter phone no." type="text"
+                        <label>
+                          {{__("Phone:")}}
+                        </label>
+                        <input pattern="[0-9]+" title="Invalid Phone no." placeholder="{{ __("Please enter phone no.") }}" type="text"
                           name="phone" value="{{old('phone')}}" class="form-control">
-                        <small class="text-muted"><i class="fa fa-question-circle"></i> Enter valid phone no. eg.
-                          0141-123456</small>
                       </div>
                     </div>
             
@@ -103,12 +99,12 @@
                       <div class="form-group">
             
                         <label>
-                          Country:
+                          {{__("Country:")}}
                         </label>
             
-                        <select data-placeholder="Please select country" name="country_id" class="form-control select2" id="country_id">
+                        <select data-placeholder="{{ __("Please select country") }}" name="country_id" class="form-control select2" id="country_id">
                           
-                          <option value="">Please Choose</option>
+                          <option value="">{{ __("Please Choose") }}</option>
                           @foreach($country as $c)
                                  
                             <option value="{{$c->id}}" >
@@ -118,23 +114,19 @@
                           @endforeach
                         </select>
             
-                        <small class="text-muted"><i class="fa fa-question-circle"></i> Please select country</small>
-            
                       </div>
                     </div>
             
                     <div class="col-md-4">
                       <div class="form-group">
                         <label>
-                          State:
+                          {{__("State:")}}
                         </label>
             
                         <select data-placeholder="Please select state" required name="state_id" class="form-control select2" id="upload_id">
-                          <option value="">Please choose</option>
+                          <option value="">{{ __("Please choose") }}</option>
                           
                         </select>
-            
-                        <small class="text-muted"><i class="fa fa-question-circle"></i> Please select state</small>
             
                       </div>
                     </div>
@@ -142,20 +134,19 @@
                     <div class="col-md-4">
                       <div class="form-group">
                         <label for="first-name">
-                          City:
+                          {{__("City:")}}
                         </label>
-                        <select data-placeholder="Please select city" name="city_id" id="city_id" class="form-control select2">
-                          <option value="">Please Choose</option>
+                        <select data-placeholder="{{ __("Please select city") }}" name="city_id" id="city_id" class="form-control select2">
+                          <option value="">{{ __('Please Choose') }}</option>
                           
                         </select>
-                        <small class="text-muted"><i class="fa fa-question-circle"></i> Please select city</small>
                       </div>
                     </div>
             
             
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label>Website:</label>
+                        <label>{{ __("Website:") }}</label>
                         <input placeholder="http://" type="text" id="first-name" name="website" value="{{ old('website') }}"
                           class="form-control">
                       </div>
@@ -164,37 +155,33 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         <label>
-                          User Role: <span class="required">*</span>
+                          {{__("User Role:")}} <span class="required">*</span>
                         </label>
-                        <select name="role" class="form-control select2">
+                        <select name="role" data-placeholder="{{ __("Please choose user role") }}" class="form-control select2">
                           
                           @foreach($roles as $role)
                             <option {{ app('request')->input('type') == $role->name ? "selected" : "" }} value="{{ $role->name }}">{{ $role->name }}</option>
                           @endforeach
                         </select>
-                        <small class="text-muted"><i class="fa fa-question-circle"></i> Select user type eg. (Admin,Seller or
-                          Customer)</small>
                       </div>
                     </div>
             
                     <div class="col-md-6">
-                      <label for="first-name">Choose Image:</label>
+                      <label for="first-name">
+                        {{__("Choose Image:")}}
+                      </label>
                       <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-                        </div>
                         <div class="custom-file">
                           <input type="file" name="image" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
-                          <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                          <label class="custom-file-label" for="inputGroupFile01">{{ __("Choose file") }} </label>
                         </div>
                       </div>
-                      <small class="text-muted"><i class="fa fa-question-circle"></i> Please select user profile picture</small>
                      
                     </div>
             
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label>Status:</label><br>
+                        <label>{{ __('Status:') }}</label><br>
                         <label class="switch">
                           <input class="slider" type="checkbox" checked id="toggle-event3" name="status" >
                           <span class="knob"></span>
@@ -203,7 +190,6 @@
 
                         
                         <input type="hidden" name="status" value="1" id="status3">
-                        <small class="text-muted"><i class="fa fa-question-circle"></i> Please select user status</small>
                       </div>
                     </div>
             
@@ -216,11 +202,9 @@
                         <div class="col-md-6">
                           <div class="form-group">
                             <div class="eyeCy">
-                              <label for="password">Enter Password:</label>
-                              <input  id="password" type="password" class="passwordbox form-control" placeholder="Enter password"
+                              <label for="password">{{ __("Enter Password:") }}</label>
+                              <input minlength="8" id="password" type="password" class="passwordbox form-control" placeholder="{{ __("Enter password min. length 8") }}"
                                 name="password" />
-            
-                              <span toggle="#password" class="fa fa-fw fa-eye field-icon toggle-password"></span>
                             </div>
                           </div>
             
@@ -231,9 +215,9 @@
             
                           <div class="form-group">
                             <div class="eyeCy">
-                              <label for="confirm">Confirm Password:</label>
+                              <label for="confirm">{{ __("Confirm Password:") }}</label>
                               <input  id="confirm_password" type="password" class="passwordbox form-control"
-                                placeholder="Re-enter password for confirmation" name="password_confirmation" />
+                                placeholder="{{ __("Re-enter password for confirmation") }}" name="password_confirmation" />
             
                               <span toggle="#confirm_password" class="fa fa-fw fa-eye field-icon toggle-password"></span>
                             </div>
@@ -254,8 +238,8 @@
             
                   </div>
                   <button type="reset" class="btn btn-danger mr-1"><i class="fa fa-ban"></i> {{ __("Reset")}}</button>
-                  <button @if(env('DEMO_LOCK')==0) type="submit" title="Click to save user details" @else
-                  title="This action is disabled in demo !" disabled="disabled" @endif  class="btn btn-primary"><i class="fa fa-check-circle"></i>
+                  <button @if(env('DEMO_LOCK')==0) type="submit" @else
+                  title="{{ __("This action is disabled in demo !") }}" disabled="disabled" @endif  class="btn btn-primary"><i class="fa fa-check-circle"></i>
                   {{ __("Create")}}</button>
 
                   
@@ -273,16 +257,3 @@
 </script>
 <script src="{{ url("js/ajaxlocationlist.js") }}"></script>
 @endsection
-              
-                  
-                  
-                  
-                 
-                  
-              
-
-
-    
-   
-  
-      

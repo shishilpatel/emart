@@ -1,5 +1,5 @@
 @extends('admin.layouts.sellermastersoyuz')
-@section('title', 'Available Brands')
+@section('title', __('Available Brands'))
 @section('body')
 
 @component('seller.components.breadcumb',['secondactive' => 'active'])
@@ -37,6 +37,7 @@
             <table id="brandDataTable" class="table table-striped table-bordered">
                  <thead>
                    <tr>
+
                     <th>#</th>
                     <th>{{ __("Brand Logo") }}</th>
                     <th>{{ __("Brand Name") }}</th>
@@ -70,18 +71,17 @@
               
               <div class="form-group">
                 <label>{{__("Brand Name")}}: <span class="required">*</span></label>
-                <input required="" name="name" type="text" class="form-control" placeholder="Enter brand name">
+                <input required="" name="name" type="text" class="form-control" placeholder="{{ __('Enter brand name') }}">
               </div>
    
               <div class="form-group">
                 <label for="">{{__("Brand Logo")}}: <span class="required">*</span></label>
               <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-                </div>
                 <div class="custom-file">
                   <input type="file" name="image" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
-                  <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                  <label class="custom-file-label" for="inputGroupFile01">
+                    {{__('Choose file')}}
+                  </label>
                 </div>
               </div>
                
@@ -102,12 +102,11 @@
               <div class="form-group">
                 <label for="">{{__("Brand Proof")}}:</label>
                 <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-                  </div>
                   <div class="custom-file">
                     <input type="file"  name="brand_proof" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
-                    <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                    <label class="custom-file-label" for="inputGroupFile01">
+                      {{__('Choose file')}}
+                    </label>
                   </div>
                 </div>
               
@@ -132,30 +131,3 @@
   <script>var url = {!! json_encode( route('seller.brand.index') ) !!};</script>
   <script src="{{ url('js/seller/sellerbrand.js') }}"></script>
 @endsection
-              
-            
-  
-     
-                 
-
-
-       
-				
-		
-			
-        
-            
-
-                          
-        
-            
-                  
-               
-  
-                 
- 
-  
-          
-              
-              
-             

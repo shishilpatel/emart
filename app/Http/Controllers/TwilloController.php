@@ -86,7 +86,7 @@ class TwilloController extends Controller
 
         $env_keys_save->save();
 
-        notify()->success("Twillo settings updated !",'Success');
+        notify()->success(__("Twillo settings updated !"),'Success');
         return back();
 
     }

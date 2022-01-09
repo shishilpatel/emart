@@ -80,7 +80,7 @@ return [
 
     'locale' => 'en',
 
-    'version' => '2.9',
+    'version' => '3.1',
 
     /*
     |--------------------------------------------------------------------------
@@ -163,7 +163,6 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        Kyslik\ColumnSortable\ColumnSortableServiceProvider::class,
         Yajra\Datatables\DatatablesServiceProvider::class,
         'Intervention\Image\ImageServiceProvider',
         Cartalyst\Stripe\Laravel\StripeServiceProvider::class,

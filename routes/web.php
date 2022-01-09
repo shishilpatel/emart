@@ -1,16 +1,20 @@
 <?php
 
+
 use App\Http\Controllers\FlashSaleController;
 use App\Http\Controllers\PaymentProcessController;
 use App\Http\Controllers\PreorderController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use JoeDixon\Translation\Http\Controllers\LanguageController;
+use JoeDixon\Translation\Translation;
 
 /** Development Routes */
 
 Route::get('/phpinfo',function(){
     return phpinfo();
 });
+
 
 /** Should Removed in Production mode -- start */
 
@@ -24,6 +28,8 @@ Route::get('/phpinfo',function(){
 
 
 /** Should Removed in Production mode -- end */
+
+Route::any('/stripe/3ds','StripController@complete3ds');
 
 Route::any('/notify/payhere', 'PayhereController@notify');
 
@@ -128,7 +134,7 @@ Route::group(['middleware' => ['web','switch_lang']], function () {
 
                 Route::get('/blog/post/{slug}', 'BlogController@show')->name('front.blog.show');
 
-                Route::get('details/{id}', 'MainController@details_product'); // Product Detail Page
+                Route::get('details/{slug}/{id}', 'MainController@details_product'); // Product Detail Page
 
                 Route::get('cart/', 'CartController@create_cart')->name('user.cart');
                 
@@ -228,7 +234,7 @@ Route::group(['middleware' => ['web','switch_lang']], function () {
 
             Route::post('/comment/{postid}', 'BlogCommentController@store')->name('blog.comment.store');
 
-            Route::get('/product/{id}/all/reviews', 'ProductController@allreviews')->name('allreviews');
+            Route::get('/product/{id}/all/{type}/reviews', 'ProductController@allreviews')->name('allreviews');
 
             Route::get('/onloadvariant/{id}', 'AddSubVariantController@ajaxGet2');
 
@@ -289,12 +295,6 @@ Route::group(['middleware' => ['web','switch_lang']], function () {
             /** Authorized Routes */
 
             Route::group(['middleware' => ['auth','is_verified','two_fa','switch_lang']], function () {
-
-                Route::get('/seller/plans','SellerSubscriptionController@frontendplans')->name('front.seller.plans');
-
-                Route::get('/seller/payforplans/','SellerSubscriptionController@paymentscreen')->name('seller.plans.payment.screen');
-
-                Route::post('/seller/payforplans/','SellerSubscriptionController@paymentscreen')->name('seller.plans.payment.screen');
 
                 Route::get('/user/affiliate/settings','AffilateController@userdashboard')->name('user.affiliate.settings');
 
@@ -526,10 +526,27 @@ Route::group(['middleware' => ['web','switch_lang']], function () {
                 Route::post('instamojo', 'InstamojoController@payment')->name('payviainsta');
                 Route::get('strip', 'StripController@index');
                 Route::post('strip', 'StripController@stripayment')->name('paytostripe');
+                
+                Route::get('/mychats','ChatController@userchat')->name('user.chat.screen');
+                Route::get('/mychats/{conv_id}','ChatController@userchatview')->name('user.chat.view');
+                Route::post('/send/message/chat/{conversion_id}','ChatController@sendmessage')->name('send.message');
+
+                Route::post('/send/typing/indication/{conversion_id}','ChatController@typing')->name('typing.message');
 
                 /*Admin + Seller Common Usable Routes */
 
                 Route::group(['middleware' => ['SellerAdminMix']], function () {
+
+                    Route::resource('manage/sizechart','SizeController');
+                    Route::post('/sizechart/add/in/list','SizeController@addInList');       
+                    Route::post('/sizechart/remove/in/list','SizeController@removefromlist');
+                    Route::post('/sizechart/preview/view','SizeController@viewpreview');
+
+                    Route::get('/manage/chats','ChatController@chatlist')->name('admin.chat.list');
+
+                    Route::get('/chat/{userid}','ChatController@createchat')->name('chat.start');
+                    
+                    Route::get('/chat/view/{conversation}','ChatController@chatscreen')->name('chat.screen');
 
                     Route::get('/admin/returnOrders/detail/{id}', 'ReturnOrderController@detail')->name('return.order.detail');
 

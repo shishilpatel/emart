@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','All Childcategories')
+@section('title',__('All Childcategories'))
 @section('body')
 @component('admin.component.breadcumb',['secondaryactive' => 'active'])
 @slot('heading')
@@ -30,7 +30,7 @@
     <div class="col-lg-12">
       <div class="card m-b-30">
         <div class="card-header">
-          <h5 class="box-title"> All Childcategories</h5>
+          <h5 class="box-title"> {{ __('All Childcategories') }}</h5>
         </div>
         
       
@@ -39,9 +39,9 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="p-2 mb-2 bg-success text-white rounded">
-                  <i class="fa fa-info-circle ml-2"></i> Note:
+                  <i class="fa fa-info-circle ml-2"></i> {{__("Note")}}:
                   <ul>
-                      <li>Drag and Drop to sort the Childcategories</li>
+                      <li>{{ __('Drag and Drop to sort the Childcategories') }}</li>
                       
                   </ul>
                 </div>
@@ -51,13 +51,13 @@
             <table id="full_detail_table" class="tcl w-100 table table-bordered table-hover">
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Image</th>
-                  <th>Category Title</th>
-                  <th>Status</th>
-                  <th>Featured</th>
-                  <th>Updated</th>
-                  <th>Action</th>
+                  <th>{{ __("ID") }}</th>
+                  <th>{{ __('Image') }}</th>
+                  <th>{{ __('Category Title') }}</th>
+                  <th>{{ __('Status') }}</th>
+                  <th>{{ __('Featured') }}</th>
+                  <th>{{ __('Updated') }}</th>
+                  <th>{{ __('Action') }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -76,9 +76,9 @@
                   </td>
 
                   <td>
-                    <p><b>Name: </b> <span class="font-weight500">{{ $cat->title }}</span></p>
-                    <p><b>Description: </b><span class="font-weight500">{{ strip_tags($cat->description) }}</span></p>
-                    <p><b>Subcategory: </b><span
+                    <p><b>{{ __('Name') }}: </b> <span class="font-weight500">{{ $cat->title }}</span></p>
+                    <p><b>{{ __('Description') }}: </b><span class="font-weight500">{{ strip_tags($cat->description) }}</span></p>
+                    <p><b>{{ __("Subcategory") }}: </b><span
                         class="font-weight500">{{ isset($cat->subcategory) ? $cat->subcategory->title : '' }}</span></p>
                   </td>
 
@@ -89,7 +89,7 @@
                       {{ csrf_field() }}
                       <button type="submit"
                         class="btn btn-rounded  {{ $cat->status ==1 ? 'btn-success-rgba' : 'btn-danger-rgba' }}">
-                        {{ $cat->status==1 ? 'Active' : 'Deactive' }}
+                        {{ $cat->status==1 ? __('Active') : __('Deactive') }}
                       </button>
                     </form>
                     @endcan
@@ -101,7 +101,7 @@
                       {{ csrf_field() }}
                       <button type="submit"
                         class="btn btn-rounded  {{ $cat->featured ==1 ? 'btn-success-rgba' : 'btn-danger-rgba' }}">
-                        {{ $cat->featured==1 ? 'Yes' : 'No' }}
+                        {{ $cat->featured==1 ? __('Yes') : __('No') }}
                       </button>
                     </form>
                     @endcan
@@ -131,7 +131,7 @@
                       <div class="dropdown-menu" aria-labelledby="CustomdropdownMenuButton1">
                         @can('childcategory.edit')
                         <a class="dropdown-item" href="{{url('admin/grandcategory/'.$cat->id.'/edit')}}"><i
-                            class="feather icon-edit mr-2"></i>Edit</a>
+                            class="feather icon-edit mr-2"></i>{{  __('Edit') }}</a>
                         @endcan
 
                         @can('childcategory.delete')
@@ -146,7 +146,7 @@
                       <div class="modal-dialog modal-sm">
                         <div class="modal-content">
                           <div class="modal-header">
-                            <h5 class="modal-title" id="exampleSmallModalLabel">Delete</h5>
+                            <h5 class="modal-title" id="exampleSmallModalLabel">{{ __("DELETE") }}</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                               <span aria-hidden="true">&times;</span>
                             </button>
@@ -159,8 +159,8 @@
                             <form method="post" action="{{url('admin/grandcategory/'.$cat->id)}}" class="pull-right">
                               {{csrf_field()}}
                               {{method_field("DELETE")}}
-                              <button type="reset" class="btn btn-secondary" data-dismiss="modal">No</button>
-                              <button type="submit" class="btn btn-primary">Yes</button>
+                              <button type="reset" class="btn btn-secondary" data-dismiss="modal">{{ __("No") }}</button>
+                              <button type="submit" class="btn btn-primary">{{ __("YES") }}</button>
                             </form>
                           </div>
                         </div>
@@ -195,15 +195,14 @@
       </div>
       <div class="modal-body">
         <!-- main content start -->
-        <a href="{{ url('files/Childcategory.xlsx') }}" class="btn btn-md btn-success"> Download Example xls/csv
-          File</a>
+        <a href="{{ url('files/Childcategory.xlsx') }}" class="btn btn-md btn-success"> {{ __("Download Example xls/csv File") }}</a>
         <hr>
         <form action="{{ url('/import/childcategories') }}" method="POST" enctype="multipart/form-data">
           @csrf
 
           <div class="row">
             <div class="form-group col-md-12">
-              <label for="file">Choose your xls/csv File :</label>
+              <label for="file">{{ __('Choose your xls/csv File :') }}</label>
               <!-- ------------ -->
               <div class="input-group mb-3">
                 <div class="input-group-prepend">
@@ -212,7 +211,7 @@
                 <div class="custom-file">
                   <input type="file" class="custom-file-input" name="file" id="inputGroupFile01"
                     aria-describedby="inputGroupFileAddon01" required>
-                  <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                  <label class="custom-file-label" for="inputGroupFile01">{{ __("Choose file") }} </label>
                 </div>
                 @if ($errors->has('file'))
                 <span class="invalid-feedback text-danger" role="alert">
@@ -222,7 +221,7 @@
                 <p></p>
               </div>
               <!-- ------------- -->
-              <button type="submit" class="btn btn-primary"><i class="fa fa-file-excel-o"></i> Import</button>
+              <button type="submit" class="btn btn-primary"><i class="fa fa-file-excel-o"></i> {{ __('Import') }}</button>
             </div>
 
           </div>
@@ -231,20 +230,20 @@
 
         <div class="box box-danger">
           <div class="box-header with-border">
-            <div class="box-title">Instructions</div>
+            <div class="box-title">{{ __('Instructions') }}</div>
           </div>
 
           <div class="box-body">
-            <p><b>Follow the instructions carefully before importing the file.</b></p>
-            <p>The columns of the file should be in the following order.</p>
+            <p><b>{{ __('Follow the instructions carefully before importing the file.') }}</b></p>
+            <p>{{ __('The columns of the file should be in the following order.') }}</p>
 
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th>Column No</th>
-                  <th>Column Name</th>
-                  <th>Required</th>
-                  <th>Description</th>
+                  <th>{{ __('Column No') }}</th>
+                  <th>{{ __('Column Name') }}</th>
+                  <th>{{ __('Required') }}</th>
+                  <th>{{ __('Description') }}</th>
                 </tr>
               </thead>
 
@@ -252,58 +251,58 @@
                 <tr>
                   <td>1</td>
                   <td><b>name</b></td>
-                  <td><b>Yes</b></td>
-                  <td>Enter category name</td>
+                  <td><b>{{ __('Yes') }}</b></td>
+                  <td>{{ __("Enter category name") }}</td>
                 </tr>
 
                 <tr>
                   <td>2</td>
                   <td> <b>status</b> </td>
-                  <td><b>Yes</b></td>
-                  <td>Category status (1 = active, 0 = deactive)</b> .</td>
+                  <td><b>{{ __('Yes') }}</b></td>
+                  <td>{{__("Category status")}} (1 = {{ __('active') }}, 0 = {{ __('deactive') }})</b> .</td>
                 </tr>
                 
 
                 <tr>
                   <td>3</td>
                   <td> <b>image</b> </td>
-                  <td><b>No</b></td>
-                  <td>Name your image eg: example.jpg <b>(Image must be already put in public/images/subcategory/) folder )</b> .</td>
+                  <td><b>{{ __('No') }}</b></td>
+                  <td>{{__("Name your image eg: example.jpg")}} <b>( {{__("Image must be already put in :dir folder",['dir' => '/public/images/subcategory/)'])}} )</b> .</td>
                 </tr>
 
                 <tr>
                   <td>4</td>
                   <td> <b>icon</b> </td>
-                  <td><b>No</b></td>
-                  <td>Icon class name eg: fa-book.</b> .</td>
+                  <td><b>{{ __('No') }}</b></td>
+                  <td>{{__("Icon class name eg:")}} fa-book.</b> .</td>
                 </tr>
 
                 <tr>
                   <td>5</td>
                   <td> <b>description</b> </td>
-                  <td><b>No</b></td>
-                  <td><b>Description of your category.</b></td>
+                  <td><b>{{ __('No') }}</b></td>
+                  <td><b>{{ __('Description of your category.') }}</b></td>
                 </tr>
 
                 <tr>
                   <td>6</td>
                   <td> <b>featured</b> </td>
-                  <td><b>No</b></td>
-                  <td><b>Set subcategory to be featured 1 = Yes , 0 = No.</b></td>
+                  <td><b>{{ __('No') }}</b></td>
+                  <td><b>{{ __('Set subcategory to be featured') }} 1 = {{ __('Yes') }}, 0 = {{ __('No') }}.</b></td>
                 </tr>
 
                 <tr>
                   <td>7</td>
                   <td> <b>parent_id</b> </td>
-                  <td><b>Yes</b></td>
-                  <td><b>Parent category id to be passed here. It means that this childcategory is linked with given category id.</b></td>
+                  <td><b>{{ __('Yes') }}</b></td>
+                  <td><b>{{ __('Parent category id to be passed here. It means that this childcategory is linked with given category id.') }}</b></td>
                 </tr>
 
                 <tr>
                   <td>8</td>
                   <td> <b>subcat_id</b> </td>
-                  <td><b>Yes</b></td>
-                  <td><b>Subcateory id to be passed here. It means that this childcategory is linked with given subcategory id.</b></td>
+                  <td><b>{{ __('Yes') }}</b></td>
+                  <td><b>{{ __('Subcateory id to be passed here. It means that this childcategory is linked with given subcategory id.') }}</b></td>
                 </tr>
 
               </tbody>

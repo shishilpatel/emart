@@ -1,23 +1,27 @@
 <div class="row">
 
   <div class="{{ $product->vender_offer_price !='' ? "col-md-6" : "col-md-12" }}">
-    <h4>Pricing Summary </h4>
+    <h4>
+      {{__('Pricing Summary')}}
+    </h4>
     <hr>
 
     <div class="row">
       <div align="left" class="left-col col-md-6">
-        <b>Product Price:</b>
+        <b>{{ __("Product Price:") }}</b>
       </div>
       <div align="right" class="right-col col-md-6">
         {{ sprintf("%.2f",$product->vender_price) }} <i class="cur_sym fa {{ $defCurrency->currency_symbol }}"></i> 
         <br>
-        <small> @if($product->tax_r != '') (Incl. of tax) @else (Excl. of Tax) @endif </small>
+        <small> @if($product->tax_r != '') ({{__("Incl. of tax")}}) @else {{__("(Excl. of Tax)")}} @endif </small>
       </div>
     </div>
     
     
     <hr>
-      <h4>Commission Summary</h4>
+      <h4>
+        {{__("Commission Summary")}}
+      </h4>
     <hr>
 
     @php
@@ -151,7 +155,7 @@ if(isset($comm)){
 
     <div class="row">
       <div align="left" class="left-col col-md-6">
-        <b>Net Commission</b>:
+        <b>{{ __("Net Commission") }}</b>:
       </div>
       <div align="right" class="right-col col-md-6">
         @if($product->tax_r =='')  {{ sprintf("%.2f",$commissionRate) }} @else  {{ sprintf("%.2f", $commissionRate-$ctax) }} @endif <i class="cur_sym fa {{ $defCurrency->currency_symbol }}"></i>
@@ -164,7 +168,9 @@ if(isset($comm)){
     <div class="row">
 
       <div align="left" class="left-col col-md-6">
-        <b>Commission Tax:</b>
+        <b>
+          {{__("Commission Tax:")}}
+        </b>
       </div>
 
       <div align="right" class="right-col col-md-6">
@@ -175,7 +181,9 @@ if(isset($comm)){
      
     <div class="row">
       <div align="left" class="left-col col-md-6">
-        <b>Gross Commission:</b>
+        <b>
+          {{__("Gross Commission:")}}
+        </b>
       </div>
 
       <div align="right" class="right-col col-md-6"> {{ sprintf("%.2f", $commissionRate) }} <i class="cur_sym fa {{ $defCurrency->currency_symbol }}"></i> <br> <small>@if($product->tax_r !='') (Incl. of Tax) @endif</small></div>
@@ -185,21 +193,27 @@ if(isset($comm)){
   </div>
 @if($product->vender_offer_price != '')
   <div class="col-md-6">
-    <h4>Offer Pricing Summary</h4>
+    <h4>
+      {{__("Offer Pricing Summary")}}
+    </h4>
     <hr>
     <div class="row">
       <div align="left" class="left-col col-md-6">
-        <b>Product Offer Price:</b>
+        <b>
+          {{__("Product Offer Price:")}}
+        </b>
       </div>
       <div align="right" class="right-col col-md-6">
         {{ sprintf("%.2f", $product->vender_offer_price) }} <i class="cur_sym fa {{ $defCurrency->currency_symbol }}"></i>
         <br>
-        <small>@if($product->tax_r !='') (Incl. of tax) @else (Excl. of Tax) @endif</small>
+        <small>@if($product->tax_r !='') ({{__("Incl. of tax")}}) @else {{__("(Excl. of Tax)")}} @endif</small>
       </div>
     </div>
     
     <hr>
-      <h4>Commission Summary</h4>
+      <h4>
+        {{__('Commission Summary')}}
+      </h4>
     <hr>
 
     @php
@@ -353,7 +367,9 @@ if(isset($comm)){
     <div class="row">
 
       <div align="left" class="left-col col-md-6">
-        <b>Commission Tax:</b> 
+        <b>
+          {{__("Commission Tax:") }}
+        </b> 
       </div>
 
       <div align="right" class="right-col col-md-6">
@@ -364,12 +380,14 @@ if(isset($comm)){
 
     <div class="row">
       <div align="left" class="left-col col-md-6">
-        <b>Gross Commission:</b>
+        <b>
+          {{__("Gross Commission:")}}
+        </b>
       </div>
       <div align="right" class="right-col col-md-6">
          {{ sprintf("%.2f", $commissionRate) }} <i class="cur_sym fa {{ $defCurrency->currency_symbol }}"></i>
         <br>
-        <small>@if($product->tax_r !='') (Incl. of Tax) @endif</small>
+        <small>@if($product->tax_r !='') ({{__("Incl. of Tax")}}) @endif</small>
       </div>
     </div>
 
@@ -382,7 +400,9 @@ if(isset($comm)){
  <div class="row">
    <div class="{{ $product->vender_offer_price !='' ? "col-md-6" : "col-md-12" }}">
     <hr>
-      <h4>Final Selling Price</h4>
+      <h4>
+        {{__("Final Selling Price")}}
+      </h4>
     <hr>
      @if($product->tax_r !='')
      <div class="row">
@@ -400,10 +420,12 @@ if(isset($comm)){
       @else
         <div class="row">
           <div align="left" class="left-col col-md-6">
-            <b>Selling Priced:</b>
+            <b>
+              {{__("Selling Priced:")}}
+            </b>
           </div>
           <div align="right" class="right-col col-md-6">
-             {{ sprintf("%.2f", $show_price) }} <i class="cur_sym fa {{ $defCurrency->currency_symbol }}"></i> <br> <small>(Excl. of Tax)</small>
+             {{ sprintf("%.2f", $show_price) }} <i class="cur_sym fa {{ $defCurrency->currency_symbol }}"></i> <br> <small>({{__("Excl. of Tax")}})</small>
           </div>
         </div>
         
@@ -414,13 +436,17 @@ if(isset($comm)){
 @if($product->vender_offer_price != '')
    <div class="col-md-6">
     <hr>
-      <h4>Final Selling Offer Price</h4>
+      <h4>
+        {{__("Final Selling Offer Price:")}}
+      </h4>
     <hr>
      @if($product->tax_r !='')
 
      <div class="row">
       <div align="left" class="left-col col-md-6">
-        <b>Selling Offer Price:</b>
+        <b>
+          {{__('Selling Offer Price:')}}
+        </b>
       </div>
       <div align="right" class="right-col col-md-6">
         {{ sprintf("%.2f", $product->vender_offer_price+$commissionRate) }} <i class="cur_sym fa {{ $defCurrency->currency_symbol }}"></i> <br> <small>(Incl. of Tax)</small>
@@ -432,10 +458,12 @@ if(isset($comm)){
     @else
     <div class="row">
       <div align="left" class="left-col col-md-6">
-        <b>Selling Offer Price:</b>
+        <b>
+          {{__("Selling Offer Price:")}}
+        </b>
       </div>
       <div align="right" class="right-col col-md-6">
-         {{ sprintf("%.2f", $convert_price) }} <i class="cur_sym fa {{ $defCurrency->currency_symbol }}"></i> <br> <small>(Excl. of Tax)</small>
+         {{ sprintf("%.2f", $convert_price) }} <i class="cur_sym fa {{ $defCurrency->currency_symbol }}"></i> <br> <small>({{__("Excl. of Tax")}})</small>
       </div>
     </div>
 

@@ -1,5 +1,5 @@
 @extends("admin.layouts.sellermastersoyuz")
-@section('title','Your Orders')
+@section('title',__('Your Orders'))
 @section('body')
 
 @component('seller.components.breadcumb',['secondactive' => 'active'])
@@ -47,10 +47,10 @@
             <table id="full_detail_table" class="table table-striped table-bordered">
               <thead>
                 <th>#</th>
-                <th>Order Type</th>
-                <th>Order ID</th>
-                <th>Total Qty</th>
-                <th>Total Amount</th>
+                <th>{{ __('Order Type') }}</th>
+                <th>{{ __('Order ID') }}</th>
+                <th>{{ __('Total Qty') }}</th>
+                <th>{{ __('Total Amount') }}</th>
                 <th>#</th>
               </thead>
 
@@ -74,17 +74,17 @@
                   <td>{{ ++$orderkey }}</td>
                   <td>
                     @if($o->payment_method !='COD')
-                    <label class="badge badge-pill badge-success">PREPAID</label>
+                    <label class="badge badge-pill badge-success">{{ __('PREPAID') }}</label>
                     @else
-                    <label class="badge badge-pill badge-primary">COD</label>
+                    <label class="badge badge-pill badge-primary">{{ __('COD') }}</label>
                     @endif
                   </td>
                   <td>{{ $inv_cus->order_prefix.$o->order_id }}
                     <p></p>
-                    <small><a title="View Order" href="{{ route('seller.view.order',$o->order_id) }}">View
-                        Order</a></small> |
-                    <small><a title="Edit Order" href="{{ route('seller.order.edit',$o->order_id) }}">Edit
-                        Order</a></small>
+                    <small><a title="{{__('View Order') }}" href="{{ route('seller.view.order',$o->order_id) }}">{{ __('View Order') }}
+                        </a></small> |
+                    <small><a title="{{ __('Edit Order') }}" href="{{ route('seller.order.edit',$o->order_id) }}">{{__('Edit Order')}}
+                        </a></small>
                   </td>
                   <td>{{ $x->sum('qty') }}</td>
                   <td> <i class="{{ $o->paid_in }}"></i>@infloat($total)

@@ -6,12 +6,6 @@ use Illuminate\Http\Request;
 use App\ProductAttributes;
 use App\ProductValues;
 
-/*==========================================
-=            Author: Media City            =
-    Author URI: https://mediacity.co.in
-=            Author: Media City            =
-=            Copyright (c) 2020            =
-==========================================*/
 
 class ProductValueController extends Controller
 {
@@ -37,7 +31,7 @@ class ProductValueController extends Controller
 
         if (isset($findsameproval)) {
             if (strcasecmp($findsameproval->values, $request->value) == 0) {
-                return back()->with('warning','Value is already there !');
+                return back()->with('warning',__('Value is already there !'));
             }
         }else
         {
@@ -49,7 +43,7 @@ class ProductValueController extends Controller
 
     	
 
-    	return back()->with('added','Value '.$request->value.' for option '.$proattr->attr_name.' created succesfully !' );
+    	return back()->with('added',__('Value :value for option :option created succesfully !',[':value' => $request->value, 'option' => $request->attr_name]));
     }
 
     
@@ -66,10 +60,10 @@ class ProductValueController extends Controller
             if($run_q)
             {
                 
-                return "<div class='well custom-well'>Value Changed to $getval $uval succesfully !</div>" ;
+                return "<div class='well custom-well'>".__('Value Changed to :getval $uval succesfully !',['getval' => $getval.' '.$uval])."</div>" ;
             }else {
                
-                return "<div class='well custom-well'>Error In Updating Value !</div>" ;
+                return "<div class='well custom-well'>".__('Error in updating value !')."</div>" ;
             }
 
         

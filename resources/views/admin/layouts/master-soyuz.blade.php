@@ -2,7 +2,7 @@
 @php
     $selected_language = App\Language::firstWhere('lang_code','=',session()->get('changed_language'));
 @endphp
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" @if(isset($selected_language) && $selected_language->rtl_available == 1) dir="rtl" @endif>
+<html lang="{{ str_replace('_', '-', session()->get('changed_language')) }}" @if(isset($selected_language) && $selected_language->rtl_available == 1) dir="rtl" @endif>
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">

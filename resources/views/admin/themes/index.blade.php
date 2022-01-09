@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Color Settings | ')
+@section('title',__('Color Settings | '))
 @section('body')
 
 @component('admin.component.breadcumb',['secondactive' => 'active'])
@@ -36,17 +36,17 @@
                                 <select required class="theme_pattern form-control select2" name="key" id="key">
                                   
                 
-                                    <option value="default" {{ $themesettings && $themesettings->key == 'default' ? "selected" : "" }}>Default Theme</option>
+                                    <option value="default" {{ $themesettings && $themesettings->key == 'default' ? "selected" : "" }}>{{ __("Default Theme") }}</option>
                 
-                                    <option {{ $themesettings && $themesettings->key == 'pattern1' ? "selected" : "" }} value="pattern1">Pattern 1</option>
+                                    <option {{ $themesettings && $themesettings->key == 'pattern1' ? "selected" : "" }} value="pattern1">{{__("Pattern")}} 1</option>
                 
-                                    <option {{ $themesettings && $themesettings->key == 'pattern2' ? "selected" : "" }} value="pattern2">Pattern 2</option>
+                                    <option {{ $themesettings && $themesettings->key == 'pattern2' ? "selected" : "" }} value="pattern2">{{__("Pattern")}} 2</option>
                 
-                                    <option {{ $themesettings && $themesettings->key == 'pattern3' ? "selected" : "" }} value="pattern3">Pattern 3</option>
+                                    <option {{ $themesettings && $themesettings->key == 'pattern3' ? "selected" : "" }} value="pattern3">{{__("Pattern")}} 3</option>
                 
-                                    <option {{ $themesettings && $themesettings->key == 'pattern4' ? "selected" : "" }} value="pattern4">Pattern 4</option>
+                                    <option {{ $themesettings && $themesettings->key == 'pattern4' ? "selected" : "" }} value="pattern4">{{__("Pattern")}} 4</option>
                 
-                                    <option {{ $themesettings && $themesettings->key == 'pattern5' ? "selected" : "" }} value="pattern5">Pattern 5</option>
+                                    <option {{ $themesettings && $themesettings->key == 'pattern5' ? "selected" : "" }} value="pattern5">{{__("Pattern")}} 5</option>
                 
                                 </select>
                             </div>
@@ -94,9 +94,6 @@
 
 </div>
                  
-                  
-              
-               
                   
 
 @endsection     

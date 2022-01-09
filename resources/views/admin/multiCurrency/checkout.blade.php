@@ -29,15 +29,15 @@
 
 </div>
 
-<caption>Currency Option</caption>
+<caption>{{ __("Currency Option:") }}</caption>
 <table class="table">
 
   <thead>
     <tr>
-      <th scope="col">Currency</th>
+      <th scope="col">{{ __('Currency') }}</th>
 
-      <th scope="col">Checkout Currency</th>
-      <th scope="col">Payment Method</th>
+      <th scope="col">{{ __("Checkout Currency") }}</th>
+      <th scope="col">{{ __("Payment Method") }}</th>
 
 
 

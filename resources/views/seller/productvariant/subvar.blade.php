@@ -1,5 +1,5 @@
 @extends("admin/layouts.sellermastersoyuz")
-@section('title','Add Product Variant -')
+@section('title',{{__('Add Product Variant')}})
 @section('body')
 
 @component('seller.components.breadcumb',['secondactive' => 'active'])
@@ -30,7 +30,7 @@
     <div class="col-md-12">
       <div class="card m-b-30">
         <div class="card-header">
-          <h5 class="card-title"> Add Product Variant For <b>{{ $findpro->name }}</b></h5>
+          <h5 class="card-title"> {{__('Add Product Variant For')}} <b>{{ $findpro->name }}</b></h5>
         </div>
         <div class="card-body">
           <form enctype="multipart/form-data" action="{{ route('seller.manage.stock.post',$findpro->id) }}"
@@ -39,22 +39,20 @@
             <ul class="nav nav-tabs custom-tab-line mb-3" id="defaultTabLine" role="tablist">
               <li class="nav-item">
                 <a class="nav-link active" id="home-tab-line" data-toggle="tab" href="#home-line" role="tab"
-                  aria-controls="home-line" aria-selected="true"><i class="feather icon-edit mr-2"></i>Add Variant</a>
+                  aria-controls="home-line" aria-selected="true"><i class="feather icon-edit mr-2"></i> {{ __('Add Variant') }}</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" id="profile-tab-line" data-toggle="tab" href="#profile-line" role="tab"
-                  aria-controls="profile-line" aria-selected="false"><i class="feather icon-database mr-2"></i>Pricing &
-                  Weight</a>
+                  aria-controls="profile-line" aria-selected="false"><i class="feather icon-database mr-2"></i>{{ __('Pricing & Weight') }}</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" id="contact-tab-line" data-toggle="tab" href="#contact-line" role="tab"
                   aria-controls="contact-line" aria-selected="false"><i
-                    class="feather icon-trending-up mr-2"></i>Inventory</a>
+                    class="feather icon-trending-up mr-2"></i>{{ __('Inventory') }}</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" id="image-tab-line" data-toggle="tab" href="#image-line" role="tab"
-                  aria-controls="image-line" aria-selected="false"><i class="feather icon-image mr-2"></i>Variant
-                  Images</a>
+                  aria-controls="image-line" aria-selected="false"><i class="feather icon-image mr-2"></i>{{ __('Variant Images') }}</a>
               </li>
             </ul>
             <div class="tab-content" id="defaultTabContentLine">
@@ -62,7 +60,7 @@
                 <div class="box box-info">
                   <div class="box-header with-border">
                     <div class="card-title">
-                      <h5>Add Stock</h5>
+                      <h5>{{ __('Add Stock') }}</h5>
                     </div>
                   </div>
 
@@ -71,7 +69,7 @@
                     <div class="row">
                       <div class="col-md-2">
                         <label>
-                          Product Attributes:
+                         {{__('Product Attributes')}}:
                         </label>
                       </div>
 
@@ -138,23 +136,9 @@
                           </div>
                         </div>
                         @endforeach
-                        <label>Set Default Variant :
+                        <label>{{__('Set Default Variant')}} :
                           <input type="checkbox" name="def">
                         </label>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
                       </div>
@@ -168,26 +152,26 @@
               </div>
               <div class="tab-pane fade" id="profile-line" role="tabpanel" aria-labelledby="profile-tab-line">
                 <div class="form-group">
-                  <label for="">Additional Price For This Variant:</label>
+                  <label for="">{{ __('Additional Price For This Variant') }}:</label>
                   <div class="row">
                     <div class="col-md-5">
                       <input required value="{{ old('price') }}" placeholder="Enter Price ex 499.99" type="text"
                         step=0.01 class="form-control editprice" name="price">
                     </div>
                   </div>
-                  <small class="help-block">Please enter Price In Positive or Negative <br></small>
+                  <small class="help-block">{{__('Please enter Price In Positive or Negative')}} <br></small>
                   <div class="row">
                     <div class="col-md-7">
                       <p class="p-3 mb-2 bg-primary-rgba text-blue mt-2">
-                        <b>Ex. </b>If for this product price is 100 and you enter +10 than price will be 110
-                        <br> OR <br>
-                        If for this product price is 100 and you enter -10 than price will be 90
+                        <b>{{ __('Ex') }}. </b>{{__('If for this product price is 100 and you enter +10 than price will be 110')}}
+                        <br> {{__('OR')}} <br>
+                        {{__('If for this product price is 100 and you enter -10 than price will be 90')}}
                       </p>
                     </div>
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="weight">Weight:</label>
+                  <label for="weight">{{ __('Weight') }}:</label>
                   <div class="row">
                     <div class="col-md-4">
 
@@ -196,7 +180,7 @@
                     </div>
                     <div class="col-md-4">
                       <select name="w_unit" class="select2 form-control">
-                        <option value="">Please Choose</option>
+                        <option value="">{{ __('Please Choose') }}</option>
                         @php
                         $unit = App\Unit::find(1);
                         @endphp
@@ -216,42 +200,37 @@
 
 
 
-
-
-
-
-
-
               <div class="tab-pane fade" id="contact-line" role="tabpanel" aria-labelledby="contact-tab-line">
                 <div class="row">
                   <div class="form-group col-md-4">
-                    <label for="">Add Stock:</label>
+                    <label for="">{{ __('Add Stock') }}:</label>
                     <input required min="1" type="text" class="form-control price" name="stock"
-                      placeholder="Enter stock" value="{{ old('stock') }}">
+                      placeholder="{{ __('Enter stock') }}" value="{{ old('stock') }}">
                   </div>
 
                   <div class="form-group col-md-4">
-                    <label for="">Min Qty :</label>
+                    <label for="">{{__('Min Qty')}} :</label>
                     <input required value="{{ old('min_order_qty')  }}" min="1" type="text" class="form-control price"
-                      name="min_order_qty" placeholder="Enter Min Qty For order">
+                      name="min_order_qty" placeholder="{{ __('Enter Min Qty For order') }}">
                   </div>
 
                   <div class="form-group col-md-4">
-                    <label for="">Max Qty :</label>
+                    <label for="">{{__('Max Qty')}} :</label>
                     <input value="{{ old('max_order_qty') }}" min="1" type="text" class="form-control price"
-                      name="max_order_qty" placeholder="Enter Max Qty For order">
+                      name="max_order_qty" placeholder="{{ __('Enter Max Qty For order') }}">
                   </div>
                 </div>
 
               </div>
               <div class="tab-pane fade" id="image-line" role="tabpanel" aria-labelledby="image-tab-line">
                 <div class="alert alert-danger">
-                  <p><i class="fa fa-info-circle" aria-hidden="true"></i> Important</p>
+                  <p><i class="fa fa-info-circle" aria-hidden="true"></i> {{ __('Important') }}</p>
 
                   <ul>
-                    <li>Altleast two variant image is required !</li>
-                    <li>Default image will be <b><i>Image 1</i></b> later you can change default image in edit variant
-                      section</li>
+                    <li>{{__("Altleast two variant image is required")}} !</li>
+                    <li>
+                      {{__("Default image will be :image later you can change default image in edit variant section.",['image' => '<b><i>Image 1</i></b>'])}}
+                    </li>
                   </ul>
                 </div>
 
@@ -259,7 +238,7 @@
 
                   <div class="col-md-4 text-center">
                     <div class="card">
-                      <label class="padding-one">Image 1</label>
+                      <label class="padding-one">{{ __('Image 1') }}</label>
                       <div class="card-body">
                         <img class="test1 margin-bottom-10 bg-secondary-rgba" id="preview1" align="center" width="150"
                           height="150" src="{{ url('images/imagechoosebg.png') }}" alt="">
@@ -269,7 +248,9 @@
                           <div class="custom-file">
                             <input type="file" name="file" name="chooseFile" name="image1" required=""
                               class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
-                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                            <label class="custom-file-label" for="inputGroupFile01">
+                              {{__('Choose file')}}
+                            </label>
                           </div>
                         </div>
                       </div>
@@ -281,7 +262,7 @@
 
                   <div class="col-md-4 text-center">
                     <div class="card">
-                      <label class="padding-one">Image 2</label>
+                      <label class="padding-one">{{ __('Image 2') }}</label>
                       <div class="card-body">
                         <img class="test1 margin-bottom-10 bg-secondary-rgba" id="preview1" align="center" width="150"
                           height="150" src="{{ url('images/imagechoosebg.png') }}" alt="">
@@ -292,7 +273,9 @@
                           <div class="custom-file">
                             <input type="file" name="file" name="chooseFile" name="image2" required=""
                               class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
-                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                            <label class="custom-file-label" for="inputGroupFile01">
+                              {{__('Choose file')}}
+                            </label>
                           </div>
                         </div>
                       </div>
@@ -301,7 +284,9 @@
                   </div>
                   <div class="col-md-4 text-center">
                     <div class="card">
-                      <label class="padding-one">Image 3</label>
+                      <label class="padding-one">
+                        {{__('Image 3')}}
+                      </label>
                       <div class="card-body">
                         <img class="test1 margin-bottom-10 bg-secondary-rgba" id="preview1" align="center" width="150"
                           height="150" src="{{ url('images/imagechoosebg.png') }}" alt="">
@@ -312,7 +297,9 @@
                           <div class="custom-file">
                             <input type="file" name="file" name="chooseFile" name="image3" required=""
                               class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
-                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                            <label class="custom-file-label" for="inputGroupFile01">
+                              {{__('Choose file')}}
+                            </label>
                           </div>
                         </div>
                       </div>
@@ -321,7 +308,9 @@
                   </div>
                   <div class="col-md-4 text-center">
                     <div class="card">
-                      <label class="padding-one">Image 4</label>
+                      <label class="padding-one">
+                        {{__('Image 4')}}
+                      </label>
                       <div class="card-body">
                         <img class="test1 margin-bottom-10 bg-secondary-rgba" id="preview1" align="center" width="150"
                           height="150" src="{{ url('images/imagechoosebg.png') }}" alt="">
@@ -332,7 +321,9 @@
                           <div class="custom-file">
                             <input type="file" name="file" name="chooseFile" name="image4" required=""
                               class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
-                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                            <label class="custom-file-label" for="inputGroupFile01">
+                              {{__('Choose file')}}
+                            </label>
                           </div>
                         </div>
 
@@ -341,7 +332,9 @@
                   </div>
                   <div class="col-md-4 text-center">
                     <div class="card">
-                      <label class="padding-one">Image 5</label>
+                      <label class="padding-one">
+                        {{__('Image 5')}}
+                      </label>
                       <div class="card-body">
                         <img class="test1 margin-bottom-10 bg-secondary-rgba" id="preview1" align="center" width="150"
                           height="150" src="{{ url('images/imagechoosebg.png') }}" alt="">
@@ -352,7 +345,9 @@
                           <div class="custom-file">
                             <input type="file" name="file" name="chooseFile" name="image5" required=""
                               class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
-                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                            <label class="custom-file-label" for="inputGroupFile01">
+                              {{__('Choose file')}}
+                            </label>
                           </div>
                         </div>
 
@@ -361,7 +356,9 @@
                   </div>
                   <div class="col-md-4 text-center">
                     <div class="card">
-                      <label class="padding-one">Image 6</label>
+                      <label class="padding-one">
+                        {{__('Image 6')}}
+                      </label>
                       <div class="card-body">
                         <img class="test1 margin-bottom-10 bg-secondary-rgba" id="preview1" align="center" width="150"
                           height="150" src="{{ url('images/imagechoosebg.png') }}" alt="">
@@ -372,7 +369,9 @@
                           <div class="custom-file">
                             <input type="file" name="file" name="chooseFile" name="image6" required=""
                               class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
-                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                            <label class="custom-file-label" for="inputGroupFile01">
+                              {{__('Choose file')}}
+                            </label>
                           </div>
                         </div>
 
@@ -390,8 +389,8 @@
             <div class="form-group mt-3">
 
               <button @if(env('DEMO_LOCK')==0) type="submit" @else disabled="disabled"
-                title="This action is disabled in demo !" @endif class="btn btn-primary-rgba">
-                <i class="feather icon-plus"></i> Add Variant
+                title="{{ __('This action is disabled in demo !') }}" @endif class="btn btn-primary-rgba">
+                <i class="feather icon-plus"></i> {{__('Add Variant')}}
               </button>
 
 
@@ -413,7 +412,7 @@
 @section('custom-script')
 
 <script>
-  var baseUrl = "<?= url('/') ?>";
+  var baseUrl = @json(url('/'));
 </script>
 <script src="{{ url('js/sellervariant.js') }}"></script>
 

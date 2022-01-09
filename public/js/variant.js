@@ -11,6 +11,20 @@ function checkall() {
     });
   }
 }
+
+$('.sel_all').on('change',function(){
+  if($(this).is(':checked')){
+    $('input.edit_chk').each(function () {
+      $(this).prop('checked', true);
+    });
+  }else{
+    $('input.edit_chk').each(function () {
+      $(this).prop('checked', false);
+    });
+  }
+})
+
+
 $(".sel_all").on('click', 'td-text', function () {
   $('input:checkbox').not(this).prop('checked', this.checked);
 });
@@ -68,8 +82,7 @@ $('.setdefButton').on('click', function () {
 });
 
 
-
-$('#attr_name').on('change', function () {
+$('#attr_name').on('change', function() {
   var get = $('#attr_name').val();
   var getoptiontext = $('#attr_name option:selected').html();
   getoptiontext = $.trim(getoptiontext);
@@ -77,29 +90,29 @@ $('#attr_name').on('change', function () {
   up.html($(''));
   $.ajax({
     method: 'GET',
-    data: "sendval=" + get,
+    data: {sendval : get},
     datatype: "json",
     url: baseUrl + '/admin/get/productvalues',
-    success: function (data) {
+    success: function(data) {
       $('#sel_box').html('');
       $('#sel_box').append('<label><input onclick="checkall()" type="checkbox" id="sel_all"/> Select All</label><br>');
       $('#sel_all').prop('checked', false);
-      $.each(data, function (i) {
-        if (data[i].unit_value != null && data[i].values.toUpperCase() != data[i].unit_value.toUpperCase()) {
-          if (getoptiontext == "Color" || getoptiontext == "Colour") {
-            up.append($('<div class="row"><div class="col-md-12"><label class="d-inline"> <input required type="checkbox" name="attr_value[]" value="' + data[i].id + '"><i title="' + data[i].values + '" style="color: ' + data[i].unit_value + '" class="border border-primary shadow-sm rounded p-1 fa fa-circle ml-3"></i><span class="tx-color ml-1">' + data[i].values + '</span></div></div>'));
-          
+      $.each(data, function(i) {
+        if(data[i].unit_value != null && data[i].values.toUpperCase() != data[i].unit_value.toUpperCase()) {
+          if(getoptiontext == "Color" || getoptiontext == "Colour") {
+            up.append($('<label class="mr-3"><input type="checkbox" name="attr_value[]" value="' + data[i].id + '"> <i style="outline-color: red;outline-style: dotted;color: ' + data[i].unit_value + '" class="fa fa-circle"></i> <span class="tx-color">' + data[i].values + '</span></label>'));
           } else {
-            up.append($('<input class="margin-left-8" type="checkbox" name="attr_value[]" value="' + data[i].id + '">&nbsp' + data[i].values + data[i].unit_value + '</label>'));
+            up.append($('<label class="mr-3"><input type="checkbox" name="attr_value[]" value="' + data[i].id + '">&nbsp' + data[i].values + data[i].unit_value + '</label>'));
           }
         } else {
-          up.append($('<label> <input class="margin-left-8" type="checkbox" name="attr_value[]" value="' + data[i].id + '">&nbsp' + data[i].values + '</label>'));
+          up.append($('<label class="mr-3"><input type="checkbox" name="attr_value[]" value="' + data[i].id + '">&nbsp' + data[i].values + '</label>'));
         }
       });
     }
   });
 });
-$('#attr_name2').on('change', function () {
+
+$('#attr_name2').on('change', function() {
   var get = $('#attr_name2').val();
   var getoptiontext = $('#attr_name2 option:selected').html();
   getoptiontext = $.trim(getoptiontext);
@@ -107,25 +120,27 @@ $('#attr_name2').on('change', function () {
   up.html($(''));
   $.ajax({
     method: 'GET',
-    data: "sendval=" + get,
+    data: {sendval : get},
     datatype: "json",
     url: baseUrl + '/admin/get/productvalues',
-    success: function (data) {
-      $.each(data, function (i) {
-        if (data[i].unit_value != null && data[i].values.toUpperCase() != data[i].unit_value.toUpperCase()) {
-          if (getoptiontext == "Color" || getoptiontext == "Colour") {
-            up.append($('<div class="row"><div class="col-md-12"><label class="d-inline"> <input required type="radio" name="attr_value2" value="' + data[i].id + '"><i title="' + data[i].values + '" style="color: ' + data[i].unit_value + '" class="border border-primary shadow-sm rounded p-1 fa fa-circle ml-3"></i><span class="tx-color ml-1">' + data[i].values + '</span></div></div>'));
-         
+    success: function(data) {
+      $.each(data, function(i) {
+        if(data[i].unit_value != null && data[i].values.toUpperCase() != data[i].unit_value.toUpperCase()) {
+          if(getoptiontext == "Color" || getoptiontext == "Colour") {
+
+            up.append($('<label class="mr-3"><input type="radio" name="attr_value2" value="' + data[i].id + '"> <i style="outline-color: red;outline-style: dotted;color: ' + data[i].unit_value + '" class="fa fa-circle"></i> <span class="tx-color">' + data[i].values + '</span></label>'));
+
           } else {
-            up.append($('<input required class="margin-left-8" type="radio" name="attr_value2" value="' + data[i].id + '">&nbsp' + data[i].values + data[i].unit_value + '</label>'));
+            up.append($('<label class="mr-3"><input required type="radio" name="attr_value2" value="' + data[i].id + '">&nbsp' + data[i].values + data[i].unit_value + '</label>'));
           }
         } else {
-          up.append($('<label> <input required class="margin-left-8" type="radio" name="attr_value2" value="' + data[i].id + '">&nbsp' + data[i].values + '</label>'));
+          up.append($('<label class="mr-3"><input required type="radio" name="attr_value2" value="' + data[i].id + '">&nbsp' + data[i].values + '</label>'));
         }
       });
     }
   });
 });
+
 $(document).on('click', '.hasCheck', function () {
   if ($(this).is(':checked')) {} else {
     var parents_id = $(this).attr('id');

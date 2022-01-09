@@ -46,7 +46,7 @@ return [
     | looking for missing translations.
     |
     */
-    'scan_paths' => [app_path(), resource_path()],
+    'scan_paths' => [app_path(),resource_path()], //resource_path(),
 
     /*
     |--------------------------------------------------------------------------
@@ -56,5 +56,5 @@ return [
     | Define the URL used to access the language management too.
     |
     */
-    'ui_url' => 'languages',
+    'ui_url' => '/languages',
 ];

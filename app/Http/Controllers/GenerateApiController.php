@@ -9,12 +9,7 @@ use Illuminate\Support\Str;
 
 class GenerateApiController extends Controller
 {
-    /*==========================================
-    =            Author: Media City            =
-    Author URI: https://mediacity.co.in
-    =            Developer: @nkit              =
-    =            Copyright (c) 2020            =
-    ==========================================*/
+
 
     public function __construct()
     {
@@ -44,7 +39,7 @@ class GenerateApiController extends Controller
               ->where('id', Auth::user()->id)
               ->update(['secret_key' => (string) Str::uuid()]);
 
-            notify()->success('Key is re-generated successfully !');
+            notify()->success(__('Key is re-generated successfully !'));
 
             return back();
 
@@ -55,7 +50,7 @@ class GenerateApiController extends Controller
             ]);
 
             if ($key) {
-                notify()->success('Key is generated successfully !');
+                notify()->success(__('Key is generated successfully !'));
                 return back();
             }
         }

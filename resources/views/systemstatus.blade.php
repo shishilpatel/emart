@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','System Status')
+@section('title',__('System Status | '))
 @section('body')
 
 @component('admin.component.breadcumb',['secondactive' => 'active'])
@@ -8,7 +8,7 @@
   @endslot
 
   @slot('menu2')
-    {{ __("System status") }}
+    {{  __('System Status') }}
   @endslot
 
 @endcomponent
@@ -24,14 +24,14 @@
           <div class="alert alert-danger" role="alert">
             @foreach($errors->all() as $error)
             <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true" style="color:red;">&times;</span></button></p>
+                <span aria-hidden="true">&times;</span></button></p>
             @endforeach
           </div>
         @endif
 
         <div class="card m-b-30">
           <div class="card-header">
-            <h5 class="card-title">{{ __('System') }} {{ __('Status') }}</h5>
+            <h5 class="card-title">{{ __('System Status') }}</h5>
           </div>
           <div class="card-body">
             @php
@@ -86,7 +86,7 @@
                   MYSQL version info
                 </th>
                 <th>
-                  Status
+                  {{  __('Status') }}
                 </th>
 
               </thead>
@@ -652,20 +652,20 @@
                 <tr>
                   <td>{{ __('max_execution_time') }} </td>
                   <td>
-                    {{ ini_get('max_execution_time') / 100 }} {{__("sec.")}}
+                    {{ ini_get('max_execution_time') }} {{__("sec.")}}
                   </td>
                   <td>
                     {{__("300 sec.")}}
                   </td>
                   <td>
-                    @if (ini_get('max_execution_time') / 100 > 300 || ini_get('max_execution_time') == '-1')
+                    @if (ini_get('max_execution_time') >= 300 || ini_get('max_execution_time') == '-1')
                       @php
                         array_push($servercheck, 1);
                       @endphp
                       <i class="text-green fa fa-check-circle"></i>
                     @else
                       @php
-                        array_push($servercheck, 1);
+                        array_push($servercheck, 0);
                       @endphp
                       <i class="text-danger fa fa-times-circle"></i>
                     @endif
@@ -677,7 +677,9 @@
                       {{ __('memory_limit') }} 
                       
                       @php
+
                         $memory_limit = ini_get('memory_limit');
+
                         if (preg_match('/^(\d+)(.)$/', $memory_limit, $matches)) {
                             if ($matches[2] == 'M') {
                                 $memory_limit = $matches[1] * 1024 * 1024; // nnnM -> nnn MB
@@ -936,7 +938,7 @@
     @if(!in_array(0, $servercheck))
     $("#message").html('<div class="alert bg-success"><p class="text-white"><i class="text-white fa fa-check-circle"></i> {{ __("All good ! No problem detected so far") }}</p></div>');
     @else
-    $('#message').html('<div class="alert bg-warning"><p class="text-white"><i class="text-re fa fa-warning"></i> {{ __("Something went wrong ! Please check status column") }}</p></div>');
+    $('#message').html('<div class="alert bg-warning"><p class="text-white"><i class="text-re fa fa-warning"></i> {{ __("Something went wrong ! Please check Status") }}</p></div>');
     @endif
   </script>
   @endsection

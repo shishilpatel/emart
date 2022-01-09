@@ -142,7 +142,7 @@
                 @if($o->courier_channel != '' && $o->tracking_link != '' && $o->exp_delivery_date != '')
                   
                   <p class="mt-2 text-green font-weight-bold">
-                    {{__('Expected delivery by '. date("d-M-Y",strtotime($o->exp_delivery_date)) )}}.
+                    {{__('Expected delivery by :date',['date' => date("d-M-Y",strtotime($o->exp_delivery_date))]) )}}.
                   </p>
 
                 @endif
@@ -315,25 +315,39 @@
                   @if($o->courier_channel != '' && $o->tracking_link != '' && $o->exp_delivery_date != '')
                   
                     <p class="mt-2 text-green font-weight-bold">
-                      {{__('Expected delivery by '. date("d-M-Y",strtotime($o->exp_delivery_date)) )}}.
+                      {{__('Expected delivery by :date',['date' => date("d-M-Y",strtotime($o->exp_delivery_date))])}}.
                     </p>
 
                   @endif
 
                   @elseif($o->status == 'return_request')
-                  <span class="badge badge-pill font-weight-normal badge-warning">Return Request</span>
+                  <span class="badge badge-pill font-weight-normal badge-warning">
+                    {{__("Return Request")}}
+                  </span>
                   @elseif($o->status == 'returned')
-                  <span class="badge badge-pill font-weight-normal badge-danger">Returned</span>
+                  <span class="badge badge-pill font-weight-normal badge-danger">
+                    {{__("Returned")}}
+                  </span>
                   @elseif($o->status == 'refunded')
-                  <span class="badge badge-pill font-weight-normal badge-success">Refunded</span>
+                  <span class="badge badge-pill font-weight-normal badge-success">
+                    {{__('Refunded')}}
+                  </span>
                   @elseif($o->status == 'cancel_request')
-                  <span class="badge badge-pill font-weight-normal badge-warning">Cancelation Request</span>
+                  <span class="badge badge-pill font-weight-normal badge-warning">
+                    {{__('Cancelation Request')}}
+                  </span>
                   @elseif($o->status == 'canceled')
-                  <span class="badge badge-pill font-weight-normal badge-danger">Canceled</span>
+                  <span class="badge badge-pill font-weight-normal badge-danger">
+                    {{__('Canceled')}}
+                  </span>
                   @elseif($o->status == 'Refund Pending')
-                  <span class="badge badge-pill font-weight-normal badge-success">Refund in progress</span>
+                  <span class="badge badge-pill font-weight-normal badge-success">
+                    {{__('Refund in progress')}}
+                  </span>
                   @elseif($o->status == 'ret_ref')
-                  <span class="badge badge-pill font-weight-normal badge-primary">Returned & Refunded</span>
+                  <span class="badge badge-pill font-weight-normal badge-primary">
+                    {{__('Returned & Refunded')}}
+                  </span>
                   @else
                   <span class="badge badge-pill font-weight-normal badge-secondary">{{ ucfirst($o->status) }}</span>
                   @endif

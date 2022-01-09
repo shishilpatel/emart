@@ -1,5 +1,5 @@
-@extends("admin.layouts.sellermaster")
-@section('title','Add Product Attributes -')
+@extends("admin.layouts.sellermastersoyuz")
+@section('title',__('Add Product Attributes'))
 @section('body')
 
 @component('seller.components.breadcumb',['secondactive' => 'active'])
@@ -29,7 +29,7 @@
         <div class="col-md-12">
             <div class="card m-b-30">
                 <div class="card-header">
-                    <h5 class="card-title">{{$findpro->name}}'s Variant</h5>
+                    <h5 class="card-title">{{__(':pro \'s Variant',['pro' => $findpro->name])}} </h5>
                 
 			</div>
 
@@ -37,26 +37,25 @@
 
 					<div class="row p-2">
 						<div class="p-2 bg-success text-white col-md-12">
-							<i class="fa fa-info-circle"></i> <i>Quick Guide</i>
+							<i class="fa fa-info-circle"></i> <i>{{ __('Quick Guide') }}</i>
 							<ul>
-								<li>Common variant not work until you don't Link a variant.</li>
-								<li>Before Link a variant click on <b>Add Variant Option</b> (You can add up to <u>2</u> variant
-									option).</li>
-								<li>After Link Variant option You can create unlimited variant from that options.</li>
-								<li>After Add a default variant you can create unlimited common variants.</li>
+								<li>{{ __('Common variant not work until you don\'t Link a variant.') }}</li>
+								<li> {{__('Before Link a variant click on')}} <b>{{ __('Add Variant Option') }}</b> ({{__('You can add up to')}} <u>2</u> {{__('variant option')}}).</li>
+								<li>{{__('After Link Variant option You can create unlimited variant from that options')}}.</li>
+								<li>{{__("After Add a default variant you can create unlimited common variants")}}.</li>
 							</ul>
 						</div>
 					</div>
                     
                     <ul class="nav nav-tabs custom-tab-line mb-3" id="defaultTabLine" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="home-tab-line" data-toggle="tab" href="#home-line" role="tab" aria-controls="home-line" aria-selected="true"><i class="feather icon-plus mr-2"></i> Add Common Variant</a>
+                            <a class="nav-link active" id="home-tab-line" data-toggle="tab" href="#home-line" role="tab" aria-controls="home-line" aria-selected="true"><i class="feather icon-plus mr-2"></i> {{ __('Add Common Variant') }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="profile-tab-line" data-toggle="tab" href="#profile-line" role="tab" aria-controls="profile-line" aria-selected="false"><i class="feather icon-database mr-2"></i> Add Variant Option</a>
+                            <a class="nav-link" id="profile-tab-line" data-toggle="tab" href="#profile-line" role="tab" aria-controls="profile-line" aria-selected="false"><i class="feather icon-database mr-2"></i> {{ __('Add Variant Option') }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="contact-tab-line" data-toggle="tab" href="#contact-line" role="tab" aria-controls="contact-line" aria-selected="false"><i class="feather icon-trending-up mr-2"></i> Link Variant</a>
+                            <a class="nav-link" id="contact-tab-line" data-toggle="tab" href="#contact-line" role="tab" aria-controls="contact-line" aria-selected="false"><i class="feather icon-trending-up mr-2"></i> {{ __('Link Variant') }}</a>
                         </li>
                         
                     </ul>
@@ -69,13 +68,13 @@
 									<div class="card-title">
 										<div class="row">
 											<div class="col-md-9">
-												Add Common Product Variant For <b>{{ $findpro->name }}</b>
+												{{__('Add Common Product Variant For')}} <b>{{ $findpro->name }}</b>
 											</div>
 											<div class="col-md-3">
 												<a @if(env('DEMO_LOCK')==0) data-toggle="modal" href="#cmModal" @else disabled
 												title="This action is disabled in demo !" @endif
 												class="btn btn-primary-rgba float-right">
-												<i class="feather icon-plus"></i> ADD Common Variant
+												<i class="feather icon-plus"></i> {{__("ADD Common Variant")}}
 											</a>
 											</div>
 										</div>
@@ -91,9 +90,9 @@
 										<thead>
 											<tr>
 												<th>#</th>
-												<th>Variant Name</th>
-												<th>Variant Value</th>
-												<th>Action</th>
+												<th>{{ __('Variant Name') }}</th>
+												<th>{{ __('Variant Value') }}</th>
+												<th>{{ __('Action') }}</th>
 											</tr>
 										</thead>
 	
@@ -186,7 +185,7 @@
 									<div class="box-title">
 										<div class="row">
 											<div class="col-md-10">
-												Add Product Attributes For <b>{{ $findpro->name }}</b>
+												{{__('Add Product Attributes For')}} <b>{{ $findpro->name }}</b>
 											</div>
 											<div class="col-md-2 ">
 												<a data-toggle="modal" href="#optionModal" class=" btn btn-primary-rgba  float-right">
@@ -206,9 +205,9 @@
 										<thead>
 											<tr>
 												<th>#</th>
-												<th>Option Names</th>
-												<th>Option Value</th>
-												<th>Action</th>
+												<th>{{ __('Option Names') }}</th>
+												<th>{{ __('Option Value') }} </th>
+												<th>{{ __('Action') }}</th>
 											</tr>
 										</thead>
 										<?php $i=0;?>
@@ -314,11 +313,11 @@
 								<div class="box-title">
 									<div class="row">
 										<div class="col-md-10">
-											Link Variant For <b>{{ $findpro->name }}</b>
+											{{__('Link variant for')}} <b>{{ $findpro->name }}</b>
 										</div>
 										<div class="col-md-2">
 											<a class="btn  btn-primary-rgba float-right"
-									href="{{ route('seller.manage.stock',$findpro->id) }}"><i class="feather icon-plus mr-2"></i> ADD
+									href="{{ route('seller.manage.stock',$findpro->id) }}"><i class="feather icon-plus mr-2"></i> {{__("ADD")}}
 								</a>
 										</div>
 									</div>
@@ -333,10 +332,10 @@
 									<thead>
 										<tr>
 											<th>#</th>
-											<th>Name</th>
-											<th>Additional Detail</th>
-											<th>Default</th>
-											<th>Action</th>
+											<th>{{ __('Name') }}</th>
+											<th>{{ __('Additional detail') }}</th>
+											<th>{{ __('Default') }}</th>
+											<th>{{ __('Action') }}</th>
 										</tr>
 									</thead>
 
@@ -412,11 +411,11 @@
 										</td>
 
 										<td>
-											<p><b>Price:</b> {{ $sub->price }}</p>
-											<p><b>Stock:</b> {{ $sub->stock }}</p>
-											<p><b>Weight:</b> {{ $sub->weight }}{{ $sub->unitname->short_code ?? '' }}</p>
-											<p><b>Min Order Qty:</b>{{ $sub->min_order_qty }}</p>
-											<p><b>Max Order Qty:</b>{{ $sub->max_order_qty }}</p>
+											<p><b>{{ __('Price') }}:</b> {{ $sub->price }}</p>
+											<p><b>{{ __('Stock') }}:</b> {{ $sub->stock }}</p>
+											<p><b>{{ __('Weight') }}:</b> {{ $sub->weight }}{{ $sub->unitname->short_code ?? '' }}</p>
+											<p><b>{{ __('Min Order Qty') }}:</b>{{ $sub->min_order_qty }}</p>
+											<p><b>{{ __('Max Order Qty') }}:</b>{{ $sub->max_order_qty }}</p>
 										</td>
 										<td class="v-middle custom-radios">
 
@@ -438,7 +437,7 @@
 													<a class="dropdown-item"  href="{{ route('seller.edit.var',$sub->id) }}"><i class="feather icon-edit mr-2"></i>{{ __("Edit")}}</a>
 													<a class="dropdown-item" @if(env('DEMO_LOCK')==0) data-toggle="modal"
 													href="#deletevar{{ $sub->id }}" @else
-													title="This action is disabled in demo !" disabled @endif><i class="feather icon-delete mr-2"></i>{{ __("Delete")}}</a>
+													title="{{ __('This action is disabled in demo !') }}" disabled @endif><i class="feather icon-delete mr-2"></i>{{ __("Delete")}}</a>
 													
 													</div>
 											</div>
@@ -521,7 +520,7 @@
 					@endif
 					@endforeach
 					
-					<button class="btn btn-primary mt-3" type="submit"><i class="fa fa-check-circle mr-2"></i>Update</button>
+					<button class="btn btn-primary mt-3" type="submit"><i class="fa fa-check-circle mr-2"></i>{{ __('Update') }}</button>
 				</form>
 			</div>
 
@@ -539,8 +538,8 @@
 				<div class="delete-icon"></div>
 			</div>
 			<div class="modal-body text-center">
-				<h4 class="modal-heading">Are You Sure ?</h4>
-				<p>Do you really want to delete this variant? This process cannot be undone.</p>
+				<h4 class="modal-heading">{{ __('Are You Sure ?') }}</h4>
+				<p>{{ __('Do you really want to delete this variant? This process cannot be undone') }}.</p>
 			</div>
 			<div class="modal-footer">
 				<form method="post" action="{{route('seller.del.common',$commonvariant->id)}}" class="pull-right">
@@ -603,9 +602,9 @@
 						$pvalues = App\ProductValues::where('atrr_id', $opt->attr_name)->get();
 						@endphp
 						<br>
-						<label><input type="checkbox" class="sel_all"> Select All</label>
+						<label><input type="checkbox" class="sel_all"> {{__('Select all') }}</label>
 						<br>
-						<label for="">Choose Value:</label>
+						<label for="">{{ __('Choose Value') }}:</label>
 						<br>
 
 
@@ -629,21 +628,8 @@
 							@if(strcasecmp($getvalname->unit_value, $getvalname->values) !=0)
 
 							@if($opt->getattrname->attr_name == "Color" || $opt->getattrname->attr_name == "Colour")
-
-
-							<div class="margin-left-minus-15 inline-flex">
-								<div class="color-options">
-									<ul>
-										<li title="{{ $getvalname->values }}" class="color varcolor active"><a href="#"
-												title=""><i style="color: {{ $getvalname->unit_value }}"
-													class="fa fa-circle"></i></a>
-											<div class="overlay-image overlay-deactive">
-											</div>
-										</li>
-									</ul>
-								</div>
-							</div>
-							<span class="tx-color">{{ $getvalname->values }}</span>
+								<i style="color: {{ $getvalname->unit_value }}" class="fa fa-circle"></i> 
+								<span class="tx-color">{{ $getvalname->values }}</span>
 							@else
 							{{ $getvalname->values }}{{ $getvalname->unit_value }}
 							@endif
@@ -664,18 +650,7 @@
 							@if(strcasecmp($getvalname->unit_value, $getvalname->values) !=0)
 
 							@if($opt->getattrname->attr_name == "Color" || $opt->getattrname->attr_name == "Colour")
-							<div class="margin-left-minus-15 inline-flex">
-								<div class="color-options">
-									<ul>
-										<li title="{{ $getvalname->values }}" class="color varcolor active"><a href="#"
-												title=""><i style="color: {{ $getvalname->unit_value }}"
-													class="fa fa-circle"></i></a>
-											<div class="overlay-image overlay-deactive">
-											</div>
-										</li>
-									</ul>
-								</div>
-							</div>
+							<i style="color: {{ $getvalname->unit_value }}" class="fa fa-circle"></i> 
 							<span class="tx-color">{{ $getvalname->values }}</span>
 							@else
 							{{ $getvalname->values }}{{ $getvalname->unit_value }}
@@ -693,7 +668,7 @@
 					</div>
 
 					<button class="btn btn-md btn-primary" type="submit">
-						<i class="fa fa-check-circle mr-2"></i>Update
+						<i class="fa fa-check-circle mr-2"></i> {{__('Update')}}
 					</button>
 				</form>
 
@@ -713,15 +688,17 @@
 				<div class="delete-icon"></div>
 			</div>
 			<div class="modal-body text-center">
-				<h4 class="modal-heading">Are You Sure ?</h4>
-				<p>Do you really want to delete this variant? This process cannot be undone.</p>
+				<h4 class="modal-heading">{{ __('Are You Sure ?') }}</h4>
+				<p>
+					{{__('Do you really want to delete this variant? This process cannot be undone.')}}
+				</p>
 			</div>
 			<div class="modal-footer">
 				<form method="post" action="{{route('seller.del.subvar',$opt->id)}}" class="pull-right">
 					{{csrf_field()}}
 					{{method_field("DELETE")}}
-					<button type="reset" class="btn btn-secondary" data-dismiss="modal">No</button>
-					<button type="submit" class="btn btn-danger">Yes</button>
+					<button type="reset" class="btn btn-secondary" data-dismiss="modal">{{ __('No') }}</button>
+					<button type="submit" class="btn btn-danger">{{ __('Yes') }}</button>
 				</form>
 			</div>
 		</div>
@@ -740,15 +717,23 @@
 				<div class="delete-icon"></div>
 			</div>
 			<div class="modal-body text-center">
-				<h4 class="modal-heading">Are You Sure ?</h4>
-				<p>Do you really want to delete this variant? This process cannot be undone.</p>
+				<h4 class="modal-heading">
+					{{__('Are You Sure ?')}}
+				</h4>
+				<p>
+					{{__('Do you really want to delete this variant? This process cannot be undone.')}}
+				</p>
 			</div>
 			<div class="modal-footer">
 				<form method="post" action="{{ route('seller.del.var',$sub->id) }}" class="pull-right">
 					{{csrf_field()}}
 					{{method_field("DELETE")}}
-					<button type="reset" class="btn btn-secondary" data-dismiss="modal">No</button>
-					<button type="submit" class="btn btn-danger">Yes</button>
+					<button type="reset" class="btn btn-secondary" data-dismiss="modal">
+						{{__("No")}}
+					</button>
+					<button type="submit" class="btn btn-danger">
+						{{__('Yes')}}
+					</button>
 				</form>
 			</div>
 		</div>
@@ -762,7 +747,9 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title" id="myModalLabel">Add Product Common Variant</h4>
+				<h4 class="modal-title" id="myModalLabel">
+					{{__('Add Product Common Variant')}}
+				</h4>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
 						aria-hidden="true">&times;</span></button>
 				
@@ -772,7 +759,7 @@
 					{{ csrf_field() }}
 
 					<div class="form-group">
-						<label for="">Option Name:</label>
+						<label for="">{{ __('Option Name') }}:</label>
 
 						@php
 
@@ -796,7 +783,9 @@
 						@endphp
 
 						<select required="" class="form-control select2" name="attr_name2" id="attr_name2">
-							<option value="">Please Choose</option>
+							<option value="">
+								{{__('Please Choose')}}
+							</option>
 							@foreach($test as $t)
 							<option value="{{ $t->id }}">
 
@@ -820,7 +809,7 @@
 					</div>
 
 					<div class="form-group">
-						<label for="">Option Value:</label>
+						<label for="">{{ __('Option Value') }}:</label>
 						<div id="attr_value2">
                                   
 						</div>
@@ -828,7 +817,7 @@
 					</div>
 
 					<button class="btn  btn-primary-rgba" type="submit">
-						<i class="fa fa-check-circle mr-2"></i>Update
+						<i class="fa fa-check-circle mr-2"></i> {{__('Update')}}
 					</button>
 				</form>
 
@@ -848,7 +837,9 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title" id="myModalLabel">Add Product Attributes</h4>
+				<h4 class="modal-title" id="myModalLabel">
+					{{__('Add Product Attributes')}}
+				</h4>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
 						aria-hidden="true">&times;</span></button>
 				
@@ -858,7 +849,7 @@
 					{{ csrf_field() }}
 
 					<div class="form-group">
-						<label for="">Option Name:</label>
+						<label for="">{{ __('Option Name') }}:</label>
 
 						@php
 
@@ -906,23 +897,18 @@
 						<div id="sel_box">
 
 						</div>
-						<label for="">Option Value:</label>
+						<label for="">{{ __('Option Value') }}:</label>
 						 
 							<div  id="attr_value">
 
 						
 						  </div>
-
-
-
-
-
-						
+	
 
 					</div>
 
 					<button class="btn btn-primary" type="submit">
-						<i class="fa fa-check-circle mr-2"></i>Update
+						<i class="fa fa-check-circle mr-2"></i> {{__('Update')}}
 					</button>
 				</form>
 
@@ -941,62 +927,6 @@
     <script>var baseUrl = "<?= url('/') ?>";</script>
 	<script src="{{ url('js/sellervariant.js') }}"></script>
 @endsection
-
-    
-                                            
-                                            
-                                            
-    
-    
-    
-    
-    
-    
-                        
-      
-                    
-    
-                  
-          
-                  
-    
-    
-          
-                  
-    
-    
-                  
-                  
-                
-    
-                
-                                      
-
-
-          
-
-            
-          
-              
-
-
-
-
-            
-
-            
-            
-            
-  
-                 
-  
-               
-  
-          
-    
-             
-            
-
           
 
 

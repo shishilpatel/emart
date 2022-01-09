@@ -6,13 +6,7 @@ use Illuminate\Http\Request;
 use Mail;
 use App\Mail\SendFeedback;
 use App\Genral;
-
-/*==========================================
-=            Author: Media City            =
-    Author URI: https://mediacity.co.in
-=            Author: Media City            =
-=            Copyright (c) 2020            =
-==========================================*/
+use Illuminate\Support\Facades\Log;
 
 class SendFeedBackController extends Controller
 {
@@ -25,17 +19,16 @@ class SendFeedBackController extends Controller
     	    'rate' => $request->rate
     	];
 
-    	
-
+    
     	$defaultemail = Genral::findorfail(1)->email;
 
     	try{
             Mail::to($defaultemail)->send(new SendFeedback($feedback));
-        }catch(\Swift_TransportException $e){
-
+        }catch(\Exception $e){
+			Log::error('Mail sent fail for feedback reason :',$e->getMessage());
 		}
 		
-        notify()->success('Sent Succesfully, Thanks for feedback us!');
+        notify()->success(__('Sent ! Thankyou for valuable feedback !'));
     	return back();
 }
 

@@ -15,7 +15,7 @@ class CreateUsersTable extends Migration {
 		if ( !Schema::hasTable('users') ) {
 			Schema::create('users', function(Blueprint $table)
 			{
-				$table->increments('id');
+				$table->unsignedBigInteger('id')->autoIncrement();
 				$table->string('role_id', 191)->default('u');
 				$table->string('name', 191)->nullable();
 				$table->string('email', 191);

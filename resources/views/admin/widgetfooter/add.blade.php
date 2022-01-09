@@ -1,23 +1,22 @@
-
-@section('title','Widgtes footer | ')
+@section('title',__('Widgtes footer | '))
 @section("body")
 
     <div class="col-xs-12">
           <!-- general form elements -->
           <div class="box box-primary" >
             <div class="box-header with-border">
-              <h3 class="box-title">Widget footer </h2>
+              <h3 class="box-title">{{__("Widget footer")}} </h2>
                   <form id="demo-form2" method="post" enctype="multipart/form-data" action="{{url('admin/widget_footer')}}" data-parsley-validate class="form-horizontal form-label-left">
                         {{csrf_field()}}
                      <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
-                        Widget Name <span class="required">*</span>
+                        {{__('Widget Name') }}<span class="required">*</span>
                         </label>
                         
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <input type="text" id="first-name" name="widget_name" 
                           value="{{ old('widget_name')}}" class="form-control col-md-7 col-xs-12">
-                          <p class="txt-desc">Please Enter Widget Name</p>
+                          <p class="txt-desc">{{ __("Please Enter Widget Name") }}</p>
                         </div>
                       </div>
                      

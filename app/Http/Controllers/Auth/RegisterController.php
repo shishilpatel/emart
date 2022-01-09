@@ -13,7 +13,6 @@ use App\User;
 use Arcanedev\NoCaptcha\Rules\CaptchaRule;
 use Auth;
 use Carbon\Carbon;
-use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -73,20 +72,20 @@ class RegisterController extends Controller
         if ($this->setting->captcha_enable == 1) {
 
             $request->validate([
-                    'name' => 'required|string|max:255',
-                    'email' => 'required|string|email|max:255|unique:users',
-                    'password' => 'required|string|min:6|confirmed',
-                    'phonecode' => 'required|numeric',
-                    'mobile' => 'numeric|unique:users,mobile',
-                    'eula' => 'required',
-                    'g-recaptcha-response' => ['required', new CaptchaRule],
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'password' => 'required|string|min:6|confirmed',
+                'phonecode' => 'required|numeric',
+                'mobile' => 'numeric|unique:users,mobile',
+                'eula' => 'required',
+                'g-recaptcha-response' => ['required', new CaptchaRule],
             ], [
-                    'g-recaptcha-response.required' => 'Please check the captcha !',
-                    'mobile.unique' => 'Mobile no is already taken !',
-                    'phonecode' => 'Phonecode is required',
-                    'mobile.numeric' => 'Mobile no should be numeric !',
-                    'eula.required' => 'Please accept terms and condition !'
-                ]
+                'g-recaptcha-response.required' => __('Please check the captcha !'),
+                'mobile.unique' => __('Mobile no. is already taken !'),
+                'mobile.numeric' => __('Mobile no should be numeric !'),
+                'eula.required' => __('Please accept terms and condition !'),
+                'phonecode' => __('Phonecode is required'),
+            ]
             );
 
         } else {
@@ -98,26 +97,26 @@ class RegisterController extends Controller
                 'password' => 'required|string|min:6|confirmed',
                 'mobile' => 'numeric|unique:users,mobile',
                 'eula' => 'required',
-                'phonecode' => 'required|numeric'
+                'phonecode' => 'required|numeric',
             ], [
-                'mobile.unique' => 'Mobile no is already taken !',
-                'mobile.numeric' => 'Mobile no should be numeric !',
-                'eula.required' => 'Please accept terms and condition !',
-                'phonecode' => 'Phonecode is required',
+                'mobile.unique' => __('Mobile no. is already taken !'),
+                'mobile.numeric' => __('Mobile no should be numeric !'),
+                'eula.required' => __('Please accept terms and condition !'),
+                'phonecode' => __('Phonecode is required'),
             ]);
 
         }
 
         $af_system = Affilate::first();
 
-        if($af_system && $af_system->enable_affilate == '1'){
+        if ($af_system && $af_system->enable_affilate == '1') {
 
-            $findreferal = User::firstWhere('refer_code',$request->refer_code);
+            $findreferal = User::firstWhere('refer_code', $request->refer_code);
 
-            if(!$findreferal){
+            if (!$findreferal) {
 
                 return back()->withInput()->withErrors([
-                    'refercode' => 'Refer code is invalid !'
+                    'refercode' => __('Refer code is invalid !'),
                 ]);
 
             }
@@ -125,35 +124,35 @@ class RegisterController extends Controller
         }
 
         $user = User::create([
-            'name'      => $request['name'],
-            'email'     => $request['email'],
-            'mobile'    => $request['mobile'],
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'mobile' => $request['mobile'],
             'phonecode' => $request['phonecode'],
-            'password'  => Hash::make($request['password']),
-            'email_verified_at' => $this->setting->email_verify_enable == '1' ? NULL : Carbon::now(),
+            'password' => Hash::make($request['password']),
+            'email_verified_at' => $this->setting->email_verify_enable == '1' ? null : Carbon::now(),
             'is_verified' => 1,
-            'refered_from' => $af_system && $af_system->enable_affilate == '1' ? $request['refer_code'] : NULL
+            'refered_from' => $af_system && $af_system->enable_affilate == '1' ? $request['refer_code'] : null,
         ]);
 
         $user->assignRole('Customer');
 
-        if($af_system && $af_system->enable_affilate == '1'){
+        if ($af_system && $af_system->enable_affilate == '1') {
 
             $findreferal->getReferals()->create([
                 'log' => 'Refer successfull',
                 'refer_user_id' => $user->id,
                 'user_id' => $findreferal->id,
                 'amount' => $af_system->refer_amount,
-                'procces' => $af_system->enable_purchase == 1 ? 0 : 1
+                'procces' => $af_system->enable_purchase == 1 ? 0 : 1,
             ]);
 
-            if($af_system->enable_purchase == 0){
+            if ($af_system->enable_purchase == 0) {
 
-                if(!$findreferal->wallet){
+                if (!$findreferal->wallet) {
 
                     $w = $findreferal->wallet()->create([
                         'balance' => $af_system->refer_amount,
-                        'status'  =>  '1',
+                        'status' => '1',
                     ]);
 
                     $w->wallethistory()->create([
@@ -161,15 +160,15 @@ class RegisterController extends Controller
                         'log' => 'Referal bonus',
                         'amount' => $af_system->refer_amount,
                         'txn_id' => str_random(8),
-                        'expire_at' => date("Y-m-d", strtotime(date('Y-m-d').'+365 days'))
+                        'expire_at' => date("Y-m-d", strtotime(date('Y-m-d') . '+365 days')),
                     ]);
 
                 }
 
-                if(isset($findreferal->wallet) && $findreferal->wallet->status == 1){
+                if (isset($findreferal->wallet) && $findreferal->wallet->status == 1) {
 
                     $findreferal->wallet()->update([
-                        'balance' => $findreferal->wallet->balance + $af_system->refer_amount
+                        'balance' => $findreferal->wallet->balance + $af_system->refer_amount,
                     ]);
 
                     $findreferal->wallet->wallethistory()->create([
@@ -177,15 +176,10 @@ class RegisterController extends Controller
                         'log' => 'Referal bonus',
                         'amount' => $af_system->refer_amount,
                         'txn_id' => str_random(8),
-                        'expire_at' => date("Y-m-d", strtotime(date('Y-m-d').'+365 days'))
+                        'expire_at' => date("Y-m-d", strtotime(date('Y-m-d') . '+365 days')),
                     ]);
-    
- 
 
                 }
-
-                
-
 
             }
 
@@ -197,7 +191,7 @@ class RegisterController extends Controller
 
                 $product = Product::find($c['pro_id']);
 
-                if(isset($product)){
+                if (isset($product)) {
                     $cart = new Cart;
                     $cart->user_id = $user->id;
                     $cart->qty = $c['qty'];
@@ -214,35 +208,33 @@ class RegisterController extends Controller
 
         }
 
-        
-
         session()->forget('cart');
 
-        if($this->setting->email_verify_enable == '1'){
+        if ($this->setting->email_verify_enable == '1') {
 
             $user->sendEmailVerificationNotification();
-    
+
         }
 
         Auth::login($user);
 
-        if(session()->has('coupanapplied')){
+        if (session()->has('coupanapplied')) {
 
-            $cpn = Coupan::firstWhere('code','=',session()->get('coupanapplied')['code']);
+            $cpn = Coupan::firstWhere('code', '=', session()->get('coupanapplied')['code']);
 
-            if(isset($cpn)){
+            if (isset($cpn)) {
 
                 $applycoupan = new CouponApplyController;
 
-                if(session()->get('coupanapplied')['appliedOn'] == 'category'){
+                if (session()->get('coupanapplied')['appliedOn'] == 'category') {
                     $applycoupan->validCouponForCategory($cpn);
                 }
 
-                if(session()->get('coupanapplied')['appliedOn'] == 'cart'){
+                if (session()->get('coupanapplied')['appliedOn'] == 'cart') {
                     $applycoupan->validCouponForCart($cpn);
                 }
 
-                if(session()->get('coupanapplied')['appliedOn'] == 'product'){
+                if (session()->get('coupanapplied')['appliedOn'] == 'product') {
                     $applycoupan->validCouponForProduct($cpn);
                 }
 
@@ -254,6 +246,5 @@ class RegisterController extends Controller
         return redirect('/');
 
     }
-
 
 }

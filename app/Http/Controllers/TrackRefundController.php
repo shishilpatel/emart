@@ -13,12 +13,6 @@ use PayPal\Rest\ApiContext;
 use PaytmWallet;
 use Razorpay\Api\Api;
 
-/*==========================================
-=            Author: Media City            =
-Author URI: https://mediacity.co.in
-=            Developer: @nkit              =
-=            Copyright (c) 2020            =
-==========================================*/
 
 class TrackRefundController extends Controller
 {
@@ -154,7 +148,7 @@ class TrackRefundController extends Controller
             $response = json_decode($response,true);
             
         }else{
-            return response()->json(['code' => 404, 'msg' => "Refund Tracking is not available currently for $order->payment_method"]);
+            return response()->json(['code' => 404, 'msg' => __("Refund Tracking is not available currently for :order",['order' => $order->payment_method])]);
         }
         return view('admin.order.refundstats', compact('response', 'paygatename', 'order', 'data'));
     }
@@ -262,7 +256,7 @@ class TrackRefundController extends Controller
             $response = json_decode($response,true);
             
         }else{
-            return response()->json(['code' => 404, 'msg' => "Refund Tracking is not available currently for $order->payment_method"]);
+            return response()->json(['code' => 404, 'msg' => __("Refund Tracking is not available currently for :order",['order' => $order->payment_method])]);
         }
 
         return view('admin.order.refundstatsfull', compact('response', 'paygatename', 'order', 'data'));

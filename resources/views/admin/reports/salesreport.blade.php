@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Sales reports all products')
+@section('title',__('Sales reports all products'))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -15,15 +15,16 @@
 @endcomponent
 <div class="contentbar">
   <div class="row">
-    @if ($errors->any())
-    <div class="alert alert-danger" role="alert">
-      @foreach($errors->all() as $error)
-      <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach
-    </div>
-    @endif
+    
     <div class="col-lg-12">
+        @if ($errors->any())
+            <div class="alert alert-danger" role="alert">
+            @foreach($errors->all() as $error)
+            <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button></p>
+            @endforeach
+            </div>
+        @endif
       <div class="card m-b-30">
         <div class="card-header">
           <h5 class="box-title">{{ __('Sales Report') }}</h5>

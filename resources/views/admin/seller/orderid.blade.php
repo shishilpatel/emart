@@ -3,7 +3,7 @@
 @endphp
 
 <p><b>#{{ $inv->order_prefix }}{{ $orderid }}</b></p>
-<p><small>Invoice No: <b>#{{ $inv->prefix }}{{ $invid }}{{ $inv->prefix }}</b></small></p>
+<p><small>{{ __("Invoice No:") }} <b>#{{ $inv->prefix }}{{ $invid }}{{ $inv->prefix }}</b></small></p>
 @if($paidvia == 'Paypal')
-<small><a role="button" class="cursor-pointer" onclick="trackstatus('{{ $txn_id }}')" title="Click to track payout status live">Track Payout Status Live</a></small>
+<small><a role="button" class="cursor-pointer" onclick="trackstatus('{{ $txn_id }}')" title="{{ __("Click to track payout status live") }}">{{ __("Track Payout Status Live") }}</a></small>
 @endif

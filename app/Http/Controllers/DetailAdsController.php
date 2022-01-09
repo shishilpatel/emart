@@ -15,7 +15,7 @@ class DetailAdsController extends Controller
      */
     public function index()
     {
-        abort_if(!auth()->user()->can('blockadvertisments.view'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('blockadvertisments.view'),403,__('User does not have the right permissions.'));
 
         $details = DetailAds::all();
         return view('admin/detailAds.index', compact('details'));
@@ -28,7 +28,7 @@ class DetailAdsController extends Controller
      */
     public function create()
     {
-        abort_if(!auth()->user()->can('blockadvertisments.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('blockadvertisments.create'),403,__('User does not have the right permissions.'));
         return view('admin/detailAds.add');
     }
 
@@ -40,7 +40,7 @@ class DetailAdsController extends Controller
      */
     public function store(Request $request)
     {
-        abort_if(!auth()->user()->can('blockadvertisments.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('blockadvertisments.create'),403,__('User does not have the right permissions.'));
 
         $blockad = new DetailAds;
 
@@ -161,7 +161,7 @@ class DetailAdsController extends Controller
         $blockad->save();
 
         return back()
-            ->with('added', 'Block ad has been created !');
+            ->with('added', __('Block ad has been created !'));
 
     }
 
@@ -185,7 +185,7 @@ class DetailAdsController extends Controller
      */
     public function edit($id)
     {   
-        abort_if(!auth()->user()->can('blockadvertisments.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('blockadvertisments.edit'),403,__('User does not have the right permissions.'));
         $detail = DetailAds::findOrFail($id);
         return view('admin/detailAds.edit', compact('detail'));
     }
@@ -200,7 +200,7 @@ class DetailAdsController extends Controller
     public function update(Request $request, $id)
     {
 
-        abort_if(!auth()->user()->can('blockadvertisments.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('blockadvertisments.edit'),403,__('User does not have the right permissions.'));
         $blockad = DetailAds::findOrFail($id);
 
         if ($request->linkby == 'category' || $request->linkby == 'detail' || $request->linkby == 'url') {
@@ -209,28 +209,28 @@ class DetailAdsController extends Controller
 
         if ($request->linkby == 'category') {
 
-            $request->validate(['cat_id' => 'required', 'linkedCat' => 'required'], ['cat_id.required' => 'Please select category !']);
+            $request->validate(['cat_id' => 'required', 'linkedCat' => 'required'], ['cat_id.required' => __('Please select category !')]);
         }
 
         if ($request->linkby == 'detail') {
 
-            $request->validate(['pro_id' => 'required'], ['pro_id.required' => 'Please select product !']);
+            $request->validate(['pro_id' => 'required'], ['pro_id.required' => __('Please select product !')]);
         }
 
         if ($request->linkby == 'url') {
 
-            $request->validate(['url' => 'required'], ['url.required' => 'Please enter valid url !']);
+            $request->validate(['url' => 'required'], ['url.required' => __('Please enter valid url !')]);
         }
 
         if ($request->position == 'category') {
 
-            $request->validate(['linkedCat' => 'required'], ['linkedCat.required' => 'Please select linked category page !']);
+            $request->validate(['linkedCat' => 'required'], ['linkedCat.required' => __('Please select linked category page !')]);
 
             $blockad->linked_id = $request->linkedCat;
 
         } else {
 
-            $request->validate(['linkedPro' => 'required'], ['linkedPro.required' => 'Please select product detail page !']);
+            $request->validate(['linkedPro' => 'required'], ['linkedPro.required' => __('Please select product detail page !')]);
 
             $blockad->linked_id = $request->linkedPro;
 
@@ -324,7 +324,7 @@ class DetailAdsController extends Controller
         $blockad->save();
 
         return back()
-            ->with('added', 'Block ad has been updated !');
+            ->with('added', __('Block ad has been updated !'));
 
     }
     /**
@@ -336,7 +336,7 @@ class DetailAdsController extends Controller
     public function destroy($id)
     {
 
-        abort_if(!auth()->user()->can('blockadvertisments.delete'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('blockadvertisments.delete'),403,__('User does not have the right permissions.'));
 
         $ad = DetailAds::findorFail($id);
 
@@ -350,7 +350,7 @@ class DetailAdsController extends Controller
 
         return redirect()
             ->route("detailadvertise.index")
-            ->with("deleted", "Selected advertise has been deleted !");
+            ->with("deleted", __("Selected advertise has been deleted !"));
 
     }
 }

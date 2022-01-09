@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Wallet Setting | ')
+@section('title',__('Wallet Setting | '))
 @section('body')
 
 @component('admin.component.breadcumb',['secondactive' => 'active'])
@@ -19,19 +19,18 @@
     <div class="card-body">
       <div class="row">
         <div class="form-group col-md-12">
-          <label>Enable Wallet: </label>
+          <label>{{__("Enable Wallet:")}} </label>
           <br>
           <label class="switch">
               <input {{ $wallet == 1 ? "checked" : "" }} type="checkbox" class="wallet_enable" name="wallet_enable">
               <span class="knob"></span>
           </label>
           <br>
-          <small class="text-muted"><i class="fa fa-question-circle"></i> It will activate the wallet on
-              portal
+          <small class="text-muted"><i class="fa fa-question-circle"></i> {{__("It will activate the wallet on portal")}}
           </small>
         </div>
         <div class="wallet-dashboard {{ $wallet == 0 ? "hide" : "" }}">
-          <h5 class="ml-md-3">Wallet States:</h5>
+          <h5 class="ml-md-3">{{ __("Wallet States:") }}</h5>
            
            
           <div class="row ml-1 mr-1">
@@ -44,14 +43,14 @@
                       <div class="row">
                           <div class="col-9">
                               <h4>{{ $states['activeuser'] }}</h4>
-                              <p class="font-14 mb-0">Active Wallet Users</p>
+                              <p class="font-14 mb-0">{{ __('Active Wallet Users') }}</p>
                               
                           </div>
                           <div class="col-md-3 col-3">
                            <i class="text-success iconsize feather icon-bar-chart-line- "></i>
                           </div>
                           <div class="col-md-12 col-12">
-                            <small class="text-muted">(Counted active wallet users ONLY)</small>
+                            <small class="text-muted">({{__("Counted active wallet users ONLY")}})</small>
                           </div>
                           
                          
@@ -68,14 +67,14 @@
                       <div class="row align-items-center">
                           <div class="col-9">
                               <h4>{{ $states['totaluser'] }}</h4>
-                              <p class="font-14 mb-0">Total Wallet Users</p>
+                              <p class="font-14 mb-0">{{ __('Total Wallet Users') }}</p>
                             
                           </div>
                           <div class="col-md-3 col-3">
                              <i class="text-danger iconsize feather icon-users"></i>
                           </div>
                           <div class="col-md-12">
-                            <small class="text-muted">(Counted active and deactive wallet users)</small>
+                            <small class="text-muted">({{__('Counted active and deactive wallet users')}})</small>
                           </div>
                       </div>
                   </div>
@@ -87,7 +86,7 @@
                       <div class="row align-items-center">
                           <div class="col-7">
                               <h4>{{ $states['wallettxn'] }}</h4>
-                              <p class="font-14 mb-0">Wallet Transcations</p>
+                              <p class="font-14 mb-0">{{ __("Wallet Transcations") }}</p>
                             
                           </div>
                           <div class="col-5 text-right">
@@ -95,7 +94,7 @@
                         
                           </div>
                           <div class="col-md-12">
-                            <small class="text-muted">(No of user wallet transcations made on {{ config('app.name') }})</small>
+                            <small class="text-muted">({{__("No of user wallet transcations made on")}} {{ config('app.name') }})</small>
                           </div>
         
                       </div>
@@ -108,7 +107,9 @@
                       <div class="row align-items-center">
                           <div class="col-7">
                               <h4 class=" {{ $states['overallwalletbalance'] < 0 ? "text-danger" : ""  }}"><i class="{{ $defCurrency->currency_symbol }}"></i> {{ $states['overallwalletbalance'] }}</h4>
-                              <p class="font-14 mb-0">Overall Wallet balance</p>
+                              <p class="font-14 mb-0">
+                                {{__("Overall Wallet balance")}}
+                              </p>
                             
                           </div>
                           <div class="col-5 text-right">
@@ -116,7 +117,7 @@
                         
                           </div>
                           <div class="col-md-12">
-                            <small class="text-muted">(Overall wallet balance of active wallet users)</small>
+                            <small class="text-muted">({{__("Overall wallet balance of active wallet users")}})</small>
                           </div>
                       </div>
                   </div>
@@ -128,7 +129,9 @@
                       <div class="row align-items-center">
                           <div class="col-8">
                               <h4>{{ $states['walletorders'] }}</h4>
-                              <p class="font-14 mb-0">Total Wallet Orders</p>
+                              <p class="font-14 mb-0">
+                                {{__("Total Wallet Orders")}}
+                              </p>
                        
                           </div>
                           <div class="col-4 text-right">
@@ -136,7 +139,7 @@
                         
                           </div>
                           <div class="col-md-12">
-                            <small class="text-muted">(Total no. of orders made by wallet)</small>
+                            <small class="text-muted">({{__("Total no. of orders made by wallet")}})</small>
                           </div>
                       </div>
                   </div>
@@ -145,18 +148,18 @@
            
             <div class="col-lg-12">
               <hr>
-              <h5 class="card-title">Order Wallet Report:</h5>
+              <h5 class="card-title">{{ __("Order Wallet Report:") }}</h5>
               <div class="table-responsive">
                 <table id="wallet_logs_table" class="w-100 table table-bordered table-striped">
                   <thead>
                       <th>#</th>
-                      <th>TXN ID</th>
-                      <th>Note</th>
-                      <th>Type</th>
-                      <th>Amount</th>
-                      <th>Balance</th>
-                      <th>Transcation Date</th>
-                      <th>Transcation Time</th>
+                      <th>{{ __("TXN ID") }}</th>
+                      <th>{{ __("Note") }}</th>
+                      <th>{{ __("Type") }}</th>
+                      <th>{{ __("Amount") }}</th>
+                      <th>{{ __("Balance") }}</th>
+                      <th>{{ __("Transcation Date") }}</th>
+                      <th>{{ __("Transcation Time") }}</th>
                   </thead>
                 </table>
               </div>

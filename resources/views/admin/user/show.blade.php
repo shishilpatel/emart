@@ -1,6 +1,5 @@
-
 @extends('admin.layouts.master-soyuz')
-@section('title','All Users | ')
+@section('title',__('All Users | '))
 @section('body')
 
 @component('admin.component.breadcumb',['secondactive' => 'active'])
@@ -16,7 +15,7 @@
 <div class="col-md-6">
     <div class="widgetbar">
       @can('users.create')
-      <a href="{{ route('users.create',['type' => app('request')->input('filter')]) }}" class="btn btn-primary-rgba"><i class="feather icon-plus mr-2"></i>  Add User</a>
+      <a href="{{ route('users.create',['type' => app('request')->input('filter')]) }}" class="btn btn-primary-rgba"><i class="feather icon-plus mr-2"></i>  {{ __('Create a new user') }}</a>
       @endcan
       
     </div>
@@ -26,17 +25,18 @@
 @endcomponent
 
 <div class="contentbar">   
-  @if ($errors->any())
-  <div class="alert alert-danger" role="alert">
-    @foreach($errors->all() as $error)
-    <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-    @endforeach
-  </div>
-  @endif
+  
   <div class="row">
   
       <div class="col-lg-12">
+        @if ($errors->any())
+        <div class="alert alert-danger" role="alert">
+          @foreach($errors->all() as $error)
+          <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span></button></p>
+          @endforeach
+        </div>
+        @endif
           <div class="card m-b-30">
               <div class="card-header">
                 <div class="row">

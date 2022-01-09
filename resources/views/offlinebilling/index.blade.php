@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Inhouse Orders |')
+@section('title',__('Inhouse Orders | '))
 @component('admin.component.breadcumb',['secondaryactive' => 'active'])
 
 @section('body')

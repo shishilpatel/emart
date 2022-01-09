@@ -101,7 +101,7 @@ class SellerPayoutController extends Controller
 
         $sellerpayouts->labels(['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']);
 
-        $sellerpayouts->title('Monthly Payouts in ' . date('Y'))->dataset('No of Payouts', 'bar', $payouts)->options([
+        $sellerpayouts->title(__('Monthly Payouts in :year',['year' => date('Y')]))->dataset(__('No of Payouts'), 'bar', $payouts)->options([
             'fill' => 'true',
             'shadow' => 'true',
             'borderWidth' => '1',
@@ -117,9 +117,9 @@ class SellerPayoutController extends Controller
                 ->addColumn('type', function ($row) {
 
                     if ($row->paidvia == 'Bank') {
-                        return '<label class="badge badge-success">Bank Transfer</label>';
+                        return '<label class="badge badge-success">'.__("Bank Transfer").'</label>';
                     } elseif ($row->paidvia == 'Paypal') {
-                        return '<label class="badge badge-pill badge-primary">PayPal</label>';
+                        return '<label class="badge badge-pill badge-primary">'.__('PayPal').'</label>';
                     } elseif ($row->txn_type == 'manual') {
                         return '<label class="badge badge-pill badge-primary">' . ucfirst($row->paidvia) . '</label>';
                     }
@@ -142,7 +142,7 @@ class SellerPayoutController extends Controller
                     return $html;
                 })
                 ->addColumn('action', function ($row) {
-                    $html = '<a href=' . route("vender.payout.show.complete", $row->id) . ' title="View payout detail" class="btn btn-primary-rgba"> <i class="feather icon-eye"></i></i> </a>';
+                    $html = '<a href=' . route("vender.payout.show.complete", $row->id) . ' title="'.__('View payout detail').'" class="btn btn-primary-rgba"> <i class="feather icon-eye"></i></i> </a>';
                     return $html;
                 })
                 ->rawColumns(['type', 'orderid', 'amount', 'detail', 'paidon', 'action'])->make(true);

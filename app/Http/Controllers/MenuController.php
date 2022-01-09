@@ -20,7 +20,7 @@ class MenuController extends Controller
      */
     public function index(Request $request)
     {   
-         abort_if(!auth()->user()->can('menu.view'),403,'User does not have the right permissions.');
+         abort_if(!auth()->user()->can('menu.view'),403,__('User does not have the right permissions.'));
 
          $lang = \Session::get('changed_language');
          $menus = Menu::orderBy('position','ASC')->select("title as title",'id as id','status as status','link_by as link_by','menu_tag as menu_tag','show_cat_in_dropdown as show_cat_in_dropdown','show_child_in_dropdown as show_child_in_dropdown','icon as icon')->get();
@@ -57,7 +57,7 @@ class MenuController extends Controller
 
     public function bulk_delete_top_menu(Request $request){
 
-        abort_if(!auth()->user()->can('menu.delete'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('menu.delete'),403,__('User does not have the right permissions.'));
 
         $validator = Validator::make($request->all() , ['checked' => 'required', ]);
 
@@ -65,7 +65,7 @@ class MenuController extends Controller
         {
 
             return back()
-                ->with('warning', 'Please select one of them to delete');
+                ->with('warning', __('Please select one of them to delete'));
         }
 
         foreach ($request->checked as $checked)
@@ -77,12 +77,12 @@ class MenuController extends Controller
             }
         }
 
-        return back()->with('deleted','Selected menu has been deleted !');
+        return back()->with('deleted',__('Selected menu has been deleted !'));
     }
 
     public function bulk_delete_footer_menu(Request $request){
 
-        abort_if(!auth()->user()->can('menu.delete'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('menu.delete'),403,__('User does not have the right permissions.'));
         
         $validator = Validator::make($request->all() , ['checked_fm' => 'required' ]);
 
@@ -90,7 +90,7 @@ class MenuController extends Controller
         {
 
             return back()
-                ->with('warning', 'Please select one of them to delete');
+                ->with('warning', __('Please select one of them to delete'));
         }
 
         foreach ($request->checked_fm as $checked)
@@ -102,7 +102,7 @@ class MenuController extends Controller
             }
         }
 
-        return back()->with('deleted','Selected menu has been deleted !');
+        return back()->with('deleted',__('Selected menu has been deleted !'));
     }
 
     public function sort(Request $request){
@@ -165,7 +165,7 @@ class MenuController extends Controller
      */
     public function create()
     {
-        abort_if(!auth()->user()->can('menu.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('menu.create'),403,__('User does not have the right permissions.'));
 
         $category = Category::all();
         $pages = Page::all();
@@ -181,7 +181,7 @@ class MenuController extends Controller
     public function store(Request $request)
     {
         
-        abort_if(!auth()->user()->can('menu.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('menu.create'),403,__('User does not have the right permissions.'));
 
        
 
@@ -190,7 +190,7 @@ class MenuController extends Controller
         $request->validate([
             'title' => 'required'
         ],[
-            'title.required' =>'Menu title is required !'
+            'title.required' => __('Menu title is required !')
         ]);
 
 
@@ -235,7 +235,7 @@ class MenuController extends Controller
                 $request->validate([
                     'parent_cat' => 'required'
                 ],[
-                    'parent_cat.required' => 'Atleast one category is required to link !'
+                    'parent_cat.required' => __('Atleast one category is required to link !')
                 ]);
                 
                 $input['show_cat_in_dropdown'] = 1;
@@ -252,7 +252,7 @@ class MenuController extends Controller
                 $request->validate([
                     'sub_id' => 'required'
                 ],[
-                    'sub_id.required' => 'Atleast one subcategory is required to link !'
+                    'sub_id.required' => __('Atleast one subcategory is required to link !')
                 ]);
 
                 $input['show_child_in_dropdown'] = 1;
@@ -339,7 +339,7 @@ class MenuController extends Controller
      */
     public function edit($id)
     {
-        abort_if(!auth()->user()->can('menu.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('menu.edit'),403,__('User does not have the right permissions.'));
 
         $menu = Menu::find($id);
         $category = Category::all();
@@ -356,7 +356,7 @@ class MenuController extends Controller
      */
     public function update(Request $request, $id)
     {
-        abort_if(!auth()->user()->can('menu.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('menu.edit'),403,__('User does not have the right permissions.'));
 
         $menu = Menu::find($id);
 
@@ -365,7 +365,7 @@ class MenuController extends Controller
         $request->validate([
             'title' => 'required'
         ],[
-            'title.required' =>'Menu title is required !'
+            'title.required' => __('Menu title is required !')
         ]);
 
         $input = $request->all();
@@ -407,7 +407,7 @@ class MenuController extends Controller
                 $request->validate([
                     'parent_cat' => 'required'
                 ],[
-                    'parent_cat.required' => 'Atleast one category is required to link !'
+                    'parent_cat.required' => __('Atleast one category is required to link !')
                 ]);
                 
                 $input['show_cat_in_dropdown'] = 1;
@@ -426,7 +426,7 @@ class MenuController extends Controller
                 $request->validate([
                     'sub_id' => 'required'
                 ],[
-                    'sub_id.required' => 'Atleast one subcategory is required to link !'
+                    'sub_id.required' => __('Atleast one subcategory is required to link !')
                 ]);
 
                 $input['show_child_in_dropdown'] = 1;
@@ -531,7 +531,7 @@ class MenuController extends Controller
 
         $menu->update($input);
 
-        notify()->success('Menu Has Been Updated !');
+        notify()->success(__('Menu has been updated !'));
 
         return redirect()
             ->route('menu.index');
@@ -546,15 +546,15 @@ class MenuController extends Controller
 
     public function destroy($id)
     {
-        abort_if(!auth()->user()->can('menu.delete'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('menu.delete'),403,__('User does not have the right permissions.'));
 
         $menu = Menu::find($id);
 
         if(isset($menu)){
             $menu->delete();
-            return back()->with('deleted','Menu has been deleted !');
+            return back()->with('deleted',__('Menu has been deleted !'));
         }else{
-            return back()->with('warning','401 | Menu not found !');
+            return back()->with('warning',__('Menu not found !'));
         }
     }
 }

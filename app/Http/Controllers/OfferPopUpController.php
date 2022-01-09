@@ -25,10 +25,10 @@ class OfferPopUpController extends Controller
         if($request->ajax()){
             if($request->opt == 1){
                 Cookie::queue('popup','0',2628000);
-                return response()->json(['msg' => 'Popup will not show'],200);
+                return response()->json(['msg' => __('Popup will not show')],200);
             }else{
                 Cookie::forget('popup');
-                return response()->json(['msg' => 'Popup will show'],200);
+                return response()->json(['msg' => __('Popup will show')],200);
             }
         }
 
@@ -84,7 +84,7 @@ class OfferPopUpController extends Controller
 
        }
 
-       notify()->success('Offer popup settings updated !');
+       notify()->success(__('Offer popup settings updated !'));
        return back();
 
     }

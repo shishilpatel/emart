@@ -1,6 +1,5 @@
-
 @extends('admin.layouts.master-soyuz')
-@section('title','All Tax Classes | ')
+@section('title',__('All Tax Classes | '))
 @section('body')
 
 @component('admin.component.breadcumb',['secondactive' => 'active'])
@@ -47,10 +46,10 @@
                     <table  id="datatable-buttons" class="table table-striped table-bordered">
                       <thead>
                         <tr >
-                          <th>ID</th>
-                          <th>Tax Title</th>
-                          <th>Description</th>
-                          <th>Action</th>
+                          <th>{{ __("ID") }}</th>
+                          <th>{{ __("Tax Title") }}</th>
+                          <th>{{ __('Description') }}</th>
+                          <th>{{ __('Action') }}</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -103,8 +102,8 @@
               <div class="delete-icon"></div>
             </div>
             <div class="modal-body text-center">
-              <h4 class="modal-heading">Are You Sure ?</h4>
-              <p>Do you really want to delete this tax? This process cannot be undone.</p>
+              <h4 class="modal-heading">{{ __("Are You Sure ?") }}</h4>
+              <p>{{ __("Do you really want to delete this tax? This process cannot be undone.") }}</p>
             </div>
             <div class="modal-footer">
               <form method="post" action="{{url('admin/tax_class/'.$tax->id)}}" class="pull-right">
@@ -112,8 +111,8 @@
                                {{method_field("DELETE")}}
                               
             
-                <button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">No</button>
-                <button type="submit" class="btn btn-danger">Yes</button>
+                <button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">{{ __("NO") }}</button>
+                <button type="submit" class="btn btn-danger">{{ __("YES") }}</button>
               </form>
             </div>
           </div>

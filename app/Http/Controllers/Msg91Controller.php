@@ -52,7 +52,7 @@ class Msg91Controller extends Controller
             }
         }
 
-        notify()->success('SMS settings has been updated !');
+        notify()->success(__('SMS settings has been updated !'));
 
         return back();
     }

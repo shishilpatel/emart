@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','All Products | ')
+@section('title',__('All Products | '))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -57,13 +57,13 @@
          <!-- main content start -->
         <table id="d_products" class="w-100 table table-bordered table-hover">
             <thead>
-                <th>S.No</th>
-                <th>Image</th>
-                <th>ID</th>
-                <th>Product Name</th>
-                <th>Pricing</th>
-                <th>Status</th>
-                <th>Action</th>
+                <th>{{ __("S.No") }}</th>
+                <th>{{ __('Image') }}</th>
+                <th>{{ __("ID") }}</th>
+                <th>{{ __('Product Name') }}</th>
+                <th>{{ __("Pricing") }}</th>
+                <th>{{ __('Status') }}</th>
+                <th>{{ __('Action') }}</th>
             </thead>
         </table>                
          <!-- main content end -->
@@ -86,22 +86,20 @@
             </div>
             <div class="modal-body">
                 <!-- main content start -->
-                <a href="{{ url('files/SimpleProductImages.xlsx') }}" class="btn btn-md btn-success"> Download Example xls/csv File</a>
+                <a href="{{ url('files/SimpleProductImages.xlsx') }}" class="btn btn-md btn-success"> {{ __('Download Example xls/csv File') }}</a>
 						<hr>
 						<form action="{{ route('simple.product.import.images') }}" method="POST" enctype="multipart/form-data">	
                             @csrf
 						
 							<div class="row">
 								<div class="form-group col-md-12">
-									<label for="file">Choose your xls/csv File :</label>
+									<label for="file">{{__("Choose your xls/csv File")}} :</label>
                                     <!-- ------------ -->
                                     <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-                                        </div>
+                                       
                                         <div class="custom-file">
                                             <input type="file" class="custom-file-input" name="image" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01" required>
-                                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                            <label class="custom-file-label" for="inputGroupFile01">{{ __("Choose file") }} </label>
                                         </div>
                                         @if ($errors->has('file'))
                                         <span class="invalid-feedback text-danger" role="alert">
@@ -111,7 +109,7 @@
                                         <p></p>
                                     </div>
                                     <!-- ------------- -->
-									<button type="submit" class="btn btn-primary"><i class="fa fa-file-excel-o"></i> Import</button>
+									<button type="submit" class="btn btn-primary"><i class="fa fa-file-excel-o"></i> {{ __('Import') }}</button>
 								</div>
 								
 							</div>
@@ -120,20 +118,20 @@
 
                         <div class="box box-danger">
 							<div class="box-header with-border">
-								<div class="box-title">Instructions</div>
+								<div class="box-title">{{ __('Instructions') }}</div>
 							</div>
 					
 							<div class="box-body">
-								<p><b>Follow the instructions carefully before importing the file.</b></p>
-								<p>The columns of the file should be in the following order.</p>
+								<p><b>{{ __('Follow the instructions carefully before importing the file.') }}</b></p>
+								<p>{{ __('The columns of the file should be in the following order.') }}</p>
 					
 								<table class="table table-striped">
 									<thead>
 										<tr>
-											<th>Column No</th>
-											<th>Column Name</th>
-                                            <th>Required</th>
-											<th>Description</th>
+											<th>{{ __('Column No') }}</th>
+											<th>{{ __('Column Name') }}</th>
+                                            <th>{{ __('Required') }}</th>
+											<th>{{ __('Description') }}</th>
 										</tr>
 									</thead>
 					
@@ -141,15 +139,15 @@
 										<tr>
 											<td>1</td>
 											<td><b>product_id</b></td>
-                                            <td><b>Yes</b></td>
+                                            <td><b>{{ __('Yes') }}</b></td>
 											<td>Enter product id here</td>	
 										</tr>
 
 										<tr>
 											<td>2</td>
 											<td> <b>image</b> </td>
-											<td><b>Yes</b></td>
-											<td>Name your image eg: example.jpg <b>(Image must be already put in public/images/simple_products/gallery/) folder )</b> .</td>
+											<td><b>{{ __('Yes') }}</b></td>
+                                            <td>Name your image eg: example.jpg <b>(Images can be uploaded using Media Manager / Simple Products Gallery Tab. )</b> .</td>
 										</tr>
 
                                     </tbody>

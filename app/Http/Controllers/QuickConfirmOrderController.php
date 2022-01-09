@@ -12,12 +12,6 @@ use App\OrderActivityLog;
 use Auth;
 use App\PendingPayout;
 
-/*==========================================
-=            Author: Media City            =
-    Author URI: https://mediacity.co.in
-=            Author: Media City            =
-=            Copyright (c) 2020            =
-==========================================*/
 
 class QuickConfirmOrderController extends Controller
 {
@@ -55,10 +49,10 @@ class QuickConfirmOrderController extends Controller
 	              
     		}
 
-    		return back()->with('added','Order confirmed successfully !');
+    		return back()->with('added',__('Order confirmed successfully !'));
 
     	}else{
-    		return back()->with('delete','Order not found or deleted !');
+    		return back()->with('delete',__('Order not found or deleted !'));
     	}
 
     }

@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title',"Tickets - $ticket->ticket_no")
+@section('title',__("Tickets :ticket - ",['ticket' => $ticket->ticket_no]))
 @section('body')
 
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
@@ -78,24 +78,26 @@
 					</div>
 
 					<div class="form-group mt-2">
-						<label>Change Status:</label>
+						<label>Change {{ __('Status:') }}</label>
 						<select id="getStatus" onchange="status('{{ $ticket->id }}')" class="select2 form-control"
 							name="status" id="">
-							<option {{ $ticket->status =="open" ? "selected" : ""}} value="pending">Pending</option>
-							<option {{ $ticket->status =="open" ? "selected" : ""}} value="open">Open</option>
-							<option {{ $ticket->status =="closed" ? "selected" : ""}} value="closed">Closed</option>
-							<option {{ $ticket->status =="solved" ? "selected" : "" }} value="solved">Solved</option>
+							<option {{ $ticket->status =="open" ? "selected" : ""}} value="pending">{{ __("Pending") }}</option>
+							<option {{ $ticket->status =="open" ? "selected" : ""}} value="open">{{ __("Open") }}</option>
+							<option {{ $ticket->status =="closed" ? "selected" : ""}} value="closed">{{ __("Closed") }}</option>
+							<option {{ $ticket->status =="solved" ? "selected" : "" }} value="solved">{{ __("Solved") }}</option>
 						</select>
 					</div>
 
-					<button id="rpy_btn" class="btn btn-primary-rgba"><i class="feather icon-message-square"></i> Reply</button>
+					<button id="rpy_btn" class="btn btn-primary-rgba"><i class="feather icon-message-square"></i> {{ __("Reply") }}</button>
 					<div class="collapse c" id="replay">
 						<form action="{{ route('ticket.replay',$ticket->ticket_no) }}" method="POST">
 							{{ csrf_field() }}
 							<textarea class="form-control" name="msg" id="editor1" cols="30" rows="10"></textarea>
 							<br>
-							<button type="submit" class="btn btn-md btn-primary-rgba">Send Mail</button>
-							<button type="button" id="cancel_btn" class="btn btn-md btn-danger-rgba">Cancel</button>
+							<button type="submit" class="btn btn-md btn-primary-rgba">{{ __("Send Mail") }}</button>
+							<button type="button" id="cancel_btn" class="btn btn-md btn-danger-rgba">
+								{{__("Cancel")}}
+							</button>
 						</form>
 
 					

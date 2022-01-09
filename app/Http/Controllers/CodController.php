@@ -28,7 +28,7 @@ class CodController extends Controller
 
         if (round($request->actualtotal, 2) != $total) {
 
-            notify()->error('Payment has been modifed !', 'Please try again !');
+            notify()->error(__('Payment has been modifed !'), __('Please try again !'));
             return redirect(route('order.review'));
 
         }
@@ -62,10 +62,10 @@ class CodController extends Controller
 
             $data->save();
             return redirect('admin/cod')
-                ->with("updated", "Cod Setting Has Been Updated");
+                ->with("updated", __("COD Setting Has Been Updated"));
         } else {
             $cat->update($input);
-            return redirect('admin/cod')->with("updated", "Cod Setting Has Been Updated");
+            return redirect('admin/cod')->with("updated", __("COD Setting Has Been Updated"));
         }
     }
 
@@ -78,10 +78,10 @@ class CodController extends Controller
 
             $data->save();
             return redirect('vender/cod')
-                ->with("updated", "Cod Setting Has Been Updated");
+                ->with("updated", __("COD Setting Has Been Updated"));
         } else {
             $cat->update($input);
-            return redirect('vender/cod')->with("updated", "Cod Setting Has Been Updated");
+            return redirect('vender/cod')->with("updated", __("COD Setting Has Been Updated"));
         }
     }
 }

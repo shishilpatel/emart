@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
         integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
-    <title>Get Secret KEY | {{ config('app.name') }}</title>
+    <title>{{__("Get Secret KEY")}} | {{ config('app.name') }}</title>
 </head>
 
 <body>
@@ -19,28 +19,27 @@
         <br>
         <div class="card">
             <div class="card-header">
-                <h5 class="card-title">Hello, {{ Auth::user()->name }}!</h5>
+                <h5 class="card-title">{{__('Hello,')}} {{ Auth::user()->name }}!</h5>
             </div>
 
             <div class="card-body">
                 <form action="{{ route('apikey.create') }}" method="POST">
                     @csrf
                     <div class="form-group">
-                        <label>Client Secret KEY:</label>
+                        <label>{{__("Client Secret KEY")}}:</label>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1">
                                     <i class="fas fa-key"></i>
                                 </span>
                             </div>
-                            <input readonly type="text" value="{{ $key ? $key->secret_key : "" }}" name="apikey"
-                                class="form-control" placeholder="API KEY" />
+                            <input readonly type="text" value="{{ $key ? $key->secret_key : "" }}" name="apikey" class="form-control" placeholder="{{ __("API KEY") }}" />
                         </div>
                     </div>
 
                     <div class="form-group">
                         <button type="submit" class="btn btn-md btn-primary">
-                            {{ $key ? "RE-GENREATE KEY" : "GET YOUR KEY" }}
+                            {{ $key ? __("RE-GENREATE KEY") : __("GET YOUR KEY") }}
                         </button>
                     </div>
                 </form>

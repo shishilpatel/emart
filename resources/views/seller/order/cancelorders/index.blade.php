@@ -1,5 +1,5 @@
-@extends("admin.layouts.sellermaster")
-@section('title','Canceled Orders |')
+@extends("admin.layouts.sellermastersoyuz")
+@section('title',__('Cancelled Orders'))
 @section('body')
 
 @component('seller.components.breadcumb',['secondactive' => 'active'])
@@ -30,12 +30,13 @@
 				<div class="card-body">
 					<div class="row">
 						<div class="col-md-12  p-3 mb-2 bg-success text-white rounded">
-							<i class="fa fa-info-circle"></i> Note:
+							<i class="fa fa-info-circle"></i> {{__('Note')}}:
 
 							<ul>
-								<li>COD Orders are only viewable !</li>
-								<li>For Prepaid canceled orders with refund method choosen Bank You can View Details IF refund is complete.</li>
-								<li>For Prepaid canceled orders with refund method choosen orignal you can track refund status LIVE from respective Payment gateway & Update TXN/REF ID.
+								<li>{{__('COD Orders are only viewable')}} !</li>
+								<li>
+									{{__("For Prepaid canceled orders with refund method choosen Bank You can View Details IF refund is complete")}}.</li>
+								<li>{{__('For Prepaid canceled orders with refund method choosen orignal you can track refund status LIVE from respective Payment gateway & Update TXN/REF ID')}}.
 								</li>
 							</ul>
 						</div>
@@ -46,11 +47,11 @@
 					<ul class="nav nav-tabs custom-tab-line mb-3" id="defaultTabLine" role="tablist">
 						<li class="nav-item">
 							<a class="nav-link active" id="home-tab-line" data-toggle="tab" href="#home-line" role="tab" aria-controls="home-line" aria-selected="true"><i class="feather icon-truck mr-2"></i>
-								Single Canceled Orders @if($partialcount>0)<span class="badge badge-danger"><span id="pcount">{{ $partialcount }}</span> New @endif</a>
+								{{__('Single Canceled Orders')}} @if($partialcount>0)<span class="badge badge-danger"><span id="pcount">{{ $partialcount }}</span> {{__('New')}} @endif</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" id="profile-tab-line" data-toggle="tab" href="#profile-line" role="tab" aria-controls="profile-line" aria-selected="false"><i class="feather icon-truck mr-2"></i>
-								Bulk Canceled Orders @if($partialcount2>0)<span class="badge badge-danger"><span id="fcount">{{ $partialcount2 }}</span> New @endif</a>
+								{{__('Bulk Canceled Orders')}} @if($partialcount2>0)<span class="badge badge-danger"><span id="fcount">{{ $partialcount2 }}</span> {{__('New')}} @endif</a>
 						</li>
 						
 					</ul>
@@ -64,27 +65,27 @@
 									</th>
 		
 									<th>
-										Order TYPE
+										{{__('Order TYPE')}}
 									</th>
 		
 									<th>
-										ORDER ID
+										{{__('ORDER ID')}}
 									</th>
 		
 									<th>
-										REASON for Cancellation
+										{{__('REASON for Cancellation')}}
 									</th>
 		
 									<th>
-										REFUND METHOD
+										{{__('REFUND METHOD')}}
 									</th>
 		
 									<th>
-										CUSTOMER
+										{{__("CUSTOMER")}}
 									</th>
 		
 									<th>
-										REFUND STATUS
+										{{__('REFUND STATUS')}}
 									</th>
 		
 								</thead>
@@ -96,9 +97,11 @@
 												<td>
 		
 													@if($order->order->payment_method != 'COD')
-														<label class="label label-success">PREPAID</label>
+														<label class="label label-success">{{ __('PREPAID') }}</label>
 													@else
-														<label class="label label-primary">COD</label>
+														<label class="label label-primary">
+															{{__('COD')}}
+														</label>
 													@endif
 		
 												</td>
@@ -111,10 +114,14 @@
 													<br>
 													<small class="text-center">
 														@if($order->method_choosen == 'bank' || $order->order->payment_method == 'COD')
-															<a role="button" onclick="readorder('{{ $order->id }}')" title="View Details" class="cursor-pointer" data-toggle="modal" data-target="#orderupdate{{ $order->id }}">View Details</a>
+															<a role="button" onclick="readorder('{{ $order->id }}')" title="{{__('View Details')}}" class="cursor-pointer" data-toggle="modal" data-target="#orderupdate{{ $order->id }}">
+																{{__('View Details')}}
+															</a>
 														@else
 		
-															<a role="button" onclick="readorder('{{ $order->id }}')" title="View Details" class="cursor-pointer" data-toggle="modal" data-target="#orderupdate{{ $order->id }}">View Details</a> | <a onclick="trackrefund('{{ $order->id }}')" class="cursor-pointer" title="Track REFUND">TRACK REFUND</a>
+															<a role="button" onclick="readorder('{{ $order->id }}')" title="{{__('View Details')}}" class="cursor-pointer" data-toggle="modal" data-target="#orderupdate{{ $order->id }}">
+																{{__('View Details')}}
+															</a> | <a onclick="trackrefund('{{ $order->id }}')" class="cursor-pointer" title="{{ __('TRACK REFUND') }}">{{ __('TRACK REFUND') }}</a>
 														@endif
 													</small>
 												</td>
@@ -139,7 +146,7 @@
 													{{ $name }}
 													@else
 		
-													No Name
+													{{__('No Name')}}
 		
 													@endif
 												</td>
@@ -168,22 +175,22 @@
 										#
 									</th>
 									<th>
-										Order TYPE
+										{{__('Order TYPE')}}
 									</th>
 									<th>
-										Order ID
+										{{__('Order ID')}}
 									</th>
 									<th>
-										REASON for Cancellation
+										{{__('REASON for Cancellation')}}
 									</th>
 									<th>
-										REFUND METHOD
+										{{__('REFUND METHOD')}}
 									</th>
 									<th>
-										CUSTOMER
+										{{__("CUSTOMER")}}
 									</th>
 									<th>
-										REFUND STATUS
+										{{__('REFUND STATUS')}}
 									</th>
 								</thead>
 		
@@ -194,9 +201,13 @@
 											<td>
 		
 													@if($fcorder->getorderinfo->payment_method != 'COD')
-														<label class="label label-success">PREPAID</label>
+														<label class="label label-success">
+															{{__('PREPAID')}}
+														</label>
 													@else
-														<label class="label label-primary">COD</label>
+														<label class="label label-primary">
+															{{__('COD')}}
+														</label>
 													@endif
 											</td>
 											<td>
@@ -208,9 +219,11 @@
 												<br>
 													<small class="text-center">
 														@if($fcorder->method_choosen == 'bank' || $fcorder->getorderinfo->payment_method == 'COD')
-															<a onclick="readfullorder('{{ $fcorder->id }}')" title="View Details" class="cursor-pointer" data-toggle="modal" data-target="#fullorderupdate{{ $fcorder->id }}">View Details</a>
+															<a onclick="readfullorder('{{ $fcorder->id }}')" title="{{__('View Details')}}" class="cursor-pointer" data-toggle="modal" data-target="#fullorderupdate{{ $fcorder->id }}">{{__('View Details')}}</a>
 														@else
-															<a onclick="readfullorder('{{ $fcorder->id }}')" title="View Details" class="cursor-pointer" data-toggle="modal" data-target="#fullorderupdate{{ $fcorder->id }}">View Details</a> | <a class="cursor-pointer" title="Track REFUND" onclick="trackrefundFullCOrder('{{ $fcorder->id }}')">TRACK REFUND</a>
+															<a onclick="readfullorder('{{ $fcorder->id }}')" title="{{__('View Details')}}" class="cursor-pointer" data-toggle="modal" data-target="#fullorderupdate{{ $fcorder->id }}">{{__('View Details')}}</a> | <a class="cursor-pointer" title="{{__('TRACK REFUND')}}" onclick="trackrefundFullCOrder('{{ $fcorder->id }}')">
+																{{__('TRACK REFUND')}}
+															</a>
 														@endif
 													</small>
 											</td>
@@ -223,7 +236,7 @@
 													 @elseif($fcorder->method_choosen == 'orignal')
 														{{ ucfirst($fcorder->method_choosen) }} ({{ ucfirst($fcorder->getorderinfo->payment_method) }})
 													 @else
-													  No need for COD Orders
+													  {{__('No need for COD Orders')}}
 													 @endif
 											</td>
 											<td>

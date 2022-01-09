@@ -15,12 +15,19 @@ use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\GenralController;
 use App\Http\Controllers\GrandcategoryController;
 use App\Http\Controllers\OtaUpdateController;
-use App\Http\Controllers\SubcategoryController;
+use App\Http\Controllers\PinCodController;
+use App\Http\Controllers\SEODirectoryController;
+use App\Http\Controllers\SubCategoryController;
+use App\SEODirectory;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => ['admin_access', 'isActive', 'IsInstalled', 'switch_lang', 'auth']], function () {
+
+
+Route::group(['middleware' => ['auth','admin_access','switch_lang']], function () {
 
     Route::post('vue/sync-translation','LanguageController@sync_vue_translation');
+
+    Route::resource("admin/multiCurrency", "MultiCurrencyController");
 
     Route::get('remove-public-and-force-https','Others\OtherController@getsettings')->name('others.settings');
     Route::post('force-https','Others\OtherController@forcehttps')->name('do.forcehttps');
@@ -31,7 +38,7 @@ Route::group(['middleware' => ['admin_access', 'isActive', 'IsInstalled', 'switc
         \Artisan::call('view:cache');
         \Artisan::call('view:clear');
 
-        notify()->success("Cache has been cleared !");
+        notify()->success(__("Cache has been cleared !"));
 
         return back();
     });
@@ -52,13 +59,7 @@ Route::group(['middleware' => ['admin_access', 'isActive', 'IsInstalled', 'switc
 
     });
 
-    Route::name('seller.subs.')->prefix('/admin/seller/subscription')->group(function(){
-        
-        Route::resource('plans','SellerSubscriptionController');
-        Route::get('subscribers','SellerSubscriptionController@listofsubscribers')->name('listofsubs');
-        Route::delete('subscription/{id}/delete','SellerSubscriptionController@deleteSubscription')->name('delete.subscription');
-
-    });
+    
 
     Route::get('/admin/addon-manger','AddOnManagerController@index')->name('addonmanger.index');
 
@@ -333,7 +334,7 @@ Route::group(['middleware' => ['admin_access', 'isActive', 'IsInstalled', 'switc
 
     Route::post('admin/product/attr/edit/{id}', 'ProductAttributeController@update')->name('opt.update');
 
-    Route::resource("admin/multiCurrency", "MultiCurrencyController");
+    
     Route::get("admin/add_curr", "MultiCurrencyController@add_currency_ajax");
     Route::get("admin/currency_codeShow", "MultiCurrencyController@show");
     Route::get("admin/enable_multicurrency", "MultiCurrencyController@auto_detect_location");
@@ -532,7 +533,7 @@ Route::group(['middleware' => ['admin_access', 'isActive', 'IsInstalled', 'switc
     Route::post('/update-quick-setting',[GenralController::class,'quicksettings']);
     Route::post('/import/brands',[BrandController::class,'importbrands']);
     Route::post('/import/categories',[CategoryController::class,'import']);
-    Route::post('/import/subcategories',[SubcategoryController::class,'import']);
+    Route::post('/import/subcategories',[SubCategoryController::class,'import']);
     Route::post('/import/childcategories',[GrandcategoryController::class,'import']);
 
     Route::get('/offline_reports','OfflineReportController@index')->name('offline.orders.reports');
@@ -549,6 +550,8 @@ Route::group(['middleware' => ['admin_access', 'isActive', 'IsInstalled', 'switc
 
     Route::resource('admin/flash-sales','FlashSaleController');
 
+    Route::resource('admin/rma','RMAController');
+
     Route::get('/admin/search/products','FlashSaleController@searchproduct');
 
     Route::get('/admin/invoice/design','InvoiceController@getInvoiceDesign')->name('get.invoice.design');
@@ -556,4 +559,8 @@ Route::group(['middleware' => ['admin_access', 'isActive', 'IsInstalled', 'switc
 
     Route::get('/device-logs',[DeviceController::class,'index'])->name('device.logs');
 
+    Route::post('export-pincodes',[PinCodController::class,'export'])->name('pincode.export');
+    Route::post('import-pincodes',[PinCodController::class,'import'])->name('pincode.import');
+    Route::view('media-manager','mediamanager')->name('media.manager');
+    Route::resource('admin/seo-directory','SEODirectoryController');
 });

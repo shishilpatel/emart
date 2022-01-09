@@ -11,7 +11,7 @@
             </h3>
             <div>
                 <product-slider  v-if="product.products" :products="product.products" :simple_products="product.simple_products" :date="date" :lang="lang" :fallbacklang="fallbacklang"
-                    :login="login" :guest_price="guest_price"></product-slider>
+                    :login="login" :guest_price="guest_price" :starbadge="false"></product-slider>
                 <div v-else>
                         <slider-skelton :item="6"></slider-skelton>
                 </div>

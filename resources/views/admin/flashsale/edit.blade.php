@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Edit Flashdeal | ')
+@section('title',__('Edit Flashdeal | '))
 @section('body')
 @component('admin.component.breadcumb',['secondaryactive' => 'active'])
 @slot('heading')
@@ -31,7 +31,7 @@
             <div class="alert alert-danger" role="alert">
                 @foreach($errors->all() as $error)
                 <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true" style="color:red;">&times;</span></button></p>
+                        <span aria-hidden="true">&times;</span></button></p>
                 @endforeach
             </div>
             @endif
@@ -52,7 +52,7 @@
                         <div class="form-group">
                             <label for="">{{ __("Title:") }} <span class="text-danger">*</span> </label>
                             <input type="text" class="form-control" class="required" name="title"
-                                placeholder="Halloween Sale" value="{{ $deal->title }}">
+                                placeholder="{{ __('Halloween Sale') }}" value="{{ $deal->title }}">
                         </div>
 
                         <div class="row">
@@ -61,15 +61,11 @@
                                     <label for="">{{ __("Background image:") }} <span class="text-danger">*</span>
                                     </label>
                                     <div class="input-group ">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-                                        </div>
                                         <div class="custom-file">
 
                                             <input type="file" name="background_image" class="custom-file-input"
                                                 id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
-                                            <label class="custom-file-label" for="inputGroupFile01">Choose background
-                                                image (2000x2000)</label>
+                                            <label class="custom-file-label" for="inputGroupFile01">{{ __('Choose background image') }} (2000x2000)</label>
 
                                         </div>
 
@@ -111,13 +107,13 @@
                             </label>
                         </div>
 
-                        <h4>Update Products</h4>
+                        <h4>{{ __('Update Products') }}</h4>
 
                         <table class="productlist table table-bordered table-hover">
                             <thead>
-                                <th>Product</th>
-                                <th>Discount</th>
-                                <th>Discount type</th>
+                                <th>{{ __('Product') }}</th>
+                                <th>{{ __('Discount') }}</th>
+                                <th>{{ __("Discount type") }}</th>
                                 <th>#</th>
                             </thead>
 
@@ -125,7 +121,7 @@
                                 @forelse($deal->saleitems as $item)
                                 <tr>
                                     <td>
-                                        <input type="text" class="product form-control" placeholder="Search product"
+                                        <input type="text" class="product form-control" placeholder="{{ __("Search product") }}"
                                             name="product[]" required
                                             value="{{ $item->product_id != 0 ? $item->variant->products->name.'('.variantname($item->variant).')' : $item->simple_product->product_name }}" />
 
@@ -149,11 +145,11 @@
                                     <td>
                                         <div class="form-group">
                                             <select name="discount_type[]" class="mt-3 form-control" id="discount_type">
-                                                <option value="">Select discount type</option>
+                                                <option value="">{{ __('Select discount type') }}</option>
                                                 <option {{ $item->discount_type == 'fixed' ? "selected" : "" }}
-                                                    value="fixed">Fixed</option>
+                                                    value="fixed">{{ __('Fixed') }}</option>
                                                 <option {{ $item->discount_type == 'upto' ? "selected" : "" }}
-                                                    value="upto">Upto</option>
+                                                    value="upto">{{ __('Upto') }}</option>
                                             </select>
                                         </div>
                                     </td>
@@ -169,7 +165,7 @@
                                 @empty
                                 <tr>
                                     <td>
-                                        <input type="text" class="product form-control" placeholder="Search product"
+                                        <input type="text" class="product form-control" placeholder="{{ __('Search product') }}"
                                             required name="product[]">
                                         <input type="hidden" class="form-control product_type" name="type[]">
                                         <input type="hidden" class="form-control product_ids" name="product_id[]">
@@ -187,9 +183,9 @@
                                     <td>
                                         <div class="form-group">
                                             <select name="discount_type[]" class="mt-3 form-control" id="discount_type">
-                                                <option value="">Select discount type</option>
-                                                <option value="fixed">Fixed</option>
-                                                <option value="upto">Upto</option>
+                                                <option value="">{{ __('Select discount type') }}</option>
+                                                <option value="fixed">{{ __('Fixed') }}</option>
+                                                <option value="upto">{{ __('Upto') }}</option>
                                             </select>
                                         </div>
                                     </td>

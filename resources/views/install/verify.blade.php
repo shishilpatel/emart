@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="stylesheet" href="{{ url('css/bootstrap.min.css') }}" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ url('css/vendor/shards.min.css') }}">
     <link rel="stylesheet" href="{{url('css/font-awesome.min.css')}}">
     <link rel="stylesheet" href="{{ url('css/install.css') }}">
     <link rel="stylesheet" href="{{ url('vendor/mckenziearts/laravel-notify/css/notify.css') }}">
@@ -20,7 +19,7 @@
       </div>
 
       <div class="container">
-        <div class="card">
+        <div class="card m-b-30">
           <div class="card-header">
               <h3 class="m-3 text-center text-dark ">
                   {{ __('Enter Your Purchase code Detail') }}
@@ -83,7 +82,6 @@
     <script src="{{ url('front/vendor/js/ej.web.all.min.js') }}"></script>
     <script src="{{ url('front/vendor/js/popper.min.js') }}"></script>
     <script src="{{ url('js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ url('front/vendor/js/shards.min.js') }}"></script>
     <script>var baseUrl = "<?= url('/') ?>";</script>
     <script src="{{ url('js/minstaller.js') }}"></script>
     @notify_js

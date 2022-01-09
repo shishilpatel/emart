@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','All Destination')
+@section('title',__('All Destination'))
 @section('body')
 @component('admin.component.breadcumb',['secondaryactive' => 'active'])
 @slot('heading')
@@ -15,18 +15,18 @@
         <div class="col-lg-12">
             <div class="card m-b-30">
                 <div class="card-header">
-                    <h5 class="box-title"> All Destination</h5>
+                    <h5 class="box-title"> {{ __('All Destination')  }}</h5>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
                     <table id="full_detail_table" class="table table-hover">
                       <thead>
                         <tr class="table-heading-row">
-                          <th>Id</th>
-                          <th>City </th>
-                           <th>State </th>
-                           <th>Country </th>
-                            <th>Pincode </th>
+                          <th>{{ __('#') }}</th>
+                          <th>{{ __('City') }}</th>
+                           <th>{{ __('State') }} </th>
+                           <th>{{__("Country")}} </th>
+                            <th>{{__("Pincode")}} </th>
                            
                         </tr>
                       </thead>

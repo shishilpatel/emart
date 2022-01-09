@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Jackiedo\DotenvEditor\Facades\DotenvEditor;
 
 class PurchaseCopy extends Command
 {
@@ -37,7 +38,7 @@ class PurchaseCopy extends Command
      */
     public function handle()
     {
-        $this->info("Making Purchase copy... Please wait it can take more time.");
+        $this->info("Making Purchase copy... Please wait it can take some time.");
        
 
         $leave_files = array('index.php');
@@ -344,6 +345,107 @@ class PurchaseCopy extends Command
                 }
             }
         }
+
+        $this->info("::::::::::::: 80% ::::::::::::");
+
+        $dir20 = public_path().'/images/adv';
+
+        foreach (glob("$dir20/*") as $file) {
+            if (!in_array(basename($file), $leave_files)) {
+                try{
+                    unlink($file);
+                }catch(\Exception $e){
+
+                }
+            }
+        }
+
+        $dir21 = public_path().'/images/banner';
+
+        foreach (glob("$dir21/*") as $file) {
+            if (!in_array(basename($file), $leave_files)) {
+                try{
+                    unlink($file);
+                }catch(\Exception $e){
+
+                }
+            }
+        }
+
+        $dir22 = public_path().'/images/flashdeals';
+
+        foreach (glob("$dir22/*") as $file) {
+            if (!in_array(basename($file), $leave_files)) {
+                try{
+                    unlink($file);
+                }catch(\Exception $e){
+
+                }
+            }
+        }
+
+        $dir23 = public_path().'/images/simple_products';
+
+        foreach (glob("$dir23/*") as $file) {
+            if (!in_array(basename($file), $leave_files)) {
+                try{
+                    unlink($file);
+                }catch(\Exception $e){
+
+                }
+            }
+        }
+
+        $dir24 = public_path().'/images/simple_products/gallery';
+
+        foreach (glob("$dir24/*") as $file) {
+            if (!in_array(basename($file), $leave_files)) {
+                try{
+                    unlink($file);
+                }catch(\Exception $e){
+
+                }
+            }
+        }
+
+        $dir25 = public_path().'/images/simple_products/360_images';
+
+        foreach (glob("$dir25/*") as $file) {
+            if (!in_array(basename($file), $leave_files)) {
+                try{
+                    unlink($file);
+                }catch(\Exception $e){
+
+                }
+            }
+        }
+
+        $dir26 = public_path().'/images/hotdeal_backgrounds';
+
+        foreach (glob("$dir26/*") as $file) {
+            if (!in_array(basename($file), ['index.php','default.jpg'])) {
+                try{
+                    unlink($file);
+                }catch(\Exception $e){
+
+                }
+            }
+        }
+
+        $dir27 = public_path().'/images/genral';
+
+        foreach (glob("$dir27/*") as $file) {
+            if (!in_array(basename($file), ['mainfavicon.png','mainlogo.png'])) {
+                try{
+                    unlink($file);
+                }catch(\Exception $e){
+
+                }
+            }
+        }
+
+        // Delete all backup
+        DotenvEditor::deleteBackups();
 
         $this->info("::::::::::::: 100% ::::::::::::");
 

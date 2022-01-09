@@ -6,13 +6,6 @@ use Illuminate\Http\Request;
 use App\Userbank;
 use Auth;
 
-/*==========================================
-=            Author: Media City            =
-    Author URI: https://mediacity.co.in
-=            Author: Media City            =
-=            Copyright (c) 2020            =
-==========================================*/
-
 class UserBankController extends Controller
 {
     public function index()
@@ -30,11 +23,11 @@ class UserBankController extends Controller
             'ifsc'  => 'required',
 
         ],[
-            'acname.required' => 'Account name is required',
-            'bankname.required' => 'Bank name is required',
-            'acno.required' => 'Account no is required',
-            'acno.unique' => 'Account no is already in our records',
-            'ifsc.required' => 'IFSC Code is required',
+            'acname.required' => __('Account name is required'),
+            'bankname.required' => __('Bank name is required'),
+            'acno.required' => __('Account no is required'),
+            'acno.unique' => __('Account no is already in our records'),
+            'ifsc.required' => __('IFSC Code is required'),
 
         ]);
 
@@ -43,7 +36,7 @@ class UserBankController extends Controller
     	$input = $request->all();
     	$input['user_id'] = Auth::user()->id;
     	$newbank->create($input);
-        notify()->success('Bank Added Successully !');
+        notify()->success(__('Bank Added Successully !'));
     	return back();
     }
 
@@ -67,15 +60,15 @@ class UserBankController extends Controller
                         'ifsc'  => 'required',
 
                     ],[
-                        'acname.required' => 'Account name is required',
-                        'bankname.required' => 'Bank name is required',
-                        'acno.required' => 'Account no is required',
-                        'ifsc.required' => 'IFSC Code is required',
+                        'acname.required' => __('Account name is required'),
+                        'bankname.required' => __('Bank name is required'),
+                        'acno.required' => __('Account no is required'),
+                        'ifsc.required' => __('IFSC Code is required'),
 
                     ]);
 
                    $findac->update($input);
-                   notify()->success('Bank account information updated !');
+                   notify()->success(__('Bank account information updated !'));
                    return back();
 
 
@@ -89,19 +82,19 @@ class UserBankController extends Controller
                         'ifsc'  => 'required',
 
                     ],[
-                        'acname.required' => 'Account name is required',
-                        'bankname.required' => 'Bank name is required',
-                        'acno.required' => 'Account no is required',
-                        'ifsc.required' => 'IFSC Code is required',
+                        'acname.required' => __('Account name is required'),
+                        'bankname.required' => __('Bank name is required'),
+                        'acno.required' => __('Account no is required'),
+                        'ifsc.required' => __('IFSC Code is required'),
 
                     ]);
 
                     $findac->update($input);
                 }catch(\Exception $e){
-                    notify()->error('Bank account already exist !');
+                    notify()->error(__('Bank account already exist !'));
                     return back();
                 }
-                    notify()->success('Bank Account Updated Successully !');
+                    notify()->success(__('Bank account updated successully !'));
                     return back();
 
                 }
@@ -118,10 +111,10 @@ class UserBankController extends Controller
 
         if(Auth::user()->id == $userbank->user_id || Auth::user()->role_id == 'a'){
             $userbank->delete();
-            notify()->success('Bank deleted successfully !');
+            notify()->success(__('Bank deleted successfully !'));
             return back();
         }else{
-            notify()->error('401 Unauthorized Action !');
+            notify()->error(__('401 Unauthorized Action !'));
             return back();
         } 
     }

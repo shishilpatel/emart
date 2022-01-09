@@ -46,8 +46,6 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapSellerRoutes();
 
         $this->mapbinRoutes();
-
-        $this->mapSububscriptionRoutes();
     }
 
     /**
@@ -83,13 +81,6 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware('web')
              ->namespace($this->namespace)
              ->group(base_path('routes/seller.php'));
-    }
-
-    protected function mapSububscriptionRoutes()
-    {
-        Route::middleware('web')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/subscription.php'));
     }
 
     protected function mapbinRoutes(){

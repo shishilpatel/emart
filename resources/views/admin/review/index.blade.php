@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','All Reviews and Ratings | ')
+@section('title',__('All Reviews and Ratings | '))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -73,7 +73,7 @@
                       <form action="{{ route('review.quick.update',$review->id) }}" method="POST">
                                     {{csrf_field()}}
                                     <button type="submit" class="btn btn-rounded {{ $review->status == 1 ? 'btn-success-rgba' : 'btn-danger-rgba' }}">
-                                      {{ $review->status ==1 ? 'Active' : 'Deactive' }}
+                                      {{ $review->status ==1 ? __('Active') : __('Deactive') }}
                                     </button>
                         </form>
                     </td>
@@ -83,7 +83,7 @@
                           <button class="btn btn-round btn-primary-rgba" type="button" id="CustomdropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="feather icon-more-vertical-"></i></button>
                           <div class="dropdown-menu" aria-labelledby="CustomdropdownMenuButton1">
                               
-                              <a class="dropdown-item" href="{{url('admin/review/'.$review->id.'/edit')}}"><i class="feather icon-edit mr-2"></i>Edit</a>
+                              <a class="dropdown-item" href="{{url('admin/review/'.$review->id.'/edit')}}"><i class="feather icon-edit mr-2"></i>{{ __("Edit") }}</a>
                             
                               <a class="dropdown-item btn btn-link" data-toggle="modal" data-target="#delete{{$review->id}}" >
                                   <i class="feather icon-delete mr-2"></i>{{ __("Delete") }}</a>
@@ -95,7 +95,7 @@
                           <div class="modal-dialog modal-sm">
                               <div class="modal-content">
                                   <div class="modal-header bg-danger border-danger">
-                                      <h5 class="modal-title" id="exampleSmallModalLabel">Delete</h5>
+                                      <h5 class="modal-title" id="exampleSmallModalLabel">{{ __("DELETE") }}</h5>
                                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                       <span aria-hidden="true">&times;</span>
                                       </button>
@@ -108,8 +108,8 @@
                                   <form method="post" action="{{url('admin/review/'.$review->id)}}" class="pull-right">
                                       {{csrf_field()}}
                                       {{method_field("DELETE")}}
-                                          <button type="reset" class="btn btn-secondary" data-dismiss="modal">No</button>
-                                          <button type="submit" class="btn btn-danger">Yes</button>
+                                          <button type="reset" class="btn btn-secondary" data-dismiss="modal">{{ __("No") }}</button>
+                                          <button type="submit" class="btn btn-danger">{{ __("YES") }}</button>
                                       </form>
                                   </div>
                               </div>
@@ -127,17 +127,4 @@
     </div>
   </div>
 </div>
-​
-                       
-​
-                      
-                      
-       
-                       
-​
-                                     
-         
-
-
 @endsection
-

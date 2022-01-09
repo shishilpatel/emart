@@ -19,14 +19,14 @@ class CouponApplyController extends Controller
         if(!isset($cpn)){
             Cart::where('user_id', Auth::user()->id)
                         ->update(['distype' => NULL, 'disamount' => NULL,'coupan_id' => NULL]);
-            return back()->with('fail','Invalid Coupan !');
+            return back()->with('fail',__('Invalid Coupan !'));
         }
 
         if ($cpn->is_login == 1)
         {
             if (!Auth::check())
             {
-                notify()->error('Login or signup to use this coupon !');
+                notify()->error(__('Login or signup to use this coupon !'));
                 return back();
             }
         }
@@ -75,7 +75,7 @@ class CouponApplyController extends Controller
                     Cart::where('user_id', Auth::user()->id)
                         ->update(['distype' => NULL, 'disamount' => NULL,'coupan_id' => NULL]);
                     return back()
-                        ->with('fail', 'Coupan code max usage limit reached !');
+                        ->with('fail', __('Coupan code max usage limit reached !'));
                 }
 
             }
@@ -86,7 +86,7 @@ class CouponApplyController extends Controller
                     ->id)
                     ->update(['distype' => NULL, 'disamount' => NULL, 'coupan_id' => NULL]);
                 return back()
-                    ->with('fail', 'Coupan code is expired !');
+                    ->with('fail', __('Coupan code is expired !'));
             }
 
         }
@@ -97,7 +97,7 @@ class CouponApplyController extends Controller
                 ->id)
                 ->update(['distype' => NULL, 'disamount' => NULL, 'coupan_id' => NULL]);
             return back()
-                ->with('fail', 'Coupan code is invalid');
+                ->with('fail', __('Coupan code is invalid'));
         }
 
     }
@@ -167,7 +167,7 @@ class CouponApplyController extends Controller
                         ->id)
                         ->update(['distype' => NULL, 'disamount' => NULL, 'coupan_id' => NULL]);
                     return back()
-                        ->with('fail', 'Sorry no product found in your cart for this coupon !');
+                        ->with('fail', __(__('Sorry no product found in your cart for this coupon !.')));
                 }
 
             }
@@ -177,7 +177,7 @@ class CouponApplyController extends Controller
                         ->id)
                         ->update(['distype' => NULL, 'disamount' => NULL, 'coupan_id' => NULL]);
                 return back()
-                    ->with('fail', 'Sorry no product found in your cart for this coupon !');
+                    ->with('fail', __(__('Sorry no product found in your cart for this coupon !.')));
             }
         }
         else
@@ -239,7 +239,7 @@ class CouponApplyController extends Controller
 
             if ($notavbl == 1)
             {
-                return back()->with('fail', 'Sorry no product found in your cart for this coupon !');
+                return back()->with('fail', __(__('Sorry no product found in your cart for this coupon !.')));
             }
 
         }
@@ -309,7 +309,7 @@ class CouponApplyController extends Controller
                         ->id)
                         ->update(['distype' => NULL, 'disamount' => NULL, 'coupan_id' => NULL]);
                     return back()
-                        ->with('fail', 'Sorry no product found in your cart for this coupon !');
+                        ->with('fail', __(__('Sorry no product found in your cart for this coupon !.')));
                 }
 
             }
@@ -319,7 +319,7 @@ class CouponApplyController extends Controller
                         ->id)
                         ->update(['distype' => NULL, 'disamount' => NULL, 'coupan_id' => NULL]);
                 return back()
-                    ->with('fail', 'Sorry no product found in your cart for this coupon !');
+                    ->with('fail', __('Sorry no product found in your cart for this coupon !.'));
             }
         }
         else
@@ -381,7 +381,7 @@ class CouponApplyController extends Controller
 
             if ($notavbl == 1)
             {
-                return back()->with('fail', 'Sorry no product found in your cart for this coupon !');
+                return back()->with('fail', __('Sorry no product found in your cart for this coupon !'));
             }
 
         }
@@ -479,7 +479,7 @@ class CouponApplyController extends Controller
                         ->update(['distype' => NULL, 'disamount' => NULL, 'coupan_id' => NULL]);
                         
                         return back()
-                            ->with('fail', 'For Apply this coupon your cart total should be ' . sprintf("%.2f",$cpn->minamount * $conversion_rate) . ' or greater !');
+                            ->with('fail', __('For Apply this coupon your cart total should be :amount or greater',[':amount' => sprintf("%.2f",$cpn->minamount * $conversion_rate) ]));
                     }
 
                 }
@@ -607,7 +607,7 @@ class CouponApplyController extends Controller
                     $cart[$key]['distype'] = 'cart';
                     Session::put('cart', $cart);
                     // END //
-                    Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $totaldiscount, 'msg' => "$cpn->code Applied Successfully !", 'appliedOn' => 'cart']);
+                    Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $totaldiscount, 'msg' => __(":code Applied Successfully !",['code' => $cpn->code]), 'appliedOn' => 'cart']);
 
                     //end return success with discounted amount
                     return back();
@@ -616,7 +616,8 @@ class CouponApplyController extends Controller
                 else
                 {
                     return back()
-                        ->with('fail', 'For Apply this coupon your cart total should be ' . sprintf("%.2f",$cpn->minamount * $conversion_rate) . ' or greater !');
+                            ->with('fail', __('For Apply this coupon your cart total should be :amount or greater',[':amount' => sprintf("%.2f",$cpn->minamount * $conversion_rate) ]));
+                            
                 }
             }
             else
@@ -666,7 +667,7 @@ class CouponApplyController extends Controller
                 }
 
                 //Putting a session//
-                Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $totaldiscount, 'msg' => "$cpn->code Applied Successfully !", 'appliedOn' => 'cart']);
+                Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $totaldiscount, 'msg' => __(":msg Applied Successfully !",['msg' => $cpn->code]), 'appliedOn' => 'cart']);
 
                 //end return success with discounted amount
                 return back();
@@ -781,7 +782,8 @@ class CouponApplyController extends Controller
                         Cart::where('user_id', Auth::user()
                             ->id)
                             ->update(['distype' => NULL, 'disamount' => NULL,'coupan_id' => NULL]);
-                        return back()->with('fail', 'For Apply this coupon your similar category products total should be ' . sprintf("%.2f",$cpn->minamount * $conversion_rate) . ' or greater !');
+
+                        return back()->with('fail', __('For Apply this coupon your similar category products total should be :amount or greater !',['amount' => sprintf("%.2f",$cpn->minamount * $conversion_rate)]));
                     }
 
                 }
@@ -799,7 +801,7 @@ class CouponApplyController extends Controller
             else
             {
                 return back()
-                    ->with('fail', 'Sorry no matching product found in your cart for this coupon !');
+                    ->with('fail', __('Sorry no matching product found in your cart for this coupon !'));
             }
 
         }
@@ -848,8 +850,7 @@ class CouponApplyController extends Controller
 
                 if ($total*$conversion_rate >= $cpn->minamount*$conversion_rate)
                 {
-                    return back()
-                        ->with('fail', 'For Apply this coupon your similar category products total should be greater than ' . sprintf("%.2f",$cpn->minamount * $conversion_rate));
+                    return back()->with('fail', __('For Apply this coupon your similar category products total should be :amount or greater !',['amount' => sprintf("%.2f",$cpn->minamount * $conversion_rate)]));
                 }
 
             }
@@ -900,14 +901,14 @@ class CouponApplyController extends Controller
             }
 
             //Putting a session//
-            Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $totaldiscount, 'msg' => "$cpn->code Applied Successfully !", 'appliedOn' => 'category']);
+            Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $totaldiscount, 'msg' => __(":code Applied Successfully !",['code' => $cpn->code]), 'appliedOn' => 'category']);
 
             //end return success with discounted amount
             return back();
 
             if (count($catcart) < 1)
             {
-                return back()->with('fail', 'Sorry no matching product found in your cart for this coupon !');
+                return back()->with('fail', __('Sorry no matching product found in your cart for this coupon !'));
             }
 
         }
@@ -923,7 +924,7 @@ class CouponApplyController extends Controller
             Cart::where('user_id', '=', Auth::user()->id)
                 ->update(['distype' => NULL, 'disamount' => NULL, 'coupan_id' => NULL]);
             return back()
-                ->with('fail', 'Coupon Removed !');
+                ->with('fail', __('Coupon Removed !'));
         }
         else
         {
@@ -936,7 +937,7 @@ class CouponApplyController extends Controller
 
             }
             Session::put('cart', $cart);
-            return back()->with('fail', 'Coupon Removed !');
+            return back()->with('fail', __('Coupon Removed !'));
         }
     }
 }

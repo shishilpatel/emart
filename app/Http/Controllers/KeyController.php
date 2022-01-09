@@ -6,13 +6,6 @@ use App\Config;
 use Illuminate\Http\Request;
 use DotenvEditor;
 
-/*==========================================
-=            Author: Media City            =
-    Author URI: https://mediacity.co.in
-=            Developer : Ankit             =
-=            Copyright (c) 2020            =
-==========================================*/
-
 class KeyController extends Controller
 {
 
@@ -40,12 +33,12 @@ class KeyController extends Controller
         $this->config->enable_amarpay = isset($request->enable_amarpay) ? 1 : 0;
         $this->config->save();
 
-        return back()->with('added','AAMARPAY settings has been updated !');
+        return back()->with('added',__('AAMARPAY settings has been updated !'));
     }
 
     public function paymentsettings()
     {
-        abort_if(!auth()->user()->can('payment-gateway.manage'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('payment-gateway.manage'),403,__('User does not have the right permissions.'));
         $bank = BankDetail::first();
         return view('admin.payment_settings.index', compact('bank'));
     }
@@ -65,7 +58,7 @@ class KeyController extends Controller
 
         $this->config->paystack_enable = isset($request->paystack_enable) ? 1 : 0;
         $this->config->save();
-        return back()->with('added','Paystack settings has been updated !');
+        return back()->with('added',__('Paystack settings has been updated !'));
     }
 
     public function sslcommerzeUpdate(Request $request){
@@ -84,7 +77,7 @@ class KeyController extends Controller
 
         $this->config->sslcommerze_enable = isset($request->sslcommerze_enable) ? 1 : 0;
         $this->config->save();
-        notify()->success('SSLCommerze settings has been updated !');
+        notify()->success(__('SSLCommerze settings has been updated !'));
         return back();
     }
 
@@ -95,25 +88,25 @@ class KeyController extends Controller
             'IYZIPAY_API_KEY' => 'required',
             'IYZIPAY_SECRET_KEY' => 'required'
         ],[
-            'IYZIPAY_BASE_URL.required' => 'IYZIPAY Base url is required',
-            'IYZIPAY_API_KEY.required' => 'IYZIPAY api key is required',
-            'IYZIPAY_SECRET_KEY.required' => 'IYZIPAY secret key is required'
+            'IYZIPAY_BASE_URL.required'     => __('IYZIPAY Base url is required'),
+            'IYZIPAY_API_KEY.required'      => __('IYZIPAY api key is required'),
+            'IYZIPAY_SECRET_KEY.required'   => __('IYZIPAY secret key is required')
         ]);
 
         $input = $request->all();
 
 
         $env_keys_save = DotenvEditor::setKeys([
-            'IYZIPAY_BASE_URL' => $input['IYZIPAY_BASE_URL'], 
-            'IYZIPAY_API_KEY' => $input['IYZIPAY_API_KEY'], 
-            'IYZIPAY_SECRET_KEY' => $input['IYZIPAY_SECRET_KEY']
+            'IYZIPAY_BASE_URL'      => $input['IYZIPAY_BASE_URL'], 
+            'IYZIPAY_API_KEY'       => $input['IYZIPAY_API_KEY'], 
+            'IYZIPAY_SECRET_KEY'    => $input['IYZIPAY_SECRET_KEY']
         ]);
 
         $env_keys_save->save();
 
         $this->config->iyzico_enable = isset($request->iyzico_enable) ? 1 : 0;
         $this->config->save();
-        notify()->success('iyzico Payment settings has been updated !');
+        notify()->success(__('Iyzico Payment settings has been updated !'));
         return back();
 
     }
@@ -133,7 +126,7 @@ class KeyController extends Controller
         $this->config->save();
 
         return back()
-            ->with('updated', 'Paytm settings has been updated !');
+            ->with('updated', __('Paytm settings has been updated !'));
     }
 
     public function updaterazorpay(Request $request)
@@ -152,7 +145,7 @@ class KeyController extends Controller
         $this->config->save();
 
         return back()
-            ->with('updated', 'Razorpay settings has been updated !');
+            ->with('updated', __('Razorpay settings has been updated !'));
 
     }
 
@@ -171,7 +164,7 @@ class KeyController extends Controller
 
         $this->config->save();
 
-        return back()->with('updated', 'Stripe settings has been updated !');
+        return back()->with('updated', __('Stripe settings has been updated !'));
     }
 
     public function saveBraintree(Request $request)
@@ -192,7 +185,7 @@ class KeyController extends Controller
 
         $this->config->save();
 
-        return back()->with('updated', 'Stripe settings has been updated !');
+        return back()->with('updated', __('Stripe settings has been updated !'));
     }
 
     public function savePaypal(Request $request)
@@ -215,7 +208,7 @@ class KeyController extends Controller
 
         $this->config->save();
 
-        return back()->with('updated', 'Paypal settings has been updated !');
+        return back()->with('updated', __('Paypal settings has been updated !'));
 
     }
 
@@ -236,7 +229,7 @@ class KeyController extends Controller
 
         $this->config->save();
 
-        return back()->with('added', 'Payhere Setting has been updated !');
+        return back()->with('added', __('Payhere setting has been updated !'));
 
     }
 
@@ -260,7 +253,7 @@ class KeyController extends Controller
 
         $this->config->save();
 
-        return back()->with('added', 'Instamojo Setting has been updated !');
+        return back()->with('added', __('Instamojo setting has been updated !'));
 
     }
 
@@ -287,7 +280,7 @@ class KeyController extends Controller
         $this->config->save();
 
         return back()
-            ->with('updated', 'PayUMoney payment settings has been updated !');
+            ->with('updated', __('PayUMoney payment settings has been updated !'));
 
     }
 
@@ -308,7 +301,7 @@ class KeyController extends Controller
         $env_keys_save->save();
 
         $this->config->save();
-        notify()->success('Cashfree payment settings has been updated !');
+        notify()->success(__('Cashfree payment settings has been updated !'));
         return back();
     }
 
@@ -328,7 +321,7 @@ class KeyController extends Controller
         $env_keys_save->save();
 
         $this->config->save();
-        notify()->success('Skrill payment settings has been updated !');
+        notify()->success(__('Skrill payment settings has been updated !'));
         return back();
     }
 
@@ -350,7 +343,7 @@ class KeyController extends Controller
         $env_keys_save->save();
 
         $this->config->save();
-        notify()->success('Omise payment settings has been updated !');
+        notify()->success(__('Omise payment settings has been updated !'));
         return back();
     }
 
@@ -369,7 +362,7 @@ class KeyController extends Controller
         $env_keys_save->save();
 
         $this->config->save();
-        notify()->success('Mollie payment settings has been updated !');
+        notify()->success(__('Mollie payment settings has been updated !'));
         return back();
     }
 
@@ -393,7 +386,7 @@ class KeyController extends Controller
         $env_keys_save->save();
 
         $this->config->save();
-        notify()->success('Rave payment settings has been updated !');
+        notify()->success(__('Rave payment settings has been updated !'));
         return back();
     }
 

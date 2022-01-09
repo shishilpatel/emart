@@ -19,7 +19,7 @@ class BrandController extends Controller
     public function index(Request $request)
     {
 
-        abort_if(!auth()->user()->can('brand.view'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('brand.view'),403,__('User does not have the right permissions.'));
 
         $brands = Brand::select('brands.id', 'brands.name', 'brands.image', 'brands.status');
 
@@ -48,7 +48,7 @@ class BrandController extends Controller
 
     public function requestedbrands()
     {
-        abort_if(!auth()->user()->can('brand.view'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('brand.view'),403,__('User does not have the right permissions.'));
         $brands = Brand::where('is_requested', '=', '1')->where('status', '0')
             ->orderBy('id', 'DESC')
             ->get();
@@ -62,12 +62,12 @@ class BrandController extends Controller
      */
     public function create()
     {
-        abort_if(!auth()->user()->can('brand.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('brand.create'),403,__('User does not have the right permissions.'));
         return view("admin.brand.add");
     }
 
     public function importbrands(Request $request){
-        abort_if(!auth()->user()->can('brand.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('brand.create'),403,__('User does not have the right permissions.'));
 
         $validator = Validator::make(
             [
@@ -82,7 +82,7 @@ class BrandController extends Controller
         );
 
         if ($validator->fails()) {
-            notify()->error('Invalid file !');
+            notify()->error(__('Invalid file !'));
             return back();
         }
 
@@ -111,12 +111,12 @@ class BrandController extends Controller
 
             Storage::delete('/excel/'.$filename);
 
-            notify()->success('Brands imported successfully');
+            notify()->success(__('Brands imported successfully'));
 
             return back();
 
         }else{
-            notify()->error('File is empty !');
+            notify()->error(__('File is empty !'));
             return back();
         }
 
@@ -131,14 +131,14 @@ class BrandController extends Controller
     public function store(Request $request)
     {
 
-        abort_if(!auth()->user()->can('brand.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('brand.create'),403,__('User does not have the right permissions.'));
 
         $this->validate($request, 
             [
                 "name" => "required|unique:brands,name"
             ],
             [
-                "name.required" => "Brand name is required",
+                "name.required" => __("Brand name is required"),
             ]
         );
 
@@ -149,7 +149,7 @@ class BrandController extends Controller
             if(!str_contains($request->image, '.png') && !str_contains($request->image, '.jpg') && !str_contains($request->image, '.jpeg') && !str_contains($request->image, '.webp') && !str_contains($request->image, '.gif')){
                     
                 return back()->withInput()->withErrors([
-                    'image' => 'Invalid image type for brand logo'
+                    'image' => _('Invalid image type for brand logo')
                 ]);
 
             }
@@ -172,7 +172,7 @@ class BrandController extends Controller
         $data = Brand::create($input);
 
         return back()
-            ->with("added", "Brand Has Been Created !");
+            ->with("added", __("Brand Has Been Created !"));
     }
     /**
      * Show the form for editing the specified resource.
@@ -182,7 +182,7 @@ class BrandController extends Controller
      */
     public function edit($id)
     {
-        abort_if(!auth()->user()->can('brand.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('brand.edit'),403,__('User does not have the right permissions.'));
         $brand = Brand::findOrFail($id);
         return view("admin.brand.edit", compact("brand"));
     }
@@ -197,7 +197,7 @@ class BrandController extends Controller
     public function update(Request $request, $id)
     {
 
-        abort_if(!auth()->user()->can('brand.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('brand.edit'),403,__('User does not have the right permissions.'));
 
         $data = $this->validate($request, [
 
@@ -205,7 +205,7 @@ class BrandController extends Controller
 
         ], [
 
-        "name.required" => "Brand name is required",
+        "name.required" => __("Brand name is required"),
 
         ]);
 
@@ -218,7 +218,7 @@ class BrandController extends Controller
             if(!str_contains($request->image, '.png') && !str_contains($request->image, '.jpg') && !str_contains($request->image, '.jpeg') && !str_contains($request->image, '.webp') && !str_contains($request->image, '.gif')){
                     
                 return back()->withInput()->withErrors([
-                    'image' => 'Invalid image type for brand logo'
+                    'image' => __('Invalid image type for brand logo')
                 ]);
 
             }
@@ -240,7 +240,7 @@ class BrandController extends Controller
 
         $brand->update($input);
 
-        return redirect('admin/brand')->with('updated', 'Brand has been updated');
+        return redirect('admin/brand')->with('updated', __('Brand has been updated'));
 
     }
 
@@ -253,7 +253,7 @@ class BrandController extends Controller
     public function destroy($id)
     {
 
-        abort_if(!auth()->user()->can('brand.delete'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('brand.delete'),403,__('User does not have the right permissions.'));
 
         $obj = Brand::findorFail($id);
 
@@ -280,7 +280,7 @@ class BrandController extends Controller
         else
         {
             return back()
-                ->with('warning', 'Brand cannot be deleted as its linked to some products !');
+                ->with('warning', __('Brand cannot be deleted as its linked to some products !'));
         }
 
     }

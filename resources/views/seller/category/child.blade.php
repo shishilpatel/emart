@@ -1,5 +1,5 @@
 @extends('admin.layouts.sellermastersoyuz')
-@section('title','All Childcategories | ')
+@section('title',__('All Childcategories'))
 @section('body')
 
 @component('seller.components.breadcumb',['secondactive' => 'active'])
@@ -99,47 +99,3 @@
 		});
 	</script>
 @endsection
-                  
-          
-                  
-    
-    
-          
-                  
-    
-    
-                  
-                  
-                
-    
-                
-                                      
-
-
-          
-
-            
-          
-              
-
-
-
-
-            
-
-            
-            
-            
-  
-                 
-  
-               
-  
-          
-    
-             
-            
-
-          
-
-

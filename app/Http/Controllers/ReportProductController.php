@@ -21,13 +21,13 @@ class ReportProductController extends Controller
       }
     	
     	$newreport->create($input);
-      notify()->error('Product reported successfully !','Reported');
+      notify()->error(__('Product reported successfully !'),__('Reported'));
     	return back();
     }
 
     public function get(Request $request){
 
-        abort_if(!auth()->user()->can('reported-products.view'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('reported-products.view'),403,__('User does not have the right permissions.'));
 
          $data = ReportProduct::with(['simpleProduct' => function($q){
          return $q->select('id','product_name');

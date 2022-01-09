@@ -29,7 +29,7 @@ class StoreController extends Controller
     public function index(Request $request)
     {
 
-        abort_if(!auth()->user()->can('stores.view'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('stores.view'),403,__('User does not have the right permissions.'));
 
         $stores = Store::leftjoin('allcities', function ($join) {
             $join->on('allcities.id', '=', 'stores.city_id');
@@ -47,7 +47,7 @@ class StoreController extends Controller
             return DataTables::of($stores)
                 ->addIndexColumn()
                 ->addColumn('logo', function ($row) {
-                    $image = @file_get_contents('../public/images/store/' . $row->store_logo);
+                    $image = @file_get_contents(public_path().'/images/store/' . $row->store_logo);
                     if ($image) {
                         $logo = '<img style="object-fit:scale-down;" width="70px" height="70px" src="' . url("images/store/" . $row->store_logo) . '"/>';
                     } else {
@@ -59,15 +59,15 @@ class StoreController extends Controller
                 })
                 ->addColumn('info', function ($store) {
 
-                    $html = '<p><b>Name:</b> <span class="font-weight500">' . $store->name . '</span></p>';
-                    $html .= '<p><b>Email:</b> <span class="font-weight500">' . $store->email . '</span></p>';
-                    $html .= '<p><b>Mobile:</b> <span class="font-weight500">' . $store->mobile . '</span></p>';
-                    $html .= '<p><b>Address:</b> <span class="font-weight500">' . $store->address . ' ,' . $store->city . ' ,' . $store->state . ' ,' . $store->country . '</p>';
+                    $html = '<p><b>'.__('Name:').'</b> <span class="font-weight500">' . $store->name . '</span></p>';
+                    $html .= '<p><b>'.__('Email').':</b> <span class="font-weight500">' . $store->email . '</span></p>';
+                    $html .= '<p><b>'.__('Mobile').':</b> <span class="font-weight500">' . $store->mobile . '</span></p>';
+                    $html .= '<p><b>'.__("Address").':</b> <span class="font-weight500">' . $store->address . ' ,' . $store->city . ' ,' . $store->state . ' ,' . $store->country . '</p>';
 
                     if ($store->verified_store == 1) {
-                        $html .= '<p><b>Verfied Store: </b> <span class="badge badge-pill badge-success"><i class="fa fa-check-circle"></i> Verified</span></p>';
+                        $html .= '<p><b>'.__('Verfied Store').': </b> <span class="badge badge-pill badge-success"><i class="fa fa-check-circle"></i> '.__('Verified').'</span></p>';
                     } else {
-                        $html .= '<p><b>Verified Store: </b> <span class="badge badge-pill badge-danger">Not Verified</span></p>';
+                        $html .= '<p><b>'.__('Verified Store').' : </b> <span class="badge badge-pill badge-danger">'.__('Not Verified').'</span></p>';
                     }
                    
                     return $html;
@@ -77,9 +77,9 @@ class StoreController extends Controller
                 ->editColumn('apply', 'admin.store.applybtn')
                 ->addColumn('rd', function ($store) {
                     if ($store->rd == '0') {
-                        $btn = '<span class="badge badge-pill badge-success">Not Received</span>';
+                        $btn = '<span class="badge badge-pill badge-success">'.__("Not Received").'</span>';
                     } else {
-                        $btn = '<span class="badge badge-pill badge-danger">Received</span>';
+                        $btn = '<span class="badge badge-pill badge-danger">'.__('Received').'</span>';
                     }
 
                     return $btn;
@@ -100,7 +100,7 @@ class StoreController extends Controller
      */
     public function create()
     {
-        abort_if(!auth()->user()->can('stores.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('stores.create'),403,__('User does not have the right permissions.'));
         $countrys = Country::all();
         $states = State::all();
         $citys = City::all();
@@ -117,7 +117,7 @@ class StoreController extends Controller
     public function store(Request $request)
     {
 
-        abort_if(!auth()->user()->can('stores.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('stores.create'),403,__('User does not have the right permissions.'));
         $data = $this->validate($request, [
             "name" => "required",
             "mobile" => "required",
@@ -129,16 +129,16 @@ class StoreController extends Controller
             "email" => "required|unique:stores,email|email|max:255",
 
         ], [
-            "name.required" => "Store Name is Required",
-            "email.required" => "Business Email is Required",
-            "mobile.required" => "Mobile No is Required",
+            "name.required" => __("Store name is required"),
+            "email.required" => __("Business email is required"),
+            "mobile.required" => __("Mobile no is required"),
 
         ]);
 
         $validateuser = User::find($request->user_id);
 
         if ($validateuser->store) {
-            notify()->error('User Already have a Store !');
+            notify()->error(__('User already have a store !'));
             return back()->withInput();
         }
 
@@ -201,7 +201,7 @@ class StoreController extends Controller
         }catch(\Exception $e){
             \Log::error('Failed to sent email to store owner:'.$e->getMessage());
         }
-        notify()->success('Store created !',$store->name);
+        notify()->success(__('Store created !'),$store->name);
         return back();
     }
     /**
@@ -212,7 +212,7 @@ class StoreController extends Controller
      */
     public function show(Store $store)
     {
-        abort_if(!auth()->user()->can('stores.view'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('stores.view'),403,__('User does not have the right permissions.'));
     }
 
     /**
@@ -223,7 +223,7 @@ class StoreController extends Controller
      */
     public function edit($id)
     {
-        abort_if(!auth()->user()->can('stores.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('stores.edit'),403,__('User does not have the right permissions.'));
         $countrys = Country::all();
         $citys = Allcity::all();
         $users = User::where('role_id', 'v')->orWhere('role_id', 'a')->get();
@@ -254,7 +254,7 @@ class StoreController extends Controller
     public function update(Request $request, $id)
     {
         
-        abort_if(!auth()->user()->can('stores.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('stores.edit'),403,__('User does not have the right permissions.'));
         $store = Store::find($id);
 
         
@@ -270,16 +270,16 @@ class StoreController extends Controller
             "email" => "required|email|max:255,unique:stores,email,$id",
 
         ], [
-            "name.required" => "Store Name is Required",
-            "email.required" => "Business Email is Required",
-            "mobile.required" => "Mobile No is Required",
+            "name.required" => __("Store name is required"),
+            "email.required" => __("Business email is required"),
+            "mobile.required" => __("Mobile no is required"),
 
         ]);
 
         $store = Store::find($id);
 
         if(!$store) {
-            notify()->error('Store Not found !','404');
+            notify()->error(__('Store Not found !'),'404');
             return back();
         }
 
@@ -343,7 +343,7 @@ class StoreController extends Controller
         $input['show_google_reviews'] = $request->show_google_reviews ? 1 : 0;
         $store->update($input);
 
-        notify()->success('Store has been updated !',$store->name);
+        notify()->success(__('Store has been updated !'),$store->name);
 
         return redirect('admin/stores');
 
@@ -356,7 +356,7 @@ class StoreController extends Controller
      */
     public function destroy($id)
     {
-        abort_if(!auth()->user()->can('stores.delete'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('stores.delete'),403,__('User does not have the right permissions.'));
 
         $store = Store::find($id);
 
@@ -378,11 +378,11 @@ class StoreController extends Controller
 
             $store->forcedelete();
             
-            notify()->success('Store has been deleted !');
+            notify()->success(__('Store has been updated !'));
             return back();
              
         } else {
-            notify()->error('Store Not found !','404');
+            notify()->error(__('Store Not found !'),'404');
             return back();
         }
     }

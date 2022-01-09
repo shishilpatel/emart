@@ -58,7 +58,7 @@ class FaqProductController extends Controller
 
         FaqProduct::create($input);
 
-        return back()->with('added', 'Faq has been created');
+        return back()->with('added', __('Faq has been created'));
     }
 
     /**
@@ -101,7 +101,7 @@ class FaqProductController extends Controller
         $input = $request->all();
 
         $faq->update($input);
-        return back()->with('updated', 'Faq has been updated');
+        return back()->with('updated', __('Faq has been updated'));
     }
 
     /**
@@ -116,7 +116,7 @@ class FaqProductController extends Controller
 
         $faq->delete();
         return back()
-            ->with('deleted', 'Faq has been deleted');
+            ->with('deleted', __('Faq has been deleted'));
     }
 }
 

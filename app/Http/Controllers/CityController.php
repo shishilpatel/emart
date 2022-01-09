@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Allcity;
@@ -57,16 +58,16 @@ class CityController extends Controller
             'name' => 'required|unique:allcities,name',
             'state_id' => 'required',
         ], [
-            'name.required' => 'Please enter city name !',
-            'name.unique' => 'City already exists !',
-            'state_id.required' => 'Please select state !',
+            'name.required'     => __('Please enter city name !'),
+            'name.unique'       => __('City already exists !'),
+            'state_id.required' => __('Please select state !'),
         ]);
 
         $input = $request->all();
 
         $newcity = new Allcity;
         $newcity->create($input);
-        notify()->success('City added', $request->name);
+        notify()->success(__('City added'), $request->name);
 
         return back();
 

@@ -29,6 +29,7 @@ class PlaceOrderController extends Controller
 {
     public function placeorder($txn_id, $payment_method, $order_id, $payment_status, $saleid = null, $file = null)
     {
+        
         require 'price.php';
 
         DB::beginTransaction();
@@ -261,9 +262,9 @@ class PlaceOrderController extends Controller
             $newInvoice->vender_id = $invcart->vender_id;
             $newInvoice->price = $price;
             $newInvoice->tax_amount = sprintf("%.2f", ($invcart->tax_amount / $invcart->qty) * $conversion_rate);
-            $newInvoice->igst = session()->has('igst') ? session()->get('igst')[$key] : null;
-            $newInvoice->sgst = session()->has('indiantax') ? session()->get('indiantax')[$key]['sgst'] : null;
-            $newInvoice->cgst = session()->has('indiantax') ? session()->get('indiantax')[$key]['cgst'] : null;
+            $newInvoice->igst = session()->has('igst') && isset(session()->get('igst')[$key]) ? session()->get('igst')[$key] : null;
+            $newInvoice->sgst = session()->has('indiantax') && isset( session()->get('indiantax')[$key]['sgst'] ) ? session()->get('indiantax')[$key]['sgst'] : null;
+            $newInvoice->cgst = session()->has('indiantax') && isset( session()->get('indiantax')[$key]['cgst'] ) ? session()->get('indiantax')[$key]['cgst'] : null;
             $newInvoice->shipping = round($invcart->shipping * $conversion_rate, 2);
             $newInvoice->discount = round($invcart->disamount * $conversion_rate, 2);
             $newInvoice->handlingcharge = $perhc;
@@ -455,10 +456,11 @@ class PlaceOrderController extends Controller
         }
 
         session()->forget('order_id');
+        
 
-        $status = "Order #$inv_cus->order_prefix $neworder->order_id placed successfully !";
+        $status = __("Order #:order placed successfully !",['order' => $inv_cus->order_prefix.$neworder->order_id]);
 
-        notify()->success("$status");
+        notify()->success($status);
 
         return redirect()->route('order.done', ['orderid' => $neworder->order_id]);
 

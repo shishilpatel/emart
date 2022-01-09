@@ -41,8 +41,8 @@ class SeoController extends Controller
             "metadata_des" => "required",
             "metadata_key" => "required",
         ],[
-            "metadata_des.required" => "Metadata description is required",
-            "metadata_key.required" => "Metadata key is required",
+            "metadata_des.required" => __("Metadata description is required"),
+            "metadata_key.required" => __("Metadata key is required"),
         ]);
 
         $env_keys_save = DotenvEditor::setKeys([
@@ -62,7 +62,7 @@ class SeoController extends Controller
         ]);
 
         
-        notify()->success('Seo settings has been updated !');
+        notify()->success(__('Seo settings has been updated !'));
         return back();
 
         

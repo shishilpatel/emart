@@ -1,5 +1,5 @@
 @extends("admin/layouts.master-soyuz")
-@section('title','Admin Dashboard | ')
+@section('title',__('Admin Dashboard | '))
 @section("body")
 
 
@@ -44,7 +44,7 @@
                   <div class="row">
                     <div class="col-8">
                       <h4>{{$user}}</h4>
-                      <p class="font-14 mb-0 ">Total Users</p>
+                      <p class="font-14 mb-0 ">{{ __('Total Users') }}</p>
                     </div>
                     <div class="col-4 animate__animated animate__fadeIn animate__delay-2s">
                       <a href="{{route('users.index')}}"> <i class="text-success feather icon-user iconsize"></i>
@@ -62,7 +62,7 @@
                   <div class="row">
                     <div class="col-8">
                       <h4 >{{$order}}</h4>
-                      <p class="font-14 mb-0">Total Orders</p>
+                      <p class="font-14 mb-0">{{ __('Total Orders') }}</p>
                     </div>
                     <div class="col-4 animate__animated animate__fadeIn animate__delay-2s">
                       <a href="{{url('admin/order')}}"> <i class="text-warning feather icon-shopping-cart mr-2 iconsize"></i>
@@ -80,7 +80,7 @@
                   <div class="row">
                     <div class="col-8">
                       <h4>{{ $totalcancelorder }}</h4>
-                      <p class="font-14 mb-0">Total Cancelled Orders</p>
+                      <p class="font-14 mb-0">{{ __('Total Cancelled Orders') }}</p>
                     </div>
                     <div class="col-4 animate__animated animate__fadeIn animate__delay-2s">
                       <a href="{{url('admin/ord/canceled')}}"> <i class="text-danger feather icon-x-circle iconsize"></i>
@@ -98,7 +98,7 @@
                   <div class="row">
                     <div class="col-8">
                       <h4>{{ $totalproducts }}</h4>
-                      <p class="font-14 mb-0">Total Products</p>
+                      <p class="font-14 mb-0">{{ __('Total Products') }}</p>
                     </div>
                     <div class="col-4 animate__animated animate__fadeIn animate__delay-2s">
                       <a href="{{url('admin/products')}}"> <i class="text-primary feather icon-truck iconsize"></i>
@@ -117,7 +117,7 @@
                   <div class="row">
                     <div class="col-8">
                       <h4>{{$store}}</h4>
-                      <p class="font-14 mb-0">Total Stores</p>
+                      <p class="font-14 mb-0">{{ __('Total Stores') }}</p>
                     </div>
                     <div class="col-4 animate__animated animate__fadeIn animate__delay-2s">
                       <a href="{{url('admin/stores')}}"> <i class="text-info feather icon-home iconsize"></i>
@@ -137,7 +137,7 @@
                   <div class="row">
                     <div class="col-8">
                       <h4>{{$category}}</h4>
-                      <p class="font-14 mb-0">Total Categories</p>
+                      <p class="font-14 mb-0">{{ __('Total Categories') }}</p>
                     </div>
                     <div class="col-4 animate__animated animate__fadeIn animate__delay-2s">
                       <a  href="{{url('admin/category')}}"> <i class="text-secondary feather icon-shopping-bag iconsize"></i>
@@ -156,7 +156,7 @@
                   <div class="row">
                     <div class="col-8">
                       <h4>{{$coupan}}</h4>
-                      <p class="font-14 mb-0">Total Coupons</p>
+                      <p class="font-14 mb-0">{{ __("Total Coupons") }}</p>
                     </div>
                     <div class="col-4 animate__animated animate__fadeIn animate__delay-2s">
                       <a href="{{url('admin/coupan')}}"> <i class="text-success feather icon-grid iconsize"></i>
@@ -175,7 +175,7 @@
                   <div class="row">
                     <div class="col-8">
                       <h4>{{$faqs}}</h4>
-                      <p class="font-14 mb-0">Total FAQ's</p>
+                      <p class="font-14 mb-0">{{ __('Total FAQ\'s') }}</p>
                     </div>
                     <div class="col-4 animate__animated animate__fadeIn animate__delay-2s">
                       <a href="{{url('admin/faq')}}"> <i class="text-warning feather icon-help-circle iconsize"></i>
@@ -194,7 +194,7 @@
                   <div class="row">
                     <div class="col-8">
                       <h4>{{ $pending_payout }}</h4>
-                      <p class="font-14 mb-0">Pending Payouts</p>
+                      <p class="font-14 mb-0">{{ __('Pending Payouts') }}</p>
                     </div>
                     <div class="col-4 animate__animated animate__fadeIn animate__delay-2s">
                       <a href="{{ route('seller.payouts.index') }}"> <i class="text-danger feather icon-credit-card iconsize"></i>
@@ -211,7 +211,7 @@
                   <div class="row">
                     <div class="col-8">
                       <h4>{{ $totalsellers }}</h4>
-                      <p class="font-14 mb-0">Total sellers (active)</p>
+                      <p class="font-14 mb-0">{{ __('Total sellers (active)') }}</p>
                     </div>
                     <div class="col-4 animate__animated animate__fadeIn animate__delay-2s">
                       <a  href="{{ route('users.index',['filter' => 'sellers']) }}"> <i class="text-warning feather icon-users iconsize"></i>
@@ -231,7 +231,7 @@
                 <div class="row">
                   <div class="col-8">
                     <h4>{{ $total_testinonials }}</h4>
-                    <p class="font-14 mb-0">Total Testimonials (active)</p>
+                    <p class="font-14 mb-0">{{ __('Total Testimonials (active)') }}</p>
                   </div>
                   <div class="col-4 animate__animated animate__fadeIn animate__delay-2s">
                     <a href="{{ route('testimonial.index') }}"> <i class="text-primary feather  icon-sliders iconsize"></i>
@@ -250,7 +250,7 @@
                 <div class="row">
                   <div class="col-8">
                     <h4>{{ $total_specialoffer }}</h4>
-                    <p class="font-14 mb-0">Total Special offers (active)</p>
+                    <p class="font-14 mb-0">{{ __('Total Special offers (active)') }}</p>
                   </div>
                   <div class="col-4 animate__animated animate__fadeIn animate__delay-2s">
                     <a  href="{{ route('special.index') }}"> <i class="text-info feather icon-gift iconsize"></i>
@@ -270,7 +270,7 @@
                 <div class="row">
                   <div class="col-8">
                     <h4>{{ $total_hotdeals }}</h4>
-                    <p class="font-14 mb-0">Total Hotdeals (active)</p>
+                    <p class="font-14 mb-0">{{ __('Total Hotdeals (active)') }}</p>
                   </div>
                   <div class="col-4 animate__animated animate__fadeIn animate__delay-2s">
                     <a href="{{ route('hotdeal.index') }}"> <i class="text-secondary feather icon-archive iconsize"></i>
@@ -303,7 +303,7 @@
 
                     </div>
                     <div class="col-9">
-                     <h4>Page Likes</h4>
+                     <h4>{{ __('Page Likes') }}</h4>
                       @if($dashsetting->fb_page_id != '' || $dashsetting->fb_page_token != '')
 
                       @if($connected)
@@ -325,7 +325,7 @@
                           }
                         }
                         else{
-                          echo 'Page is not a valid FB Page';
+                          echo __('Page is not a valid FB Page');
                         }
                       @endphp
                       @else
@@ -354,7 +354,7 @@
                      
                     </div>
                     <div class="col-9">
-                      <h4>Followers</h4>
+                      <h4>{{ __('Followers') }}</h4>
                       @if($dashsetting->tw_username != '')
 
                       @if($connected)
@@ -367,14 +367,16 @@
                       
                         echo '<h4 class="animate__animated animate__fadeIn animate__delay-1s">'.$tw_followers.'</h4>';
                       }catch(\Exception $e){
-                        echo '<span class="info-box-number">'.$e->getCode().' Invalid Username !</span>';
+                        echo '<span class="info-box-number">'.$e->getCode().''.__('Invalid Username !').'</span>';
                       }
                     ?>
                       @else
-                      <p><b>Connection Problem !</b></p>
+                      <p><b>{{ __('Connection Problem !') }}</b></p>
                       @endif
                       @else
-                      <p class="animate__animated animate__fadeIn animate__delay-1s"><b>Set up Twitter username in Admin Dashboard Setting !</b></p>
+                      <p class="animate__animated animate__fadeIn animate__delay-1s"><b>
+                        {{__('Set up Twitter username in Admin Dashboard Setting !')}}  
+                      </b></p>
                       @endif
                     </div>
                   </div>
@@ -393,7 +395,7 @@
                      
                     </div>
                     <div class="col-9">
-                      <h4>Followers</h4>
+                      <h4>{{ __('Followers') }}</h4>
                       @if($dashsetting->inst_username !='')
 
                       @if($connected)
@@ -405,15 +407,15 @@
                         try{
                           echo '<h4 class="animate__animated animate__fadeIn animate__delay-1s">'.$m[1].'</h4>';
                         }catch(\Exception $e){
-                          echo '<span class="info-box-number">'.$e->getCode().' Invalid Username !</span>';
+                          echo '<span class="info-box-number">'.$e->getCode().' '.__('Invalid Username !').'</span>';
                         }
                         
                       ?>
                       @else
-                      <p><b>Connection Problem !</b></p>
+                      <p><b>{{ __('Connection Problem !') }}</b></p>
                       @endif
                       @else
-                      <p class="animate__animated animate__fadeIn animate__delay-1s"><b>Set up Instagram username in <br>Admin Dashboard Setting !</b></p>
+                      <p class="animate__animated animate__fadeIn animate__delay-1s"><b> {{__("Set up Instagram username in")}} <br>{{ __('Admin Dashboard Setting !') }}</b></p>
                       @endif
                     </div>
                   </div>
@@ -436,7 +438,7 @@
                 <div class="card-header  bg-primary">                                
                     <div class="row align-items-center">
                         <div class="col-9">
-                            <h5 class="card-title mb-0 text-white">Visitors</h5>
+                            <h5 class="card-title mb-0 text-white">{{ __('Visitors') }}</h5>
                         </div>
                         <div class="col-3">
                           
@@ -461,14 +463,18 @@
                   <div class="card-header">                                
                       <div class="row align-items-center">
                           <div class="col-9">
-                              <h5 class="card-title mb-0">Latest Orders</h5>
+                              <h5 class="card-title mb-0">
+                                {{__("Latest Orders")}}
+                              </h5>
                           </div>
                           <div class="col-3">
                               <div class="dropdown">
                                   <button class="btn btn-link p-0 font-18 float-right" type="button" id="upcomingTask" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="feather icon-more-horizontal-"></i></button>
                                   <div class="dropdown-menu dropdown-menu-right" aria-labelledby="upcomingTask">
                                       @if(count($latestorders))
-                                        <a class="dropdown-item font-13" href="{{ url('admin/order') }}">View All Orders</a>
+                                        <a class="dropdown-item font-13" href="{{ url('admin/order') }}">
+                                          {{__('View All Orders')}}
+                                        </a>
                                       @endif
                                   </div>
                               </div>
@@ -481,11 +487,11 @@
                           <thead>
                             <tr>
                               <th>#</th>
-                              <th>Order ID</th>
-                              <th>Customer name</th>
-                              <th>Total Qty</th>
-                              <th>Total Price</th>
-                              <th>Order Date</th>
+                              <th>{{ __('Order ID') }}</th>
+                              <th>{{ __('Customer name') }}</th>
+                              <th>{{ __('Total Qty') }}</th>
+                              <th>{{ __('Total Price') }}</th>
+                              <th>{{ __('Order Date') }}</th>
                             </tr>
                           </thead>
                 
@@ -494,7 +500,7 @@
                 
                             <tr>
                               <td>{{$key+1}}</td>
-                              <td><a title="View order"
+                              <td><a title="{{ __('View order') }}"
                                   href="{{ route('show.order',$order->order_id) }}">#{{ $inv_cus->order_prefix.$order->order_id }}</a>
                               </td>
                               <td>{{ $order->user->name }}</td>
@@ -532,7 +538,9 @@
                   <div class="card-header">                                
                       <div class="row align-items-center">
                           <div class="col-9">
-                              <h5 class="card-title mb-0">Recent Store Requests</h5>
+                              <h5 class="card-title mb-0">
+                                {{__('Recent store requests')}}
+                              </h5>
                           </div>
                           <div class="col-3">
                               <div class="dropdown">
@@ -540,7 +548,7 @@
                                   <div class="dropdown-menu dropdown-menu-right" aria-labelledby="upcomingTask">
                                     @if(count($storerequest))
                                       <a class="dropdown-item font-13" href="{{ url('admin/appliedform') }}">
-                                        View All Store Request
+                                        {{__("View all store requests")}}
                                       </a>
                                     @else
                                       <a class="dropdown-item font-13" href="#">
@@ -558,9 +566,9 @@
                           <thead>
                             <tr>
                               <th>#</th>
-                              <th>Store Name</th>
-                              <th>Buisness Email</th>
-                              <th>Request By</th>
+                              <th>{{ __("Store Name") }}</th>
+                              <th>{{ __('Buisness Email') }}</th>
+                              <th>{{ __('Request By') }}</th>
                             </tr>
                           </thead>
                 
@@ -595,14 +603,18 @@
                   <div class="card-header">                                
                       <div class="row align-items-center">
                           <div class="col-9">
-                              <h5 class="card-title mb-0">Recently Added Products</h5>
+                              <h5 class="card-title mb-0">
+                                {{__('Recently added products')}}
+                              </h5>
                           </div>
                           <div class="col-3">
                               <div class="dropdown">
                                   <button class="btn btn-link p-0 font-18 float-right" type="button" id="upcomingTask" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="feather icon-more-horizontal-"></i></button>
                                   <div class="dropdown-menu dropdown-menu-right" aria-labelledby="upcomingTask">
                                   
-                                      <a class="dropdown-item font-13" href="{{ url('admin/products') }}">View All Product</a>
+                                      <a class="dropdown-item font-13" href="{{ url('admin/products') }}">
+                                        {{__('View all products')}}
+                                      </a>
                                     
                                   </div>
                               </div>
@@ -648,12 +660,14 @@
                   <div class="card-header">                                
                       <div class="row align-items-center">
                           <div class="col-5">
-                              <h5 class="card-title mb-0">Recent Users</h5>
+                              <h5 class="card-title mb-0">
+                                {{__("Recent Users")}}
+                              </h5>
                           </div>
                           <div class="col-7">
                             <div class="row">
                               <div class="col-md-10">
-                                <span class="{{ selected_lang()->rtl_available == 0 ? "float-right" : "float-left" }} mt-2 badge badge-success">{{ $registerTodayUsers }} members today</span>
+                                <span class="{{ selected_lang()->rtl_available == 0 ? "float-right" : "float-left" }} mt-2 badge badge-success">{{ $registerTodayUsers }} {{ __('members today') }}</span>
                               </div>
                               <div class="col-md-2">
                             
@@ -661,7 +675,7 @@
                                 
                                   <button class="btn btn-link p-0 font-18 float-right" type="button" id="widgetRevenue" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="feather icon-more-horizontal-"></i></button>
                                   <div class="dropdown-menu dropdown-menu-right" aria-labelledby="widgetRevenue">
-                                      <a class="dropdown-item font-13"  href="{{ route('users.index',['filter' => 'customer']) }}">View All Users</a>
+                                      <a class="dropdown-item font-13"  href="{{ route('users.index',['filter' => 'customer']) }}">{{ __('View all users') }}</a>
                                 
                                   </div>
                               </div>
@@ -690,10 +704,7 @@
                           </div>
                         </div>
                         @endforeach
-                              
-                          
                      
-                    
                                                    
                   </div>                            
               </div>      

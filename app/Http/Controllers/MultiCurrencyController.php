@@ -18,6 +18,7 @@ class MultiCurrencyController extends Controller
 {
     public function __construct()
     {
+        $this->middleware(['IsInstalled','admin_access','switch_lang']);
         $this->middleware(['permission:currency.manage']);
     }
 
@@ -38,7 +39,7 @@ class MultiCurrencyController extends Controller
 
         $auto_geo = AutoDetectGeo::first();
 
-        $currencies = CurrencyNew::with('currencyextract')->get();
+        $currencies = CurrencyNew::with('currencyextract');
 
         if ($request->ajax()) {
 
@@ -50,7 +51,7 @@ class MultiCurrencyController extends Controller
                     $html = $row->code;
 
                     if (isset($row->currencyextract) && $row->currencyextract->default_currency == 1) {
-                        $html .= " <span class='label label-success'>Default</span>";
+                        $html .= " <label role='button' class='badge badge-primary'>".__('Default')."</label>";
                     }
 
                     return $html;
@@ -87,9 +88,9 @@ class MultiCurrencyController extends Controller
         $request->validate([
             'code' => 'required|string|max:3',
         ], [
-            'code.required' => 'Currency code is required',
-            'code.string' => 'Currency code should not be numeric',
-            'code.max' => 'Currency code cannot be greater than 3',
+            'code.required' => __('Currency code is required'),
+            'code.string'   => __('Currency code should not be numeric'),
+            'code.max'      => __('Currency code cannot be greater than 3'),
         ]);
 
         try {
@@ -119,14 +120,14 @@ class MultiCurrencyController extends Controller
 
             Artisan::call('currency:update -o');
 
-            notify()->success('Added', "Currency $request->code added !");
+            notify()->success('Added', __("Currency :code added !",['code' => $request->code]));
 
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
         }
 
         return back()
-            ->with("category_message", "Currency Has Been Created");
+            ->with("category_message", __("Currency Has Been Created"));
     }
 
     /**
@@ -152,17 +153,6 @@ class MultiCurrencyController extends Controller
             ));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\multiCurrency  $multiCurrency
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(multiCurrency $multiCurrency)
-    {
-        //
-
-    }
 
     /**
      * Update the specified resource in storage.
@@ -196,11 +186,11 @@ class MultiCurrencyController extends Controller
                     'updated_at' => Carbon::now(),
                 ]);
             }
-            notify()->info("Currency $currency->code updated !", 'Updated');
+            notify()->info('Updated', __("Currency :code updated !",['code' => $currency->code]));
             return back();
 
         } else {
-            return back()->with('warning', '404 | Currency not found !');
+            return back()->with('warning', __('Currency not found !'));
         }
 
     }
@@ -212,7 +202,7 @@ class MultiCurrencyController extends Controller
 
             try {
                 Artisan::call('currency:update -o');
-                return response()->json('Auto Update Successfully !');
+                return response()->json(__('Auto Update Successfully !'));
             } catch (\Exception $e) {
                 return response()->json($e->getMessage());
             }
@@ -243,7 +233,7 @@ class MultiCurrencyController extends Controller
         currency()->delete($obj->currency->code);
 
         $obj->delete();
-        notify()->error('Currency Deleted Successfully !');
+        notify()->error(__('Currency deleted successfully !'));
         return back();
     }
 
@@ -313,7 +303,7 @@ class MultiCurrencyController extends Controller
 
         }
 
-        return back()->with('updated', 'Currency Setting Updated !');
+        return back()->with('updated', __('Currency setting updated !'));
 
     }
 

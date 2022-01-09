@@ -113,7 +113,7 @@ class SliderController extends Controller
 
         $slider->save();
 
-        return redirect()->route('slider.index')->with('added', 'Slider has been created !');
+        return redirect()->route('slider.index')->with('added', __('Slider has been created !'));
     }
 
     public function show(Category $category)
@@ -238,7 +238,7 @@ class SliderController extends Controller
 
         $slider->save();
 
-        return redirect()->route('slider.index')->with('added', 'Slider has been updated !');
+        return redirect()->route('slider.index')->with('added', __('Slider has been updated !'));
 
     }
 
@@ -253,7 +253,7 @@ class SliderController extends Controller
         $cat = Slider::find($id);
         $value = $cat->delete();
         if ($value) {
-            session()->flash("deleted", "Slider Has Been Deleted");
+            session()->flash("deleted", __("Slider has been deleted"));
             return redirect("admin/slider");
         }
     }

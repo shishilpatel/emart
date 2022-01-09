@@ -1,5 +1,5 @@
-@extends("admin.layouts.sellermaster")
-@section('title',"Shipping Item : $inv_cus->prefix$invoice->inv_no$inv_cus->postfix | ")
+@extends("admin.layouts.sellermastersoyuz")
+@section('title',__('Shipping Item - :invno',['invno' => $inv_cus->prefix$invoice->inv_no$inv_cus->postfix]))
 @section('body')
 
 @component('seller.components.breadcumb',['secondactive' => 'active'])
@@ -89,27 +89,4 @@
         </div>
     </div>
 </div>
-
-                            
-                
-                 
-            
-       
-        
-       
-		
-			
-        
-            
-
-                          
-        
-            
-                  
-               
-  
-  @endsection
-                 
-
-              
-             
+@endsection

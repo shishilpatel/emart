@@ -14,7 +14,7 @@ class FaqController extends Controller
      */
     public function index()
     {
-        abort_if(!auth()->user()->can('faq.view'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('faq.view'),403,__('User does not have the right permissions.'));
         $faqs = Faq::all();
         return view("admin.faq.index", compact("faqs"));
     }
@@ -27,7 +27,7 @@ class FaqController extends Controller
 
     public function create()
     {
-        abort_if(!auth()->user()->can('faq.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('faq.create'),403,__('User does not have the right permissions.'));
         $faq = Faq::all();
         return view("admin.faq.add", compact("faq"));
     }
@@ -40,14 +40,11 @@ class FaqController extends Controller
      */
     public function store(Request $request)
     {
-        abort_if(!auth()->user()->can('faq.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('faq.create'),403,__('User does not have the right permissions.'));
 
         $request->validate([
             "ans" => "required",
             "que" => "required"
-        ],[
-            "ans.required" => "Answer Fild is Required", 
-            "que.required" => "Question Fild is Required"
         ]);
 
         $input = $request->all();
@@ -55,7 +52,7 @@ class FaqController extends Controller
         $faq = Faq::create($input);
         $faq->save();
 
-        return back()->with('added', 'Faq has been Create');
+        return back()->with('added', __('Faq has been Create'));
     }
 
     /**
@@ -67,7 +64,7 @@ class FaqController extends Controller
     public function edit($id)
     {
 
-        abort_if(!auth()->user()->can('faq.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('faq.edit'),403,__('User does not have the right permissions.'));
         
         $faq = Faq::findOrFail($id);
 
@@ -84,14 +81,11 @@ class FaqController extends Controller
      */
     public function update(Request $request, $id)
     {
-        abort_if(!auth()->user()->can('faq.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('faq.edit'),403,__('User does not have the right permissions.'));
 
         $request->validate([
             "ans" => "required",
             "que" => "required"
-        ],[
-            "ans.required" => "Answer field is required", 
-            "que.required" => "Question field is required"
         ]);
 
         $faq = Faq::findOrFail($id);
@@ -112,11 +106,11 @@ class FaqController extends Controller
      */
     public function destroy($id)
     {
-        abort_if(!auth()->user()->can('faq.delete'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('faq.delete'),403,__('User does not have the right permissions.'));
 
         $faq = Faq::findorfail($id);
         $faq->delete();
-        session()->flash("deleted", "Faq has been deleted");
+        session()->flash("deleted", __("Faq has been deleted"));
         return redirect("admin/faq");
         
     }

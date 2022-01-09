@@ -15,7 +15,7 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        abort_if(!auth()->user()->can('invoicesetting.view'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('invoicesetting.view'),403,__('User does not have the right permissions.'));
         
         $Invoice = Invoice::first();
 
@@ -37,7 +37,7 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
-        abort_if(!auth()->user()->can('invoicesetting.update'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('invoicesetting.update'),403,__('User does not have the right permissions.'));
 
         $invoice = Invoice::first();
 
@@ -49,7 +49,7 @@ class InvoiceController extends Controller
 
             ], [
 
-            "prefix.required" => "Prefix Field is Required", "postfix.required" => "Postfix Field is Required",
+            "prefix.required" => __("Prefix Field is Required"), "postfix.required" => __("Postfix Field is Required"),
 
             ]);
 
@@ -89,7 +89,7 @@ class InvoiceController extends Controller
             $value = $obj->save();
             if ($value)
             {
-                session()->flash("updated", "Invoice has been Created for You !");
+                session()->flash("updated", __("Invoice has been created !"));
                 return back();
             }
         }
@@ -110,15 +110,15 @@ class InvoiceController extends Controller
             if ($file = $request->file('seal'))
             {
 
-                $seal  = @file_get_contents('../public/images/seal/' . $obj->seal);
+                $seal  = @file_get_contents(public_path().'/images/seal/' . $obj->seal);
                 if ($seal)
                 {
-                    unlink('../public/images/seal/' . $obj->seal);
+                    unlink(public_path().'/images/seal/' . $obj->seal);
                 }
 
                 $name = time() . $file->getClientOriginalName();
 
-                $file->move('../public/images/seal', $name);
+                $file->move(public_path().'/images/seal', $name);
 
                 $obj->seal = $name;
 
@@ -126,16 +126,16 @@ class InvoiceController extends Controller
 
             if ($file = $request->file('sign'))
             {
-                $sign = @file_get_contents('../public/images/sign/' . $obj->sign);
+                $sign = @file_get_contents(public_path().'/images/sign/' . $obj->sign);
 
                 if ($sign)
                 {
-                    unlink('../public/images/sign/' . $obj->sign);
+                    unlink(public_path().'/images/sign/' . $obj->sign);
                 }
 
                 $name = time() . $file->getClientOriginalName();
 
-                $file->move('../public/images/sign', $name);
+                $file->move(public_path().'/images/sign', $name);
 
                 $obj->sign = $name;
 
@@ -144,7 +144,7 @@ class InvoiceController extends Controller
             $value = $obj->save();
             if ($value)
             {
-                session()->flash("updated", "Invoice Setting has been Updated for You !");
+                session()->flash("updated", __("Invoice setting has been updated !"));
                 return back();
             }
         }

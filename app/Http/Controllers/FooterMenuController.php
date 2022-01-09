@@ -10,7 +10,7 @@ class FooterMenuController extends Controller
 {
     public function store(Request $request){
 
-		abort_if(!auth()->user()->can('menu.create'),403,'User does not have the right permissions.');
+		abort_if(!auth()->user()->can('menu.create'),403,__('User does not have the right permissions.'));
 
     	$request->validate(['title' => 'required']);
 
@@ -35,13 +35,13 @@ class FooterMenuController extends Controller
 
     	$footermenu->create($input);
 
-    	return back()->with('added',"$request->title menu has been created !");
+    	return back()->with('added',__(":menu menu has been created !",['menu' => $request->title]));
 
     }
 
     public function update(Request $request,$id){
 
-		abort_if(!auth()->user()->can('menu.edit'),403,'User does not have the right permissions.');
+		abort_if(!auth()->user()->can('menu.edit'),403,__('User does not have the right permissions.'));
 
     	$request->validate(['title' => 'required']);
 
@@ -67,22 +67,22 @@ class FooterMenuController extends Controller
 
 	    	$footermenu->update($input);
 
-	    	return back()->with('added',"$request->title menu has been updated !");
+	    	return back()->with('added',__(":menu menu has been updated !",['menu' => $request->title]));
 
 	    	}else{
-	    		return back()->with('404 | Menu not found !');
+	    		return back()->with(__('404 | Menu not found !'));
 	    	}
     }
 
     public function delete($id){
-		abort_if(!auth()->user()->can('menu.delete'),403,'User does not have the right permissions.');
+		abort_if(!auth()->user()->can('menu.delete'),403,__('User does not have the right permissions.'));
     	$footermenu = FooterMenu::find($id);
 
     	if(isset($footermenu)){
     		$footermenu->delete();
-    		return back()->with('success','Footer menu has been deleted !');
+    		return back()->with('success',__('Footer menu has been deleted !'));
     	}else{
-    		return back()->with('delete','404 | Footer menu not found !');
+    		return back()->with('delete',__('404 | Footer menu not found !'));
     	}
     }
 }

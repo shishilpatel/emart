@@ -4,12 +4,6 @@ namespace App\Http\Controllers;
 use App\FrontCat;
 use Illuminate\Http\Request;
 
-/*==========================================
-=            Author: Media City            =
-Author URI: https://mediacity.co.in
-=            Author: Media City            =
-=            Copyright (c) 2020            =
-==========================================*/
 
 class FrontCatController extends Controller
 {
@@ -35,7 +29,7 @@ class FrontCatController extends Controller
             $data->save();
 
             return back()
-                ->with("added", "New Product Category Has Been Added");
+                ->with("added", __("New product category has been added"));
         } else {
             if ($request->name) {
                 $name = implode(",", $request->name);
@@ -48,7 +42,7 @@ class FrontCatController extends Controller
 
             $NewProCat->update($input);
 
-            return back()->with("updated", "New Product Category Has Been Update");
+            return back()->with("updated", __("New product category has been updated"));
 
         }
     }

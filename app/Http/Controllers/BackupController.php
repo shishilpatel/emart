@@ -13,7 +13,7 @@ class BackupController extends Controller
 {
     public function get(){
 
-        abort_if(!auth()->user()->can('others.database-backup'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('others.database-backup'),403,__('User does not have the right permissions.'));
 
         Artisan::call('backup:list');
         
@@ -27,7 +27,7 @@ class BackupController extends Controller
 
     public function updatedumpPath(Request $request){
 
-        abort_if(!auth()->user()->can('others.database-backup'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('others.database-backup'),403,__('User does not have the right permissions.'));
 
         $env_keys_save = DotenvEditor::setKeys([
             'SQL_DUMP_PATH' => $request->SQL_DUMP_PATH
@@ -35,17 +35,17 @@ class BackupController extends Controller
 
         $env_keys_save->save();
 
-        notify()->success('SQL dump path updated !');
+        notify()->success(__('SQL dump path updated !'));
         return back();
 
     }
 
     public function process(Request $request){
 
-        abort_if(!auth()->user()->can('others.database-backup'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('others.database-backup'),403,__('User does not have the right permissions.'));
 
         if(env('DEMO_LOCK') == 1){
-            notify()->error("This action is disabled in demo !");
+            notify()->error(__("This action is disabled in demo !"));
             return back();
         }
        
@@ -74,7 +74,7 @@ class BackupController extends Controller
             return back();
         }
 
-        notify()->success('Backup completed !','Done !');
+        notify()->success(__('Backup completed !'),__('Done !'));
 
         return back();
 
@@ -82,15 +82,15 @@ class BackupController extends Controller
 
     public function download(Request $request, $filename){
 
-        abort_if(!auth()->user()->can('others.database-backup'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('others.database-backup'),403,__('User does not have the right permissions.'));
 
         if(env('DEMO_LOCK') == 1){
-            notify()->error("This action is disabled in demo !");
+            notify()->error(__("This action is disabled in demo !"));
             return back();
         }
 
         if (! $request->hasValidSignature()) {
-            notify()->error('Download Link is invalid or expired !');
+            notify()->error(__('Download Link is invalid or expired !'));
             return redirect(route('admin.backup.settings'));
         }
 

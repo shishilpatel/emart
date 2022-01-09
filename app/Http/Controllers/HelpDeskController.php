@@ -75,7 +75,7 @@ class HelpDeskController extends Controller
 
         }
 
-        notify()->success('Ticket has been created ! You can view status of your ticket under MyAccount');
+        notify()->success(__('Ticket has been created ! You can view status of your ticket under MyAccount'));
         return back();
     }
 
@@ -87,7 +87,7 @@ class HelpDeskController extends Controller
 
     public function viewbyadmin(Request $request)
     {
-        abort_if(!auth()->user()->can('support-ticket.manage'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('support-ticket.manage'),403,__('User does not have the right permissions.'));
 
         $data = \DB::table('help_desks')->join('users', 'users.id', '=', 'help_desks.user_id')
             ->select('help_desks.ticket_no as ticket', 'help_desks.issue_title as title', 'help_desks.status as status', 'users.name as username')
@@ -127,7 +127,7 @@ class HelpDeskController extends Controller
 
     public function updateTicket(Request $request, $id)
     {
-        abort_if(!auth()->user()->can('support-ticket.manage'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('support-ticket.manage'),403,__('User does not have the right permissions.'));
         
         $status = $request->ticketstatus;
 
@@ -148,7 +148,7 @@ class HelpDeskController extends Controller
 
     public function show($id)
     {
-        abort_if(!auth()->user()->can('support-ticket.manage'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('support-ticket.manage'),403,__('User does not have the right permissions.'));
         
         $ticket = HelpDesk::where('ticket_no', '=', $id)->first();
 
@@ -157,7 +157,7 @@ class HelpDeskController extends Controller
 
     public function replay(Request $request, $id)
     {
-        abort_if(!auth()->user()->can('support-ticket.manage'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('support-ticket.manage'),403,__('User does not have the right permissions.'));
 
         $hd = HelpDesk::where('ticket_no', '=', $id)->first();
         $newmsg = clean($request->msg);
@@ -165,11 +165,11 @@ class HelpDeskController extends Controller
 
         try {
             Mail::to($get_user_email)->send(new SendTicketReplay($hd, $newmsg));
-        } catch (\Swift_TransportException $e) {
+        } catch (\Exception $e) {
 
         }
 
-        notify()->success('Replied Successfully !');
+        notify()->success(__('Reply sent !'));
 
         return back();
     }

@@ -5,7 +5,7 @@
   Author URI: https://mediacity.co.in
   Created Date: 04/07/2020
   Description: A default RTL stylesheet for emart - Laravel Multi-Vendor Ecommerce Advanced CMS.
-  Version: 2.9
+  Version: 3.1.0
 */
 
 .inline {
@@ -891,7 +891,9 @@ element.style {}
 a {
     color: var(--text_black_color);
 }
-
+a:hover {
+    color: #0f6cb2;
+}
 .show-theme-options:focus,
 .show-theme-options:hover {
     background: var(--background_dark_blue_bg_color);
@@ -1001,7 +1003,7 @@ a {
 
 .product .product-info .name a:focus,
 .product .product-info .name a:hover {
-    color: var(--text_black_color);
+    color: #0f6cb2;
 }
 
 .product .product-info .product-price .price {

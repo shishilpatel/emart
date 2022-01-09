@@ -9,53 +9,9 @@ use App\Shipping;
 use App\ShippingWeight;
 use App\UserReview;
 use App\Wishlist;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Validator;
 
-if (!function_exists('getPlanStatus')) {
-    function getPlanStatus()
-    {
 
-        if (auth()->user()->activeSubscription && date('Y-m-d h:i:s') <= auth()->user()->activeSubscription->end_date && auth()->user()->activeSubscription->status == 1) {
 
-            return 1;
-
-        } else {
-
-            if (auth()->user()->activeSubscription) {
-
-                auth()->user()->activeSubscription()->update([
-                    'status' => 0,
-                ]);
-            }
-
-            return 0;
-        }
-
-    }
-}
-
-if (!function_exists('extended_license')) {
-    function extended_license()
-    {
-
-        if (!@file_get_contents(storage_path() . '/app/extended/extended.json')) {
-
-            return false;
-        }
-
-        $code = json_decode(@file_get_contents(storage_path() . '/app/extended/extended.json'), true);
-
-        if (!preg_match("/^(\w{8})-((\w{4})-){3}(\w{12})$/", $code)) {
-            //throw new Exception("Invalid code");
-            $logmessage = __("Invalid Purchase Code");
-            return false;
-        }
-
-        return true;
-
-    }
-}
 
 if (!function_exists('shippingprice')) {
     function shippingprice($cart)
@@ -564,10 +520,10 @@ if(!function_exists('support_check')){
         if($body->supported_until != null){
 
             if(date('Y-m-d') == date('Y-m-d',strtotime($body->supported_until))){
-                return session()->flash('support_ping',__("Your envato support is expiring for this item today ! To renew it <a class='alert-link' target='__blank' href='https://help.market.envato.com/hc/en-us/articles/207886473-Extending-and-Renewing-Item-Support'>Click here</a>"));
+                return session()->flash('support_ping',__("Your envato support is expiring for this item today ! To renew it")."<a class='alert-link' target='__blank' href='https://help.market.envato.com/hc/en-us/articles/207886473-Extending-and-Renewing-Item-Support'>".__('Click here')."</a>");
             }
             elseif(date('Y-m-d') > date('Y-m-d',strtotime($body->supported_until))){
-                return session()->flash('support_ping',__("Your envato support is expired for this item To renew it <a class='alert-link' target='__blank' href='https://help.market.envato.com/hc/en-us/articles/207886473-Extending-and-Renewing-Item-Support'>Click here</a>"));
+                return session()->flash('support_ping',__("Your envato support is expired for this item To renew it")."<a class='alert-link' target='__blank' href='https://help.market.envato.com/hc/en-us/articles/207886473-Extending-and-Renewing-Item-Support'>".__("Click here")."</a>");
             }
 
         }else{
@@ -575,6 +531,6 @@ if(!function_exists('support_check')){
         }
 
     }
-    
-}  
 
+ 
+}  

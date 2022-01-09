@@ -29,7 +29,7 @@ class WhatsappSettingsController extends Controller
         
                 $env_keys_save->save();
 
-                notify()->success('Whatsapp settings updated !');
+                notify()->success(__('Whatsapp settings updated !'));
                 return back();
             }catch(\Exception $e){
                 notify()->error($e->getMessage());

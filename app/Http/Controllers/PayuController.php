@@ -106,7 +106,7 @@ class PayuController extends Controller
 
         } else {
 
-            notify()->error("Payment not done due to some payumoney server issue !");
+            notify()->error(__("Payment not done due to some payumoney server issue !"));
             $failedTranscations = new FailedTranscations;
             $failedTranscations->txn_id = 'PAYU_FAILED_' . Str::uuid();
             $failedTranscations->user_id = Auth::user()->id;

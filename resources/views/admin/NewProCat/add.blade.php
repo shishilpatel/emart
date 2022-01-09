@@ -1,17 +1,17 @@
 @extends("admin/layouts.master-soyuz")
-@section('title','Add Categories in Front Slider Tab | ')
+@section('title',__('Add Categories in Front Slider Tab | '))
 @section("body")
 
 
   <div class="box" >
     <div class="box-header with-border">
-      <h3 class="box-title">Add categories in front slider tab </h3>
+      <h3 class="box-title">{{__('Add categories in front slider tab')}} </h3>
     </div>
           <form id="demo-form2" method="post" enctype="multipart/form-data" action="{{url('admin/NewProCat')}}" data-parsley-validate class="form-horizontal form-label-left">
                 {{csrf_field()}}
               
                <div class="form-group">
-                    <label for="name" class="col-sm-2 col-md-3 control-label">Select Categories:</label>
+                    <label for="name" class="col-sm-2 col-md-3 control-label">{{ __("Select Categories:") }}</label>
                   <ul class="col-md-5"> 
                      <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                  <div class="panel panel-default">
@@ -30,7 +30,7 @@
                         </a>
                     </h4>
                 </div>
-                <span class="help-block hidden">Choose Category And Show Heading</span>
+                <span class="help-block hidden">{{ __("Choose Category And Show Heading") }}</span>
                 @endforeach
             </div> 
 
@@ -41,13 +41,13 @@
  
               <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
-                        Status:
+                        {{ __('Status:') }}
                       </label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
                        <input id="toggle-event3" @if(!empty($NewProCat)) {{ $NewProCat->status ==1 ? "checked" : "" }} @endif type="checkbox" class="tgl tgl-skewed">
-                       <label class="tgl-btn" data-tg-off="Deactive" data-tg-on="Active" for="toggle-event3"></label>
+                       <label class="tgl-btn" data-tg-off="{{ __("Deactive") }}" data-tg-on="{{ __("Active") }}" for="toggle-event3"></label>
                        <input type="hidden" name="status" value="@if(!empty($NewProCat)) {{ $NewProCat->status }} @endif" id="status3">
-                       <small class="txt-desc">(Please Choose Status )</small>
+                       <small class="txt-desc">({{__("Please Choose Status")}})</small>
                       </div>
                 </div>
             <div>
@@ -55,7 +55,7 @@
               <div class="box-footer">
                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                   
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">{{ __("Submit") }}</button>
               </div>
             </form>
                 

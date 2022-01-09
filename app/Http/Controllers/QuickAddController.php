@@ -6,12 +6,6 @@ use Illuminate\Http\Request;
 use App\Category;
 use App\Subcategory;
 
-/*==========================================
-=            Author: Media City            =
-    Author URI: https://mediacity.co.in
-=            Author: Media City            =
-=            Copyright (c) 2020            =
-==========================================*/
 
 class QuickAddController extends Controller
 {
@@ -42,7 +36,7 @@ class QuickAddController extends Controller
     	 $cat->featured = isset($request->featured) ? "1" : "0";
          $cat->position = (Category::count()+1);
     	 $cat->save();
-    	 return back()->with('added','Category Added Succesfully !');
+    	 return back()->with('added',__('Category Added Succesfully !'));
     }
 
     public function quickAddSub(Request $request)
@@ -74,6 +68,6 @@ class QuickAddController extends Controller
     	 $cat->featured = isset($request->featured) ? "1" : "0";
 
     	 $cat->save();
-    	 return back()->with('added','Subcategory Added Succesfully !');
+    	 return back()->with('added',__('Subcategory Added Succesfully !'));
     }
 }

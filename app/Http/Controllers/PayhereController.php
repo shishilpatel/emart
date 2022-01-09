@@ -48,7 +48,7 @@ class PayhereController extends Controller
 
             if ($status['data'] == null) {
 
-                notify()->error("Payment Failed ! Try Again");
+                notify()->error(__("Payment Failed ! Try Again"));
                 $failedTranscations = new FailedTranscations();
                 $failedTranscations->txn_id = 'PAYHERE_FAILED_' . str_random(5);
                 $failedTranscations->user_id = Auth::user()->id;

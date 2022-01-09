@@ -198,16 +198,16 @@
                         <div class="products">
                           <div class="hot-deal-wrapper">
                             <div class="image">
-                              <a href="{{ $deal['producturl'] }}" title="{{ $deal['productname'][session()->get('changed_language')] ?? $deal['productname'][config('fallback_locale')] }}">
+                              <a href="{{ $deal['producturl'] }}" title="{{ $deal['productname'][session()->get('changed_language')] ?? $deal['productname'][config('translatable.fallback_locale')] }}">
                                 
                                 
                                 <img class="owl-lazy"
                                   data-src="{{ $deal['thumbnail'] }}"
-                                  alt="{{ $deal['productname'][session()->get('changed_language')] ?? $deal['productname'][config('fallback_locale')] }}">
+                                  alt="{{ $deal['productname'][session()->get('changed_language')] ?? $deal['productname'][config('translatable.fallback_locale')] }}">
 
                                 <img class="owl-lazy hover-image"
                                   src="{{ $deal['hover_thumbnail'] }}"
-                                  alt="{{ $deal['productname'][session()->get('changed_language')] ?? $deal['productname'][config('fallback_locale')] }}" />
+                                  alt="{{ $deal['productname'][session()->get('changed_language')] ?? $deal['productname'][config('translatable.fallback_locale')] }}" />
 
                               </a>
                             </div>
@@ -230,8 +230,8 @@
 
                           <div class="product-info text-left m-t-20">
                             <h3 class="name"><b><a href="{{ $deal['producturl'] }}"
-                                  title="{{ $deal['productname'][session()->get('changed_language')] ?? $deal['productname'][config('fallback_locale')] }}">
-                                  {{ $deal['productname'][session()->get('changed_language')] ?? $deal['productname'][config('fallback_locale')] }}</a></b></h3>
+                                  title="{{ $deal['productname'][session()->get('changed_language')] ?? $deal['productname'][config('translatable.fallback_locale')] }}">
+                                  {{ $deal['productname'][session()->get('changed_language')] ?? $deal['productname'][config('translatable.fallback_locale')] }}</a></b></h3>
                            
                             @if($deal['rating'] != '0')
                             <div class="">
@@ -273,7 +273,7 @@
 
                           </div>
                           <!-- /.product-info -->
-
+                         
                           <div class="cart clearfix animate-effect">
                             <div class="action">
                               <ul class="list-unstyled">
@@ -284,7 +284,7 @@
 
                                   if(!empty(Session::has('cart'))){
                                     foreach (Session::get('cart') as $scart) {
-                                      if($deal['product_type'] == 'variant' && $deal->id == $scart['variantid']){
+                                      if($deal['product_type'] == 'variant' && $deal['variantid'] == $scart['variantid']){
                                         $in_session = 1;
                                       }
                                     }
@@ -407,7 +407,7 @@
 
               <div id="details-container"></div>
 
-              <div class="product-info">
+              <div class="product-info product-x">
                 <div class="stock-container info-container">
                   <div class="row">
                     <div class="col-lg-8">
@@ -490,7 +490,7 @@
 
                       <div class="margin-left25">
                         <div class="reviews">
-                          <a href="{{ route('allreviews',$pro->id) }}"
+                          <a href="{{ route('allreviews',['id' => $pro->id, 'type' => 'v']) }}"
                             class="lnk">&nbsp;&nbsp;{{  $count =  count($pro->reviews) }} {{ __('ratings and') }}
                             {{ $reviewcount }} {{ __('reviews') }}</a>
                         </div>
@@ -984,9 +984,21 @@
 
                       </div>
 
+                      @if(isset($pro->sizechart) && $pro->size_chart != '' && $pro->sizechart->status == 1)
+                        <div class="col-lg-6">
+                          <h6 class="float-right">
+                            <a class="text-primary" data-toggle="modal" data-target="#previewModal" role="button">
+                              <i class="fa fa-bar-chart"></i> {{__("View size chart")}}
+                            </a>
+                          </h6>
+                        </div>
+                      @endif
+
                     </div>
                     <hr>
                   </div><!-- /.delivery-container -->
+                 
+                 
 
                   <!-- ============================ small-screen start ========================================= -->
 
@@ -1201,7 +1213,7 @@
     
                     <hr>
                     <a title="View all reviews" class="font-weight-bold pull-right"
-                      href="{{ route('allreviews',$pro->id) }}">{{ __('staticwords.vall') }}</a>
+                      href="{{ route('allreviews',['id' => $pro->id, 'type' => 'v']) }}">{{ __('staticwords.vall') }}</a>
                     <h5 class="title">{{ __('staticwords.recReviews') }}</h5>
     
                     <hr>
@@ -1976,20 +1988,22 @@
                 $name = array();
                 $var_name;
                 $newarr = array();
-                for($i = 0; $i<$var_name_count; $i++){ $var_id=$orivar['main_attr_id'][$i];
+
+                for($i = 0; $i<$var_name_count; $i++){ 
+
+                  $var_id=$orivar['main_attr_id'][$i];
                   $var_name[$i]=$orivar['main_attr_value'][$var_id];
                   $name[$i]=App\ProductAttributes::where('id',$var_id)->first();
 
-                  }
+                }
 
 
-                  try{
-                  $url =
-                  url('details').'/'.$relproduct->id.'?'.$name[0]['attr_name'].'='.$var_name[0].'&'.$name[1]['attr_name'].'='.$var_name[1];
-                  }catch(Exception $e)
-                  {
-                  $url = url('details').'/'.$relproduct->id.'?'.$name[0]['attr_name'].'='.$var_name[0];
+                  try {
+                      $url = url('details') . '/'. str_slug($relproduct->name,'-')  .'/' . $relproduct->id . '?' . $name[0]['attr_name'] . '=' . $var_name[0] . '&' . $name[1]['attr_name'] . '=' . $var_name[1];
+                  } catch (\Exception $e) {
+                      $url = url('details') . '/' .str_slug($relproduct->name,'-')  .'/' . $relproduct->id . '?' . $name[0]['attr_name'] . '=' . $var_name[0];
                   }
+
                   @endphp
 
                   <div class="item item-carousel">
@@ -2178,7 +2192,7 @@
 
                   @else
 
-                  @foreach($pro->subcategory->products as $relpro)
+                  @foreach($pro->subcategory->products()->where('status','1')->get() as $relpro)
                   @if(isset($pro->subcategory->products))
                   @foreach($relpro->subvariants as $orivar)
 
@@ -2197,12 +2211,10 @@
                     }
 
 
-                    try{
-                    $url =
-                    url('details').'/'.$relpro->id.'?'.$name[0]['attr_name'].'='.$var_name[0].'&'.$name[1]['attr_name'].'='.$var_name[1];
-                    }catch(\Exception $e)
-                    {
-                    $url = url('details').'/'.$relpro->id.'?'.$name[0]['attr_name'].'='.$var_name[0];
+                    try {
+                        $url = url('details') . '/'. str_slug($relpro->name,'-')  .'/' . $relpro->id . '?' . $name[0]['attr_name'] . '=' . $var_name[0] . '&' . $name[1]['attr_name'] . '=' . $var_name[1];
+                    } catch (\Exception $e) {
+                        $url = url('details') . '/' .str_slug($relpro->name,'-')  .'/' . $relpro->id . '?' . $name[0]['attr_name'] . '=' . $var_name[0];
                     }
                     @endphp
 
@@ -2493,6 +2505,30 @@
     </div>
   </div>
 
+  <!-- Size chart modal -->
+    @if(isset($pro->sizechart) && $pro->size_chart != '' && $pro->sizechart->status == 1)
+      <div class="modal fade" id="previewModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="p-2 modal-title">
+                    {{__('Preview')}}
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body previewTable">
+                @include('admin.sizechart.previewtable',['template' => $pro->sizechart]) 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger-rgba" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+        </div>
+      </div>
+    @endif
+  <!-- size chart model end -->
 
   @endsection
   @section('script')

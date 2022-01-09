@@ -46,6 +46,10 @@ return [
 		'manual_payment' => [
     		'path' => public_path().'/images/manual_payment',
     		'name' => 'manual_payment' // as url prefix
+    	],
+		'simple_products_gallery' => [
+    		'path' => public_path().'/images/simple_products/gallery',
+    		'name' => 'simple_products_gallery' // as url prefix
     	]
     ],
 

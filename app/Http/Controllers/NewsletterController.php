@@ -15,12 +15,12 @@ class NewsletterController extends Controller
                 if (!Newsletter::isSubscribed($request->email))
                 {
                     Newsletter::subscribePending($request->email);
-                    notify()->success('Thanks For Subscribe !');
+                    notify()->success(__('Thanks For Subscribe !'));
                     return back();
                 }
                 else
                 {
-                    notify()->error('You are already in our subscription list !');
+                    notify()->error(__('You are already in our subscription list !'));
                     return back();
                 }
            }catch(\Exception $e){
@@ -30,7 +30,7 @@ class NewsletterController extends Controller
         }
         else
         {
-            notify()->error('Mailchimp API keys not updated !');
+            notify()->error(__('Mailchimp API keys not updated !'));
             return back();
         }
 

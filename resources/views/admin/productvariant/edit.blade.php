@@ -1,13 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Edit Product Variant | ')
-@section('stylesheet')
-<style>
-    .image_size {
-        height: 80px;
-        width: 200px;
-    }
-</style>
-@endsection
+@section('title',__('Edit Product Variant | '))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -20,8 +12,9 @@
 @slot('button')
 <div class="col-md-6">
     <div class="widgetbar">
-        <a href="{{ route('add.var',$vars->products->id) }}" class="btn btn-primary-rgba"><i
-                class="feather icon-arrow-left mr-2"></i>{{ __("Back")}}</a>
+        <a href="{{ route('add.var',$vars->products->id) }}" class="btn btn-primary-rgba">
+            <i class="feather icon-arrow-left mr-2"></i>{{ __("Back")}}
+        </a>
     </div>
 </div>
 @endslot
@@ -38,7 +31,7 @@
             <div class="alert alert-danger" role="alert">
                 @foreach($errors->all() as $error)
                 <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true" style="color:red;">&times;</span></button></p>
+                        <span aria-hidden="true">&times;</span></button></p>
                 @endforeach
             </div>
             @endif
@@ -49,7 +42,7 @@
                 $row = App\AddSubVariant::withTrashed()->where('pro_id',$vars->pro_id)->get();
                 @endphp
                 <div class="card-header">
-                    <h5 class="card-box"> Edit Product Variant For <b>{{ $vars->products->name }}</b></h5>
+                    <h5 class="card-box"> {{__("Edit Product Variant For")}} <b>{{ $vars->products->name }}</b></h5>
                 </div>
                 
                 <!-- card body started -->
@@ -227,7 +220,7 @@
 
                             <div class="col-md-12 mt-3 form-group">
 
-                                <label>Set Default: <input {{ $vars->def ==1 ? "checked" : "" }} type="checkbox"
+                                <label>{{__('Set Default:')}} <input {{ $vars->def ==1 ? "checked" : "" }} type="checkbox"
                                         name="def"></label>
                             </div>
 
@@ -239,12 +232,14 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="text-dark" for="">Edit Additional Price For This Variant :</label>
+                                        <label class="text-dark" for="">
+                                            {{__('Edit Additional Price For This Variant :')}}
+                                        </label>
                                         <input required placeholder="Enter Price ex 499.99"
                                             type="number" value="{{ $vars->price  }}" step="0.01" class="form-control"
                                             name="price">
-                                        <small class="help-block">Please enter Price In Positive or Negative or
-                                            zero<br></small>
+                                        <small class="help-block">
+                                            {{ __("Please enter Price In Positive or Negative or zero") }}<br></small>
                                         <!-- ------------------------------------ -->
                                         <div class="card bg-success-rgba m-b-30">
                                             <div class="card-body">
@@ -253,9 +248,7 @@
                                                         <h5 class="card-title text-primary mb-1"><i
                                                                 class="feather icon-alert-circle"></i> {{ __('Ex. :') }}
                                                         </h5>
-                                                        <p class="mb-0 text-primary font-14">If you enter +10 and
-                                                            product price is 100 than price will be 110<br> OR <br>If
-                                                            you enter -10 and product price is 100 than price will be 90
+                                                        <p class="mb-0 text-primary font-14">{{ __("If you enter +10 and product price is 100 than price will be 110") }}<br> {{__('OR')}} <br>{{__("If you enter -10 and product price is 100 than price will be 90")}}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -267,7 +260,9 @@
 
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label class="text-dark" for="weight">Weight:</label>
+                                        <label class="text-dark" for="weight">
+                                            {{__('Weight:')}}
+                                        </label>
                                         <input type="number" step=0.01 name="weight" class="form-control"
                                             value="{{ $vars->weight }}" placeholder="0.00">
                                     </div>
@@ -277,7 +272,7 @@
                                     <div class="form-group">
                                         <label class="text-dark" for="weight"></label>
                                         <select name="w_unit" class="select2 form-control">
-                                            <option value="">Please Choose</option>
+                                            <option value="">{{ __("Please Choose") }}</option>
                                             @php
                                             $unit = App\Unit::find(1);
                                             @endphp
@@ -305,19 +300,19 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="text-dark" for="">Edit Stock: <small><b>[ Current Stock:
+                                        <label class="text-dark" for=""> {{__("Edit Stock:")}} <small><b>[ {{__("Current Stock:")}}
                                                     {{ $vars->stock }}</b>
                                                 ]</small></label>
                                         <input data-placement="bottom" id="stock" data-toggle="popover"
-                                            data-trigger="focus" data-title="Need help?"
-                                            data-content="It will add stock in existing stock. For example you enter 10 and existing stock is 20 than total stock will be 30."
+                                            data-trigger="focus" data-title="{{ __("Need help?") }}"
+                                            data-content="{{ __('It will add stock in existing stock. For example you enter 10 and existing stock is 20 than total stock will be 30.') }}"
                                             type="text" value="" name="stock" class="form-control">
                                     </div>
                                 </div>
 
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="text-dark" for="">Edit Min Order Qty:</label>
+                                        <label class="text-dark" for="">{{__("Edit Min Order Qty")}}:</label>
                                         <input type="text" value="{{ $vars->min_order_qty }}" name="min_order_qty"
                                             class="form-control">
                                     </div>
@@ -325,7 +320,7 @@
 
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="text-dark" for="">Edit Max Order Qty:</label>
+                                        <label class="text-dark" for="">{{__("Edit Max Order Qty")}}:</label>
                                         <input type="text" value="{{ $vars->max_order_qty }}" name="max_order_qty"
                                             class="form-control">
                                     </div>
@@ -342,12 +337,13 @@
 
                             <br>
                             <div class="alert alert-warning">
-                                <p><i class="fa fa-info-circle" aria-hidden="true"></i> Important</p>
+                                <p><i class="fa fa-info-circle" aria-hidden="true"></i> {{__("Important")}}</p>
 
                                 <ul>
-                                    <li>Altleast two variant image is required !</li>
-                                    <li>Default image will be <b><i>Image 1</i></b> later you can change default image
-                                        in edit variant section</li>
+                                    <li>
+                                        {{__("Altleast two variant image is required !")}}
+                                    </li>
+                                    <li>{{__("Default image will be")}} <b><i>Image 1</i></b> {{ __("later you can change default image in edit variant section") }}</li>
                                 </ul>
                             </div>
 
@@ -378,7 +374,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <button cusid="{{ $vars->variantimages['id'] }}" id="btn-single"
-                                                    value="{{ $vars->variantimages['image1'] }}" title="Delete this?"
+                                                    value="{{ $vars->variantimages['image1'] }}" title="{{  __('Delete this?') }}"
                                                     class="btn btn-sm btn-block btn-danger-rgba btn-ema {{ $vars->variantimages['image1'] != $vars->variantimages['main_image'] ? '' : 'd-none' }}"
                                                     type="button">
                                                     <i class="fa fa-trash-o"></i>
@@ -387,7 +383,7 @@
 
                                             <div class="col-md-12">
                                                 <button disabled="disabled" id="btn-dis1"
-                                                    title="You cannot delete Default Image"
+                                                    title="{{ __("You cannot delete Default Image") }}"
                                                     class="btn btn-sm btn-block btn-danger-rgba btn-ema {{ $vars->variantimages['image1'] == $vars->variantimages['main_image'] ? "" : 'd-none' }}"
                                                     type="button">
                                                     <i class="fa fa-trash-o"></i>
@@ -433,7 +429,7 @@
     
                                                 <div class="col-md-12">
                                                     <button cusid="{{ $vars->variantimages['id'] }}" id="btn-single2"
-                                                        value="{{ $vars->variantimages['image2'] }}" title="Delete this?"
+                                                        value="{{ $vars->variantimages['image2'] }}" title="{{  __('Delete this?') }}"
                                                         class="btn btn-sm btn-block btn-danger-rgba btn-ema {{ $vars->variantimages['image2'] != $vars->variantimages['main_image'] ? '' : 'd-none' }}"
                                                         type="button">
                                                         <i class="fa fa-trash-o"></i>
@@ -484,7 +480,7 @@
     
                                                 <div class="col-md-12">
                                                     <button cusid="{{ $vars->variantimages['id'] }}" id="btn-single3"
-                                                        value="{{ $vars->variantimages['image3'] }}" title="Delete this?"
+                                                        value="{{ $vars->variantimages['image3'] }}" title="{{  __('Delete this?') }}"
                                                         class="btn btn-sm btn-block btn-danger-rgba btn-ema {{ $vars->variantimages['image3'] != $vars->variantimages['main_image'] ? '' : 'd-none' }}"
                                                         type="button">
                                                         <i class="fa fa-trash-o"></i>
@@ -493,7 +489,7 @@
     
                                                 <div class="col-md-12">
                                                     <button id="btn-dis3" disabled="disabled"
-                                                        title="You cannot delete Default Image !"
+                                                        title="{{  __('You cannot delete Default Image !') }}"
                                                         class="btn btn-sm btn-block btn-danger-rgba {{ $vars->variantimages['image3'] == $vars->variantimages['main_image'] ? '' : 'd-none' }}"
                                                         type="button">
                                                         <i class="fa fa-trash-o"></i>
@@ -537,7 +533,7 @@
 
                                             <div class="col-md-12">
                                                 <button cusid="{{ $vars->variantimages['id'] }}" id="btn-single4"
-                                                    value="{{ $vars->variantimages['image4'] }}" title="Delete this?"
+                                                    value="{{ $vars->variantimages['image4'] }}" title="{{  __('Delete this?') }}"
                                                     class="btn btn-sm btn-block btn-danger-rgba btn-ema {{ $vars->variantimages['image4'] != $vars->variantimages['main_image'] ? '' : 'd-none' }}"
                                                     type="button">
                                                     <i class="fa fa-trash-o"></i>
@@ -546,7 +542,7 @@
 
                                             <div class="col-md-12">
                                                 <button id="btn-dis4" disabled="disabled"
-                                                    title="You cannot delete Default Image !"
+                                                    title="{{ __("You cannot delete Default Image !") }}"
                                                     class="btn btn-sm btn-block btn-danger-rgba {{ $vars->variantimages['image4'] == $vars->variantimages['main_image'] ? "" : 'd-none' }}"
                                                     type="button">
                                                     <i class="fa fa-trash-o"></i>
@@ -595,7 +591,7 @@
 
                                             <div class="col-md-12">
                                                 <button cusid="{{ $vars->variantimages['id'] }}" id="btn-single5"
-                                                    value="{{ $vars->variantimages['image5'] }}" title="Delete this?"
+                                                    value="{{ $vars->variantimages['image5'] }}" title="{{ __("Delete this?") }}"
                                                     class="btn btn-sm btn-block btn-danger-rgba btn-ema {{ $vars->variantimages['image5'] != $vars->variantimages['main_image'] ? '' : 'd-none' }}"
                                                     type="button">
                                                     <i class="fa fa-trash-o"></i>
@@ -604,7 +600,7 @@
 
                                             <div class="col-md-12">
                                                 <button id="btn-dis5" disabled="disabled"
-                                                    title="You cannot delete Default Image !"
+                                                    title="{{ __("You cannot delete Default Image !") }}"
                                                     class="btn btn-sm btn-block btn-danger-rgba {{ $vars->variantimages['image5'] == $vars->variantimages['main_image'] ? '' : 'd-none' }}"
                                                     type="button">
                                                     <i class="fa fa-trash-o"></i>
@@ -657,7 +653,7 @@
 
                                                 <div class="col-md-12">
                                                     <button cusid="{{ $vars->variantimages['id'] }}" id="btn-single6"
-                                                        value="{{ $vars->variantimages['image6'] }}" title="Delete this?"
+                                                        value="{{ $vars->variantimages['image6'] }}" title="{{  __('Delete this?') }}"
                                                         class="btn btn-sm btn-block btn-danger-rgba btn-ema {{ $vars->variantimages['image6'] != $vars->variantimages['main_image'] ? '' : 'd-none' }}"
                                                         type="button">
                                                         <i class="fa fa-trash-o"></i>
@@ -666,7 +662,7 @@
 
                                                 <div class="col-md-12">
                                                     <button id="btn-dis6" disabled="disabled"
-                                                        title="You cannot delete Default Image !"
+                                                        title="{{  __('You cannot delete Default Image !') }}"
                                                         class="btn btn-sm btn-block btn-danger-rgba {{ $vars->variantimages['image6'] == $vars->variantimages['main_image'] ? '' : 'd-none' }}"
                                                         type="button">
                                                         <i class="fa fa-trash-o"></i>
@@ -687,7 +683,7 @@
                                    
                                     <div class="row">
                                         <div class="col-md-8">
-                                            <label>Select Default Image: </label>
+                                            <label>{{__("Select Default Image:")}} </label>
                                             <select name="defimage" id="defimage" class="form-control select2">
 
                                                 @if($vars->variantimages && $vars->variantimages['image1'] != null)
@@ -743,7 +739,7 @@
 
                     <div class="col-md-12">
                         <button @if(env('DEMO_LOCK') == 0) type="submit" @else disabled=""
-                            title="This action is disabled in demo !" @endif
+                            title="{{ __("This action is disabled in demo !") }}" @endif
                             class="pull-right btn btn-md btn-primary-rgba"><i class="feather icon-save"></i>
                             {{__("Update variant")}}
                         </button>

@@ -1,5 +1,5 @@
 @extends('admin.layouts.sellermastersoyuz')
-@section('title','All Subcategories | ')
+@section('title',__('All Subcategories'))
 @section('body')
 
 @component('seller.components.breadcumb',['secondactive' => 'active'])
@@ -31,10 +31,6 @@
               
 			  <div class="card-body">
                   
-                 
-        
-                  
-               
                   <div class="table-responsive">
 					<table id="subcats" class="table table-bordered table-striped">
 						<thead>
@@ -95,47 +91,3 @@
 		});
 	</script>
 @endsection
-                  
-          
-                  
-    
-    
-          
-                  
-    
-    
-                  
-                  
-                
-    
-                
-                                      
-
-
-          
-
-            
-          
-              
-
-
-
-
-            
-
-            
-            
-            
-  
-                 
-  
-               
-  
-          
-    
-             
-            
-
-          
-
-

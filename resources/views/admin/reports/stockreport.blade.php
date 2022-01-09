@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Stock reports all products')
+@section('title',__('Stock reports all products'))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -19,7 +19,9 @@
         <div class="col-md-12">
             <div class="card m-b-30">
                 <div class="card-header">
-                    <h5 class="card-title">Stock Report</h5>
+                    <h5 class="card-title">
+                        {{__("Stock Report")}}
+                    </h5>
                 </div>
                 <div class="card-body">
                     <ul class="nav nav-tabs custom-tab-line mb-3" id="defaultTabLine" role="tablist">
@@ -36,10 +38,12 @@
                             <table  id="stock_report_vp" class="w-100 table table-striped table-bordered">
                                 <thead>
                                     <th>#</th>
-                                    <th>Product name</th>
-                                    <th>Variant detail</th>
-                                    <th>Store name</th>
-                                    <th>Stock</th>
+                                    <th>{{ __("Product name") }}</th>
+                                    <th>{{ __("Variant detail") }}</th>
+                                    <th>{{ __('Store name') }}</th>
+                                    <th>
+                                        {{__("Stock")}}
+                                    </th>
                                 </thead>
                             </table>
                         </div>
@@ -47,9 +51,13 @@
                             <table  id="stock_report_sp" class="w-100 table table-striped table-bordered">
                                 <thead>
                                     <th>#</th>
-                                    <th>Product name</th>
-                                    <th>Store name</th>
-                                    <th>Stock</th>
+                                    <th>{{ __("Product name") }}</th>
+                                    <th>
+                                        {{__("Store name")}}
+                                    </th>
+                                    <th>
+                                        {{__("Stock")}}
+                                    </th>
                                 </thead>
                             </table>
                         </div>

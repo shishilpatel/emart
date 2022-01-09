@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\InvoiceDownload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Nwidart\Modules\Facades\Module;
 
 class PreorderController extends Controller
 {
@@ -57,6 +58,14 @@ class PreorderController extends Controller
                     return $payment->payment($order_id = $order->order->order_id.'_pre',$amount = round($order->remaning_amount,2),$name = $order->order->user->name,$email = $order->order->user->email,$phone = $order->order->user->mobile,$purpose = "Preorder remaining payment",url('/'));
                 }
 
+                if($order->order->payment_method == 'DPO PAYMENT' && Module::has('DPOPayment') && Module::find('DPOPayment')->isEnabled()){
+
+
+                    $dpo = new \Modules\DPOPayment\Http\Controllers\DPOPaymentController;
+
+                    return $dpo->createToken($order_id = $order->order->order_id.'_pre',$amount = round($order->remaning_amount,2),$name = $order->order->user->name,$email = $order->order->user->email,$phone = $order->order->user->mobile,$purpose = "Preorder remaining payment",url('/'));
+                }
+
             }else{
                 notify()->error(__('The order is not preorder !'));
                 return redirect('/');
@@ -100,9 +109,9 @@ class PreorderController extends Controller
         session()->forget('order_id');
         session()->forget('error_url');
 
-        $status = 'Order #'.$order->order['order_id']. 'payment successfully !';
+        $status = __("Order #:order placed successfully !",['order' => $order->order['order_id']]);
 
-        notify()->success("$status");
+        notify()->success($status);
 
         return redirect()->route('order.done', ['orderid' => $order->order->order_id]);
 

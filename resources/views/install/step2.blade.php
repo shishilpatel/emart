@@ -7,7 +7,6 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{{ url('css/bootstrap.min.css') }}" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ url('css/vendor/shards.min.css') }}">
     <link rel="stylesheet" href="{{url('css/font-awesome.min.css')}}">
     <link rel="stylesheet" href="{{ url('css/install.css') }}">
     <link rel="stylesheet" href="{{ url('vendor/mckenziearts/laravel-notify/css/notify.css') }}">
@@ -105,8 +104,7 @@
     <!-- Essential JS UI widget -->
     <script src="{{ url('front/vendor/js/ej.web.all.min.js') }}"></script>
     <script src="{{ url('front/vendor/js/popper.min.js') }}"></script>
-   
-    <script src="{{ url('front/vendor/js/shards.min.js') }}"></script>
+  
     <script>var baseUrl= "<?= url('/') ?>";</script>
     
      @notify_js

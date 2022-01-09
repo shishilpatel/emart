@@ -13,21 +13,21 @@
   <div class="modal-dialog modal-sm">
       <div class="modal-content">
           <div class="modal-header">
-              <h5 class="modal-title" id="exampleSmallModalLabel">Delete</h5>
+              <h5 class="modal-title" id="exampleSmallModalLabel">{{ __("DELETE") }}</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
               </button>
           </div>
           <div class="modal-body">
-          <h4 class="modal-heading">Are You Sure ?</h4>
-          <p>Do you really want to delete currency <b>{{ $code }}</b>? This process cannot be undone.</p>
+          <h4 class="modal-heading">{{ __("Are You Sure ?") }}</h4>
+          <p>{{__("Do you really want to delete currency")}} <b>{{ $code }}</b> {{ __('? This process cannot be undone.') }}</p>
           </div>
           <div class="modal-footer">
               <form method="post" action="{{route('multiCurrency.destroy',$currencyextract['id'])}}" class="pull-right">
                   @method('delete')
                   @csrf
-                  <button type="reset" class="btn btn-secondary" data-dismiss="modal">No</button>
-                  <button type="submit" class="btn btn-primary">Yes</button>
+                  <button type="reset" class="btn btn-secondary" data-dismiss="modal">{{ __("No") }}</button>
+                  <button type="submit" class="btn btn-primary">{{ __("YES") }}</button>
               </form>
           </div>
       </div>
@@ -57,8 +57,8 @@
 
                     <div class="col-md-12">
                       <div class="form-group">
-                        <label class="text-dark">Currency Code: <span class="text-danger">*</span></label>
-                        <input readonly placeholder="eg. USD" value="{{ $code }}" required class="form-control width100"
+                        <label class="text-dark">{{__("Currency Code:")}} <span class="text-danger">*</span></label>
+                        <input readonly placeholder="{{__("eg.")}} USD" value="{{ $code }}" required class="form-control width100"
                           type="text" name="code">
                       </div>
                     </div>
@@ -67,8 +67,10 @@
                     <div class="col-md-12">
                       <br>
                       <div class="form-group">
-                        <label class="text-dark">Additional Charge:</label>
-                        <input placeholder="eg. 0.50" min="0" step="0.01" value="{{ $currencyextract['add_amount'] }}"
+                        <label class="text-dark">
+                          {{__("Additional Charge:")}}
+                        </label>
+                        <input placeholder="{{__("eg.")}} 0.50" min="0" step="0.01" value="{{ $currencyextract['add_amount'] }}"
                           class="form-control width100" type="number" name="add_amount">
                       </div>
                     </div>
@@ -76,14 +78,14 @@
                     <div class="col-md-12">
                       <br>
                       <div class="form-group">
-                        <label class="text-dark">Currency Position: <span class="text-danger">*</span></label>
+                        <label class="text-dark">{{__("Currency Position:")}} <span class="text-danger">*</span></label>
                         <br>
                         <select name="position" id="position" class="form-control">
-                            <option value="">Please select currency position</option>
-                            <option {{ $currencyextract['position'] == 'l' ? "selected" : "" }} value="l">Left side currency icon</option>
-                            <option {{ $currencyextract['position'] == 'r' ? "selected" : "" }} value="r">Right side currency icon</option>
-                            <option {{ $currencyextract['position'] == 'ls' ? "selected" : "" }} value="ls">Left side with space currency icon</option>
-                            <option {{ $currencyextract['position'] == 'rs' ? "selected" : "" }} value="rs">Right side with space currency icon</option>
+                            <option value="">{{ __("Please select currency position") }}</option>
+                            <option {{ $currencyextract['position'] == 'l' ? "selected" : "" }} value="l">{{ __("Left side currency icon") }}</option>
+                            <option {{ $currencyextract['position'] == 'r' ? "selected" : "" }} value="r">{{ __("Right side currency icon") }}</option>
+                            <option {{ $currencyextract['position'] == 'ls' ? "selected" : "" }} value="ls">{{ __("Left side with space currency icon") }}</option>
+                            <option {{ $currencyextract['position'] == 'rs' ? "selected" : "" }} value="rs">{{ __("Right side with space currency icon") }}</option>
                         </select>
                       </div>
                     </div>
@@ -91,7 +93,7 @@
                     <div class="col-md-12">
                       <br>
                       <div class="form-group">
-                        <label class="text-dark">Currency Symbol: <span class="text-danger">*</span></label>
+                        <label class="text-dark">{{__("Currency Symbol:")}} <span class="text-danger">*</span></label>
                         <br>
                         <div class="input-group">
                           <input id="iconvalue{{ $id }}" name="currency_symbol" type="text" class="form-control" required value="{{ $currencyextract['currency_symbol'] }}">
@@ -106,7 +108,7 @@
                       <br>
                       <div class="form-group">
                       <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> {{ __("Update")}}</button>
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>  
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('Close') }}</button>  
                     
                       </div>
                     </div>

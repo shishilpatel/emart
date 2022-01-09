@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Payout Detail | ')
+@section('title',__('Payout Detail | '))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -21,18 +21,20 @@
 @endcomponent
 <div class="contentbar">
   <div class="row">
-    @if ($errors->any())
-    <div class="alert alert-danger" role="alert">
-      @foreach($errors->all() as $error)
-      <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach
-    </div>
-    @endif
+    
     <div class="col-lg-12">
+      @if ($errors->any())
+      <div class="alert alert-danger" role="alert">
+        @foreach($errors->all() as $error)
+        <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button></p>
+        @endforeach
+      </div>
+      @endif
+
       <div class="card m-b-30">
         <div class="card-header">
-          <h5 class="box-title"><i class="fa fa-globe"></i> Payout Slip for Order Item
+          <h5 class="box-title"><i class="fa fa-globe"></i> {{__("Payout Slip for Order Item")}}
             #{{ $inv_cus->prefix.$order->singleorder->inv_no.$inv_cus->postfix }}
             <small class="pull-right">Date: {{ date('d/m/Y',strtotime($order->created_at)) }}</small></h5>
         </div>
@@ -44,7 +46,9 @@
             <div class="col-md-6 col-lg-6 col-xl-4">
               <div class="card m-b-30">
                 <div class="card-body">
-                  <h5 class="card-title font-18">From</h5>
+                  <h5 class="card-title font-18">
+                    {{__("From")}}
+                  </h5>
                   <p class="card-text">
                     <strong>{{ $genrals_settings->project_name }}</strong><br>{{ $genrals_settings->address }}</p>
                   <p class="card-text"><b>Phone :</b> {{ $genrals_settings->mobile }}</p>
@@ -59,7 +63,9 @@
                   @php
                   $seller = App\User::withTrashed()->findorfail($order->sellerid);
                   @endphp
-                  <h5 class="card-title font-18">To</h5>
+                  <h5 class="card-title font-18">
+                    {{__('To')}}
+                  </h5>
 
                   <p class="card-text">
                     <strong><b>{{$seller->name}}</b></strong><br>{{ $seller->store->address }}<br>{{ $seller->store->city['name'] }},
@@ -75,11 +81,11 @@
               <div class="card m-b-30">
                 <div class="card-body">
 
-                  <h5 class="card-title font-18">Invoice
+                  <h5 class="card-title font-18">{{__('Invoice')}}
                     #{{ $inv_cus->prefix.$order->singleorder->inv_no.$inv_cus->postfix }}</h5>
-                  <p class="card-text"><b>Order ID :
+                  <p class="card-text"><b>{{__("Order ID :")}}
                     </b>#{{ $inv_cus->order_prefix.$order->singleorder->order->order_id }}</p>
-                  <p class="card-text"><b>Payment Due</b> </p>
+                  <p class="card-text"><b>{{ __("Payment Due") }}</b> </p>
 
                 </div>
               </div>
@@ -95,10 +101,12 @@
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>Item</th>
-                    <th>Qty</th>
-                    <th>Delivered at</th>
-                    <th>Grand Total</th>
+                    <th>{{ __('Item') }}</th>
+                    <th>{{ __("Qty") }}</th>
+                    <th>{{  __("Delivered at") }}</th>
+                    <th>
+                      {{__("Grand Total")}}
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -114,7 +122,7 @@
                       </small>
 
                       <br>
-                      <small><b>Sold By:</b> {{$order->singleorder->variant->products->store->name}}</small></td>
+                      <small><b>{{ __("Sold By:") }}</b> {{$order->singleorder->variant->products->store->name}}</small></td>
                     @else
                     <td><img height="50px"
                         src="{{url('images/simple_products/'.$order->singleorder->simple_product->thumbnail)}}"
@@ -124,7 +132,7 @@
                       <b>{{$order->singleorder->simple_product->product_name}}</b>
 
                       <br>
-                      <small><b>Sold By:</b> {{$order->singleorder->simple_product->store->name}}</small>
+                      <small><b>{{ __("Sold By:") }}</b> {{$order->singleorder->simple_product->store->name}}</small>
                     </td>
                     @endif
                     <td>{{$order->singleorder->qty}}</td>
@@ -144,25 +152,28 @@
           <div class="row">
             <!-- accepted payments column -->
             <div class="col-md-6">
-              <p class="lead">Payment Methods:</p>
+              <p class="lead">
+                {{__("Payment Methods:")}}
+              </p>
 
 
               <img src="{{ url('images/paypal.png') }}" alt="Paypal">
               <img width="50px" src="{{ url('images/bankt.png') }}" alt="bank_transfer" title="Bank Transfer">
               <hr>
               <div class="callout callout-success no-shadow">
-                <h5><i class="fa fa-info-circle"></i> Note:</h5>
+                <h5><i class="fa fa-info-circle"></i>{{ __('Note:') }}</h5>
                 @if($order->singleorder->order->handlingcharge ==0)
                 @if($order->singleorder->order->payment_method !='COD')
-                <li>Handling fee {{ $order->paid_in }} {{ sprintf("%.2f",$order->singleorder->order->handlingcharge) }}
-                  already paid out in your account
+                <li>{{__("Handling fee")}} {{ $order->paid_in }} {{ sprintf("%.2f",$order->singleorder->order->handlingcharge) }} {{__("already paid out in your account")}}
                 </li>
                 @endif
                 @endif
-                <li>Paypal payout fee additionally applied by Paypal at Transcation time</li>
-                <li>Please refer to this for payout fees for following payment gatways:
+                <li>
+                  {{__('Paypal payout fee additionally applied by Paypal at Transcation time.')}}
+                </li>
+                <li>{{__("Please refer to this for payout fees for following payment gatways:")}}
                   <a title="Click to open" target="_blank"
-                    href="https://developer.paypal.com/docs/payouts/reference/fees/">Paypal Payouts</a></li>
+                    href="https://developer.paypal.com/docs/payouts/reference/fees/">{{ __("Paypal Payouts") }}</a></li>
 
 
                 </li>
@@ -177,7 +188,7 @@
               <div class="table-responsive">
                 <table class="table">
                   <tr>
-                    <th class="width50">Subtotal:</th>
+                    <th class="width50">{{ __("Subtotal:") }}</th>
                     <td>+{{ sprintf("%.2f", $order->subtotal) }} <i
                         class="cur_sym {{ $defCurrency->currency_symbol }}"></i>
                       <br>
@@ -186,13 +197,17 @@
                   </tr>
 
                   <tr>
-                    <th>Tax </th>
+                    <th>
+                      {{__("Tax:")}}
+                    </th>
                     <td>+ {{ sprintf("%.2f",$order->tax) }} <i class="cur_sym {{ $defCurrency->currency_symbol }}"></i>
                     </td>
                   </tr>
 
                   <tr>
-                    <th>Shipping </th>
+                    <th>
+                      {{__("Shipping:")}}
+                    </th>
                     <td>+ {{ sprintf("%.2f",$order->shipping) }} <i
                         class="cur_sym {{ $defCurrency->currency_symbol }}"></i>
                     </td>
@@ -205,7 +220,9 @@
                   </tr>
 
                   <tr>
-                    <th>Commission:</th>
+                    <th>
+                      {{__("Commission:")}}
+                    </th>
                     <td>- @php
                       $commissions = App\CommissionSetting::all();
                       $commissionRate = 0;
@@ -307,7 +324,9 @@
                       @endphp </td>
                   </tr>
                   <tr>
-                    <th>Payable Amount:</th>
+                    <th>
+                      {{__("Payable Amount:")}}
+                    </th>
                     @php
 
 
@@ -334,7 +353,7 @@
                 $amount = Crypt::encrypt(round($order->orderamount-$commissionRate,2));
                 @endphp
                 <input type="hidden" name="amount" value="{{ $amount }}">
-                <button title="Click to pay via Paypal" class="btn btn-block btn-primary-rgba"><i
+                <button title="{{ __("Click to pay via Paypal") }}" class="btn btn-block btn-primary-rgba"><i
                     class="fa fa-cc-paypal" aria-hidden="true"></i>
                   {{ sprintf("%.2f",$order->orderamount-$commissionRate) }} <i
                     class="cur_sym {{ $defCurrency->currency_symbol }}"></i></button>
@@ -342,7 +361,7 @@
             </div>
             <div class="col-md-2">
 
-              <button type="button" data-toggle="modal" data-target="#bank_transfer" title="Pay via bank transfer"
+              <button type="button" data-toggle="modal" data-target="#bank_transfer" title="{{ __("Pay via bank transfer") }}"
                 class="btn btn-block btn-info-rgba"><i class="fa fa-university" aria-hidden="true"></i>
                 {{ sprintf("%.2f",$order->orderamount-$commissionRate) }} <i
                   class="cur_sym {{ $defCurrency->currency_symbol }}"></i></button>
@@ -350,7 +369,7 @@
             </div>
             <div class="col-md-2">
               <button data-toggle="modal" data-target="#manualtransfer" class="btn btn-block btn-warning-rgba"><i
-                  class="fa fa-circle-o"></i> Manual Transfer</button>
+                  class="fa fa-circle-o"></i> {{ __("Manual Transfer") }}</button>
             </div>
           </div>
 
@@ -372,7 +391,7 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header bg-info border-info">
-        <h5 class="modal-title" id="exampleStandardModalLabel">Pay via bank transfer method</h5>
+        <h5 class="modal-title" id="exampleStandardModalLabel">{{ __("Pay via bank transfer method") }}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -385,14 +404,14 @@
           <div class="col-md-6">
             <div class="card bg-primary-rgba">
               <div class="card-header">
-                <h5>Bank Account Detail</h5>
+                <h5>{{ __("Bank Account Detail") }}</h5>
               </div>
               <div class="card-body">
-                <b>Account Name:</b> {{ $seller->store->account_name }} <br>
-                <b>Account No:</b> {{ $seller->store->account }} <br>
-                <b>IFSC Code:</b> {{ $seller->store->ifsc }} <br>
-                <b>Bank Name:</b> {{ $seller->store->bank_name }} <br>
-                <b>Branch:</b> {{ $seller->store->branch }} <br>
+                <b>{{ __('Account Name:') }}</b> {{ $seller->store->account_name }} <br>
+                <b>{{ __("Account No:") }}</b> {{ $seller->store->account }} <br>
+                <b>{{ __("IFSC Code:") }}</b> {{ $seller->store->ifsc }} <br>
+                <b>{{ __("Bank Name:") }}</b> {{ $seller->store->bank_name }} <br>
+                <b>{{ __('Branch:') }}</b> {{ $seller->store->branch }} <br>
               </div>
             </div>
           </div>
@@ -404,17 +423,25 @@
             <input type="hidden" name="acholder" value="{{ $seller->store->account_name }}">
             <div class="col-md-6">
               <div class="form-group">
-                <label for="">Transfer Method: <span class="required">*</span></label>
+                <label for="">{{__("Transfer Method:")}} <span class="required">*</span></label>
                 <select required="" name="transfer_type" id="" class="form-control">
-                  <option value="IMPS">IMPS</option>
-                  <option value="NEFT">NEFT</option>
-                  <option value="RTGS">RTGS</option>
+                  <option value="IMPS">
+                    {{__("IMPS")}}
+                  </option>
+                  <option value="NEFT">
+                    {{__("NEFT")}}
+                  </option>
+                  <option value="RTGS">
+                    {{__("RTGS")}}
+                  </option>
                 </select>
               </div>
 
               <div class="form-group">
                 <div class="form-group">
-                  <label for="">Transfer Fee: (If applied) </label>
+                  <label for="">
+                    {{__("Transfer Fee: (If applied)")}}
+                  </label>
                   <div class="input-group">
                     <span class="input-group-text" id="basic-addon1"><i class="fa fa-minus"
                         aria-hidden="true"></i></span>
@@ -426,7 +453,7 @@
 
               <div class="form-group">
 
-                <label for="">Amount:</label>
+                <label for="">{{ __('Amount:') }}</label>
                 <div class="input-group">
                   <span class="input-group-text" id="basic-addon1"><i
                       class="{{ $defCurrency->currency_symbol }}"></i></span>
@@ -441,10 +468,12 @@
         <!-- ------------------------------- -->
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-md btn-success-rgba">Pay
+        <button type="submit" class="btn btn-md btn-success-rgba"> {{__("Pay")}}
           {{ sprintf("%.2f",$order->orderamount-$commissionRate) }}</span> <i
             class="cur_sym {{ $defCurrency->currency_symbol }}"></i></button>
-        <button type="button" class="btn btn-danger-rgba" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger-rgba" data-dismiss="modal">
+          {{__("Cancel")}}
+        </button>
       </div>
     </form>
     </div>
@@ -458,7 +487,9 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header bg-warning border-warning">
-        <h5 class="modal-title" id="exampleStandardModalLabel">Saving Record for Manual Transfer.</h5>
+        <h5 class="modal-title" id="exampleStandardModalLabel">
+          {{__("Saving Record for Manual Transfer.")}}
+        </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -471,13 +502,13 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                <label>Paid via: <small class="help-block">(eg. Paytm,Paypal,RazarPay etc.)</small></label>
+                <label>{{__('Paid via:')}} <small class="help-block">({{__("eg. ") }} Paytm,Paypal,RazarPay etc.)</small></label>
                 <input type="text" class="form-control" name="paidvia">
   
               </div>
   
               <div class="form-group">
-                <label>Transcation ID:</label>
+                <label>{{ __("Transcation ID:") }}</label>
                 <input required type="text" class="form-control" name="txn_id">
               </div>
   
@@ -488,7 +519,7 @@
   
               <div class="form-group">
                 <div class="form-group">
-                  <label for="">Transfer Fee: <small class="help-block">(If applied)</small> </label>
+                  <label for="">{{__("Transfer Fee:")}} <small class="help-block">({{__("If applied")}})</small> </label>
                   <div class="input-group">
                       <div class="input-group-prepend" id="basic-addon1">
                         <span class="input-group-text" id="basic-addon1">
@@ -508,7 +539,9 @@
   
               <div class="form-group">
   
-                <label for="">Paid Amount:</label>
+                <label for="">
+                  {{__("Paid Amount:")}}
+                </label>
                 <div class="input-group">
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1">
@@ -530,8 +563,8 @@
           </div>
 
          
-          <button type="submit" class="btn btn-success-rgba btn-md">Save Record</button>
-          <button type="button" class="btn btn-dark-rgba" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-success-rgba btn-md">{{ __('Save Record') }}</button>
+          <button type="button" class="btn btn-dark-rgba" data-dismiss="modal">{{ __('Close') }}</button>
           
         </form>
       </div>

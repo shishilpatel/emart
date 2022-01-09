@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use Nwidart\Modules\Facades\Module;
 
 class IsVendor
 {
@@ -23,9 +24,8 @@ class IsVendor
 
             if (auth()->user()->getRoleNames() && auth()->user()->getRoleNames()->contains('Seller')) {
 
-                
-
-                if(env('ENABLE_SELLER_SUBS_SYSTEM') == 1){
+                if(Module::has('SellerSubscription') && Module::find('SellerSubscription')->isEnabled()){
+                    
                     if (getPlanStatus() == 1) {
                        
                          return $next($request);
@@ -35,6 +35,7 @@ class IsVendor
                         return redirect(route('front.seller.plans'));
                         
                     }
+
                 }else{
                     return $next($request);
                 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Commission;
 use App\CommissionSetting;
 use App\Genral;
+use App\Mostsearched;
 use App\Product;
 use App\SimpleProduct;
 use Illuminate\Http\Request;
@@ -21,6 +22,22 @@ class SearchController extends Controller
         $infourl = url('images');
 
         $sellerSystem = Genral::first();
+
+        $ifwordExist = Mostsearched::where('keyword',$search)->first();
+
+        if(isset($ifwordExist)){
+            
+            $ifwordExist->count = $ifwordExist->count + 1;
+
+        }else{
+
+            $ifwordExist = new Mostsearched;
+            $ifwordExist->keyword = $search;
+            $ifwordExist->count = 1;
+            
+        }
+
+        $ifwordExist->save();
 
         if ($request->catid == 'all') {
 

@@ -153,7 +153,6 @@
              element += '            <a href="#midia-page-upload">'+midiaLang['Upload']+'</a>';
              element += '            <a href="#midia-page-loader" class="active">'+midiaLang['All Files']+'</a>';
              element += '            <a href="#midia-page-help">'+midiaLang["Help"]+'</a>';
-             element += '            <a href="#midia-page-about">'+midiaLang["About"]+'</a>';
              element += '        </div>';
              element += '        <div class="midia-nav-right">';
              element += '            <a class="midia-tool" id="midia-reload" title="'+midiaLang["Refresh File List"]+'">&#8635;</a>';
@@ -292,7 +291,7 @@
                  headers: {
                      'X-CSRF-TOKEN': options.csrf_field
                  },
-                 maxFilesize: 2
+                 maxFilesize: 5
              }, default_dropzone_options, dropzone_language_strings);
  
              let clipboard = new ClipboardJS('.midia-copy-url');

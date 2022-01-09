@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','All FAQ')
+@section('title',__('All FAQ'))
 @section('body')
 @component('admin.component.breadcumb',['secondaryactive' => 'active'])
 @slot('heading')
@@ -29,18 +29,18 @@
     <div class="col-lg-12">
       <div class="card m-b-30">
         <div class="card-header">
-          <h5 class="box-title"> All Faq</h5>
+          <h5 class="box-title"> {{__("Add Faq")}}</h5>
         </div>
         <div class="card-body">
           <div class="table-responsive">
             <table id="full_detail_table" class="width100 table table-bordered table-striped">
               <thead>
                 <tr class="table-heading-row">
-                  <th>ID</th>
-                  <th>Question</th>
-                  <th>Answer</th>
-                  <th>Status</th>
-                  <th>Action</th>
+                  <th>{{ __("ID") }}</th>
+                  <th>{{ __('Question') }}</th>
+                  <th>{{ __('Answer') }}</th>
+                  <th>{{ __('Status') }}</th>
+                  <th>{{ __('Action') }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -56,7 +56,7 @@
                       {{csrf_field()}}
                       <button type="submit"
                         class="btn btn-rounded {{ $faq->status==1 ? "btn-success-rgba" : "btn-danger-rgba" }}">
-                        {{ $faq->status ==1 ? 'Active' : 'Deactive' }}
+                        {{ $faq->status ==1 ? __('Active') : __('Deactive') }}
                       </button>
                     </form>
                   <td>
@@ -67,7 +67,7 @@
                       <div class="dropdown-menu" aria-labelledby="CustomdropdownMenuButton1">
                         @can('faq.edit')
                         <a class="dropdown-item" href="{{url('admin/faq/'.$faq->id.'/edit')}}"><i
-                            class="feather icon-edit mr-2"></i>Edit</a>
+                            class="feather icon-edit mr-2"></i>{{ __('Edit') }}</a>
                         @endcan
 
                         @can('faq.delete')
@@ -82,7 +82,7 @@
                       <div class="modal-dialog modal-sm">
                         <div class="modal-content">
                           <div class="modal-header">
-                            <h5 class="modal-title" id="exampleSmallModalLabel">Delete</h5>
+                            <h5 class="modal-title" id="exampleSmallModalLabel">{{ __("DELETE") }}</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                               <span aria-hidden="true">&times;</span>
                             </button>
@@ -95,8 +95,8 @@
                             <form method="post" action="{{url('admin/faq/'.$faq->id)}}" class="pull-right">
                               {{csrf_field()}}
                               {{method_field("DELETE")}}
-                              <button type="reset" class="btn btn-secondary" data-dismiss="modal">No</button>
-                              <button type="submit" class="btn btn-primary">Yes</button>
+                              <button type="reset" class="btn btn-secondary" data-dismiss="modal">{{ __("No") }}</button>
+                              <button type="submit" class="btn btn-primary">{{ __("YES") }}</button>
                             </form>
                           </div>
                         </div>

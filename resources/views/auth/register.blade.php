@@ -1,5 +1,5 @@
-@extends("front/layout.master")
-@section('title','Register |')
+@extends("front.layout.master")
+@section('title',__('Register').' | ')
 @section("body")
 @php
     require_once(base_path().'/app/Http/Controllers/price.php');
@@ -38,7 +38,7 @@
 
             @if(Module::has('MimSms') && Module::find('MimSms')->isEnabled() && env('MIM_SMS_OTP_ENABLE') == 1 && env('DEFAULT_SMS_CHANNEL') == 'mim')
                 @include('mimsms::auth.register')
-            @elseif(Module::has('Exabytes') && Module::find('Exabytes')->isEnabled() && env('EXABYTES_OTP_ENABLE') == 1 && env('DEFAULT_SMS_CHANNEL') == 'exabytes')
+            @elseif(Module::has('Exabytes') && Module::find('Exabytes')->isEnabled() && env('DEFAULT_SMS_CHANNEL') == 'exabytes')
                 @include('exabytes::auth.register')
             @else
 
@@ -56,38 +56,38 @@
 
                                 @if($configs->fb_login_enable=='1')
                                 <a href="{{ route('sociallogin','facebook') }}" class="btn btn-primary btn-lg"><i
-                                        class="fa fa-facebook"></i> Facebook</a>
+                                        class="fa fa-facebook"></i> {{__('Facebook') }}</a>
                                 @endif
 
                                 @if($configs->twitter_enable == 1)
                                 <a href="{{ route('sociallogin','twitter') }}" class="btn bg-twitter btn-lg"><i
-                                        class="fa fa-twitter"></i> Twitter</a>
+                                        class="fa fa-twitter"></i> {{ __('Twitter') }}</a>
                                 @endif
 
                                 @if($configs->google_login_enable=='1')
                                 <a href="{{ route('sociallogin','google') }}" class="btn btn-danger btn-lg"><i
-                                        class="fa fa-google"></i> Google</a>
+                                        class="fa fa-google"></i> {{ __('Google') }}</a>
                                 @endif
 
                                 @if($configs->amazon_enable=='1')
                                 <a href="{{ route('sociallogin','amazon') }}" class="btn btn-warning btn-lg"><i
-                                        class="fa fa-amazon"></i> Amazon</a>
+                                        class="fa fa-amazon"></i> {{ __('Amazon') }}</a>
                                 @endif
 
                                 @if(env('ENABLE_GITLAB') == 1 )
                                 <a href="{{ route('sociallogin','gitlab') }}" class="btn bg-dark btn-lg"><i
-                                        class="fa fa-gitlab"></i> Gitlab</a>
+                                        class="fa fa-gitlab"></i> {{ __('Gitlab') }}</a>
                                 @endif
 
                                 @if($configs->linkedin_enable=='1')
                                 <a href="{{ route('sociallogin','linkedin') }}" class="btn bg-primary btn-lg"><i
-                                        class="fa fa-linkedin"></i> Linkedin</a>
+                                        class="fa fa-linkedin"></i> {{ __('Linkedin') }}</a>
                                 @endif
 
 
                             </div>
 
-                            <div class="or-seperator"><b>or</b></div>
+                            <div class="or-seperator"><b>{{ __('or') }}</b></div>
 
                         </div>
 
@@ -263,8 +263,8 @@
 <script>
     "use strict";
 
-    var baseurl = "<?= url('/') ?>";
-    $(document).ready(function () {
+    var baseurl = @json(url('/'));
+    $(function () {
         $('.select2').select2({
             height: '100px'
         });
@@ -288,9 +288,7 @@
                         event.preventDefault();
                         event.stopPropagation();
                     } else {
-                        $('.register').html(
-                            '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> {{ __('
-                            staticwords.Register ') }}');
+                        $('.register').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> {{ __("staticwords.Register") }}');
                     }
                     form.classList.add('was-validated');
 
@@ -300,4 +298,5 @@
         }, false);
     })();
 </script>
+@stack('module-script')
 @endsection

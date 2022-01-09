@@ -1,6 +1,5 @@
-
-@extends(!in_array('Seller',auth()->user()->getRoleNames()->toArray()) ? "admin.layouts.master" : "admin.layouts.sellermaster")
-
+@extends(!in_array('Seller',auth()->user()->getRoleNames()->toArray()) ? "admin.layouts.master" : "admin.layouts.sellermastersoyuz")
+@section('title',__('Trash'))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -14,15 +13,16 @@
 @endcomponent
 <div class="contentbar">
     <div class="row">
-        @if ($errors->any())
-        <div class="alert alert-danger" role="alert">
-        @foreach($errors->all() as $error)
-        <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-        @endforeach
-        </div>
-        @endif
+        
         <div class="col-lg-12">
+            @if ($errors->any())
+                <div class="alert alert-danger" role="alert">
+                @foreach($errors->all() as $error)
+                <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button></p>
+                @endforeach
+                </div>
+            @endif
             <div class="card m-b-30">
                 <div class="card-header">
                 <h5 class="box-title">    {{__("Trashed Simple Products")}}</h5>
@@ -34,9 +34,15 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Product Name</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
+                                    <th>
+                                        {{__('Product Name')}}
+                                    </th>
+                                    <th>
+                                        {{__("Status")}}
+                                    </th>
+                                    <th>
+                                        {{__('Action')}}
+                                    </th>
                                 </tr>
                             </thead>
             
@@ -50,13 +56,6 @@
         </div>
     </div>
 </div>
-                        
-
-​
-                 
-
-                                      
-                   
 @endsection
 @section('custom-script')
     <script>

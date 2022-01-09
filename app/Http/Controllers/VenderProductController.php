@@ -19,6 +19,7 @@ use App\RealatedProduct;
 use App\Related_setting;
 use App\Shipping;
 use App\SimpleProduct;
+use App\SizeChart;
 use App\Store;
 use App\Subcategory;
 use App\TaxClass;
@@ -32,9 +33,15 @@ use Rap2hpoutre\FastExcel\FastExcel;
 use Session;
 use View;
 use Image;
+use Nwidart\Modules\Facades\Module;
 
 class VenderProductController extends Controller
 {
+    public function __construct()
+    {
+        $this->moduleenable = Module::has('SellerSubscription') && Module::find('SellerSubscription')->isEnabled();
+    }
+
     public function index(Request $request)
     {
         $products = Product::with(['category' => function ($q) {
@@ -117,8 +124,8 @@ class VenderProductController extends Controller
                     $html .= '<p><b>Product translation not updated in this language </b></p>';
                 }
 
-                $html .= '<p><b>Store:</b> ' . $row->store->name ?? "Not Store set" . ' </p>';
-                $html .= '<p><b>Brand:</b> ' . $row->brand->name ?? "Not Brand Set" . ' </p>';
+                $html .= '<p><b>Store:</b> ' . $row->store->name ?? __("No Store set") . ' </p>';
+                $html .= '<p><b>Brand:</b> ' . $row->brand->name ?? __("No Brand Set") . ' </p>';
 
                 return $html;
             })
@@ -129,19 +136,19 @@ class VenderProductController extends Controller
                 if ($row->category != null) {
                     $catdtl .= '<p><i class="fa fa-angle-double-right"></i> ' . $row->category->title . '</p>';
                 } else {
-                    $catdtl .= '<p>Category not set</p>';
+                    $catdtl .= '<p>'.__('Category not set').'</p>';
                 }
 
                 if ($row->subcategory != null) {
                     $catdtl .= '<p class="font-weight600"><i class="fa fa-angle-double-right"></i> ' . $row->subcategory->title . '</p>';
                 } else {
-                    $catdtl .= "<p>Subcategory not set</p>";
+                    $catdtl .= "<p>".__('Subcategory not set')."</p>";
                 }
 
                 if ($row->childcat != null) {
                     $catdtl .= '<p class="font-weight600"><i class="fa fa-angle-double-right"></i> ' . $row->childcat->title . '</p>';
                 } else {
-                    $catdtl .= "<p>Child category not set</p>";
+                    $catdtl .= "<p>".__("Child category not set")."</p>";
                 }
 
                 return $catdtl;
@@ -163,7 +170,7 @@ class VenderProductController extends Controller
         if ($product) {
             return response()->json(['body' => View::make('admin.product.dtablecolumn.add_price_detail', compact('product'))->render()]);
         } else {
-            return response()->json(['msg' => 'No product found !']);
+            return response()->json(['msg' => __('No product found !')]);
         }
     }
 
@@ -172,7 +179,7 @@ class VenderProductController extends Controller
         $pro = Product::find($id);
 
         if (!$pro) {
-            notify()->error('Product not found !', '404');
+            notify()->error(__('Product not found !'), '404');
             return back();
         }
 
@@ -181,11 +188,11 @@ class VenderProductController extends Controller
 
     public function importPage()
     {
-        if(env('ENABLE_SELLER_SUBS_SYSTEM') == 1){
+        if($this->moduleenable == 1){
 
             if(getPlanStatus() == 1 && auth()->user()->activeSubscription->plan->csv_product != 1){
 
-                notify()->error('This feature is not available in your current subscription !','Sorry !');
+                notify()->error(__('This feature is not available in your current subscription !'),__('Sorry !'));
                 return redirect(route('my.products.index'));
 
             }
@@ -244,17 +251,17 @@ class VenderProductController extends Controller
         }
 
 
-        notify()->success('Selected products has been '.$request->action);
+        notify()->success(__('Selected products has been :action'),['action' => $request->action]);
         return back();
     }
 
     public function storeImportProducts(Request $request)
     {
 
-        if(env('ENABLE_SELLER_SUBS_SYSTEM') == 1){
+        if($this->moduleenable == 1){
 
             if(auth()->user()->activeSubscription && auth()->user()->activeSubscription->plan && auth()->user()->activeSubscription->plan->csv_product != 1){
-                notify()->error('This feature is not available in your current subscription !','Sorry !');
+                notify()->error(__('This feature is not available in your current subscription !'),__('Sorry !'));
                 return back();
             }
 
@@ -293,7 +300,7 @@ class VenderProductController extends Controller
 
         
        
-        if(env('ENABLE_SELLER_SUBS_SYSTEM') == 1 && auth()->user()->activeSubscription->plan->csv_product == 1){
+        if(Module::has('SellerSubscription') && Module::find('SellerSubscription')->isEnabled() && auth()->user()->activeSubscription->plan->csv_product == 1){
 
             $plancount = auth()->user()->activeSubscription->plan->product_create;
 
@@ -307,7 +314,7 @@ class VenderProductController extends Controller
                     unlink(public_path() . '/excel/' . $fileName);
                 }
 
-                notify()->error('Excel contains more products then your current products upload limit !','Sorry !');
+                notify()->error(__('Excel contains more products then your current products upload limit !','Sorry !'));
                 return back();
 
             }
@@ -339,7 +346,7 @@ class VenderProductController extends Controller
                         unlink(public_path() . '/excel/' . $fileName);
                     }
 
-                    notify()->error("Invalid Category name at Row no $rowno ! Please create it and than try to import this file again !");
+                    notify()->error(__('Invalid Category name at Row no :row ! Please create it and than try to import this file again !',['row' => $rowno]));
 
                     return back();
                     break;
@@ -355,7 +362,7 @@ class VenderProductController extends Controller
                         unlink(public_path() . '/excel/' . $fileName);
                     }
 
-                    notify()->error("Invalid subcategory name at Row no $rowno Subcategory not found ! Please create it and than try to import this file again !");
+                    notify()->error(__('Invalid Subategory name at Row no :row ! Please create it and than try to import this file again !',['row' => $rowno]));
 
                     return back();
                     break;
@@ -371,7 +378,7 @@ class VenderProductController extends Controller
                         unlink(public_path() . '/excel/' . $fileName);
                     }
 
-                    notify()->error("Invalid brand name at Row no $rowno brand not found ! Please create it and than try to import this file again !");
+                    notify()->error(__('Invalid Brand name at Row no :row ! Please create it and than try to import this file again !',['row' => $rowno]));
 
                     return back();
 
@@ -387,7 +394,7 @@ class VenderProductController extends Controller
                         unlink(public_path() . '/excel/' . $fileName);
                     }
 
-                    notify()->error("Invalid Store name at Row no $rowno Store not found ! Please create it and than try to import this file again !");
+                    notify()->error(__('Invalid Store name at Row no :row ! Please create it and than try to import this file again !',['row' => $rowno]));
 
                     return back();
                     break;
@@ -404,7 +411,7 @@ class VenderProductController extends Controller
                             unlink(public_path() . '/excel/' . $fileName);
                         }
 
-                        notify()->error("Invalid Return Policy name at Row no $rowno Return Policy not found ! Please create it and than try to import this file again !");
+                        notify()->error(__('Invalid return policy name at Row no :row ! Please create it and than try to import this file again !',['row' => $rowno]));
 
                         return back();
                         break;
@@ -426,7 +433,7 @@ class VenderProductController extends Controller
                             unlink(public_path() . '/excel/' . $fileName);
                         }
 
-                        notify()->error("Invalid TaxClass name at Row no $rowno TaxClass not found ! Please create it and than try to import this file again !");
+                        notify()->error(__('Invalid Taxclass name at Row no :row ! Please create it and than try to import this file again !',['row' => $rowno]));
 
                         return back();
                         break;
@@ -452,7 +459,7 @@ class VenderProductController extends Controller
                             unlink(public_path() . '/excel/' . $fileName);
                         }
 
-                        notify()->error("Invalid Shipping name at Row no $rowno Childcategory not found ! Please create it and than try to import this file again !");
+                        notify()->error(__('Invalid Shipping name at Row no :row ! Please create it and than try to import this file again !',['row' => $rowno]));
 
                         return back();
                         break;
@@ -478,7 +485,7 @@ class VenderProductController extends Controller
                             unlink(public_path() . '/excel/' . $fileName);
                         }
 
-                        notify()->error("Invalid childcategory name at Row no $rowno Childcategory not found ! Please create it and than try to import this file again !");
+                        notify()->error(__('Invalid Childcategory name at row no :row ! Please create it and than try to import this file again !',['row' => $rowno]));
 
                         return back();
                         break;
@@ -642,7 +649,7 @@ class VenderProductController extends Controller
 
             }
 
-            notify()->success('Products Imported Successfully !', $productfile->count() - 1 . ' Imported !');
+            notify()->success(__('Products Imported Successfully !'), __(':count Imported !',['count' => $productfile->count() - 1]));
 
             $file = @file_get_contents(public_path() . '/excel/' . $fileName);
 
@@ -654,7 +661,7 @@ class VenderProductController extends Controller
 
         } else {
 
-            notify()->error('Your excel file is empty !');
+            notify()->error(__('Your excel file is empty !'));
             $file = @file_get_contents(public_path() . '/excel/' . $fileName);
 
             if ($file) {
@@ -745,7 +752,7 @@ class VenderProductController extends Controller
                         unlink(public_path() . '/excel/' . $fileName);
                     }
 
-                    notify()->error("Invalid Store name at Row no $key Store not found ! Please create it and than try to import this file again !");
+                    notify()->error(__('Invalid Store name at row no :row ! Please create it and than try to import this file again !',['row' => $key]));
 
                     return back();
                     break;
@@ -764,7 +771,7 @@ class VenderProductController extends Controller
 
                         $rowno = $key + 1;
 
-                        notify()->error('Invalid return policy name at row no. '. $rowno .' return policy not found ! Please create it and than try to import this file again !','Failed !');
+                        notify()->error(__('Invalid return policy name at row no :row ! Please create it and than try to import this file again !',['row' => $rowno]));
 
                         return back();
                         break;
@@ -901,7 +908,7 @@ class VenderProductController extends Controller
 
             }
 
-            notify()->success('Product import successfully !','Imported');
+            notify()->success(__('Product import successfully !'),__('Imported'));
             $file = @file_get_contents(public_path() . '/excel/' . $fileName);
 
             if ($file) {
@@ -911,7 +918,7 @@ class VenderProductController extends Controller
             return back();
 
         }else{
-            notify()->warning('Your excel file is empty !');
+            notify()->warning(__('Your excel file is empty !'));
             $file = @file_get_contents(public_path() . '/excel/' . $fileName);
 
             if ($file) {
@@ -936,11 +943,11 @@ class VenderProductController extends Controller
         }
 
         if (!Auth::user()->store) {
-            notify()->warning('Sorry your store is not found or deactive !');
+            notify()->warning(__('Sorry your store is not found or deactive !'));
             return back();
         }
 
-        if(env('ENABLE_SELLER_SUBS_SYSTEM') == 1){
+        if(config('sellersubscription.enable') == 1 && Module::has('SellerSubscription') && Module::find('SellerSubscription')->isEnabled()){
 
             if((auth()->user()->products()->count() + auth()->user()->store->simple_products->count()) == auth()->user()->activeSubscription->plan->product_create){
                notify()->error('Product upload limit reached !','Upgrade your plan');
@@ -951,8 +958,14 @@ class VenderProductController extends Controller
 
         $categorys = Category::where('status','1')->get(['id','title']);
         $brands_products = Brand::where('status', '=', '1')->get();
+        $template_size_chart = SizeChart::whereHas('sizeoptions')
+                                ->whereHas('sizeoptions.values')
+                                ->with('sizeoptions')
+                                ->where('status','=','1')
+                                ->where('user_id',auth()->id())
+                                ->get();
 
-        return view('seller.product.create', compact('auth_name', 'brands_products', 'categorys', 'vender_id'));
+        return view('seller.product.create', compact('auth_name', 'brands_products', 'categorys', 'vender_id','template_size_chart'));
 
     }
 
@@ -965,11 +978,11 @@ class VenderProductController extends Controller
     public function store(Request $request)
     {   
 
-        if(env('ENABLE_SELLER_SUBS_SYSTEM') == 1){
+        if(config('sellersubscription.enable') == 1 && Module::has('SellerSubscription') && Module::find('SellerSubscription')->isEnabled()){
 
            
             if((auth()->user()->products()->count() + auth()->user()->store->simple_products->count() ) == auth()->user()->activeSubscription->plan->product_create){
-               notify()->error('Product upload limit reached !','Upgrade your plan');
+               notify()->error(__('Product upload limit reached !'),__('Upgrade your plan'));
                return redirect(route('my.products.index'));
             }
 
@@ -979,7 +992,9 @@ class VenderProductController extends Controller
 
         ], [
 
-            "name.required" => "Product Name is needed", "price.required" => "Price is needed", "brand_id.required" => "Please Choose Brand",
+            "name.required" => __("Product Name is needed"), 
+            "price.required" => __("Price is needed"), 
+            "brand_id.required" => __("Please Choose Brand"),
 
         ]);
 
@@ -1032,6 +1047,26 @@ class VenderProductController extends Controller
             mkdir(public_path() . '/images/videothumbnails');
         }
 
+        if(isset($request->other_cats)){
+
+            $other_categories = $request->other_cats;
+ 
+            $duplicate_element_index = array_search($request->category_id,$other_categories);
+            
+            if($duplicate_element_index !== false){
+                unset($other_categories[$duplicate_element_index]);
+            }
+            
+            $other_categories = array_values($other_categories);
+ 
+            $input['other_cats'] = $other_categories;
+ 
+         }else{
+ 
+             $input['other_cats'] = NULL;
+ 
+         }
+
         if ($request->video_thumbnail) {
 
             $request->validate([
@@ -1068,7 +1103,7 @@ class VenderProductController extends Controller
             );
 
             if ($validator->fails()) {
-                return back()->withErrors('Invalid file for product catlog !');
+                return back()->withErrors(__('Invalid file for product catlog !'));
             }
 
             if (!is_dir(public_path() . '/productcatlog')) {
@@ -1146,11 +1181,11 @@ class VenderProductController extends Controller
 
         if ($request->return_avbls == "1") {
 
-            $request->validate(['return_avbls' => 'required', 'return_policy' => 'required'], ['return_policy.required' => 'Please choose return policy']);
+            $request->validate(['return_avbls' => 'required', 'return_policy' => 'required'], ['return_policy.required' => __('Please choose return policy')]);
 
             if ($request->return_policy === "Please choose an option") {
                 return back()
-                    ->with('warning', 'Please choose a return policy !');
+                    ->with('warning', __('Please choose a return policy !'));
             }
 
         }
@@ -1182,7 +1217,7 @@ class VenderProductController extends Controller
         $relsetting->status = '0';
         $relsetting->save();
 
-        notify()->success('Product created !  create at-least one variant to complete the product');
+        notify()->success(__('Product created !  create at-least one variant to complete the product'));
 
         return redirect()->route('seller.add.var', $data->id);
 
@@ -1218,7 +1253,7 @@ class VenderProductController extends Controller
             ->first();
 
         if (!$store) {
-            notify()->error('Sorry your store is not found or deactive !');
+            notify()->error(__('Sorry your store is not found or deactive !'));
             return back();
         }
 
@@ -1231,8 +1266,14 @@ class VenderProductController extends Controller
         $grand = Grandcategory::where('status','1')->where('subcat_id', $cat_id->child)
             ->get();
         
+        $template_size_chart = SizeChart::whereHas('sizeoptions')
+        ->whereHas('sizeoptions.values')
+        ->with('sizeoptions')
+        ->where('status','=','1')
+        ->where('user_id',auth()->id())
+        ->get();
 
-        return view("seller.product.edit_tab", compact('rel_setting', "products", "categorys", "store", "brands_products", "faqs", "child", "grand", "realateds"));
+        return view("seller.product.edit_tab", compact("rel_setting", "products", "categorys", "store", "brands_products", "faqs", "child", "grand", "realateds","template_size_chart"));
     }
 
     /**
@@ -1391,10 +1432,10 @@ class VenderProductController extends Controller
 
         if ($request->return_avbls == "1") {
 
-            $request->validate(['return_avbls' => 'required', 'return_policy' => 'required'], ['return_policy.required' => 'Please choose return policy']);
+            $request->validate(['return_avbls' => 'required', 'return_policy' => 'required'], ['return_policy.required' => __('Please choose return policy')]);
 
             if ($request->return_policy === "Please choose an option") {
-                return back()->withErrors('Please choose a return policy !')->withInput();
+                return back()->withErrors(__('Please choose a return policy !'))->withInput();
             }
 
         }
@@ -1465,7 +1506,7 @@ class VenderProductController extends Controller
             );
 
             if ($validator->fails()) {
-                return back()->withErrors('Invalid file for product catlog !');
+                return back()->withErrors(__('Invalid file for product catlog !'));
             }
 
             if (!is_dir(public_path() . '/productcatlog')) {
@@ -1501,7 +1542,7 @@ class VenderProductController extends Controller
 
         CartPriceChange::dispatch($cart);
 
-        notify()->success('Product has been updated !', $product->name);
+        notify()->success(__('Product has been updated !'), $product->name);
         return back();
 
     }
@@ -1518,7 +1559,7 @@ class VenderProductController extends Controller
         $pro = Product::find($id);
 
         if (!$pro) {
-            notify()->error('404 | Product not found !');
+            notify()->error(__('404 | Product not found !'));
             return back();
         }
 
@@ -1528,7 +1569,7 @@ class VenderProductController extends Controller
 
         $pro->delete();
 
-        notify()->error('Product has been deleted !');
+        notify()->error(__('Product has been deleted !'));
         return back();
 
     }

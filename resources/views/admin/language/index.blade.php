@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Site Languages')
+@section('title',__('Site Languages'))
 @section('body')
 @component('admin.component.breadcumb',['secondaryactive' => 'active'])
 @slot('heading')
@@ -17,7 +17,7 @@
 
     <a title="Click to add new language" data-toggle="modal" data-target="#addLang"
       class="float-right btn btn-primary-rgba mr-2">
-      <i class="feather icon-plus mr-2"></i> Add New Language
+      <i class="feather icon-plus mr-2"></i> {{__("Add New Language")}}
     </a>
     <form method="POST" action="{{ url('/vue/sync-translation') }}">
       @csrf
@@ -35,17 +35,17 @@
     <div class="col-lg-12">
       <div class="card m-b-30">
         <div class="card-header">
-          <h5 class="box-title">All Site Languages</h5>
+          <h5 class="box-title">{{ __('All Site Languages') }}</h5>
         </div>
         <div class="card-body">
           <ul class="nav nav-tabs custom-tab-line mb-3" id="pills-tab" role="tablist">
             <li class="nav-item">
               <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab"
-                aria-controls="pills-home" aria-selected="true">Languages</a>
+                aria-controls="pills-home" aria-selected="true">{{ __('Languages') }}</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab"
-                aria-controls="pills-profile" aria-selected="false">Update Static Word Translations</a>
+                aria-controls="pills-profile" aria-selected="false">{{ __('Update Static Word Translations') }}</a>
             </li>
           </ul>
           <div class="tab-content" id="pills-tabContent">
@@ -56,16 +56,16 @@
                     #
                   </th>
                   <th>
-                    Display Name
+                    {{__('Display Name')}}
                   </th>
                   <th>
-                    Language Code
+                    {{__("Language Code")}}
                   </th>
                   <th>
-                    Default
+                    {{__("Default")}}
                   </th>
                   <th>
-                    Action
+                    {{__("Action")}}
                   </th>
                 </thead>
                 <tbody>
@@ -92,9 +92,9 @@
                       <div class="dropdown">
                         <button class="btn btn-round btn-primary-rgba" type="button" id="CustomdropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="feather icon-more-vertical-"></i></button>
                         <div class="dropdown-menu" aria-labelledby="CustomdropdownMenuButton1">
-                            <a class="dropdown-item" data-toggle="modal"  data-target="#editLang{{ $lang->id }}"><i class="feather icon-edit mr-2"></i>Edit</a>
-                            <a class="dropdown-item btn btn-link" data-toggle="modal" @if(env('DEMO_LOCK')==0) data-target="#delModal{{ $lang->id }}" title="Delete Language"
-                              data-toggle="modal" @else disabled title="This action is disabled in demo !" @endif >
+                            <a class="dropdown-item" data-toggle="modal"  data-target="#editLang{{ $lang->id }}"><i class="feather icon-edit mr-2"></i>{{ __("Edit") }}</a>
+                            <a class="dropdown-item btn btn-link" data-toggle="modal" @if(env('DEMO_LOCK')==0) data-target="#delModal{{ $lang->id }}" title="{{ __("Delete Language") }}"
+                              data-toggle="modal" @else disabled title="{{ __('This action is disabled in demo !') }}" @endif >
                                 <i class="feather icon-delete mr-2"></i>{{ __("Delete") }}</a>
                             </a>
                         </div>
@@ -115,16 +115,16 @@
                     #
                   </th>
                   <th>
-                    Display Name
+                    {{__("Display Name")}}
                   </th>
                   <th>
-                    Language Code
+                    {{__("Language Code")}}
                   </th>
                   <th>
-                    Default
+                    {{__('Default')}}
                   </th>
                   <th>
-                    Action
+                    {{__('Action')}}
                   </th>
                 </thead>
                 <tbody>
@@ -141,16 +141,16 @@
                     </td>
                     <td>
                       @if($lang->def == 1)
-                      <i class="text-green fa fa-check-circle"></i>
-                    @else
-                      <i class="required fa fa-times"></i>
-                    @endif
+                        <i class="text-green fa fa-check-circle"></i>
+                      @else
+                        <i class="required fa fa-times"></i>
+                      @endif
                     </td>
                     <td>
                       <div class="dropdown">
                         <button class="btn btn-round btn-primary-rgba" type="button" id="CustomdropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="feather icon-more-vertical-"></i></button>
                         <div class="dropdown-menu" aria-labelledby="CustomdropdownMenuButton1">
-                            <a class="dropdown-item" href="{{ url('languages/'.$lang->lang_code.'/translations') }}"><i class="feather icon-edit mr-2"></i>Edit</a>
+                            <a class="dropdown-item" href="{{ url('languages/'.$lang->lang_code.'/translations') }}"><i class="feather icon-edit mr-2"></i>{{ __("Edit") }}</a>
                          
                         </div>
                     </div>
@@ -172,7 +172,9 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">Add Language</h4>
+        <h4 class="modal-title" id="myModalLabel">
+          {{__('Add Language')}}
+        </h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
             aria-hidden="true">&times;</span></button>
       
@@ -182,17 +184,17 @@
         <form action="{{ route('site.lang.store') }}" method="POST">
           @csrf
           <div class="form-group">
-            <label>Language Name: <span class="required">*</span></label>
-            <input required name="name" type="text" class="form-control" placeholder="enter language name" />
+            <label>{{__("Language Name")}}: <span class="required">*</span></label>
+            <input required name="name" type="text" class="form-control" placeholder="{{ __("Enter language name") }}" />
           </div>
 
           <div class="form-group">
-            <label>Language Code: <span class="required">*</span></label>
-            <input required type="text" name="lang_code" class="form-control" placeholder="enter language code" />
+            <label>{{__("Language Code")}}: <span class="required">*</span></label>
+            <input required type="text" name="lang_code" class="form-control" placeholder="{{ __('Enter language code') }}" />
           </div>
 
           <div class="form-group">
-            <label>Default:</label>
+            <label>{{__("Default")}}:</label>
             <br>
             <label class="switch">
               <input type="checkbox" class="quizfp toggle-input toggle-buttons" name="def" checked>
@@ -201,7 +203,7 @@
           </div>
 
           <div class="form-group">
-            <label>RTL:</label>
+            <label>{{__("RTL")}}:</label>
             <br>
             <label class="switch">
               <input type="checkbox" class="quizfp toggle-input toggle-buttons" name="rtl_available" checked>
@@ -209,9 +211,9 @@
             </label>
           </div>
 
-          <button type="reset" class="btn btn-danger-rgba"><i class="fa fa-ban"></i> Reset</button>
+          <button type="reset" class="btn btn-danger-rgba"><i class="fa fa-ban"></i> {{ __("Reset") }}</button>
           <button type="submit" class="btn btn-primary-rgba"><i class="fa fa-check-circle"></i>
-            Create</button>
+            {{ __("Create") }}</button>
         </div>
 
         <div class="clear-both"></div>
@@ -235,15 +237,15 @@
         <div class="delete-icon"></div>
       </div>
       <div class="modal-body text-center">
-        <h4 class="modal-heading">Are You Sure ?</h4>
-        <p>Do you really want to delete this language? This process cannot be undone.</p>
+        <h4 class="modal-heading">{{ __("Are You Sure ?") }}</h4>
+        <p>{{ __('Do you really want to delete this language? This process cannot be undone.') }}</p>
       </div>
       <div class="modal-footer">
         <form method="post" action="{{route('site.lang.delete',$lang->id)}}" class="pull-right">
           {{csrf_field()}}
           {{method_field("DELETE")}}
-          <button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">No</button>
-          <button type="submit" class="btn btn-danger">Yes</button>
+          <button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">{{ __("NO") }}</button>
+          <button type="submit" class="btn btn-danger">{{ __("YES") }}</button>
         </form>
       </div>
     </div>
@@ -255,7 +257,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">Edit Language {{ $lang->display_name }}</h4>
+        <h4 class="modal-title" id="myModalLabel"> {{__('Edit Language :lang',['lang' => $lang->display_name])}}</h4>
 
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
             aria-hidden="true">&times;</span></button>
@@ -265,19 +267,19 @@
           @csrf
 
           <div class="form-group">
-            <label>Edit Language Name: <span class="required">*</span></label>
+            <label>{{__("Edit Language Name")}}: <span class="required">*</span></label>
             <input required name="name" value="{{ $lang->name }}" type="text" class="form-control"
-              placeholder="enter language name" />
+              placeholder="{{ __('enter language name') }}" />
           </div>
 
           <div class="form-group">
-            <label>Edit Language Code: <span class="required">*</span></label>
+            <label>{{__('Edit Language Code:')}} <span class="required">*</span></label>
             <input required value="{{ $lang->lang_code }}" type="text" name="lang_code" class="form-control"
-              placeholder="enter language code" />
+              placeholder="{{ __('enter language code') }}" />
           </div>
 
           <div class="form-group">
-            <label>Default:</label>
+            <label>{{__('Default')}}:</label>
             <br>
             <label class="switch">
               <input {{ $lang->def == 1 ? 'checked' : "" }} type="checkbox" class="quizfp toggle-input toggle-buttons"
@@ -287,7 +289,7 @@
           </div>
 
           <div class="form-group">
-            <label>RTL:</label>
+            <label>{{__('RTL')}}:</label>
             <br>
             <label class="switch">
               <input {{ $lang->rtl_available == 1 ? 'checked' : '' }} type="checkbox"
@@ -296,9 +298,9 @@
             </label>
           </div>
 
-          <button type="button" data-dismiss="modal" class="btn btn-danger-rgba"><i class="fa fa-ban"></i> Close</button>
+          <button type="button" data-dismiss="modal" class="btn btn-danger-rgba"><i class="fa fa-ban"></i> {{ __('Close') }}</button>
           <button type="submit" class="btn btn-primary-rgba"><i class="fa fa-check-circle"></i>
-            Update</button>
+            {{ __("Update") }}</button>
         </div>
 
         <div class="clear-both"></div>

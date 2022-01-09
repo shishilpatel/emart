@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Create '.$findpro->name.' variant | ')
+@section('title',__('Create :product variant |',['product' => $findpro->name]))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -19,305 +19,478 @@
 @endcomponent
 <div class="contentbar">
     <div class="row">
-@if ($errors->any())  
-  <div class="alert alert-danger" role="alert">
-  @foreach($errors->all() as $error)     
-  <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-  <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach  
-  </div>
-  @endif
-  
-    <!-- row started -->
-    <div class="col-lg-12">
-    
-        <div class="card m-b-30">
-       
-                <!-- Card header will display you the heading -->
-                <div class="card-header">
-                    <h5 class="card-box">{{ __('Variant Product') }}</h5>
-                </div> 
-               
-                <!-- card body started -->
-                <div class="card-body">
-					
-					<div class="row mr-0 ml-0">
-						<div class="col-md-12  p-3 mb-2 bg-success text-white rounded">
-							<i class="fa fa-info-circle"></i> {{ __('Quick Guide') }}
-							<ul>
-								<li>Common variant not work until you don't Link a variant.</li>
-								<li>Before Link a variant click on <b>Add Variant Option</b> (You can add up to <u>2</u> variantoption).</li>
-							
-								</li>
-								<li>After Link Variant option You can create unlimited variant from that options.</li>
-							    <li>After Add a default variant you can create unlimited common variants.</li>
-							</ul>
+
+		<!-- row started -->
+		<div class="col-lg-12">
+
+			@if ($errors->any())  
+				<div class="alert alert-danger" role="alert">
+					@foreach($errors->all() as $error)     
+					<p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span></button></p>
+					@endforeach  
+				</div>
+			@endif
+				
+			<div class="card m-b-30">
+		
+					<!-- Card header will display you the heading -->
+					<div class="card-header">
+						<h5 class="card-box">{{ __('Variant Product') }}</h5>
+					</div> 
+				
+					<!-- card body started -->
+					<div class="card-body">
+						
+						<div class="row mr-0 ml-0">
+							<div class="col-md-12  p-3 mb-2 bg-success text-white rounded">
+								<i class="fa fa-info-circle"></i> {{ __('Quick Guide') }}
+								<ul>
+									<li>
+										{{__('Common variant not work until you don\'t Link a variant.')}}
+									</li>
+									<li> {{__('Before Link a variant click on')}} <b>{{ __('Add Variant Option') }}</b> ({{__('You can add up to')}} <u>2</u> {{__('variant option')}}).</li>
+									<li>
+										{{__("After Link Variant option You can create unlimited variant from that options.")}}
+									</li>
+									<li>
+										{{__('After Add a default variant you can create unlimited common variants.')}}
+									</li>
+								</ul>
+							</div>
 						</div>
-					</div>
 
 
-					
-					<!--------------------------------------  -->
-                <ul class="nav nav-tabs mb-3 custom-tab-line" id="defaultTab" role="tablist">
+						
+						<!--------------------------------------  -->
+					<ul class="nav nav-tabs mb-3 custom-tab-line" id="defaultTab" role="tablist">
 
-                        <li class="nav-item">
-                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#facebook" role="tab" aria-controls="home" aria-selected="true"><i class="feather icon-plus mr-2"></i> {{ __('Add Common Variant') }}</a>
-                        </li>
+							<li class="nav-item">
+								<a class="nav-link active" id="home-tab" data-toggle="tab" href="#facebook" role="tab" aria-controls="home" aria-selected="true"><i class="feather icon-plus mr-2"></i> {{ __('Add Common Variant') }}</a>
+							</li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#google" role="tab" aria-controls="profile" aria-selected="false"><i class="feather icon-database mr-2"></i> {{ __('Add Variant Option') }}</a>
-                        </li>
+							<li class="nav-item">
+								<a class="nav-link" id="profile-tab" data-toggle="tab" href="#google" role="tab" aria-controls="profile" aria-selected="false"><i class="feather icon-database mr-2"></i> {{ __('Add Variant Option') }}</a>
+							</li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#twitter" role="tab" aria-controls="profile" aria-selected="false"><i class="feather icon-trending-up mr-2"></i> {{ __('Link Variant') }}</a>
-                        </li>
-                      
-                    </ul>
-                    <div class="tab-content" id="defaultTabContent">
+							<li class="nav-item">
+								<a class="nav-link" id="profile-tab" data-toggle="tab" href="#twitter" role="tab" aria-controls="profile" aria-selected="false"><i class="feather icon-trending-up mr-2"></i> {{ __('Link Variant') }}</a>
+							</li>
+						
+						</ul>
+						<div class="tab-content" id="defaultTabContent">
 
-                        <!-- === language start ======== -->
-                        <div class="tab-pane fade show active" id="facebook" role="tabpanel" aria-labelledby="home-tab">
-							<div class="box box-danger">
-								<div class="box-header with-border">
-									<div class="box-title">
-										<div class="row">
-											<div class="col-md-9">
-												Add Common Product Variant For <b>{{ $findpro->name }}</b>
+							<!-- === language start ======== -->
+							<div class="tab-pane fade show active" id="facebook" role="tabpanel" aria-labelledby="home-tab">
+								<div class="box box-danger">
+									<div class="box-header with-border">
+										<div class="box-title">
+											<div class="row">
+												<div class="col-md-9">
+													{{__("Add Common Product Variant For")}} <b>{{ $findpro->name }}</b>
+												</div>
+												<div class="col-md-3">
+													<a @if(env('DEMO_LOCK')==0) data-toggle="modal" href="#cmModal" @else disabled
+														title="{{ __("This action is disabled in demo !") }}" @endif
+														class="float-right btn btn-primary-rgba mr-2">
+														<i class="feather icon-plus mr-2"></i> {{__('Add Common Variant')}}
+													</a>
+												</div>
 											</div>
-											<div class="col-md-3">
-												<a @if(env('DEMO_LOCK')==0) data-toggle="modal" href="#cmModal" @else disabled
-													title="This action is disabled in demo !" @endif
-													class="float-right btn btn-primary-rgba mr-2">
-													<i class="feather icon-plus mr-2"></i> Add Common Variant
-												</a>
-											</div>
+										
 										</div>
+		
+		
+		
 									
+		
+		
 									</div>
-	
-	
-	
-								
-	
-	
-								</div>
-	
-								<div class="box-body mt-2">
+		
+									<div class="box-body mt-2">
 
-									<table id="full_detail_table" class="width100 table table-bordered table-striped">
-										<thead>
-											<tr>
-												<th>#</th>
-												<th>Variant Name</th>
-												<th>Variant Value</th>
-												<th>Action</th>
-											</tr>
-										</thead>
+										<table id="full_detail_table" class="width100 table table-bordered table-striped">
+											<thead>
+												<tr>
+													<th>#</th>
+													<th>
+														{{__("Variant Name")}}
+													</th>
+													<th>
+														{{__("Variant Value")}}
+													</th>
+													<th>
+														{{__("Action")}}
+													</th>
+												</tr>
+											</thead>
 
-										<tbody>
-											@foreach($findpro->commonvars as $key=> $commonvariant)
-											<tr>
-												<td>{{ $key+1 }}</td>
-												<td>
-													@php
-													$nameofattr = App\ProductAttributes::where('id','=',$commonvariant->cm_attr_id)->first()->attr_name;
-													@endphp
-													@php
-													$key = '_';
-													@endphp
-													@if (strpos($nameofattr, $key) == false)
+											<tbody>
+												@foreach($findpro->commonvars as $key=> $commonvariant)
+												<tr>
+													<td>{{ $key+1 }}</td>
+													<td>
+														@php
+														$nameofattr = App\ProductAttributes::where('id','=',$commonvariant->cm_attr_id)->first()->attr_name;
+														@endphp
+														@php
+														$key = '_';
+														@endphp
+														@if (strpos($nameofattr, $key) == false)
 
-													{{ $nameofattr }}
+														{{ $nameofattr }}
 
-													@else
+														@else
 
-													{{str_replace('_', ' ', $nameofattr)}}
+														{{str_replace('_', ' ', $nameofattr)}}
 
-													@endif
-												</td>
-												<td>
+														@endif
+													</td>
+													<td>
 
-													@php
-													$nameofval = App\ProductValues::where('id','=',$commonvariant->cm_attr_val)->first();
-													@endphp
+														@php
+														$nameofval = App\ProductValues::where('id','=',$commonvariant->cm_attr_val)->first();
+														@endphp
 
-													@if($nameofattr == "Color" || $nameofattr == "Colour" || $nameofattr == 'color' || $nameofattr == 'colour')
+														@if($nameofattr == "Color" || $nameofattr == "Colour" || $nameofattr == 'color' || $nameofattr == 'colour')
 
-														<div class="inline-flex margin-left-minus-15">
-															<div class="color-options">
-																<ul>
-																	<li title="{{ $nameofval->values }}"
-																		class="color varcolor active"><a href="#" title=""><i
-																				style="color: {{ $nameofval->unit_value }}"
-																				class="fa fa-circle"></i></a>
-																		<div class="overlay-image overlay-deactive">
-																		</div>
-																	</li>
-																</ul>
+															<div class="inline-flex margin-left-minus-15">
+																<div class="color-options">
+																	<ul>
+																		<li title="{{ $nameofval->values }}"
+																			class="color varcolor active"><a href="#" title=""><i
+																					style="color: {{ $nameofval->unit_value }}"
+																					class="fa fa-circle"></i></a>
+																			<div class="overlay-image overlay-deactive">
+																			</div>
+																		</li>
+																	</ul>
+																</div>
+															</div>
+															<span class="tx-color">{{ $nameofval->values }}</span>
+
+														@else
+
+
+
+														@if($nameofval->unit_value != null && strcasecmp($nameofval->unit_value,
+														$nameofval->values) != 0)
+														{{ $nameofval->values }}{{ $nameofval->unit_value }}
+														@else
+														{{ $nameofval->values }}
+														@endif
+
+														@endif
+
+													</td>
+													<td>
+
+														<div class="dropdown">
+															<button class="btn btn-round btn-primary-rgba" type="button" id="CustomdropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="feather icon-more-vertical-"></i></button>
+															<div class="dropdown-menu" aria-labelledby="CustomdropdownMenuButton1">
+																
+																<a class="dropdown-item btn btn-link" data-toggle="modal" data-target="#editcm{{ $commonvariant->id }}" >
+																	<i class="feather icon-edit mr-2"></i>{{ __("Edit") }}</a>
+																</a>
+																<a @if(env('DEMO_LOCK')==0) data-target="#cmdel{{ $commonvariant->id }}"
+																	@else disabled title="{{ __("This action is disabled in demo !") }}" @endif
+																	class="dropdown-item btn btn-link" data-toggle="modal">
+																	<i class="feather icon-delete mr-2"></i>{{ __("Delete") }}
+																</a>
+																
 															</div>
 														</div>
-														<span class="tx-color">{{ $nameofval->values }}</span>
 
-													@else
-
-
-
-													@if($nameofval->unit_value != null && strcasecmp($nameofval->unit_value,
-													$nameofval->values) != 0)
-													{{ $nameofval->values }}{{ $nameofval->unit_value }}
-													@else
-													{{ $nameofval->values }}
-													@endif
-
-													@endif
-
-												</td>
-												<td>
-
-													<div class="dropdown">
-														<button class="btn btn-round btn-primary-rgba" type="button" id="CustomdropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="feather icon-more-vertical-"></i></button>
-														<div class="dropdown-menu" aria-labelledby="CustomdropdownMenuButton1">
-															
-															<a class="dropdown-item btn btn-link" data-toggle="modal" data-target="#editcm{{ $commonvariant->id }}" >
-																<i class="feather icon-edit mr-2"></i>{{ __("Edit") }}</a>
-															</a>
-															<a @if(env('DEMO_LOCK')==0) data-target="#cmdel{{ $commonvariant->id }}"
-																@else disabled title="This action is disabled in demo !" @endif
-																class="dropdown-item btn btn-link" data-toggle="modal">
-																<i class="feather icon-delete mr-2"></i>{{ __("Delete") }}
-															</a>
-															
-														</div>
-													</div>
-
-													
-												</td>
+														
+													</td>
 
 
-											</tr>
-											@endforeach
-										</tbody>
-									</table>
-								</div>
-
-							</div>
-                            <!-- === language form end ===========-->    
-                        </div>
-                          <!-- === language end ======== -->
-
-                          <!-- === frontstatic start ======== -->
-                        <div class="tab-pane fade" id="google" role="tabpanel" aria-labelledby="profile-tab">
-							<div class="box box-danger">
-								<div class="box-header with-border">
-									<div class="box-title">
-										<div class="row">
-											<div class="col-md-10">
-												{{ __("Add Product Attributes For") }} <b>{{ $findpro->name }}</b>
-											</div>
-											<div class="col-md-2 ">
-												<a data-toggle="modal" href="#optionModal" class=" btn btn-primary-rgba  float-right">
-													<i class="feather icon-plus"></i> ADD Option
-												</a>
-											</div>
-										</div>
-									
+												</tr>
+												@endforeach
+											</tbody>
+										</table>
 									</div>
-	
-	
-								</div>
-	
-								<div class="box-body mt-2">
 
-									<table id="full_detail_table" class="table table-bordered table-striped">
-										<thead>
+								</div>
+								<!-- === language form end ===========-->    
+							</div>
+							<!-- === language end ======== -->
+
+							<!-- === frontstatic start ======== -->
+							<div class="tab-pane fade" id="google" role="tabpanel" aria-labelledby="profile-tab">
+								<div class="box box-danger">
+									<div class="box-header with-border">
+										<div class="box-title">
+											<div class="row">
+												<div class="col-md-10">
+													{{ __("Add Product Attributes For") }} <b>{{ $findpro->name }}</b>
+												</div>
+												<div class="col-md-2 ">
+													<a data-toggle="modal" href="#optionModal" class=" btn btn-primary-rgba  float-right">
+														<i class="feather icon-plus"></i> ADD Option
+													</a>
+												</div>
+											</div>
+										
+										</div>
+		
+		
+									</div>
+		
+									<div class="box-body mt-2">
+
+										<table id="full_detail_table" class="table table-bordered table-striped">
+											<thead>
+												<tr>
+													<th>#</th>
+													<th>{{ __("Option Names") }}</th>
+													<th>{{ __("Option Value") }}</th>
+													<th>{{ __("Action") }}</th>
+												</tr>
+											</thead>
+											<?php $i=0;?>
+											<tbody>
+												@foreach($getopts as $opt)
+												<?php $i++; ?>
+												<tr>
+													<td>{{ $i }}</td>
+													<td>
+														<b>
+															@php
+															$key = '_';
+															@endphp
+															@if (strpos($opt->getattrname->attr_name, $key) == false)
+
+															{{ $opt->getattrname->attr_name }}
+
+															@else
+
+															{{str_replace('_', ' ', $opt->getattrname->attr_name)}}
+
+															@endif
+														</b>
+													</td>
+													
+													<td width="50%">
+														<div class="row">
+															
+															@foreach($opt->attr_value as $value)
+			
+															@php
+															$originalvalue = App\ProductValues::where('id',$value)->get();
+															@endphp
+															
+															@foreach($originalvalue as $value)
+															
+															@if($value->unit_value !=null && strcasecmp($value->unit_value,
+															$value->values) != 0)
+																<div class="col-md-3">
+																	@if($value->proattr->attr_name == "Color" || $value->proattr->attr_name
+																	== "Colour")
+					
+																	<div class="numberCircle">
+																			<a href="#" title=""><i
+																				style="color: {{ $value->unit_value }}"
+																				class="fa fa-circle"></i></a>
+																				
+																	</div>			
+																	<span class="tx-color">{{ $value->values }}</span>			
+																	
+																	
+																	@else
+																	
+																		{{$value->values}}{{ $value->unit_value }}
+																	
+																	
+																
+																	@endif
+																
+					
+																	@else
+																	{{$value->values}}
+																	@endif
+																</div>
+															@endforeach
+														
+														
+															@endforeach
+														
+														</div>
+		
+													</td>
+
+													<td>
+														<div class="dropdown">
+															<button class="btn btn-round btn-primary-rgba" type="button" id="CustomdropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="feather icon-more-vertical-"></i></button>
+															<div class="dropdown-menu" aria-labelledby="CustomdropdownMenuButton1">
+																
+																<a class="dropdown-item btn btn-link" data-toggle="modal" data-target="#edit{{ $opt->id }}" >
+																	<i class="feather icon-edit mr-2"></i>{{ __("Edit") }}</a>
+																</a>
+																<a @if(env('DEMO_LOCK')==0) data-target="#var{{ $opt->id }}"
+																	@else disabled title="{{ __("This action is disabled in demo !") }}" @endif
+																	class="dropdown-item btn btn-link" data-toggle="modal">
+																	<i class="feather icon-delete mr-2"></i>{{ __("Delete") }}
+																</a>
+																
+															</div>
+														</div>
+
+													</td>
+
+
+												</tr>
+												@endforeach
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<!-- === frontstatic form end ===========-->
+							</div>
+							<!-- === frontstatic end ======== -->
+
+							<!-- === adminstatic start ======== -->
+							<div class="tab-pane fade" id="twitter" role="tabpanel" aria-labelledby="profile-tab">
+								<div class="box box-danger">
+									<div class="box-header with-border">
+										<div class="box-title">
+											<div class="row">
+												<div class="col-md-10">
+													Link Variant For <b>{{ $findpro->name }}</b>
+												</div>
+												<div class="col-md-2 ">
+													<a class="float-right btn btn-primary-rgba mr-2"
+													href="{{ route('manage.stock',$findpro->id) }}"><i class="feather icon-plus mr-2"></i>Add
+													</a>
+												</div>
+											</div>
+										
+										</div>
+		
+		
+									</div>
+		
+									<div class="box-body mt-2">
+
+							
+										<table class="table table-striped">
+											<thead>
+												<tr>
+													<th>#</th>
+													<th>
+														{{__("Name")}}
+													</th>
+													<th>
+														{{__("Additional Detail")}}
+													</th>
+													<th>
+														{{__('Default')}}
+													</th>
+													<th>
+														{{__('Action')}}
+													</th>
+												</tr>
+											</thead>
+
+											@foreach($findpro->subvariants as $key=> $sub)
 											<tr>
-												<th>#</th>
-												<th>{{ __("Option Names") }}</th>
-												<th>{{ __("Option Value") }}</th>
-												<th>{{ __("Action") }}</th>
-											</tr>
-										</thead>
-										<?php $i=0;?>
-										<tbody>
-											@foreach($getopts as $opt)
-											<?php $i++; ?>
-											<tr>
-												<td>{{ $i }}</td>
+
 												<td>
+
+													{{$key+1}}
+												</td>
+												<td>@foreach($sub->main_attr_value as $key=> $originalvalue)
+													@if($originalvalue != 0)
+													@php
+													$getattrname = App\ProductAttributes::where('id',$key)->first();
+													@endphp
+		
+													@php
+													$getattrval = App\ProductValues::where('id',$originalvalue)->first();
+													@endphp
+		
 													<b>
 														@php
 														$key = '_';
 														@endphp
-														@if (strpos($opt->getattrname->attr_name, $key) == false)
-
-														{{ $opt->getattrname->attr_name }}
-
-														@else
-
-														{{str_replace('_', ' ', $opt->getattrname->attr_name)}}
-
-														@endif
-													</b>
-												</td>
-												
-												<td width="50%">
-													<div class="row">
-														
-														@foreach($opt->attr_value as $value)
+														@if (strpos($getattrname->attr_name, $key) == false)
 		
-														@php
-														$originalvalue = App\ProductValues::where('id',$value)->get();
-														@endphp
-														
-														@foreach($originalvalue as $value)
-														
-														@if($value->unit_value !=null && strcasecmp($value->unit_value,
-														$value->values) != 0)
-															<div class="col-md-3">
-																@if($value->proattr->attr_name == "Color" || $value->proattr->attr_name
-																== "Colour")
-				
-																<div class="numberCircle">
-																		<a href="#" title=""><i
-																			style="color: {{ $value->unit_value }}"
-																			class="fa fa-circle"></i></a>
-																			
-																</div>			
-																<span class="tx-color">{{ $value->values }}</span>			
+														{{ $getattrname->attr_name }}
+		
+														@else
+		
+														{{str_replace('_', ' ', $getattrname->attr_name)}}
+		
+														@endif
+													</b> :
+		
+													@if(strcasecmp($getattrval->unit_value, $getattrval->values) !=0)
+		
+													@if($getattrname->attr_name == "Color" || $getattrname->attr_name ==
+													"Colour")
+		
+																<i style="color: {{ $getattrval->unit_value }}"
+																			class="border border-primary shadow-sm rounded p-1 fa fa-circle"></i>
+																			<span class="tx-color">{{ $getattrval->values }}</span>
+																	
+																</li>
 																
-																
-																@else
-																
-																	{{$value->values}}{{ $value->unit_value }}
-																
-																
-															
-																@endif
-															
-				
-																@else
-																{{$value->values}}
-																@endif
-															</div>
-														@endforeach
+															</ul>
 													
 													
-														@endforeach
 													
-													</div>
-	
+		
+													@else
+													{{ $getattrval->values }}{{ $getattrval->unit_value }}
+													@endif
+		
+													@else
+													{{ $getattrval->values }}
+													@endif
+		
+													<br>
+													@else
+													@php
+													$getattrname = App\ProductAttributes::where('id',$key)->first();
+													@endphp
+													<b>{{ $getattrname->attr_name }}</b> :
+													Not Available
+													<br>
+													@endif
+													@endforeach
 												</td>
 
 												<td>
+													<p><b>{{__("Price")}}:</b> {{ $sub->price }}</p>
+													<p><b>{{__("Stock")}}:</b> {{ $sub->stock }}</p>
+													<p><b>{{__("Weight")}}:</b> {{ $sub->weight }}{{ $sub->unitname->short_code ?? '' }}</p>
+													<p><b>{{__("Min Order Qty")}}:</b>{{ $sub->min_order_qty }}</p>
+													<p><b>{{__('Max Order Qty')}}:</b>{{ $sub->max_order_qty }}</p>
+												</td>
+												<td class="v-middle custom-radios">
+
+													<input name="def" class="setdefButton cmn" data-proid="{{ $findpro->id }}"
+														id="{{ $sub->id }}" type="radio" {{ $sub->def==1 ? "checked" : "" }}>
+
+
+													<label for="{{ $sub->id }}">
+														<span>
+															<img class="align-unset"
+																src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
+																alt="Checked Icon" />
+														</span>
+													</label>
+
+												</td>
+												<td>
+
 													<div class="dropdown">
 														<button class="btn btn-round btn-primary-rgba" type="button" id="CustomdropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="feather icon-more-vertical-"></i></button>
 														<div class="dropdown-menu" aria-labelledby="CustomdropdownMenuButton1">
-															
-															<a class="dropdown-item btn btn-link" data-toggle="modal" data-target="#edit{{ $opt->id }}" >
-																<i class="feather icon-edit mr-2"></i>{{ __("Edit") }}</a>
-															</a>
-															<a @if(env('DEMO_LOCK')==0) data-target="#{{ $opt->id }}var"
-																@else disabled title="This action is disabled in demo !" @endif
+															<a href="{{ route('edit.var',$sub->id) }}" class="dropdown-item"><i class="feather icon-edit mr-2"></i>{{ __("Edit") }}</a>
+
+															<a @if(env('DEMO_LOCK')==0) href="#deletevar{{ $sub->id }}"
+																@else disabled title="{{ __("This action is disabled in demo !") }}" @endif
 																class="dropdown-item btn btn-link" data-toggle="modal">
 																<i class="feather icon-delete mr-2"></i>{{ __("Delete") }}
 															</a>
@@ -327,180 +500,24 @@
 
 												</td>
 
-
 											</tr>
 											@endforeach
-										</tbody>
-									</table>
-								</div>
-							</div>
-                            <!-- === frontstatic form end ===========-->
-                        </div>
-                        <!-- === frontstatic end ======== -->
-
-                        <!-- === adminstatic start ======== -->
-                        <div class="tab-pane fade" id="twitter" role="tabpanel" aria-labelledby="profile-tab">
-							<div class="box box-danger">
-								<div class="box-header with-border">
-									<div class="box-title">
-										<div class="row">
-											<div class="col-md-10">
-												Link Variant For <b>{{ $findpro->name }}</b>
-											</div>
-											<div class="col-md-2 ">
-												<a class="float-right btn btn-primary-rgba mr-2"
-										        href="{{ route('manage.stock',$findpro->id) }}"><i class="feather icon-plus mr-2"></i>Add
-									            </a>
-											</div>
-										</div>
-									
+										</table>
 									</div>
-	
-	
 								</div>
-	
-								<div class="box-body mt-2">
-
-                           
-									<table class="table table-striped">
-										<thead>
-											<tr>
-												<th>#</th>
-												<th>Name</th>
-												<th>Additional Detail</th>
-												<th>Default</th>
-												<th>Action</th>
-											</tr>
-										</thead>
-
-										@foreach($findpro->subvariants as $key=> $sub)
-										<tr>
-
-											<td>
-
-												{{$key+1}}
-											</td>
-											<td>@foreach($sub->main_attr_value as $key=> $originalvalue)
-												@if($originalvalue != 0)
-												@php
-												$getattrname = App\ProductAttributes::where('id',$key)->first();
-												@endphp
-	
-												@php
-												$getattrval = App\ProductValues::where('id',$originalvalue)->first();
-												@endphp
-	
-												<b>
-													@php
-													$key = '_';
-													@endphp
-													@if (strpos($getattrname->attr_name, $key) == false)
-	
-													{{ $getattrname->attr_name }}
-	
-													@else
-	
-													{{str_replace('_', ' ', $getattrname->attr_name)}}
-	
-													@endif
-												</b> :
-	
-												@if(strcasecmp($getattrval->unit_value, $getattrval->values) !=0)
-	
-												@if($getattrname->attr_name == "Color" || $getattrname->attr_name ==
-												"Colour")
-	
-	
-												
-													
-															<i style="color: {{ $getattrval->unit_value }}"
-																		class="border border-primary shadow-sm rounded p-1 fa fa-circle"></i>
-																		<span class="tx-color">{{ $getattrval->values }}</span>
-																
-															</li>
-															
-														</ul>
-												
-												
-												
-	
-												@else
-												{{ $getattrval->values }}{{ $getattrval->unit_value }}
-												@endif
-	
-												@else
-												{{ $getattrval->values }}
-												@endif
-	
-												<br>
-												@else
-												@php
-												$getattrname = App\ProductAttributes::where('id',$key)->first();
-												@endphp
-												<b>{{ $getattrname->attr_name }}</b> :
-												Not Available
-												<br>
-												@endif
-												@endforeach
-											</td>
-
-											<td>
-												<p><b>Price:</b> {{ $sub->price }}</p>
-												<p><b>Stock:</b> {{ $sub->stock }}</p>
-												<p><b>Weight:</b> {{ $sub->weight }}{{ $sub->unitname->short_code ?? '' }}</p>
-												<p><b>Min Order Qty:</b>{{ $sub->min_order_qty }}</p>
-												<p><b>Max Order Qty:</b>{{ $sub->max_order_qty }}</p>
-											</td>
-											<td class="v-middle custom-radios">
-
-												<input name="def" class="setdefButton cmn" data-proid="{{ $findpro->id }}"
-													id="{{ $sub->id }}" type="radio" {{ $sub->def==1 ? "checked" : "" }}>
-
-
-												<label for="{{ $sub->id }}">
-													<span>
-														<img class="align-unset"
-															src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
-															alt="Checked Icon" />
-													</span>
-												</label>
-
-											</td>
-											<td>
-
-												<div class="dropdown">
-													<button class="btn btn-round btn-primary-rgba" type="button" id="CustomdropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="feather icon-more-vertical-"></i></button>
-													<div class="dropdown-menu" aria-labelledby="CustomdropdownMenuButton1">
-														<a href="{{ route('edit.var',$sub->id) }}" class="dropdown-item"><i class="feather icon-edit mr-2"></i>{{ __("Edit") }}</a>
-
-														<a @if(env('DEMO_LOCK')==0) href="#deletevar{{ $sub->id }}"
-															@else disabled title="This action is disabled in demo !" @endif
-															class="dropdown-item btn btn-link" data-toggle="modal">
-															<i class="feather icon-delete mr-2"></i>{{ __("Delete") }}
-														</a>
-														
-													</div>
-												</div>
-
-											</td>
-
-										</tr>
-										@endforeach
-									</table>
-								</div>
+								<!-- === adminstatic form end ===========-->
 							</div>
-                            <!-- === adminstatic form end ===========-->
-                        </div>
-                        <!-- === adminstatic end ======== -->
+							<!-- === adminstatic end ======== -->
 
-                    </div>
-                </div><!-- card body end -->
-            
-        </div><!-- col end -->
-    </div>
-</div>
+						</div>
+					</div><!-- card body end -->
+				
+			</div><!-- col end -->
+		</div>
+
+	</div>
 </div><!-- row end -->
-    <br><br>
+<br><br>
 
 
 @foreach($findpro->commonvars as $key=> $commonvariant)
@@ -563,7 +580,7 @@
 					@endforeach
 					<hr>
 					<button class="btn btn-primary btn-md" type="submit"><i class="fa fa-check-circle"></i> Save</button>
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('Close') }}</button>
 				</form>
 			</div>
 		
@@ -581,15 +598,17 @@
 				<div class="delete-icon"></div>
 			</div>
 			<div class="modal-body text-center">
-				<h4 class="modal-heading">Are You Sure ?</h4>
-				<p>Do you really want to delete this variant? This process cannot be undone.</p>
+				<h4 class="modal-heading">{{ __("Are You Sure ?") }}</h4>
+				<p>
+					{{__('Do you really want to delete this variant? This process cannot be undone.')}}
+				</p>
 			</div>
 			<div class="modal-footer">
 				<form method="post" action="{{route('del.common',$commonvariant->id)}}" class="pull-right">
 					{{csrf_field()}}
 					{{method_field("DELETE")}}
-					<button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">No</button>
-					<button type="submit" class="btn btn-danger">Yes</button>
+					<button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">{{ __("NO") }}</button>
+					<button type="submit" class="btn btn-danger">{{ __("YES") }}</button>
 				</form>
 			</div>
 		</div>
@@ -598,13 +617,12 @@
 @endforeach
 
 @foreach($getopts as $opt)
-
 <div class="modal fade" id="edit{{ $opt->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleStandardModalLabel" aria-hidden="true">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="exampleStandardModalLabel">
-				Edit: <b> @php
+				{{__("Edit :")}} <b> @php
 						$key = '_';
 						@endphp
 						@if (strpos($opt->getattrname->attr_name, $key) == false)
@@ -626,7 +644,7 @@
 					{{ csrf_field() }}
 
 					<div class="form-group">
-						<label><i>Choosed Option:</i>
+						<label><i>{{ __("Choosed Option:") }}</i>
 							@php
 							$key = '_';
 							@endphp
@@ -645,9 +663,9 @@
 						$pvalues = App\ProductValues::where('atrr_id', $opt->attr_name)->get();
 						@endphp
 						<br>
-						<label><input type="checkbox" class="sel_all"> Select All</label>
+						<label><input type="checkbox" class="sel_all"> {{ __("Select All") }}</label>
 						<br>
-						<label for="">Choose Value:</label>
+						<label for="">{{ __('Choose Value:') }}</label>
 						<br>
 
 
@@ -664,7 +682,7 @@
 						@if(isset($old_values) && count($old_values) > 0)
 						@foreach($old_values as $old_value)
 						<label>
-							<input checked type="checkbox" name="attr_value[]" value="{{ $old_value }}">
+							<input checked type="checkbox" class="edit_chk" name="attr_value[]" value="{{ $old_value }}">
 							@php
 							$getvalname = App\ProductValues::where('id',$old_value)->first();
 							@endphp
@@ -672,19 +690,7 @@
 
 							@if($opt->getattrname->attr_name == "Color" || $opt->getattrname->attr_name == "Colour")
 
-
-							<div class="margin-left-minus-15 inline-flex">
-								<div class="color-options">
-									<ul>
-										<li title="{{ $getvalname->values }}" class="color varcolor active"><a href="#"
-												title=""><i style="color: {{ $getvalname->unit_value }}"
-													class="fa fa-circle"></i></a>
-											<div class="overlay-image overlay-deactive">
-											</div>
-										</li>
-									</ul>
-								</div>
-							</div>
+							<i style="color: {{ $getvalname->unit_value }}" class="fa fa-circle"></i>
 							<span class="tx-color">{{ $getvalname->values }}</span>
 							@else
 							{{ $getvalname->values }}{{ $getvalname->unit_value }}
@@ -699,25 +705,14 @@
 						@if(isset($diff_values))
 						@foreach($diff_values as $orivalue)
 						<label>
-							<input type="checkbox" value="{{ $orivalue }}" name="attr_value[]">
+							<input type="checkbox" class="edit_chk" value="{{ $orivalue }}" name="attr_value[]">
 							@php
 							$getvalname = App\ProductValues::where('id',$orivalue)->first();
 							@endphp
 							@if(strcasecmp($getvalname->unit_value, $getvalname->values) !=0)
 
 							@if($opt->getattrname->attr_name == "Color" || $opt->getattrname->attr_name == "Colour")
-							<div class="margin-left-minus-15 inline-flex">
-								<div class="color-options">
-									<ul>
-										<li title="{{ $getvalname->values }}" class="color varcolor active"><a href="#"
-												title=""><i style="color: {{ $getvalname->unit_value }}"
-													class="fa fa-circle"></i></a>
-											<div class="overlay-image overlay-deactive">
-											</div>
-										</li>
-									</ul>
-								</div>
-							</div>
+							<i style="color: {{ $getvalname->unit_value }}" class="fa fa-circle"></i> 
 							<span class="tx-color">{{ $getvalname->values }}</span>
 							@else
 							{{ $getvalname->values }}{{ $getvalname->unit_value }}
@@ -733,9 +728,9 @@
 
 						</p>
 					</div>
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('Close') }}</button>
 					<button class="btn btn-md btn-primary" type="submit">
-						<i class="fa fa-check-circle"></i> Update
+						<i class="fa fa-check-circle"></i> {{__('Update')}}
 					</button>
 				</form>
 			</div>
@@ -745,7 +740,7 @@
 </div>
 
 
-<div id="{{ $opt->id }}var" class="delete-modal modal fade" role="dialog">
+<div id="var{{ $opt->id }}" class="delete-modal modal fade" role="dialog">
 	<div class="modal-dialog modal-sm">
 		<!-- Modal content-->
 		<div class="modal-content">
@@ -754,15 +749,17 @@
 				<div class="delete-icon"></div>
 			</div>
 			<div class="modal-body text-center">
-				<h4 class="modal-heading">Are You Sure ?</h4>
-				<p>Do you really want to delete this variant? This process cannot be undone.</p>
+				<h4 class="modal-heading">{{ __("Are You Sure ?") }}</h4>
+				<p>
+					{{__('Do you really want to delete this option? This process cannot be undone.')}}
+				</p>
 			</div>
 			<div class="modal-footer">
 				<form method="post" action="{{route('del.subvar',$opt->id)}}" class="pull-right">
 					{{csrf_field()}}
 					{{method_field("DELETE")}}
-					<button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">No</button>
-					<button type="submit" class="btn btn-danger">Yes</button>
+					<button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">{{ __("NO") }}</button>
+					<button type="submit" class="btn btn-danger">{{ __("YES") }}</button>
 				</form>
 			</div>
 		</div>
@@ -777,21 +774,23 @@
 	<div class="modal-dialog modal-sm">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="exampleSmallModalLabel">Delete</h5>
+				<h5 class="modal-title" id="exampleSmallModalLabel">{{ __("DELETE") }}</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<div class="modal-body">
-			<h4 class="modal-heading">Are You Sure ?</h4>
-				<p>Do you really want to delete this variant? This process cannot be undone.</p>
+			<h4 class="modal-heading">{{ __("Are You Sure ?") }}</h4>
+				<p>
+					{{__("Do you really want to delete this variant? This process cannot be undone.")}}
+				</p>
 			</div>
 			<div class="modal-footer">
 			<form method="post" action="{{ route('del.var',$sub->id) }}" class="pull-right">
 					{{csrf_field()}}
 					{{method_field("DELETE")}}
-					<button type="reset" class="btn btn-secondary" data-dismiss="modal">No</button>
-					<button type="submit" class="btn btn-primary">Yes</button>
+					<button type="reset" class="btn btn-secondary" data-dismiss="modal">{{ __("No") }}</button>
+					<button type="submit" class="btn btn-primary">{{ __("YES") }}</button>
 				</form>
 			</div>
 		</div>
@@ -799,30 +798,6 @@
 </div>
 <!-- delete Model ended -->
 
-
-<!-- <div id="deletevar{{ $sub->id }}" class="delete-modal modal fade" role="dialog">
-	<div class="modal-dialog modal-sm">
-		
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<div class="delete-icon"></div>
-			</div>
-			<div class="modal-body text-center">
-				<h4 class="modal-heading">Are You Sure ?</h4>
-				<p>Do you really want to delete this variant? This process cannot be undone.</p>
-			</div>
-			<div class="modal-footer">
-				<form method="post" action="{{ route('del.var',$sub->id) }}" class="pull-right">
-					{{csrf_field()}}
-					{{method_field("DELETE")}}
-					<button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">No</button>
-					<button type="submit" class="btn btn-danger">Yes</button>
-				</form>
-			</div>
-		</div>
-	</div>
-</div> -->
 @endforeach
 <!--END Sub variant delete modal-->
 
@@ -831,7 +806,7 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="exampleStandardModalLabel">Add Product Common Variant</h5>
+				<h5 class="modal-title" id="exampleStandardModalLabel">{{ __("Add Product Common Variant") }}</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 				</button>
@@ -841,7 +816,7 @@
 					{{ csrf_field() }}
 
 					<div class="form-group">
-						<label class="text-dark" for="">Option Name:</label>
+						<label class="text-dark" for="">{{ __("Option Name:") }}</label>
 
 						@php
 
@@ -865,7 +840,9 @@
 						@endphp
 
 						<select required="" class="form-control select2" name="attr_name2" id="attr_name2">
-							<option value="">Please Choose</option>
+							<option value="">
+								{{__("Please Choose")}}
+							</option>
 							@foreach($test as $t)
 							<option value="{{ $t->id }}">
 
@@ -889,15 +866,17 @@
 					</div>
 
 					<div class="form-group">
-						<label class="text-dark" for="">Option Value:</label>
+						<label class="text-dark" for="">
+							{{__("Option Value:")}}
+						</label>
 						<div id="attr_value2">
 
 						</div>
 
 					</div>
-					<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-danger" data-dismiss="modal">{{ __('Close') }}</button>
 					<button class="btn btn-md btn-primary" type="submit">
-						<i class="fa fa-check-circle"></i> Save
+						<i class="fa fa-check-circle"></i> {{__("Save")}}
 					</button>
 				</form>
 			</div>
@@ -918,7 +897,9 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="exampleStandardModalLabel">Add Product Attributes</h5>
+				<h5 class="modal-title" id="exampleStandardModalLabel">
+					{{__("Add Product Attributes")}}
+				</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 				</button>
@@ -928,7 +909,9 @@
 					{{ csrf_field() }}
 
 					<div class="form-group">
-						<label class="text-dark" for="">Option Name:</label>
+						<label class="text-dark" for="">
+							{{__("Option Name:")}}
+						</label>
 
 						@php
 
@@ -950,7 +933,9 @@
 						@endphp
 
 						<select class="form-control select2" name="attr_name" id="attr_name">
-							<option>Please Choose</option>
+							<option>
+								{{__("Please Choose")}}
+							</option>
 							@foreach($test as $t)
 							<option value="{{ $t->id }}">
 
@@ -976,23 +961,21 @@
 						<div id="sel_box">
 
 						</div>
-						<label class="text-dark" for="">Option Value:</label>
+						<label class="text-dark" for="">
+							{{__("Option Value:")}}
+						</label>
 						<div id="attr_value">
 
 						</div>
 
 					</div>
-					<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-danger" data-dismiss="modal">{{ __('Close') }}</button>
 					<button class="btn btn-md btn-primary" type="submit">
-						<i class="fa fa-check-circle"></i> Save
+						<i class="fa fa-check-circle"></i> {{__("Save")}}
 					</button>
 				</form>
 
 			</div>
-			<!-- <div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary">Save changes</button>
-			</div> -->
 		</div>
 	</div>
 </div>
@@ -1004,7 +987,7 @@
 <!-- main content section ended -->
 @section('custom-script')
 <script>
-	var baseUrl = "<?= url('/') ?>";
+	var baseUrl = @json(url('/'));
 </script>
 <script src="{{ url('js/variant.js') }}"></script>
 @endsection

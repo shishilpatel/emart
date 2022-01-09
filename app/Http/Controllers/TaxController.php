@@ -53,7 +53,7 @@ class TaxController extends Controller
          $input = $request->all(); 
         $data = Tax::create($input);
         $data->save();
-        return redirect('admin/tax')->with('category_message', 'Tax has been updated'); 
+        return redirect('admin/tax')->with('added', __('Tax has been updated')); 
     }
 
     
@@ -88,23 +88,19 @@ class TaxController extends Controller
     {
          
         $data = $this->validate($request,[
+            
             "name"=>"required",
             'rate' => 'required|integer|not_in:0',
             'zone_id' => 'required|not_in:0',
             
-        ],[
-
-            "name.required"=>"Name Fild is Required",
-            "rate.required"=>"Rate Fild Accept Only Number",
-            
-          ]);
+        ]);
 
         
          $tax = Tax::findOrFail($id);
           $input = $request->all();  
           $tax->update($input);
 
-          return redirect('admin/tax')->with('category_message', 'Tax has been updated');
+          return redirect('admin/tax')->with('added', __('Tax has been updated'));
 
 
     }
@@ -121,7 +117,7 @@ class TaxController extends Controller
          $obj = $daa->findorFail($id);
          $value = $obj->delete();
          if($value){
-            session()->flash("category_message","Tax Has Been deleted");
+            session()->flash("deleted",__("Tax has been deleted"));
              return redirect("admin/tax");
          }
     }

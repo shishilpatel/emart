@@ -467,27 +467,7 @@ if(Auth::check()){
             $orivar = App\AddSubVariant::withTrashed()->where('id','=',$row['variantid'])->first();
 
 
-            $var_name_count = count($orivar['main_attr_id']);
-            unset($name);
-            $name = array();
-            $var_name;
-
-            $newarr = array();
-            for($i = 0; $i<$var_name_count; $i++){ $var_id=$orivar['main_attr_id'][$i];
-              $var_name[$i]=$orivar['main_attr_value'][$var_id];
-              array_push($name,App\ProductAttributes::where('id',$var_id)->first());
-
-
-              }
-
-
-              try{
-              $url =
-              url('details').'/'.$row['pro_id'].'?'.$name[0]['attr_name'].'='.$var_name[0].'&'.$name[1]['attr_name'].'='.$var_name[1];
-              }catch(Exception $e)
-              {
-              $url = url('details').'/'.$row['pro_id'].'?'.$name[0]['attr_name'].'='.$var_name[0];
-              }
+            
 
               @endphp
 
@@ -495,15 +475,14 @@ if(Auth::check()){
                 <div class="col-md-1 col-xs-3">
                   <div class="cart-image">
 
-                    <a class="entry-thumbnail" href="{{url($url)}}" title="">
-                      <img class="img-responsive"
-                        src="{{url('/variantimages/thumbnails/'.$orivar->variantimages['main_image'])}}" alt="">
+                    <a class="entry-thumbnail" href="{{ App\Helpers\ProductUrl::getUrl($orivar->id) }}" title="">
+                      <img class="img-responsive" src="{{url('/variantimages/thumbnails/'.$orivar->variantimages['main_image'])}}">
                     </a>
                   </div>
                 </div>
                 <div class="col-md-4 col-xs-9">
                   <div class="cart-product-name-info">
-                    <h4 class='cart-product-description'><a href="{{url($url)}}" title="">{{$pro->name}}</a></h4>
+                    <h4 class='cart-product-description'><a href="{{ App\Helpers\ProductUrl::getUrl($orivar->id) }}" title="">{{$pro->name}}</a></h4>
                     <?php
                           $reviews = App\UserReview::where('pro_id',$row['pro_id'])->where('status','1')->get(); 
                         

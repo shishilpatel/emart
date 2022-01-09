@@ -43,7 +43,7 @@
                                       <p class="card-text font-weight-normal">
                                         {{__("Sale End Date:")}} {{ date('d-m-Y @ h:i A',strtotime($deal->end_date)) }}
                                       </p>
-                                      <a href="{{ route('flashdeals.view',['id' => $deal->id, 'slug' => $deal->title]) }}" class="btn btn-outline-primary">
+                                      <a href="{{ route('flashdeals.view',['id' => $deal->id, 'slug' => str_slug($deal->title,'-')]) }}" class="btn btn-outline-primary">
                                           {{__("View Deal")}}
                                       </a>
                                     </div>

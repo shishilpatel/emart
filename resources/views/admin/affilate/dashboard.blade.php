@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Affiliate Reports')
+@section('title',__('Affiliate Reports'))
 @section('body')
 @component('admin.component.breadcumb',['secondaryactive' => 'active'])
 @slot('heading')
@@ -16,9 +16,12 @@
     <div class="row">
         
         <div class="col-lg-12">
+
+            
+
             <div class="card m-b-30">
                 <div class="card-header">
-                    <h5 class="box-title">Affiliate Reports</h5>
+                    <h5 class="box-title">{{ __('Affiliate Reports') }}</h5>
                 </div>
                 <div class="card-body">
                 
@@ -30,16 +33,16 @@
                                 </th>
                                
                                 <th>
-                                    Refered user
+                                    {{__('Refered user')}}
                                 </th>
                                 <th>
-                                    Refered by
+                                    {{__('Refered by')}}
                                 </th>
                                 <th>
-                                    Date
+                                    {{__('Date')}}
                                 </th>
                                 <th>
-                                    Amount
+                                    {{__("Amount")}}
                                 </th>
                             </thead>
                             <tbody>

@@ -14,7 +14,7 @@ class PageController extends Controller
      */
     public function index()
     {
-        abort_if(!auth()->user()->can('pages.view'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('pages.view'),403,__('User does not have the right permissions.'));
         $pages = Page::all();
         return view("admin.page.index", compact("pages"));
     }
@@ -27,7 +27,7 @@ class PageController extends Controller
 
     public function create()
     {
-        abort_if(!auth()->user()->can('pages.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('pages.create'),403,__('User does not have the right permissions.'));
         return view("admin.page.add");
     }
 
@@ -39,13 +39,9 @@ class PageController extends Controller
      */
     public function store(Request $request)
     {
-        abort_if(!auth()->user()->can('pages.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('pages.create'),403,__('User does not have the right permissions.'));
 
-        $data = $this->validate($request, ["name" => "required", "slug" => "required",
-
-        ], [
-
-        "name.required" => "Name Fild is Required", "slug.required" => "Slug Fild is Required",
+            $data = $this->validate($request, ["name" => "required", "slug" => "required",
 
         ]);
 
@@ -56,7 +52,7 @@ class PageController extends Controller
         $page->save();
 
         return back()
-            ->with('updated', 'Page has been created !');
+            ->with('updated', __('Page has been created !'));
     }
 
     /**
@@ -68,7 +64,7 @@ class PageController extends Controller
     public function edit($id)
     {
 
-        abort_if(!auth()->user()->can('pages.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('pages.edit'),403,__('User does not have the right permissions.'));
 
         $page = Page::findOrFail($id);
 
@@ -85,22 +81,19 @@ class PageController extends Controller
      */
     public function update(Request $request, $id)
     {
-        abort_if(!auth()->user()->can('pages.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('pages.edit'),403,__('User does not have the right permissions.'));
 
-        $data = $this->validate($request, ["name" => "required", "slug" => "required",
-
-        ], [
-
-            "name.required" => "Name Fild is Required", "slug.required" => "Slug Fild is Required",
+            $data = $this->validate($request, ["name" => "required", "slug" => "required",
 
         ]);
+        
         $page = Page::findOrFail($id);
         $input = $request->all();
         $input['des'] = clean($request->des);
         $input['status'] = $request->status ? '1' : '0';
         $page->update($input);
 
-        return redirect('admin/page')->with('updated', 'Page has been updated');
+        return redirect('admin/page')->with('updated', __('Page has been updated'));
     }
 
     /**
@@ -111,12 +104,12 @@ class PageController extends Controller
      */
     public function destroy($id)
     {
-        abort_if(!auth()->user()->can('pages.delete'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('pages.delete'),403,__('User does not have the right permissions.'));
         $cat = Page::find($id);
         $value = $cat->delete();
         if ($value)
         {
-            session()->flash("deleted", "Page Has Been Deleted");
+            session()->flash("deleted", __("Page Has Been Deleted"));
             return redirect("admin/page");
         }
     }

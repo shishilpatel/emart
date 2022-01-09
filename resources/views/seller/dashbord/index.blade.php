@@ -9,7 +9,9 @@
       <div class="breadcrumb-list">
         <ol class="breadcrumb">
           <h4>
-            <li class="breadcrumb-item text-dark">Dashboard</li>
+            <li class="breadcrumb-item text-dark">
+              {{__('Dashboard')}}
+            </li>
           </h4>
 
         </ol>
@@ -24,6 +26,34 @@
   <div class="row">
     <!-- Start col -->
     <div class="col-lg-12 col-xl-12">
+      @if(Module::has('SellerSubscription') && Module::find('SellerSubscription')->isEnabled())
+      <div class="card mb-3">
+        <div class="card-header">
+          <h4 class="card-title">
+            {{ __("Current Subscription") }}
+          </h4>
+        </div>
+        <div class="card-body">
+          <h5><b>{{ __("Plan Name:") }}</b>
+            {{ auth()->user()->activeSubscription->plan ? auth()->user()->activeSubscription->plan->name : __("seller.Plan not found !") }}
+          </h5>
+          <h5><b>{{ __("Product Upload Limit:") }}</b>
+            {{ auth()->user()->activeSubscription->plan ? auth()->user()->products()->count().' / '.auth()->user()->activeSubscription->plan->product_create : __("seller.Plan not found !") }}
+          </h5>
+          <h5><b>{{ __("Expires ON:") }}</b>
+            {{ auth()->user()->activeSubscription ?  date('d/m/Y h:i A',strtotime(auth()->user()->activeSubscription->end_date)) : __("seller.Not found !")}}
+          </h5>
+          <h5><b>{{ __("CSV Product Upload:") }}</b>
+            {{ auth()->user()->activeSubscription->plan && auth()->user()->activeSubscription->plan->csv_product ? __("seller.YES")  : __("seller.NO")}}
+          </h5>
+        </div>
+        <div class="card-footer">
+          <a class="text-center text-muted" href="{{ route('seller.my.subscriptions') }}">
+            <b> {{__("View More")}}</b>
+          </a>
+        </div>
+      </div>
+      @endif
       <!-- Start row -->
       <div class="row">
         <!-- Start col -->
@@ -147,7 +177,9 @@
                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
                         class="feather icon-more-horizontal-"></i></button>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="upcomingTask">
-                      <a class="dropdown-item font-13" href="{{ url('seller/orders') }}">View All</a>
+                      <a class="dropdown-item font-13" href="{{ url('seller/orders') }}">
+                        {{__('View All')}}
+                      </a>
 
                     </div>
                   </div>
@@ -207,8 +239,6 @@
         </div>
 
 
-
-
         <div class="col-md-12 ">
           {!! $sellerpayoutdata->container() !!}
         </div>
@@ -228,7 +258,9 @@
                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
                         class="feather icon-more-horizontal-"></i></button>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="upcomingTask">
-                      <a class="dropdown-item font-13" href="{{ url('seller/orders') }}">View All</a>
+                      <a class="dropdown-item font-13" href="{{ url('seller/orders') }}">
+                        {{__('View All')}}
+                      </a>
 
                     </div>
                   </div>
@@ -266,17 +298,19 @@
                     <div class="row">
                       <div class="col-md-2">
                         @if(count($pro->subvariants)>0)
-                        
-                          @if($sub->variantimages)
-                          <img width="70px" class="object-fit" src="{{ url('variantimages/thumbnails/'.$sub->variantimages['main_image']) }}"
-                            alt="{{ $sub->variantimages['main_image'] }}" title="{{ $pro->name }}">
-                          @else
-                          <img  width="70px" class="object-fit" src="{{ Avatar::create($pro->name) }}" title="{{ $pro->name }}">
-                          @endif
-                        
+
+                        @if($sub->variantimages)
+                        <img width="70px" class="object-fit"
+                          src="{{ url('variantimages/thumbnails/'.$sub->variantimages['main_image']) }}"
+                          alt="{{ $sub->variantimages['main_image'] }}" title="{{ $pro->name }}">
+                        @else
+                        <img width="70px" class="object-fit" src="{{ Avatar::create($pro->name) }}"
+                          title="{{ $pro->name }}">
+                        @endif
+
                         @endif
                       </div>
-                      
+
                       <div class="col-md-8">
                         <b><a href="{{ url($url) }}" class="text-info">{{ $pro->name }}
                           </a></b> <br>

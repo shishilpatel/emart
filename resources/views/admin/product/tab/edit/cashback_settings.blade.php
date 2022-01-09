@@ -7,7 +7,9 @@
 
         <div class="col-md-12">
             <div class="form-group">
-                <label class="text-dark">Enable Cashback system :</label>
+                <label class="text-dark">
+                    {{__("Enable Cashback system :")}}
+                </label>
                 <br>
                 <label class="switch">
                   <input id="enable" type="checkbox" name="enable"
@@ -49,10 +51,6 @@
         <div class="col-md-12">
         <button type="reset" class="btn btn-danger mr-1"><i class="fa fa-ban"></i> {{ __("Reset")}}</button>
         <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> {{ __("Save")}}</button>
-
-            <!-- <button type="submit" class="btn btn-md btn-success">
-               <i class="fa fa-save"></i>  {{__("Save settings")}}
-            </button> -->
         </div>
 
     </div>

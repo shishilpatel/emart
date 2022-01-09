@@ -7,6 +7,7 @@ use App\Console\Commands\PurchaseCopy;
 use App\Jobs\WalletExpire;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use JoeDixon\Translation\Console\Commands\AddLanguageCommand;
 use Tohidplus\Translation\Console\Commands\Translation;
 
 class Kernel extends ConsoleKernel
@@ -25,7 +26,7 @@ class Kernel extends ConsoleKernel
          PurchaseCopy::class,
          Commands\ImportDemo::class,
          Commands\MakeZip::class,
-         Translation::class,
+         Translation::class
     ];
 
     /**

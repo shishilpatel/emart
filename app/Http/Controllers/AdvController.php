@@ -16,7 +16,7 @@ class AdvController extends Controller
      */
     public function index(Request $request)
     {
-        abort_if(!auth()->user()->can('advertisements.view'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('advertisements.view'),403,__('User does not have the right permissions.'));
 
         $adv = Adv::select('id', 'layout', 'position', 'status')->get();
 
@@ -56,13 +56,13 @@ class AdvController extends Controller
      */
     public function create()
     {
-        abort_if(!auth()->user()->can('advertisements.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('advertisements.create'),403,__('User does not have the right permissions.'));
         return view("admin.adv.add");
     }
 
     public function selectLayout(Request $request)
     {
-        abort_if(!auth()->user()->can('advertisements.view'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('advertisements.view'),403,__('User does not have the right permissions.'));
 
         $request->validate(['layout' => 'required'], ['layout.required' => 'Select a layout first !']);
 
@@ -74,13 +74,13 @@ class AdvController extends Controller
             } else {
 
                 return redirect()->route('adv.create')
-                    ->with('warning', '404 ! Layout not found !');
+                    ->with('warning', __('404 ! Layout not found !'));
             }
 
         } else {
             return redirect()
                 ->route('adv.create')
-                ->with('warning', 'Layout not selected !');
+                ->with('warning', __('Layout not selected !'));
         }
     }
 
@@ -92,7 +92,7 @@ class AdvController extends Controller
      */
     public function store(Request $request)
     {
-        abort_if(!auth()->user()->can('advertisements.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('advertisements.create'),403,__('User does not have the right permissions.'));
         $layout = $request->layout;
         $newadv = new Adv;
         $input = $request->all();
@@ -343,12 +343,12 @@ class AdvController extends Controller
 
         $newadv->create($input);
         return redirect()->route('adv.index')
-            ->with("added", "Advertisement Has Been Created !");
+            ->with("added", __("Advertisement has been created !"));
     }
 
     public function edit($id)
     {
-        abort_if(!auth()->user()->can('advertisements.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('advertisements.edit'),403,__('User does not have the right permissions.'));
         $adv = Adv::find($id);
         return view("admin.adv.edit", compact("adv"));
     }
@@ -363,7 +363,7 @@ class AdvController extends Controller
     public function update(Request $request, $id)
     {
 
-        abort_if(!auth()->user()->can('advertisements.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('advertisements.edit'),403,__('User does not have the right permissions.'));
 
         $adv = Adv::find($id);
 
@@ -660,17 +660,17 @@ class AdvController extends Controller
             } else {
                 return redirect()
                     ->route('adv.create')
-                    ->with('warning', 'Invalid Layout !');
+                    ->with('warning', __('Invalid Layout !'));
             }
 
             $adv->update($input);
             return redirect()->route('adv.index')
-                ->with("added", "Advertisement Has Been Updated !");
+                ->with("added", __("Advertisement has been Updated !"));
 
         } else {
             return redirect()
                 ->route('adv.index')
-                ->with('warning', '404 Adv Not found !');
+                ->with('warning', __('404 Adv Not found !'));
         }
 
     }
@@ -683,7 +683,7 @@ class AdvController extends Controller
      */
     public function destroy($id)
     {
-        abort_if(!auth()->user()->can('advertisements.delete'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('advertisements.delete'),403,__('User does not have the right permissions.'));
 
         $adv = Adv::find($id);
 
@@ -748,10 +748,10 @@ class AdvController extends Controller
             }
             $adv->delete();
             return back()
-                ->with('deleted', 'Advertisement has been deleted !');
+                ->with('deleted', __('Advertisement has been deleted !'));
         } else {
             return back()
-                ->with('warning', '404 Advertisement not found !');
+                ->with('warning', __('404 Advertisement not found !'));
         }
 
     }

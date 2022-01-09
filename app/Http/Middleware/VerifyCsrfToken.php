@@ -29,6 +29,7 @@ class VerifyCsrfToken extends Middleware
         'payvia/sslcommerze/ipn',
         'payvia/iyzcio/success',
         'success/aamarpay',
-        'pay/for/subscription/paytm/success'
+        'pay/for/subscription/paytm/success',
+        'stripe/3ds'
     ];
 }

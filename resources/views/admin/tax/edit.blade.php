@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Edit Tax Rate: '.$tax->name. ' | ')
+@section('title',__('Edit Tax Rate: :taxname',['taxname' => $tax->name]))
 @section('body')
 
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
@@ -39,7 +39,7 @@
                 <div class="row">
                   <div class="form-group col-md-6">
                     <label>
-                      Tax Name <span class="required">*</span>
+                      {{__("Tax Name")}} <span class="required">*</span>
                     </label>
                
                       <input type="text" name="name" class="form-control " value="{{$tax->name}}">
@@ -49,40 +49,40 @@
                   </div>
                   <div class="form-group col-md-6">
                     <label>
-                      Zone <span class="required">*</span>
+                      {{__("Zone")}} <span class="required">*</span>
                     </label>
                
                       <select name="zone_id" class="form-control select2" id="country_id">
-                      <option value="0">Please Choose</option>
+                      <option value="0">{{ __("Please Choose") }}</option>
                         @foreach(App\Zone::all() as $zone)
                       <option value="{{$zone->id}}" {{ $zone->id == $tax->zone_id ? 'selected="selected"' : '' }}>
                           {{$zone->title}}
                         </option>
                         @endforeach
                       </select>
-                      <small class="txt-desc">(Tax will be applied only to the selected zones.)</small>
+                      <small class="txt-desc">({{__("Tax will be applied only to the selected zones.")}})</small>
                     </div>
                   
                   <div class="form-group col-md-6">
                     <label>
-                      Rate <span class="required">*</span>
+                      {{__("Rate")}} <span class="required">*</span>
                     </label>
                  
-                      <input placeholder="Please enter rate" type="text" id="first-name" name="rate" value="{{$tax->rate}}" class="form-control">
+                      <input placeholder="{{ __('Please enter rate') }}" type="text" id="first-name" name="rate" value="{{$tax->rate}}" class="form-control">
                   
                   </div>
                   
                 <div class="form-group col-md-6">
                     <label>
-                      Type <span class="required">*</span>
+                      {{__("Type")}} <span class="required">*</span>
                     </label>
                     
                  
                       <select name="type" class="form-control select2">
-                        <option value="p" <?php echo ($tax->type=='p')?'selected':'' ?>>Percentage</option>
-                        <option value="f" <?php echo ($tax->type=='f')?'selected':'' ?>>Fix Amount</option>
+                        <option value="p" <?php echo ($tax->type=='p')?'selected':'' ?>>{{ __("Percentage") }}</option>
+                        <option value="f" <?php echo ($tax->type=='f')?'selected':'' ?>>{{ __("Fix Amount") }}</option>
                       </select>
-                      <small class="txt-desc">(Please Choose Type) </small>
+                      <small class="txt-desc">({{__("Please Choose Type")}}) </small>
                     </div>
                  
                   
@@ -99,76 +99,4 @@
     </div>
   </div>
 </div>
-             
-             
- 
-               
-               
-                     
- 
- @endsection 
- 
-
-                         
-  
-                 
-                  
-                
-                 
-                  
-              
-               
-
-                  
-               
-               
-
-
-        
-  
-                    
-    
-                  
-          
-                  
-    
-    
-          
-                  
-    
-    
-                  
-                  
-                
-    
-                
-                                      
-
-
-          
-
-            
-          
-              
-
-
-
-
-            
-
-            
-            
-            
-  
-                 
-  
-               
-  
-          
-    
-             
-            
-
-          
-
-
+@endsection 

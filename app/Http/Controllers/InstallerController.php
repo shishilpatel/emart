@@ -146,7 +146,7 @@ class InstallerController extends Controller
             return redirect()->route('servercheck');
 
         } else {
-            notify()->error('Please Accept Terms and conditions first !');
+            notify()->error(__('Please Accept Terms and conditions first !'));
             return back();
         }
 
@@ -172,16 +172,16 @@ class InstallerController extends Controller
        
         $app_settings = DotenvEditor::setKeys([
 
-            'APP_NAME' => $request->APP_NAME, 
-            'APP_URL' => $request->APP_URL, 
-            'MAIL_FROM_NAME' => $request->MAIL_FROM_NAME, 
-            'MAIL_FROM_ADDRESS' => $request->MAIL_FROM_ADDRESS, 
-            'MAIL_DRIVER' => $request->MAIL_DRIVER, 
-            'MAIL_HOST' => $request->MAIL_HOST, 
-            'MAIL_PORT' => $request->MAIL_PORT, 
-            'MAIL_USERNAME' => $request->MAIL_USERNAME, 
-            'MAIL_PASSWORD' => $request->MAIL_PASSWORD, 
-            'MAIL_ENCRYPTION' => $request->MAIL_ENCRYPTION
+            'APP_NAME'          => strip_tags($request->APP_NAME), 
+            'APP_URL'           => $request->APP_URL, 
+            'MAIL_FROM_NAME'    => $request->MAIL_FROM_NAME, 
+            'MAIL_FROM_ADDRESS' => strip_tags($request->MAIL_FROM_ADDRESS), 
+            'MAIL_DRIVER'       => $request->MAIL_DRIVER, 
+            'MAIL_HOST'         => $request->MAIL_HOST, 
+            'MAIL_PORT'         => $request->MAIL_PORT, 
+            'MAIL_USERNAME'     => strip_tags($request->MAIL_USERNAME), 
+            'MAIL_PASSWORD'     => strip_tags($request->MAIL_PASSWORD), 
+            'MAIL_ENCRYPTION'   => $request->MAIL_ENCRYPTION
 
         ]);
 
@@ -224,11 +224,11 @@ class InstallerController extends Controller
 
         
         $db_details = DotenvEditor::setKeys([
-            'DB_HOST' => $request->DB_HOST, 
-            'DB_PORT' => $request->DB_PORT, 
-            'DB_DATABASE' => $request->DB_DATABASE, 
-            'DB_USERNAME' => $request->DB_USERNAME, 
-            'DB_PASSWORD' => $request->DB_PASSWORD
+            'DB_HOST'       => strip_tags($request->DB_HOST), 
+            'DB_PORT'       => strip_tags($request->DB_PORT), 
+            'DB_DATABASE'   => strip_tags($request->DB_DATABASE), 
+            'DB_USERNAME'   => strip_tags($request->DB_USERNAME), 
+            'DB_PASSWORD'   => strip_tags($request->DB_PASSWORD)
         ]);
 
         $db_details->save();
@@ -274,6 +274,8 @@ class InstallerController extends Controller
                     Artisan::call('migrate --path=database/migrations/update2_7');
                     Artisan::call('migrate --path=database/migrations/update2_8');
                     Artisan::call('migrate --path=database/migrations/update2_9');
+                    Artisan::call('migrate --path=database/migrations/update3_0');
+                    Artisan::call('migrate --path=database/migrations/update3_1');
                     Artisan::call('db:seed');
 
                 }
@@ -291,6 +293,12 @@ class InstallerController extends Controller
 
         } catch (\Exception $e) {
 
+            try{
+                Artisan::call('db:wipe');
+            }catch(\Exception $e){
+                
+            }
+
             notify()->error($e->getMessage(),$e->getCode());
             return redirect()->route('get.step2');
 
@@ -301,6 +309,11 @@ class InstallerController extends Controller
     public function storeStep3(Request $request)
     {
 
+        $request->validate([
+            'project_name' => 'required|string|max:255',
+            'country' => 'required',
+            'currency' => 'required|string|max:3|min:3'
+        ]);
 
         Session::put('changed_language', 'en');
 
@@ -331,11 +344,13 @@ class InstallerController extends Controller
 
         $currency = CurrencyNew::where('code',$request->currency)->first();
 
-        $currency->currencyextract()->create([
+        $currency->currencyextract()->updateOrCreate([
+            'id' => 1
+        ],[
             'currency_id' => $currency->id,
             'add_amount' => 0.00,
             'currency_symbol' => $currency->code == 'USD' ? 'fa fa-dollar' : $request->currency_symbol,
-            'default_currency' => $currency->code == $request->currency ? 1 : 0,
+            'default_currency' => 1,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             'position' => 'l'
@@ -443,10 +458,10 @@ class InstallerController extends Controller
 
         $user = new User;
 
-        $user->name = $request->name;
-        $user->email = $request->email;
+        $user->name = strip_tags($request->name);
+        $user->email = strip_tags($request->email);
         $user->role_id = 'a';
-        $user->password = Hash::make($request->password);
+        $user->password = Hash::make(strip_tags($request->password));
         $user->country_id = $request->country;
         $user->state_id = $request->state_id;
         $user->city_id = $request->city_id;
@@ -573,7 +588,7 @@ class InstallerController extends Controller
 
             Artisan::call('cache:clear');
             Artisan::call('view:clear');
-            notify()->error('Oops Please try again !');
+            notify()->error(__('Oops Please try again !'));
             return redirect()->route('get.step5')->withInput();
 
         }
@@ -629,7 +644,7 @@ class InstallerController extends Controller
         $response = curl_exec($ch);
         if (curl_errno($ch) > 0)
         {
-            $message = "Error connecting to API.";
+            $message = __("Error connecting to API.");
             return 2;
         }
         

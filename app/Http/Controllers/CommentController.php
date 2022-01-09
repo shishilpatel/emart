@@ -3,17 +3,9 @@ namespace App\Http\Controllers;
 
 use App\Comment;
 use App\Subcomment;
-use Avatar;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use View;
 
-/*==========================================
-=            Author: Media City            =
-Author URI: https://mediacity.co.in
-=            Author: Media City            =
-=            Copyright (c) 2020            =
-==========================================*/
 
 class CommentController extends Controller
 {
@@ -40,7 +32,7 @@ class CommentController extends Controller
 
        $comment->save();
 
-       notify()->success('Comment has been posted !');
+       notify()->success(__('Comment has been posted !'));
 
        return back();
 
@@ -74,7 +66,7 @@ class CommentController extends Controller
         if (count($comments)) {
             return response()->json(['cururl' => View::make('front.loadmorecomments', compact('comments','proid','type'))->render()]);
         }else{
-            return response()->json("No comments found !");
+            return response()->json(__("No comments found !"));
         }
 
        
@@ -97,7 +89,7 @@ class CommentController extends Controller
         $comment->comment = clean($request->comment);
         $comment->save();
 
-        Session::flash('success', 'Comment Updated Successfully');
+        Session::flash('success', __('Comment updated successfully'));
         return redirect()
             ->route('posts.show', $comment
                     ->post
@@ -108,7 +100,7 @@ class CommentController extends Controller
     {
         $comment = Comment::find($id);
         $comment->delete();
-        Session::flash('success', 'Comment Deleted');
+        Session::flash('success', __('Comment deleted'));
         $post_id = $comment
             ->post->id;
         return redirect()
@@ -125,12 +117,12 @@ class CommentController extends Controller
         $check = $comment->save();
 
         $arr = array(
-            'success' => 'Something goes to wrong. Please try again lator',
+            'success' => __('Something goes to wrong. Please try again lator'),
             'status' => false,
         );
         if ($check) {
             $arr = array(
-                'success' => 'Successfully submit form using ajax',
+                'success' => __('Successfully submit form using ajax'),
                 'status' => true,
                 'msg' => $request->comment,
             );

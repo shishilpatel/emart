@@ -16,7 +16,7 @@ class GenralController extends Controller
      */
     public function index()
     {
-        abort_if(!auth()->user()->can('site-settings.genral-settings'), 403, 'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('site-settings.genral-settings'), 403, __('User does not have the right permissions.'));
 
         $row = Genral::first();
 
@@ -40,7 +40,7 @@ class GenralController extends Controller
     public function store(Request $request)
     {
 
-        abort_if(!auth()->user()->can('site-settings.genral-settings'), 403, 'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('site-settings.genral-settings'), 403, __('User does not have the right permissions.'));
 
         $input = array_filter($request->all());
 
@@ -109,7 +109,7 @@ class GenralController extends Controller
     public function verifiedupdate($input, $request)
     {
 
-        abort_if(!auth()->user()->can('site-settings.genral-settings'), 403, 'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('site-settings.genral-settings'), 403, __('User does not have the right permissions.'));
 
         $cat = Genral::first();
 
@@ -129,7 +129,11 @@ class GenralController extends Controller
             'GOOGLE_TAG_MANAGER_ENABLED' => $request->GOOGLE_TAG_MANAGER_ENABLED ? "true" : "false",
             'GOOGLE_TAG_MANAGER_ID' => $request->GOOGLE_TAG_MANAGER_ID,
             'PRICE_DISPLAY_FORMAT' => $request->PRICE_DISPLAY_FORMAT ? 'comma' : 'decimal',
-            'SHOW_IMAGE_INSTEAD_COLOR' => $request->SHOW_IMAGE_INSTEAD_COLOR ? 'true' : 'false'
+            'SHOW_IMAGE_INSTEAD_COLOR' => $request->SHOW_IMAGE_INSTEAD_COLOR ? 'true' : 'false',
+            'PUSHER_APP_ID' => $request->PUSHER_APP_ID,
+            'PUSHER_APP_KEY' => $request->PUSHER_APP_KEY,
+            'PUSHER_APP_SECRET' => $request->PUSHER_APP_SECRET,
+            'PUSHER_APP_CLUSTER' => $request->PUSHER_APP_CLUSTER
         ]);
 
         $env_keys_save->save();
@@ -140,15 +144,11 @@ class GenralController extends Controller
             
             if(strstr($request->logo, '.png') || strstr($request->logo, '.jpg') || strstr($request->logo, '.jpeg') || strstr($request->logo, '.webp') || strstr($request->logo, '.gif')){
 
-                // if ($cat->logo != '' && file_exists(public_path() . '/images/genral/' . $cat->logo)) {
-                //     unlink(public_path() . '/images/genral/' . $cat->logo);
-                // }
-
                 $input['logo'] = $request->logo;
 
             }else{
                 return back()->withInput()->withErrors([
-                    'Invalid image type'
+                    __('Invalid image type')
                 ]);
             }
 
@@ -156,18 +156,14 @@ class GenralController extends Controller
 
         if ($request->fevicon != null) {
 
-            $input['fevicon'] = $request->fevicon;
-
 
             if(strstr($request->fevicon, '.png') || strstr($request->fevicon, '.jpg') || strstr($request->fevicon, '.jpeg') || strstr($request->fevicon, '.webp') || strstr($request->fevicon, '.ico')){
 
-                if ($cat->fevicon != '' && file_exists(public_path() . '/images/genral/' . $cat->fevicon)) {
-                    unlink(public_path() . '/images/genral/' . $cat->fevicon);
-                }
+                $input['fevicon'] = $request->fevicon;
 
             }else{
                 return back()->withInput()->withErrors([
-                    'Invalid favicon type'
+                    __('Invalid image type')
                 ]);
             }
  
@@ -240,155 +236,15 @@ class GenralController extends Controller
 
         $cat->update($input);
 
-        if (isset($request->ENABLE_SELLER_SUBS_SYSTEM)) {
-
-            $this->verifyPurchase();
-
-        } else {
-
-            $env_keys_save = DotenvEditor::setKeys([
-                'ENABLE_SELLER_SUBS_SYSTEM' => 0,
-            ]);
-
-            $env_keys_save->save();
-
-        }
-
-        notify()->success("Genral Setting Has Been Updated !");
+        notify()->success(__("Genral Setting Has Been Updated !"));
         return back();
 
     }
 
-    public function verifyPurchase()
-    {
-
-        $domain = str_replace("www.", "", \Request::getHost());
-
-        if ($domain == 'localhost' || strstr($domain, '.test') || strstr($domain, '192.168.') || strstr($domain, 'mediacity.co.in')) {
-
-            $env_keys_save = DotenvEditor::setKeys([
-                'ENABLE_SELLER_SUBS_SYSTEM' => 1,
-            ]);
-
-            $env_keys_save->save();
-            return back();
-        }
-
-        if (extended_license() != true) {
-            request()->validate([
-                'purchase_code' => 'required',
-            ]);
-        }
-
-        
-
-        $code = request()->purchase_code;
-
-        $personalToken = "inNy83FTjV2CTPqvNdPGRr2mAJ0raPC4";
-
-        if (!preg_match("/^(\w{8})-((\w{4})-){3}(\w{12})$/", $code)) {
-            //throw new Exception("Invalid code");
-            $message = __("Invalid Purchase Code");
-            return back()->withErrors($message)->withInput();
-        }
-
-        $ch = curl_init();
-
-        curl_setopt_array($ch, array(
-            CURLOPT_URL => "https://api.envato.com/v3/market/author/sale?code={$code}",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => 20,
-
-            CURLOPT_HTTPHEADER => array(
-                "Authorization: Bearer {$personalToken}",
-            ),
-        ));
-
-        // Send the request with warnings supressed
-        $response = curl_exec($ch);
-
-        // Handle connection errors (such as an API outage)
-        if (curl_errno($ch) > 0) {
-            //throw new Exception("Error connecting to API: " . curl_error($ch));
-            $message = __("Error connecting to API !");
-            return back()->withErrors($message)->withInput();
-        }
-        // If we reach this point in the code, we have a proper response!
-        // Let's get the response code to check if the purchase code was found
-        $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-        // HTTP 404 indicates that the purchase code doesn't exist
-        if ($responseCode === 404) {
-            //throw new Exception("The purchase code was invalid");
-            $message = __("Purchase Code is invalid");
-            return back()->withErrors($message)->withInput();
-        }
-
-        // Anything other than HTTP 200 indicates a request or API error
-        // In this case, you should again ask the user to try again later
-        if ($responseCode !== 200) {
-            //throw new Exception("Failed to validate code due to an error: HTTP {$responseCode}");
-            $message = __("Failed to validate code.");
-            return back()->withErrors($message)->withInput();
-        }
-
-        // Parse the response into an object with warnings supressed
-        $body = json_decode($response);
-
-        // Check for errors while decoding the response (PHP 5.3+)
-        if ($body === false && json_last_error() !== JSON_ERROR_NONE) {
-            //new Exception("Error parsing response");
-            $message = __("Can't Verify Now.");
-            return back()->withErrors($message)->withInput();
-        }
-
-        if ($body->item->id == '25300293') {
-
-            if ($body->license == 'Extended License') {
-
-                $env_keys_save = DotenvEditor::setKeys([
-                    'ENABLE_SELLER_SUBS_SYSTEM' => 1,
-                ]);
-
-                $env_keys_save->save();
-
-                Storage::disk('local')->put('/extended/' . 'extended.json', json_encode($code));
-
-                $message = __("Seller subscription enabled successfully !");
-                notify()->success($message);
-                return back()->withInput();
-
-            }
-
-            $env_keys_save = DotenvEditor::setKeys([
-                'ENABLE_SELLER_SUBS_SYSTEM' => 0,
-            ]);
-
-            $env_keys_save->save();
-
-            $message = __("Seller subscription cannot be enabled with this Regular license.");
-            notify()->error($message);
-            return back()->withInput();
-
-        } else {
-
-            $env_keys_save = DotenvEditor::setKeys([
-                'ENABLE_SELLER_SUBS_SYSTEM' => 0,
-            ]);
-
-            $env_keys_save->save();
-
-            $message = __("Seller subscription cannot be enabled with this purchase code.");
-            notify()->error($message);
-            return back()->withInput();
-
-        }
-
-    }
-
+   
     public function quicksettings(Request $request){
 
-        abort_if(!auth()->user()->can('site-settings.genral-settings'), 403, 'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('site-settings.genral-settings'), 403, __('User does not have the right permissions.'));
 
         $env = DotenvEditor::setkeys([
 
@@ -411,7 +267,7 @@ class GenralController extends Controller
         
         $settings->save();
 
-        notify()->success('Settings updated !');
+        notify()->success(__('Settings updated !'));
 
         return back();
 

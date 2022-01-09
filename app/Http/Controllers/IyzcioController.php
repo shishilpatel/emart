@@ -28,7 +28,7 @@ class IyzcioController extends Controller
 
         if ($c < 10) {
 
-            notify()->error("Invalid Phone no. ");
+            notify()->error(__("Invalid Phone no !"));
             return redirect(route('order.review'));
         }
 
@@ -42,7 +42,7 @@ class IyzcioController extends Controller
 
         if (round($request->actualtotal, 2) != $total) {
 
-            notify()->error('Payment has been modifed !','Please try again !');
+            notify()->error(__('Payment has been modifed !'),__('Please try again !'));
             return redirect(route('order.review'));
 
         }
@@ -179,7 +179,7 @@ class IyzcioController extends Controller
             $failedTranscations->txn_id = 'PAYU_FAILED_' . Str::uuid();
             $failedTranscations->user_id = Auth::user()->id;
             $failedTranscations->save();
-            notify()->warning('Payment failed !','Failed');
+            notify()->warning(__('Payment failed !'),__('Failed'));
             return redirect(route('order.review'));
         }
     }

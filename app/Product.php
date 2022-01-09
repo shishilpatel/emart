@@ -15,11 +15,12 @@ class Product extends Model implements Viewable
     public $translatable = ['name', 'des', 'tags', 'key_features', 'tax_name','sale_tag'];
 
     protected $fillable = [
-        'category_id', 'child', 'grand_id', 'store_id', 'name', 'des', 'tags', 'model', 'sku', 'price', 'offer_price', 'website', 'dimension', 'weight', 'status', 'featured', 'brand_id', 'vender_id', 'sale', 'tax', 'free_shipping', 'return_avbl', 'cancel_avl', 'vender_price', 'vender_offer_price', 'commission_rate', 'return_policy', 'selling_start_at', 'key_features', 'codcheck', 'shipping_id', 'price_in', 'w_d', 'w_my', 'w_type', 'tax_r', 'tax_name', 'video_preview', 'video_thumbnail','catlog','gift_pkg_charge','hsn','sale_tag','sale_tag_color','sale_tag_text_color'
+        'category_id', 'child', 'grand_id', 'store_id', 'name', 'des', 'tags', 'model', 'sku', 'price', 'offer_price', 'website', 'dimension', 'weight', 'status', 'featured', 'brand_id', 'vender_id', 'sale', 'tax', 'free_shipping', 'return_avbl', 'cancel_avl', 'vender_price', 'vender_offer_price', 'commission_rate', 'return_policy', 'selling_start_at', 'key_features', 'codcheck', 'shipping_id', 'price_in', 'w_d', 'w_my', 'w_type', 'tax_r', 'tax_name', 'video_preview', 'video_thumbnail','catlog','gift_pkg_charge','hsn','sale_tag','sale_tag_color','sale_tag_text_color','size_chart','other_cats'
     ];
 
     protected $casts = [
-        'name' => 'array',
+        'name'       => 'array',
+        'other_cats' => 'array'
     ];
 
     protected $dates = ['deleted_at'];
@@ -131,6 +132,10 @@ class Product extends Model implements Viewable
         return $this->hasOne('App\Cashback','product_id','id');
     }
 
+    public function sizechart(){
+        return $this->belongsTo('App\SizeChart','size_chart','id');
+    }
+
     public function getURL($orivar)
     {
         $url = '#';
@@ -152,9 +157,9 @@ class Product extends Model implements Viewable
             }
 
             try {
-                $url = url('details') . '/' . $this->id . '?' . $name[0]['attr_name'] . '=' . $var_name[0] . '&' . $name[1]['attr_name'] . '=' . $var_name[1];
+                $url = url('details') . '/'. str_slug($this->name,'-')  .'/' . $this->id . '?' . $name[0]['attr_name'] . '=' . $var_name[0] . '&' . $name[1]['attr_name'] . '=' . $var_name[1];
             } catch (\Exception $e) {
-                $url = url('details') . '/' . $this->id . '?' . $name[0]['attr_name'] . '=' . $var_name[0];
+                $url = url('details') . '/' .str_slug($this->name,'-')  .'/' . $this->id . '?' . $name[0]['attr_name'] . '=' . $var_name[0];
             }
         }
 

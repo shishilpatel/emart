@@ -15,7 +15,7 @@ class TrashController extends Controller
 
     public function getTrashedVariantProduct(){
 
-        abort_if(!auth()->user()->can('products.delete'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('products.delete'),403,__('User does not have the right permissions.'));
 
         if(!in_array('Seller',auth()->user()->getRoleNames()->toArray())){
             $products = Product::onlyTrashed()
@@ -34,8 +34,8 @@ class TrashController extends Controller
                             return $row->name;
                     })
                     ->addColumn('status',function($row){
-                            return $row->status == 1 ? '<span class="badge badge-success btn-rounded">Active</span>
-                            ' : '<span class="label label-danger">Deactive</span>';
+                            return $row->status == 1 ? '<span class="badge badge-success btn-rounded">'.__('Active').'</span>
+                            ' : '<span class="label label-danger">'.__('Deactive').'</span>';
                     })
                    ->editColumn('action','admin.product.bin.action')
                    ->rawColumns(['name', 'status', 'action'])
@@ -49,7 +49,7 @@ class TrashController extends Controller
 
     public function forceDeleteVariantProduct($id){
 
-        abort_if(!auth()->user()->can('products.delete'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('products.delete'),403,__('User does not have the right permissions.'));
 
         $products = Product::onlyTrashed()->findorfail($id);
 
@@ -115,7 +115,7 @@ class TrashController extends Controller
 
         $products->forceDelete();
 
-        notify()->success(__("Product has been permanently deleted !"),'Success');
+        notify()->success(__("Product has been permanently deleted !"),__('Success'));
 
         return back();
 
@@ -123,7 +123,7 @@ class TrashController extends Controller
 
     public function restorevariantProducts($id){
 
-        abort_if(!auth()->user()->can('products.delete'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('products.delete'),403,__('User does not have the right permissions.'));
 
         $products = Product::onlyTrashed()->findorfail($id);
         
@@ -131,7 +131,7 @@ class TrashController extends Controller
 
         $products->restore();
 
-        notify()->success(__("Product has been restored successfully !"),'Success');
+        notify()->success(__("Product has been restored successfully !"),__('Success'));
 
         return back();
 
@@ -141,7 +141,7 @@ class TrashController extends Controller
 
     public function getTrashedSimpleProduct(){
 
-        abort_if(!auth()->user()->can('products.delete'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('products.delete'),403,__('User does not have the right permissions.'));
 
         if(in_array('Seller',auth()->user()->getRoleNames()->toArray())){
             $products = SimpleProduct::onlyTrashed()->where('store_id','=',auth()->user()->store->id)->select(['id','product_name','status']);
@@ -158,8 +158,8 @@ class TrashController extends Controller
                             return $row->product_name;
                     })
                     ->addColumn('status',function($row){
-                            return $row->status == 1 ? '<span class="label label-success">Active</span>
-                            ' : '<span class="label label-danger">Deactive</span>';
+                            return $row->status == 1 ? '<span class="label label-success">'.__('Active').'</span>
+                            ' : '<span class="label label-danger">'.__('Deactive').'</span>';
                     })
                    ->editColumn('action','admin.simpleproducts.bin.action')
                    ->rawColumns(['name', 'status', 'action'])
@@ -172,7 +172,7 @@ class TrashController extends Controller
 
     public function restoresimpleProducts($id){
 
-        abort_if(!auth()->user()->can('products.delete'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('products.delete'),403,__('User does not have the right permissions.'));
 
         $product = SimpleProduct::onlyTrashed()->findOrFail($id);
 
@@ -180,7 +180,7 @@ class TrashController extends Controller
 
         $product->restore();
 
-        notify()->success('Product has been restored','Success');
+        notify()->success(__('Product has been restored'),__('Success'));
 
         return back();
 
@@ -188,7 +188,7 @@ class TrashController extends Controller
 
     public function forceDeleteSimpleProduct($id){
 
-        abort_if(!auth()->user()->can('products.delete'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('products.delete'),403,__('User does not have the right permissions.'));
 
         $product = SimpleProduct::onlyTrashed()->findOrFail($id);
 

@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title',"Edit Order : $inv_cus->order_prefix$order->order_id | ")
+@section('title',__('Edit Order :orderid | ',['orderid' => $inv_cus->order_prefix.$order->order_id]))
 @section('body')
 
 @component('admin.component.breadcumb',['secondaryactive' => 'active'])
@@ -21,15 +21,16 @@
 
 <div class="contentbar">
   <div class="row">
-    @if ($errors->any())
-    <div class="alert alert-danger" role="alert">
-      @foreach($errors->all() as $error)
-      <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach
-    </div>
-    @endif
+    
     <div class="col-lg-12">
+		@if ($errors->any())
+			<div class="alert alert-danger" role="alert">
+			@foreach($errors->all() as $error)
+			<p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span></button></p>
+			@endforeach
+			</div>
+		@endif
       <div class="card m-b-30">
         <div class="card-header">
           <h5 class="box-title">{{ __('Edit Order') }} {{ $order->order_id }}</h5>
@@ -43,8 +44,7 @@
 		@if($order->manual_payment == '1')
 			<div class="alert alert-info p-1">
 				<i class="fa fa-info-circle"></i> {{__("This order is placed using")}} {{ ucfirst($order->payment_method) }} {{__("method and purchase proof you can view")}} <a href="{{ url('images/purchase_proof/'.$order->purchase_proof) }}"
-					data-lightbox="image-1" data-title="{{__("Purchase proof for")}} {{ $order->order_id }}">{{ __("here") }}</a> {{__("and")}} {{__("after verify you can
-					change the order status")}}.
+					data-lightbox="image-1" data-title="{{__("Purchase proof for")}} {{ $order->order_id }}">{{ __("here") }}</a> {{__("and")}} {{__("after verify you can change the order status")}}.
 			</div>
 		@endif
 
@@ -122,16 +122,16 @@
 
 							@elseif($rlogs->method_choosen == 'bank')
 							@if($rlogs->status == 'refunded')
-								and Amount <i class="{{ $rlogs->getorder->order->paid_in }}"></i>{{ $rlogs->amount }}
-								is {{ $rlogs->status }} to <b>{{ $rlogs->user->name }}'s</b> bank ac @if(isset($rlogs->bank->acno))
-								XXXX{{ substr($rlogs->bank->acno, -4) }} @endif with TXN ID: <b>{{ $rlogs->txn_id }} @if($rlogs->txn_fee
-									!='') <br> (TXN FEE APPLIED) <b><i
+								{{__("and Amount")}} <i class="{{ $rlogs->getorder->order->paid_in }}"></i>{{ $rlogs->amount }}
+								{{__("is")}} {{ $rlogs->status }} {{__("to")}} <b>{{ $rlogs->user->name }}</b> {{__("'s bank ac")}} @if(isset($rlogs->bank->acno))
+								XXXX{{ substr($rlogs->bank->acno, -4) }} @endif {{__("with TXN ID:")}} <b>{{ $rlogs->txn_id }} @if($rlogs->txn_fee
+									!='') <br> ({{__("TXN FEE APPLIED")}}) <b><i
 											class="{{ $rlogs->getorder->order->paid_in }}"></i>{{ $rlogs->txn_fee }}</b> @endif</b>.
 							@else
-								and Amount <i class="{{ $order->paid_in }}"></i>{{ $rlogs->amount }}
-								is pending to <b>{{ $rlogs->user->name }}'s</b> bank ac @if(isset($rlogs->bank->acno))
-								XXXX{{ substr($rlogs->bank->acno, -4) }} @endif with TXN ID/REF NO: <b>{{ $rlogs->txn_id }}</b>
-							@if($rlogs->txn_fee !='') <br> (TXN FEE APPLIED) <b><i
+								{{__("and Amount")}} <i class="{{ $order->paid_in }}"></i>{{ $rlogs->amount }}
+								{{__("is pending to")}} <b>{{ $rlogs->user->name }}</b> {{__("'s bank ac")}} @if(isset($rlogs->bank->acno))
+								XXXX{{ substr($rlogs->bank->acno, -4) }} @endif {{__('with TXN ID/REF NO:')}} <b>{{ $rlogs->txn_id }}</b>
+							@if($rlogs->txn_fee !='') <br> ({{__("TXN FEE APPLIED")}}) <b><i
 									class="{{ $rlogs->getorder->order->paid_in }}"></i>{{ $rlogs->txn_fee }}</b> @endif.
 							@endif
 							@endif
@@ -270,16 +270,16 @@
 										@php
 											$orivar = $invoice->variant;
 										@endphp
-									<i class="fa fa-info-circle"></i> For Item <b>{{ $invoice->variant->products->name }} <small>
+									<i class="fa fa-info-circle"></i> {{__("For Item")}} <b>{{ $invoice->variant->products->name }} <small>
 											({{ variantname($orivar) }})
 						
-										</small></b> @endif @if($invoice->simple_products) {{ $invoice->simple_products->product_name }} @endif Customer has choosen Local Pickup. @if($invoice->status != 'delivered')
-									Estd Delivery date: <span id="estddate{{ $invoice->id }}">
-										{{ $invoice->loc_deliv_date == '' ? "Yet to update" : date('d-m-Y',strtotime($invoice->loc_deliv_date)) }}
+										</small></b> @endif @if($invoice->simple_products) {{ $invoice->simple_products->product_name }} @endif {{__("Customer has choosen Local Pickup.")}} @if($invoice->status != 'delivered')
+										{{__("Estd Delivery date:")}} <span id="estddate{{ $invoice->id }}">
+										{{ $invoice->loc_deliv_date == '' ? __("Yet to update") : date('d-m-Y',strtotime($invoice->loc_deliv_date)) }}
 						
 										@else
-										Item Delivered On: <span id="estddate{{ $invoice->id }}">
-											{{ $invoice->loc_deliv_date == '' ? "Yet to update" : date('d-m-Y',strtotime($invoice->loc_deliv_date)) }}
+										{{__('Item Delivered On:')}} <span id="estddate{{ $invoice->id }}">
+											{{ $invoice->loc_deliv_date == '' ? __("Yet to update") : date('d-m-Y',strtotime($invoice->loc_deliv_date)) }}
 											@endif
 										</span>
 								</div>
@@ -290,7 +290,7 @@
 									<div class="row">
 										
 										<div class="col-md-6">
-										<p class="font-weight-bold">Update Local Pickup Delivery dates: </p>
+										<p class="font-weight-bold">{{__('Update Local Pickup Delivery dates:')}} </p>
 										
 											@if($invoice->variant)
 											@php
@@ -396,21 +396,21 @@
 											@endif
 											<br>
 											@if($invoice->variant)
-											<small><b>Sold By:</b> {{$invoice->variant->products->store->name}}</small>
+											<small><b>{{__('Sold By:') }}</b> {{$invoice->variant->products->store->name}}</small>
 											@endif
 		
 											@if($invoice->simple_product)
-												<small><b>Sold By:</b> {{$invoice->simple_product->store->name}}</small>
+												<small><b>{{__('Sold By:') }}</b> {{$invoice->simple_product->store->name}}</small>
 											@endif
 											<br>
-											<small><b>Price:</b>
+											<small><b>{{ __('Price:') }}</b>
 												<i class="{{ $invoice->order->paid_in }}"></i>
 		
 												{{ round(($invoice->price),2) }}
 		
 											</small>
 											<br>
-											<small><b>Tax:</b> <i class="{{ $invoice->order->paid_in }}"></i>{{ round($invoice->tax_amount,2) }}</small>
+											<small><b>{{ __("Tax:") }}</b> <i class="{{ $invoice->order->paid_in }}"></i>{{ round($invoice->tax_amount,2) }}</small>
 		
 										</div>
 									</div>
@@ -429,17 +429,29 @@
 										@elseif($invoice->status == 'shipped')
 										<span class="badge badge-pill badge-primary">{{ ucfirst($invoice->status) }}</span>
 										@elseif($invoice->status == 'return_request')
-										<span class="badge badge-pill badge-warning">Return Requested</span>
+										<span class="badge badge-pill badge-warning">
+											{{__("Return Requested")}}
+										</span>
 										@elseif($invoice->status == 'returned')
-										<span class="badge badge-pill badge-success">Returned</span>
+										<span class="badge badge-pill badge-success">
+											{{__("Returned")}}
+										</span>
 										@elseif($invoice->status == 'cancel_request')
-										<span class="badge badge-pill badge-warning">Cancelation Request</span>
+										<span class="badge badge-pill badge-warning">
+											{{__("Cancelation Request")}}
+										</span>
 										@elseif($invoice->status == 'canceled')
-										<span class="badge badge-pill badge-danger">Canceled</span>
+										<span class="badge badge-pill badge-danger">
+											{{__('Canceled')}}
+										</span>
 										@elseif($invoice->status == 'refunded')
-										<span class="badge badge-pill badge-danger">Refunded</span>
+										<span class="badge badge-pill badge-danger">
+											{{__("Refunded")}}
+										</span>
 										@elseif($invoice->status == 'ret_ref')
-										<span class="badge badge-pill badge-success">Return & Refunded</span>
+										<span class="badge badge-pill badge-success">
+											{{__("Return & Refunded")}}
+										</span>
 										@else
 										<span class="badge badge-pill badge-default">{{ ucfirst($invoice->status) }}</span>
 										@endif
@@ -450,31 +462,34 @@
 
 										@if($invoice->status == 'Refund Pending' || $invoice->status == 'canceled' || $invoice->status == 'refunded' || $invoice->status == 'returned' || $invoice->status == 'refunded' || $invoice->status == 'ret_ref' || $invoice->status == 'return_request')
 										<select disabled="" class="form-control select2">
-											<option {{ $invoice->status =="pending" ? "selected" : "" }} value="pending">Pending
+											<option {{ $invoice->status =="pending" ? "selected" : "" }} value="pending"> {{__('Pending')}}
 											</option>
-											<option {{ $invoice->status =="processed" ? "selected" : "" }} value="processed">Processed
+											<option {{ $invoice->status =="processed" ? "selected" : "" }} value="processed"> {{__('Processed')}}
 											</option>
-											<option {{ $invoice->status =="delivered" ? "selected" : "" }} value="delivered">Delivered
+											<option {{ $invoice->status =="delivered" ? "selected" : "" }} value="delivered"> {{__("Delivered")}}
 											</option>
 
 											<option {{ $invoice->status =="return_request" ? "selected" : "" }} value="return_request">
-												Return Requested</option>
-											<option {{ $invoice->status =="returned" ? "selected" : "" }} value="returned">Returned
+												{{__('Return Requested')}}
+											</option>
+											<option {{ $invoice->status =="returned" ? "selected" : "" }} value="returned"> {{__("Returned")}}
 											</option>
 											<option {{ $invoice->status =="cancel_request" ? "selected" : "" }} value="cancel_request">
-												Canceled Request</option>
+												{{__("Canceled Request")}}
+												</option>
 
-											<option {{ $invoice->status =="canceled" ? "selected" : "" }} value="canceled">Canceled
+											<option {{ $invoice->status =="canceled" ? "selected" : "" }} value="canceled"> {{__('Canceled')}}
 											</option>
 
-											<option {{ $invoice->status =="refunded" ? "selected" : "" }} value="refunded">Refunded
+											<option {{ $invoice->status =="refunded" ? "selected" : "" }} value="refunded"> {{__('Refunded')}}
 											</option>
 
-											<option {{ $invoice->status =="Refund Pending" ? "selected" : "" }} value="refunded">Refund pending
+											<option {{ $invoice->status =="Refund Pending" ? "selected" : "" }} value="refunded"> {{__("Refund pending")}}
 											</option>
 
-											<option {{ $invoice->status =="ret_ref" ? "selected" : "" }} value="refunded">Return &
-												Refunded</option>
+											<option {{ $invoice->status =="ret_ref" ? "selected" : "" }} value="refunded">
+												{{__("Return & Refunded")}}
+											</option>
 
 										</select>
 										@else
@@ -492,20 +507,20 @@
 								</td>
 
 								<td>
-									<b>Total Price:</b> <i class="{{ $invoice->order->paid_in }}"></i>
+									<b>{{ __("Total Price:") }}</b> <i class="{{ $invoice->order->paid_in }}"></i>
 
 									{{ round(($invoice->price*$invoice->qty),2) }}
 
 									<p></p>
-									<b>Total Tax:</b> <i
+									<b>{{ __("Total Tax:") }}</b> <i
 										class="{{ $invoice->order->paid_in }}"></i>{{ round(($invoice->tax_amount),2) }}
 									<p></p>
-									<b>Shipping Charges:</b> <i
+									<b>{{ __("Shipping Charges:") }}</b> <i
 										class="{{ $invoice->order->paid_in }}"></i>{{ round($invoice->shipping,2) }}
 									<p></p>
 
 
-									<small class="help-block">(Price & TAX Multiplied with Quantity)</small>
+									<small class="help-block">({{__("Price & TAX Multiplied with Quantity")}})</small>
 									<p></p>
 								</td>
 
@@ -557,7 +572,7 @@
 													<li role="presentation">
 
 														<a role="button" class="dropdown-item" id="canbtn{{ $invoice->id }}" data-toggle="modal"
-															data-target="#singleordercancel{{ $invoice->id }}"  title="Cancel this order?">
+															data-target="#singleordercancel{{ $invoice->id }}"  title="{{ __("Cancel this order?") }}">
 															<i class="fa fa-ban"></i> {{__("Cancel")}}
 														</a>
 
@@ -585,7 +600,7 @@
 				{{__("Order Activity Logs")}}
 			</h4>
 
-		    @if(count($order->orderlogs) < 1) <span id="ifnologs">No activity logs for this order <br></span>
+		    @if(count($order->orderlogs) < 1) <span id="ifnologs"> {{__("No activity logs for this order")}} <br></span>
 
 			@endif
 
@@ -609,13 +624,13 @@
 					<small>{{ date('d-m-Y | h:i:a',strtotime($logs->updated_at)) }} • For Order
 						<b>{{ $orivar->products->name }} ({{variantname($orivar)}}) </b>
 						: @if($logs->user->role_id == 'a')
-						<span class="text-danger"><b>{{ $logs->user->name }}</b> (Admin)</span> changed status to
+						<span class="text-danger"><b>{{ $logs->user->name }}</b> ({{__('Admin')}})</span> {{__("changed")}} {{__("status to")}}
 						<b>{{ $logs->log }}</b>
 						@elseif($logs->user->role_id == 'v')
-						<span class="text-primary"><b>{{ $logs->user->name }}</b> (Vendor)</span> changed status to
+						<span class="text-primary"><b>{{ $logs->user->name }}</b> ({{__("Vendor")}})</span> {{__("changed")}} {{__("status to")}}
 						<b>{{ $logs->log }}</b>
 						@else
-						<span class="text-success"><b>{{ $logs->user->name }}</b> (Customer)</span> changed status to
+						<span class="text-success"><b>{{ $logs->user->name }}</b> ({{__("Customer")}})</span> {{__("changed")}} {{__("status to")}}
 						<b>{{ $logs->log }}</b>
 						@endif
 
@@ -624,13 +639,13 @@
 
 					@if(isset($logs->simple_product))
 						<small>{{ date('d-m-Y | h:i:a',strtotime($logs->updated_at)) }} • For Order Item <b>{{ $logs->simple_product->product_name }}</b> @if($logs->user->role_id == 'a')
-							<span class="text-danger"><b>{{ $logs->user->name }}</b> (Admin)</span> changed status to
+							<span class="text-danger"><b>{{ $logs->user->name }}</b> (Admin)</span> {{__("changed status to")}}
 							<b>{{ $logs->log }}</b>
 							@elseif($logs->user->role_id == 'v')
-							<span class="text-primary"><b>{{ $logs->user->name }}</b> (Vendor)</span> changed status to
+							<span class="text-primary"><b>{{ $logs->user->name }}</b> (Vendor)</span> {{__("changed status to")}}
 							<b>{{ $logs->log }}</b>
 							@else
-							<span class="text-success"><b>{{ $logs->user->name }}</b> (Customer)</span> changed status to
+							<span class="text-success"><b>{{ $logs->user->name }}</b> (Customer)</span> {{__("changed status to")}}
 							<b>{{ $logs->log }}</b>
 							@endif </small>
 					@endif
@@ -655,7 +670,8 @@
 			<div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h4 class="modal-title" id="myModalLabel">Cancel Item: 
+						<h4 class="modal-title" id="myModalLabel">
+							{{__("Cancel Item: ")}}
 
 							@if(isset($o->simple_product))
 								{{ $o->simple_product->product_name }}
@@ -677,32 +693,32 @@
 						<form action="{{ route('cancel.item', Crypt::encrypt($o->id)) }}" method="POST">
 							@csrf
 							<div class="form-group">
-								<label for="">Choose Reason <span class="required">*</span></label>
+								<label for="">{{__('Choose Reason')}} <span class="required">*</span></label>
 								<select class="form-control" required="" name="comment" id="">
-									<option value="">Please Choose Reason</option>
-									<option value="Requested by User">Requested by User</option>
-									<option value="Order Placed Mistakely">Order Placed Mistakely</option>
-									<option value="Shipping cost is too much">Shipping cost is too much</option>
-									<option value="Wrong Product Ordered">Wrong Product Ordered</option>
-									<option value="Product is not match to my expectations">Product is not match to my
-										expectations</option>
-									<option value="Other">My Reason is not listed here</option>
+									 <option value="">{{ __('staticwords.PleaseChooseReason') }}</option>
+			  
+									  @forelse(App\RMA::where('status','=','1')->get() as $rma)
+										<option value="{{ $rma->reason }}">{{ $rma->reason }}</option>
+									  @empty
+										<option value="Other">{{ __('My Reason is not listed here') }}</option>
+									  @endforelse
+									  
 								</select>
 							</div>
 							@if($order->payment_method !='COD' && $order->payment_method !=' BankTransfer')
 							<div class="form-group">
 
-								<label for="">Choose Refund Method:</label>
+								<label for="">{{ __("Choose Refund Method:") }}</label>
 								<label><input onclick="hideBank('{{ $o->id }}')" id="source_check_o{{ $o->id }}" required
 										type="radio" value="orignal" name="source" />Orignal Source
 									[{{ $o->order->payment_method }}] </label>&nbsp;&nbsp;
 								@if($order->user->banks->count()>0)
 								<label><input onclick="showBank('{{ $o->id }}')" id="source_check_b{{ $o->id }}" required
-										type="radio" value="bank" name="source" />In Bank</label>
+										type="radio" value="bank" name="source" />{{_("In Bank")}} </label>
 								@else
-								<label><input disabled="disabled" type="radio" /> In Bank <i class="fa fa-question-circle"
+								<label><input disabled="disabled" type="radio" /> {{_("In Bank")}} <i class="fa fa-question-circle"
 										data-toggle="tooltip" data-placement="right"
-										title="Add a bank account in My Bank Account" aria-hidden="true"></i></label>
+										title="{{ __("Add a bank account in My Bank Account") }}" aria-hidden="true"></i></label>
 								@endif
 
 								<select name="bank_id" id="bank_id_single{{ $o->id }}" class="form-control display-none">
@@ -718,9 +734,9 @@
 
 							@if($order->user->banks->count()>0)
 							<label><input onclick="showBank('{{ $o->id }}')" id="source_check_b{{ $o->id }}" required
-									type="radio" value="bank" name="source" />In Bank</label>
+									type="radio" value="bank" name="source" />{{_("In Bank")}} </label>
 							@else
-							<label><input disabled="disabled" type="radio" /> In Bank <i class="fa fa-question-circle"
+							<label><input disabled="disabled" type="radio" /> {{__("In Bank")}} <i class="fa fa-question-circle"
 									data-toggle="tooltip" data-placement="right" title="Add a bank account in My Bank Account"
 									aria-hidden="true"></i></label>
 							@endif
@@ -735,29 +751,33 @@
 							@endif
 
 							<div class="alert alert-info">
-								<h5><i class="fa fa-info-circle"></i> Important !</h5>
+								<h5><i class="fa fa-info-circle"></i> {{ __("Important !") }}</h5>
 
 								<ol class="ol">
-									<li>IF Original source is choosen than amount will be reflected to User's orignal source in
-										1-2 days(approx).
+									<li>
+										{{__('IF Original source is choosen than amount will be reflected to User\'s orignal source in 1-2 days(approx).')}}
 									</li>
 
 									<li>
-										IF Bank Method is choosen than make sure User added a bank account else refund will not
-										procced. IF already added than it will take 14 days to reflect amount in users bank
-										account (Working Days*).
+										{{__("IF Bank Method is choosen than make sure User added a bank account else refund will not procced. IF already added than it will take 14 days to reflect amount in users bank account (Working Days*).")}}
 									</li>
 
-									<li>Amount will be paid in original currency which used at time of placed order.</li>
+									<li>
+										{{__("Amount will be paid in original currency which used at time of placed order.")}}
+									</li>
 
 								</ol>
 							</div>
 							<button type="submit" class="btn btn-md btn-primary">
-								Procced...
+								{{__("Procced")}}...
 							</button>
 							<p></p>
-							<p class="bg-danger-rgba p-3 help-block">This action cannot be undone !</p>
-							<p class="bg-danger-rgba p-3 help-block">It will take time please do not close or refresh window !</p>
+							<p class="bg-danger-rgba p-3 help-block">
+								{{__("This action cannot be undone !")}}
+							</p>
+							<p class="bg-danger-rgba p-3 help-block">
+								{{__("It will take time please do not close or refresh window !")}}
+							</p>
 						</form>
 
 						

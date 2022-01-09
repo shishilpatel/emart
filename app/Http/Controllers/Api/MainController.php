@@ -6,6 +6,7 @@ use App\Address;
 use App\Adv;
 use App\Allcity;
 use App\Allstate;
+use App\AppSection;
 use App\Blog;
 use App\Brand;
 use App\Category;
@@ -14,11 +15,11 @@ use App\Commission;
 use App\CommissionSetting;
 use App\Country;
 use App\Faq;
+use App\Flashsale;
 use App\FooterMenu;
 use App\FrontCat;
 use App\Genral;
 use App\Grandcategory;
-use App\Hotdeal;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Controller;
 use App\Menu;
@@ -26,6 +27,7 @@ use App\Page;
 use App\Product;
 use App\ProductAttributes;
 use App\ProductValues;
+use App\SimpleProduct;
 use App\Slider;
 use App\SpecialOffer;
 use App\Subcategory;
@@ -35,10 +37,22 @@ use App\UserWallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Validator;
+use Illuminate\Support\Facades\Validator;
+use ProductRating;
 
 class MainController extends Controller
 {
+
+    public function __construct()
+    {
+        try {
+
+            $this->sellerSystem = Genral::select('vendor_enable')->first();
+
+        } catch (\Exception $e) {
+
+        }
+    }
 
     public function homepage(Request $request)
     {
@@ -51,20 +65,20 @@ class MainController extends Controller
         if ($validator->fails()) {
 
             $errors = $validator->errors();
-            
-			if($errors->first('secret')){
-				return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
+
+            if ($errors->first('secret')) {
+                return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
             }
-            
-            if($errors->first('currency')){
-				return response()->json(['msg' => $errors->first('currency'), 'status' => 'fail']);
-			}
+
+            if ($errors->first('currency')) {
+                return response()->json(['msg' => $errors->first('currency'), 'status' => 'fail']);
+            }
         }
 
         $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
 
         if (!$key) {
-            return response()->json(['msg' => 'Invalid Secret Key !','status' => 'fail']);
+            return response()->json(['msg' => 'Invalid Secret Key !', 'status' => 'fail']);
         }
 
         $rates = new CurrencyController;
@@ -81,11 +95,12 @@ class MainController extends Controller
         $response = $response->getData();
 
         $appheader = array(
+            'sort' => 8,
             'name' => 'appheader',
             'logopath' => $response->logopath,
             'logo' => $response->logo,
             'current_lang' => app()->getLocale(),
-            'current_time' => date('Y-m-d H:i:s')
+            'current_time' => date('Y-m-d H:i:s'),
         );
         /** End */
 
@@ -93,6 +108,7 @@ class MainController extends Controller
         $response = $this->sidebarcategories($content);
 
         $categories = array(
+            'sort' => 7,
             'name' => 'categories',
             'layout' => 'vertical',
             'enable' => true,
@@ -106,6 +122,7 @@ class MainController extends Controller
         /** End */
 
         $specialoffers = array(
+            'sort' => 6,
             'layout' => 'vertical',
             'name' => 'specialoffers',
             'enable' => true,
@@ -120,6 +137,7 @@ class MainController extends Controller
         /** End */
 
         $sliders = array(
+            'sort' => 5,
             'name' => 'slider',
             'layout' => 'vertical',
             'autoslide' => true,
@@ -133,6 +151,7 @@ class MainController extends Controller
         $response = $this->topcategories($content);
 
         $topcategories = array(
+            'sort' => 4,
             'name' => 'topcategories',
             'layout' => 'vertical',
             'enable' => true,
@@ -145,6 +164,7 @@ class MainController extends Controller
         $response = $this->recentProducts($content);
 
         $recentProducts = array(
+            'sort' => 3,
             'name' => 'newProducts',
             'layout' => 'vertical',
             'enable' => true,
@@ -152,16 +172,24 @@ class MainController extends Controller
             'items' => $response,
         );
 
-        
         // /** Getting Blogs */
 
-
-       $blogs = array(
+        $blogs = array(
+            'sort' => 2,
             'name' => 'blogs',
             'layout' => 'vertical',
             'enable' => true,
             'path' => url('/images/blog/'),
-            'items' => $this->gettingBlogs($content = array())
+            'items' => $this->gettingBlogs($content = array()),
+        );
+
+
+
+        $flashdeals = array(
+            'sort' => 1,
+            'status' => Flashsale::count() ? true : false, // to be change dynamic 
+            'images' => Flashsale::select('background_image')->inRandomOrder()->get(),
+            'path'   => url('/images/flashdeals')
         );
 
         // Final Response //
@@ -170,6 +198,7 @@ class MainController extends Controller
             'appheaders' => $appheader,
             'categories' => $categories,
             'specialoffers' => $specialoffers,
+            'flashdeals' => $flashdeals,
             'sliders' => $sliders,
             'TwoEqualAdvertise' => $this->advertise('abovenewproduct', 'Two equal image layout') != null ? $this->advertise('abovenewproduct', 'Two equal image layout') : null,
             'hotdeals' => $this->hotdeals($request, $content),
@@ -182,6 +211,39 @@ class MainController extends Controller
             'blogs' => $blogs,
             'newProducts' => $this->tabbedProducts(),
         ];
+
+        $h2 = array();
+
+        // Table fetch of keys
+
+        $section = AppSection::orderBy('sort','ASC')->get();
+
+        $arr2 = array(); // the second array
+        // a variable to count the number of iterations
+            foreach ($section as $key => $value) {
+
+                 $value->name;
+
+                $x =  array_key_exists($value->name,$homepage);
+
+                if($x == true){
+                    $arr2[$value->name] = $homepage[$value->name];
+                }
+
+                // foreach($homepage as $key => $val){
+                //     $name = $value->name;
+                //     if($name != $key) break;
+                //     // if(++$num > 3) break; // we don’t need more than three iterations
+                //     $arr2[$key] = $val; // copy the key and value from the first array to the second
+                //     unset($homepage[$key]); // remove the key and value from the first
+                // }
+            }
+            
+            return $arr2;
+
+        // loop thorugh that table
+
+        // push value according to table key
 
         return response()->json($homepage, 200);
 
@@ -214,18 +276,17 @@ class MainController extends Controller
 
         $saleT = new BrandController;
 
-       
-       
         foreach ($brands as $brand) {
             $content[] = array(
                 'id' => $brand['id'],
                 'name' => $brand['name'],
                 'image' => $brand['image'] ?? null,
                 'image_path' => url('images/brands/'),
-                'url' => url('/brands/'.$brand['id'].'/products'),
-                'sale_text' => $brand->products->count() > 0 ? $saleT->brandprices($request->currency,$brand) : null
+                'url' => url('/brands/' . $brand['id'] . '/products'),
+                'sale_text' => $brand->products->count() > 0 ? $saleT->brandprices($request->currency, $brand) : null,
             );
         }
+
 
         return $content;
 
@@ -248,15 +309,14 @@ class MainController extends Controller
                     $linkby = url('api/category/' . $ad->cat_id1);
                 } elseif ($ad->pro_id1 != '') {
 
-                    if(isset($ad->product)){
+                    if (isset($ad->product)) {
                         $linkby = url('api/details/' . $ad->pro_id1 . '/' . $ad->product->subvariants->where('def', 1)->first()->id ?? '' . '/');
-                    }
-                    else{
-                        $linkby = NULL;
+                    } else {
+                        $linkby = null;
                     }
 
                     return $linkby;
-                    
+
                 } elseif ($ad->url1 != '') {
                     $linkby = $ad->url1;
                 }
@@ -266,7 +326,7 @@ class MainController extends Controller
                 if ($ad->cat_id2 != '') {
                     $linkby2 = url('api/category/' . $ad->cat_id2);
                 } elseif ($ad->pro_id2 != '') {
-                    if(isset($ad->product)){
+                    if (isset($ad->product)) {
                         $linkby2 = url('api/details/' . $ad->pro_id2 . '/' . $ad->product->subvariants->where('def', 1)->first()->id . '/');
                     }
                 } elseif ($ad->url2 != '') {
@@ -334,10 +394,10 @@ class MainController extends Controller
                 if ($ad->cat_id1 != '') {
                     $linkby = url('api/category/' . $ad->cat_id1);
                 } elseif ($ad->pro_id1 != '') {
-                    if(isset($ad->product)){
+                    if (isset($ad->product)) {
                         $linkby = url('api/details/' . $ad->pro_id1 . '/' . $ad->product->subvariants->where('def', 1)->first()->id . '/');
-                    }else{
-                        $linkby = NULL;
+                    } else {
+                        $linkby = null;
                     }
                 } elseif ($ad->url1 != '') {
                     $linkby = $ad->url1;
@@ -348,7 +408,7 @@ class MainController extends Controller
                 if ($ad->cat_id2 != '') {
                     $linkby2 = url('api/category/' . $ad->cat_id2);
                 } elseif ($ad->pro_id2 != '') {
-                    if(isset($ad->product)){
+                    if (isset($ad->product)) {
                         $linkby2 = url('api/details/' . $ad->pro_id2 . '/' . $ad->product->subvariants->where('def', 1)->first()->id . '/');
                     }
                 } elseif ($ad->url2 != '') {
@@ -456,29 +516,31 @@ class MainController extends Controller
         return $content;
     }
 
-    public function tabbedProducts(){
+    public function tabbedProducts()
+    {
 
         $tabbed = array();
 
         $frontcat = FrontCat::first();
 
-        if(isset($frontcat) && $frontcat->name != '' && $frontcat->status == '1'){
+        if (isset($frontcat) && $frontcat->name != '' && $frontcat->status == '1') {
             $tabbed[] = array(
+                'tabid' => '0',
                 'tabname' => array(
-                    'en' => __("ALL")
+                    'en' => __("ALL"),
                 ),
-                'products' => $this->recentProducts($content = array()) != NULL ? $this->recentProducts($content = array()) : 'No Products found'
+                'products' => $this->recentProducts() != null ? $this->recentProducts() : 'No Products found',
             );
-            
-            foreach(explode(',',$frontcat->name) as $name){
+
+            foreach (explode(',', $frontcat->name) as $name) {
 
                 $category = Category::find($name);
-                
-                if(isset($category)){
+
+                if (isset($category)) {
 
                     $tabbed[] = array(
+                        'tabid' => $category->id,
                         'tabname' => $category->getTranslations('title'),
-                        'products' => $this->categoryproducts($category) != NULL ? $this->categoryproducts($category) : 'No Product found !'
                     );
 
                 }
@@ -489,179 +551,354 @@ class MainController extends Controller
         return $tabbed;
     }
 
-    public function recentProducts($content)
+    public function recentProducts()
     {
 
-        $products = Product::whereHas('subvariants')->whereHas('subvariants.variantimages')->orderBy('id', 'DESC')->take(20)->get();
+        $sellerSystem = $this->sellerSystem;
 
-        foreach ($products as $product) {
-            if ($product->subvariants->count() > 0) {
+        $topcatproducts = Product::with('category')->whereHas('category', function ($q) {
 
-                $attributeName = array();
+            $q->where('status', '=', '1');
 
-                foreach ($product->subvariants as $orivar) {
+        })->with('subcategory')->wherehas('subcategory', function ($q) {
 
-                    $variant = $this->getVariant($orivar);
+            $q->where('status', '1');
 
-                    $variant = $variant->getData();
+        })->with('vender')->whereHas('vender', function ($query) use ($sellerSystem) {
 
-                    array_push($attributeName, $variant->attrName);
-
-                    $attributeName = array_unique($attributeName);
-
-                    $price = $this->getprice($product, $orivar)->getData();
-
-                    $rating = $this->getproductrating($product);
-
-                    if ($this->getprice($product, $orivar)->getData()->offerprice != '0') {
-                        $mp = sprintf("%.2f", $this->getprice($product, $orivar)->getData()->mainprice);
-                        $op = sprintf("%.2f", $this->getprice($product, $orivar)->getData()->offerprice);
-
-                        $getdisprice = $mp - $op;
-
-                        $discount = $getdisprice / $mp;
-
-                        $offamount = $discount * 100;
-                    } else {
-                        $offamount = 0;
-                    }
-
-                    $reviews = new ProductController;
-
-                    $tag = '';
-                    $tagbgcolor = '';
-
-                    if($product->featured == '1') { 
-                        $tag = __('staticwords.Hot');
-                        $tagbgcolor = '#FF585D';
-                    }elseif($product->offer_price != '0'){
-                        $tag = __('staticwords.Sale');
-                        $tagbgcolor = '#2940B0';
-                    }else{
-                        $tag =  __('staticwords.New');
-                        $tagbgcolor = '#5D6276';
-                    }
-
-                    $wishlist = new WishlistController;
-
-
-                    $content[] = array(
-                        'productid' => $product->id,
-                        'variantid' => $orivar->id,
-                        'productname' => $product->getTranslations('name'),
-                        'description' => array_map(function ($v) {
-                            return trim(strip_tags($v));
-                        }, $product->getTranslations('des')),
-                        'mainprice' => round($price->mainprice * $this->rate->exchange_rate,2),
-                        'offerprice' =>  round($price->offerprice * $this->rate->exchange_rate,2),
-                        'pricein' => $this->rate->code,
-                        'symbol' => $this->rate->symbol,
-                        'rating' => (double) $rating,
-                        'review' => (int) $reviews->getProductReviews($product)->count(),
-                        'thumbnail' => $orivar->variantimages->main_image ?? "",
-                        'thumbnail_path' => url('/variantimages/thumbnails'),
-                        'off_in_percent' => (int) round($offamount),
-                        'tax_info' => $product->tax_r == '' ? __("Exclusive of tax") : __("Inclusive of all taxes"),
-                        'tag' => $tag,
-                        'tag_bg_color' => $tagbgcolor,
-                        'is_in_wishlist' => $wishlist->isItemInWishlist($orivar)
-                    );
-
-                  
-
-                }
+            if ($sellerSystem->vendor_enable == 1) {
+                $query->where('status', '=', '1')->where('is_verified', '1');
+            } else {
+                $query->where('status', '=', '1')->where('role_id', '=', 'a')->where('is_verified', '1');
             }
-        }
 
-        return $content;
+        })->with('store')->whereHas('store', function ($query) {
+
+            return $query->where('status', '=', '1');
+
+        })->with('subvariants')->whereHas('subvariants', function ($query) {
+
+            $query->where('def', '=', '1');
+
+        })
+            ->with('subvariants.variantimages')
+            ->whereHas('subvariants.variantimages')
+            ->where('status', '=', '1')
+            ->orderBy('id', 'DESC')
+            ->take(20)
+            ->get();
+
+        $review = new ProductController;
+
+        $wishlist = new WishlistController;
+
+        $topcatproducts = $topcatproducts->map(function ($q) use ($review, $wishlist) {
+
+            $orivar = $q->subvariants[0];
+            $mainprice = $this->getprice($q, $orivar);
+            $price = $mainprice->getData();
+
+            if ($this->getprice($q, $orivar)->getData()->offerprice != 0) {
+
+                $mp = sprintf("%.2f", $this->getprice($q, $orivar)->getData()->mainprice);
+                $op = sprintf("%.2f", $this->getprice($q, $orivar)->getData()->offerprice);
+
+                $getdisprice = $mp - $op;
+
+                $discount = $getdisprice / $mp;
+
+                $offamount = $discount * 100;
+            } else {
+                $offamount = 0;
+            }
+
+            $item['productid'] = $q->id;
+            $item['variantid'] = $orivar->id;
+            $item['productname'] = $q->getTranslations('name');
+            $item['description'] = array_map(function ($v) {
+                return trim(strip_tags($v));
+            }, $q->getTranslations('des'));
+            $item['type'] = 'v';
+            $item['mainprice'] = round($price->mainprice * $this->rate->exchange_rate, 2);
+            $item['offerprice'] = round($price->offerprice * $this->rate->exchange_rate, 2);
+            $item['pricein'] = $this->rate->code;
+            $item['symbol'] = $this->rate->symbol;
+            $item['rating'] = (double) get_product_rating($q->id);
+            $item['review'] = (int) $review->getProductReviews($q)->count();
+            $item['thumbnail'] = $orivar->variantimages->main_image ?? '';
+            $item['thumbnail_path'] = url('/variantimages/thumbnails');
+            $item['off_in_percent'] = (int) round($offamount);
+            $item['tax_info'] = $q->tax_r == '' ? __("Exclusive of tax") : __("Inclusive of all taxes");
+            $item['tag_text'] = $q->sale_tag;
+            $item['tag_text_color'] = $q->sale_tag_text_color;
+            $item['tag_bg_color'] = $q->sale_tag_color;
+            $item['is_in_wishlist'] = $wishlist->isItemInWishlist($orivar);
+
+            return $item;
+
+        });
+
+        $top_simple_products = SimpleProduct::with('category')->whereHas('category', function ($q) {
+
+            $q->where('status', '=', '1');
+
+        })->with('subcategory')->wherehas('subcategory', function ($q) {
+
+            $q->where('status', '1');
+
+        })->with('store')->whereHas('store', function ($query) {
+
+            return $query->where('status', '=', '1');
+
+        })->whereHas('store.user', function ($query) use ($sellerSystem) {
+
+            if ($sellerSystem->vendor_enable == 1) {
+                $query->where('status', '=', '1')->where('is_verified', '1');
+            } else {
+                $query->where('status', '=', '1')->where('role_id', '=', 'a')->where('is_verified', '1');
+            }
+
+        })
+            ->where('status', '=', '1')
+            ->orderBy('id', 'DESC')
+            ->take(20)
+            ->get();
+
+        $top_simple_products = $top_simple_products->map(function ($sp) {
+
+            if ($sp->offer_price != 0) {
+
+                $getdisprice = $sp->price - $sp->offer_price;
+
+                $discount = $getdisprice / $sp->price;
+
+                $offamount = $discount * 100;
+            } else {
+                $offamount = 0;
+            }
+
+            $item['productid'] = $sp->id;
+            $item['variantid'] = 0;
+            $item['type'] = 's';
+            $item['productname'] = $sp->getTranslations('product_name');
+            $item['description'] = array_map(function ($v) {
+                return trim(strip_tags($v));
+            }, $sp->getTranslations('product_detail'));
+            $item['type'] = 's';
+            $item['mainprice'] = round($sp->price * $this->rate->exchange_rate, 2);
+            $item['offerprice'] = round($sp->offer_price * $this->rate->exchange_rate, 2);
+            $item['pricein'] = $this->rate->code;
+            $item['symbol'] = $this->rate->symbol;
+            $item['rating'] = (double) simple_product_rating($sp->id);
+            $item['review'] = (int) $sp->reviews()->whereNotNull('review')->count();
+            $item['thumbnail'] = $sp->thumbnail;
+            $item['thumbnail_path'] = url('images/simple_products/');
+            $item['off_in_percent'] = (int) round($offamount);
+            $item['tax_info'] = __("Inclusive of all taxes");
+            $item['tag_text'] = $sp->sale_tag;
+            $item['tag_text_color'] = $sp->sale_tag_text_color;
+            $item['tag_bg_color'] = $sp->sale_tag_color;
+            $item['is_in_wishlist'] = inwishlist($sp->id);
+
+            return $item;
+
+        });
+
+        return $topcatproducts->toBase()->merge($top_simple_products)->shuffle();
     }
 
-    public function categoryproducts($category){
+    public function categoryproducts($catid)
+    {
 
-        $content = array();
+        $validator = Validator::make(request()->all(), [
+            'secret' => 'required|string',
+            'currency' => 'required|max:3|min:3',
+        ]);
 
-        $products = Product::orderBy('id', 'DESC')->where('category_id','=',$category->id)->take(20)->get();
+        $sellerSystem = $this->sellerSystem;
 
-        foreach ($products as $product) {
-            if ($product->subvariants->count() > 0) {
+        if ($validator->fails()) {
 
-                $attributeName = array();
+            $errors = $validator->errors();
 
-                foreach ($product->subvariants as $orivar) {
-
-                    $variant = $this->getVariant($orivar);
-
-                    $variant = $variant->getData();
-
-                    array_push($attributeName, $variant->attrName);
-
-                    $attributeName = array_unique($attributeName);
-
-                    $price = $this->getprice($product, $orivar)->getData();
-
-                    $rating = $this->getproductrating($product);
-
-                    if ($this->getprice($product, $orivar)->getData()->offerprice != '0') {
-                        $mp = sprintf("%.2f", $this->getprice($product, $orivar)->getData()->mainprice);
-                        $op = sprintf("%.2f", $this->getprice($product, $orivar)->getData()->offerprice);
-
-                        $getdisprice = $mp - $op;
-
-                        $discount = $getdisprice / $mp;
-
-                        $offamount = $discount * 100;
-                    } else {
-                        $offamount = 0;
-                    }
-
-                    $reviews = new ProductController;
-
-                    $wishlist = new WishlistController;
-
-                    $tag = '';
-                    $tagbgcolor = '';
-
-                    if($product->featured == '1') { 
-                        $tag = __('staticwords.Hot');
-                        $tagbgcolor = '#FF585D';
-                    }elseif($product->offer_price != '0'){
-                        $tag = __('staticwords.Sale');
-                        $tagbgcolor = '#2940B0';
-                    }else{
-                        $tag =  __('staticwords.New');
-                        $tagbgcolor = '#5D6276';
-                    }
-
-
-                    $content[] = array(
-                        'productid' => $product->id,
-                        'variantid' => $orivar->id,
-                        'productname' => $product->getTranslations('name'),
-                        'description' => array_map(function ($v) {
-                            return trim(strip_tags($v));
-                        }, $product->getTranslations('des')),
-                        'mainprice' => round($price->mainprice * $this->rate->exchange_rate,2),
-                        'offerprice' =>  round($price->offerprice * $this->rate->exchange_rate,2),
-                        'pricein' => $this->rate->code,
-                        'symbol' => $this->rate->symbol,
-                        'rating' => (double) $rating,
-                        'review' => (int) $reviews->getProductReviews($product)->count(),
-                        'thumbnail' => $orivar->variantimages->main_image ?? '',
-                        'thumbnail_path' => url('/variantimages/thumbnails'),
-                        'off_in_percent' => (int) round($offamount),
-                        'tax_info' => $product->tax_r == '' ? __("Exclusive of tax") : __("Inclusive of all taxes"),
-                        'tag' => $tag,
-                        'tag_bg_color' => $tagbgcolor,
-                        'is_in_wishlist' => $wishlist->isItemInWishlist($orivar)
-                    );
-
-                  
-
-                }
+            if ($errors->first('secret')) {
+                return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
             }
+
+            if ($errors->first('currency')) {
+                return response()->json(['msg' => $errors->first('currency'), 'status' => 'fail']);
+            }
+
         }
 
-        return $content;
+        $key = DB::table('api_keys')->where('secret_key', '=', request()->secret)->first();
+
+        if (!$key) {
+            return response()->json(['msg' => 'Invalid Secret Key !', 'status' => 'fail']);
+        }
+
+        if (!$catid) {
+            return response()->json(['msg' => 'Category id is required', 'status' => 'fail']);
+        }
+
+        $category = Category::find($catid);
+
+        if (isset($category)) {
+
+            $rates = new CurrencyController;
+
+            $this->rate = $rates->fetchRates(request()->currency)->getData();
+
+            $categoryproducts_vp = Product::with('category')->whereHas('category', function ($q) use ($category) {
+
+                $q->where('status', '=', '1')->where('id', $category->id);
+
+            })->with('subcategory')->wherehas('subcategory', function ($q) {
+
+                $q->where('status', '1');
+
+            })->with('vender')->whereHas('vender', function ($query) use ($sellerSystem) {
+
+                if ($sellerSystem->vendor_enable == 1) {
+                    $query->where('status', '=', '1')->where('is_verified', '1');
+                } else {
+                    $query->where('status', '=', '1')->where('role_id', '=', 'a')->where('is_verified', '1');
+                }
+
+            })->with('store')->whereHas('store', function ($query) {
+
+                return $query->where('status', '=', '1');
+
+            })->with('subvariants')->whereHas('subvariants', function ($query) {
+
+                $query->where('def', '=', '1');
+
+            })
+                ->with(['subvariants.variantimages'])
+                ->whereHas('subvariants.variantimages')
+                ->where('status', '=', '1')
+                ->orderBy('id', 'DESC')
+                ->take(20)
+                ->get();
+
+            $review = new ProductController;
+
+            $wishlist = new WishlistController;
+
+            $categoryproducts_vp = $categoryproducts_vp->map(function ($q) use ($review, $wishlist) {
+
+                $orivar = $q->subvariants[0];
+                $mainprice = $this->getprice($q, $orivar);
+                $price = $mainprice->getData();
+
+                if ($this->getprice($q, $orivar)->getData()->offerprice != 0) {
+
+                    $mp = sprintf("%.2f", $this->getprice($q, $orivar)->getData()->mainprice);
+                    $op = sprintf("%.2f", $this->getprice($q, $orivar)->getData()->offerprice);
+
+                    $getdisprice = $mp - $op;
+
+                    $discount = $getdisprice / $mp;
+
+                    $offamount = $discount * 100;
+                } else {
+                    $offamount = 0;
+                }
+
+                $item['productid'] = $q->id;
+                $item['variantid'] = $orivar->id;
+                $item['productname'] = $q->getTranslations('name');
+                $item['description'] = array_map(function ($v) {
+                    return trim(strip_tags($v));
+                }, $q->getTranslations('des'));
+                $item['type'] = 'v';
+                $item['mainprice'] = round($price->mainprice * $this->rate->exchange_rate, 2);
+                $item['offerprice'] = round($price->offerprice * $this->rate->exchange_rate, 2);
+                $item['pricein'] = $this->rate->code;
+                $item['symbol'] = $this->rate->symbol;
+                $item['rating'] = (double) get_product_rating($q->id);
+                $item['review'] = (int) $review->getProductReviews($q)->count();
+                $item['thumbnail'] = $orivar->variantimages->main_image ?? '';
+                $item['thumbnail_path'] = url('/variantimages/thumbnails');
+                $item['off_in_percent'] = (int) round($offamount);
+                $item['tax_info'] = $q->tax_r == '' ? __("Exclusive of tax") : __("Inclusive of all taxes");
+                $item['tag_text'] = $q->sale_tag;
+                $item['tag_text_color'] = $q->sale_tag_text_color;
+                $item['tag_bg_color'] = $q->sale_tag_color;
+                $item['is_in_wishlist'] = $wishlist->isItemInWishlist($orivar);
+
+                return $item;
+
+            });
+
+            $categoryproducts_sp = SimpleProduct::with('category')->whereHas('category', function ($q) use ($category) {
+
+                $q->where('id', $category->id)->where('status', '=', '1');
+
+            })->with('subcategory')->wherehas('subcategory', function ($q) {
+
+                $q->where('status', '1');
+
+            })->with('store')->whereHas('store', function ($query) {
+
+                return $query->where('status', '=', '1');
+
+            })->whereHas('store.user', function ($query) use ($sellerSystem) {
+
+                if ($sellerSystem->vendor_enable == 1) {
+                    $query->where('status', '=', '1')->where('is_verified', '1');
+                } else {
+                    $query->where('status', '=', '1')->where('role_id', '=', 'a')->where('is_verified', '1');
+                }
+
+            })->where('status', '=', '1')->orderBy('id', 'DESC')->take(20)->get();
+
+            $categoryproducts_sp = $categoryproducts_sp->map(function ($sp) {
+
+                if ($sp->offer_price != 0) {
+
+                    $getdisprice = $sp->price - $sp->offer_price;
+
+                    $discount = $getdisprice / $sp->price;
+
+                    $offamount = $discount * 100;
+                } else {
+                    $offamount = 0;
+                }
+
+                $item['productid'] = $sp->id;
+                $item['variantid'] = 0;
+                $item['type'] = 's';
+                $item['productname'] = $sp->getTranslations('product_name');
+                $item['description'] = array_map(function ($v) {
+                    return trim(strip_tags($v));
+                }, $sp->getTranslations('product_detail'));
+                $item['type'] = 's';
+                $item['mainprice'] = round($sp->price * $this->rate->exchange_rate, 2);
+                $item['offerprice'] = round($sp->offer_price * $this->rate->exchange_rate, 2);
+                $item['pricein'] = $this->rate->code;
+                $item['symbol'] = $this->rate->symbol;
+                $item['rating'] = (double) simple_product_rating($sp->id);
+                $item['review'] = (int) $sp->reviews()->whereNotNull('review')->count();
+                $item['thumbnail'] = $sp->thumbnail;
+                $item['thumbnail_path'] = url('images/simple_products/');
+                $item['off_in_percent'] = (int) round($offamount);
+                $item['tax_info'] = __("Inclusive of all taxes");
+                $item['tag_text'] = $sp->sale_tag;
+                $item['tag_text_color'] = $sp->sale_tag_text_color;
+                $item['tag_bg_color'] = $sp->sale_tag_color;
+                $item['is_in_wishlist'] = inwishlist($sp->id);
+
+                return $item;
+
+            });
+
+            return $categoryproducts_vp->toBase()->merge($categoryproducts_sp)->shuffle();
+        } else {
+            return response()->json([
+                'No products found !',
+            ]);
+        }
 
     }
 
@@ -670,7 +907,7 @@ class MainController extends Controller
 
         $topcats = CategorySlider::first();
 
-        if ($topcats && $topcats->category_ids !='') {
+        if ($topcats && $topcats->category_ids != '') {
 
             foreach ($topcats->category_ids as $categoryid) {
 
@@ -708,16 +945,16 @@ class MainController extends Controller
         if ($validator->fails()) {
 
             $errors = $validator->errors();
-            
-			if($errors->first('secret')){
-				return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
-			}
+
+            if ($errors->first('secret')) {
+                return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
+            }
         }
 
         $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
 
         if (!$key) {
-            return response()->json(['msg' => 'Invalid Secret Key !','status' => 'fail']);
+            return response()->json(['msg' => 'Invalid Secret Key !', 'status' => 'fail']);
         }
 
         $categories = Category::orderBy('position', 'ASC')->get();
@@ -733,12 +970,12 @@ class MainController extends Controller
 
             $content[] = array(
                 'title' => $blog->getTranslations('heading'),
-                'des' =>  array_map(function ($v) {
+                'des' => array_map(function ($v) {
                     return trim(strip_tags($v));
                 }, $blog->getTranslations('des')),
                 'author' => $blog->getTranslations('user'),
                 'image' => $blog->image,
-                'created_on' => date('M jS, Y',strtotime($blog->created_at)),
+                'created_on' => date('M jS, Y', strtotime($blog->created_at)),
                 'url' => url('/api/blog/post/' . $blog->slug),
             );
 
@@ -749,62 +986,149 @@ class MainController extends Controller
 
     public function featuredProducts($content)
     {
+        $sellerSystem = $this->sellerSystem;
 
-        $featuredproducts = Product::where('featured', '=', '1')->orderBy('id', 'DESC')->take(20)->get();
+        $featured_variant_products = Product::with('category')->whereHas('category', function ($q) {
 
-        foreach ($featuredproducts as $product) {
-            if ($product->subvariants) {
+            $q->where('status', '=', '1');
 
-                foreach ($product->subvariants as $orivar) {
+        })->with('subcategory')->wherehas('subcategory', function ($q) {
 
-                    if ($orivar->def == '1') {
-                        $variant = $this->getVariant($orivar);
+            $q->where('status', '1');
 
-                        $variant = $variant->getData();
+        })->with('vender')->whereHas('vender', function ($query) use ($sellerSystem) {
 
-                        $mainprice = $this->getprice($product, $orivar);
-
-                        $price = $mainprice->getData();
-
-                        $rating = $this->getproductrating($product);
-
-                        $mp = sprintf("%.2f", $this->getprice($product, $orivar)->getData()->mainprice);
-
-                        $op = sprintf("%.2f", $this->getprice($product, $orivar)->getData()->offerprice);
-
-                        $getdisprice = $mp - $op;
-
-                        $discount = $getdisprice / $mp;
-
-                        $offamount = $discount * 100;
-
-                        $wishlist = new WishlistController;
-
-                        $content[] = array(
-                            'productid' => $product->id,
-                            'variantid' => $orivar->id,
-                            'productname' => $product->getTranslations('name'),
-                            'description' => array_map(function ($v) {
-                                return trim(strip_tags($v));
-                            }, $product->getTranslations('des')),
-                            'tax_info' => $product->tax_r == '' ? __("Exclusive of tax") : __("Inclusive of all taxes"),
-                            'mainprice' => (float) sprintf("%.2f", $price->mainprice * $this->rate->exchange_rate),
-                            'offerprice' => (float) sprintf("%.2f", $price->offerprice * $this->rate->exchange_rate),
-                            'pricein' => $this->rate->code,
-                            'symbol' => $this->rate->symbol,
-                            'off_percent' => (int) round($offamount),
-                            'rating' => (double) $rating,
-                            'thumbnail' => $orivar->variantimages->main_image,
-                            'thumbnail_path' => url('variantimages/thumbnails'),
-                            'is_in_wishlist' => $wishlist->isItemInWishlist($orivar)
-                        );
-                    }
-
-                }
+            if ($sellerSystem->vendor_enable == 1) {
+                $query->where('status', '=', '1')->where('is_verified', '1');
+            } else {
+                $query->where('status', '=', '1')->where('role_id', '=', 'a')->where('is_verified', '1');
             }
-        }
 
-        return $content;
+        })->with('store')->whereHas('store', function ($query) {
+
+            return $query->where('status', '=', '1');
+
+        })->with('subvariants')->whereHas('subvariants', function ($query) {
+
+            $query->where('def', '=', '1');
+
+        })->with('subvariants.variantimages')->whereHas('subvariants.variantimages')
+            ->where('status', '=', '1')
+            ->where('featured', '=', '1')
+            ->orderBy('id', 'DESC')
+            ->take(20)
+            ->get();
+
+        $featured_variant_products = $featured_variant_products->map(function ($product) {
+
+            $orivar = $product->subvariants[0];
+
+            $variant = $this->getVariant($orivar);
+
+            $variant = $variant->getData();
+
+            $mainprice = $this->getprice($product, $orivar);
+
+            $price = $mainprice->getData();
+
+            $rating = $this->getproductrating($product);
+
+            $mp = sprintf("%.2f", $this->getprice($product, $orivar)->getData()->mainprice);
+
+            $op = sprintf("%.2f", $this->getprice($product, $orivar)->getData()->offerprice);
+
+            $getdisprice = $mp - $op;
+
+            $discount = $getdisprice / $mp;
+
+            $offamount = $discount * 100;
+
+            $wishlist = new WishlistController;
+
+            $item['productid'] = $product->id;
+            $item['variantid'] = $orivar->id;
+            $item['productname'] = $product->getTranslations('name');
+            $item['description'] = array_map(function ($v) {
+                return trim(strip_tags($v));
+            }, $product->getTranslations('des'));
+            $item['type'] = 'v';
+            $item['tax_info'] = $product->tax_r == '' ? __("Exclusive of tax") : __("Inclusive of all taxes");
+            $item['mainprice'] = (float) sprintf("%.2f", $price->mainprice * $this->rate->exchange_rate);
+            $item['offerprice'] = (float) sprintf("%.2f", $price->offerprice * $this->rate->exchange_rate);
+            $item['pricein'] = $this->rate->code;
+            $item['symbol'] = $this->rate->symbol;
+            $item['off_percent'] = (int) round($offamount);
+            $item['rating'] = (double) $rating;
+            $item['thumbnail'] = $orivar->variantimages->main_image;
+            $item['thumbnail_path'] = url('variantimages/thumbnails');
+            $item['is_in_wishlist'] = $wishlist->isItemInWishlist($orivar);
+
+            return $item;
+
+        });
+
+        $featured_simple_products = SimpleProduct::with('category')->whereHas('category', function ($q) {
+
+            $q->where('status', '=', '1');
+
+        })->with('subcategory')->wherehas('subcategory', function ($q) {
+
+            $q->where('status', '1');
+
+        })->with('store')->whereHas('store', function ($query) {
+
+            return $query->where('status', '=', '1');
+
+        })->whereHas('store.user', function ($query) use ($sellerSystem) {
+
+            if ($sellerSystem->vendor_enable == 1) {
+                $query->where('status', '=', '1')->where('is_verified', '1');
+            } else {
+                $query->where('status', '=', '1')->where('role_id', '=', 'a')->where('is_verified', '1');
+            }
+
+        })
+            ->where('status', '=', '1')
+            ->where('featured', '=', '1')
+            ->orderBy('id', 'DESC')
+            ->take(20)
+            ->get();
+
+        $featured_simple_products = $featured_simple_products->map(function ($sp) {
+
+            $offamount = 0;
+
+            if ($sp->offer_price != 0) {
+                $getdisprice = $sp->price - $sp->offer_price;
+
+                $discount = $getdisprice / $sp->price;
+
+                $offamount = $discount * 100;
+            }
+
+            $item['productid'] = $sp->id;
+            $item['variantid'] = 0;
+            $item['type'] = 's';
+            $item['productname'] = $sp->getTranslations('product_name');
+            $item['description'] = array_map(function ($v) {
+                return trim(strip_tags($v));
+            }, $sp->getTranslations('product_detail'));
+            $item['tax_info'] = $sp->tax_r == '' ? __("Exclusive of tax") : __("Inclusive of all taxes");
+            $item['mainprice'] = (float) sprintf("%.2f", $sp->price * $this->rate->exchange_rate);
+            $item['offerprice'] = (float) sprintf("%.2f", $sp->offer_price * $this->rate->exchange_rate);
+            $item['pricein'] = $this->rate->code;
+            $item['symbol'] = $this->rate->symbol;
+            $item['off_percent'] = (int) round($offamount);
+            $item['rating'] = (double) simple_product_rating($sp->id);
+            $item['thumbnail_path'] = url('/images/simple_products/');
+            $item['thumbnail'] = $sp->thumbnail;
+            $item['is_in_wishlist'] = inwishlist($sp->id);
+
+            return $item;
+
+        });
+
+        return $featured_simple_products->toBase()->merge($featured_variant_products)->shuffle();
 
     }
 
@@ -837,21 +1161,21 @@ class MainController extends Controller
         if ($validator->fails()) {
 
             $errors = $validator->errors();
-            
-			if($errors->first('secret')){
-				return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
-			}
-	
-		}
+
+            if ($errors->first('secret')) {
+                return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
+            }
+
+        }
 
         $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
 
         if (!$key) {
-            return response()->json(['msg' => 'Invalid Secret Key !','status' => 'fail']);
+            return response()->json(['msg' => 'Invalid Secret Key !', 'status' => 'fail']);
         }
 
         $categories = Subcategory::orderBy('position', 'ASC')->get();
-        return response()->json(['categories' => $categories],200);
+        return response()->json(['categories' => $categories], 200);
     }
 
     public function childcategories(Request $request)
@@ -861,22 +1185,22 @@ class MainController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['msg' => 'Secret Key is required','status' => 'fail']);
+            return response()->json(['msg' => 'Secret Key is required', 'status' => 'fail']);
         }
 
         $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
 
         if (!$key) {
-            return response()->json(['msg' =>'Invalid Secret Key !','status' => 'fail']);
+            return response()->json(['msg' => 'Invalid Secret Key !', 'status' => 'fail']);
         }
 
         $categories = Grandcategory::orderBy('position', 'ASC')->get();
-        return response()->json(['categories' => $categories],200);
+        return response()->json(['categories' => $categories], 200);
     }
 
     public function getcategoryproduct(Request $request, $id)
     {
-
+        
         $validator = Validator::make($request->all(), [
             'secret' => 'required|string',
             'currency' => 'required|max:3|min:3',
@@ -885,119 +1209,197 @@ class MainController extends Controller
         if ($validator->fails()) {
 
             $errors = $validator->errors();
-            
-			if($errors->first('secret')){
-				return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
+
+            if ($errors->first('secret')) {
+                return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
             }
-            
-            if($errors->first('currency')){
-				return response()->json(['msg' => $errors->first('currency'), 'status' => 'fail']);
+
+            if ($errors->first('currency')) {
+                return response()->json(['msg' => $errors->first('currency'), 'status' => 'fail']);
             }
-            
+
         }
 
         $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
 
         if (!$key) {
-            return response()->json(['msg' => 'Invalid Secret Key !','status' => 'fail']);
+            return response()->json(['msg' => 'Invalid Secret Key !', 'status' => 'fail']);
         }
+
+        $sellerSystem = $this->sellerSystem;
 
         $rates = new CurrencyController;
 
         $this->rate = $rates->fetchRates($request->currency)->getData();
 
-        $cat = Category::find($id);
+        $category = Category::find($id);
 
-        if (!$cat) {
-            return response()->json(['msg' => 'Category not found !','status' => 'fail']);
+        if (!$category) {
+            return response()->json(['msg' => 'Category not found !', 'status' => 'fail']);
         }
 
-        if ($cat->status != 1) {
-            return response()->json(['msg' => 'Category is not active !','status' => 'fail']);
+        if ($category->status != 1) {
+            return response()->json(['msg' => 'Category is not active !', 'status' => 'fail']);
         }
 
-        $pros = $cat->products;
+        $rates = new CurrencyController;
 
-        $result = array();
+        $this->rate = $rates->fetchRates(request()->currency)->getData();
 
-        foreach ($pros as $pro) {
+        $categoryproducts_vp = Product::with('category')->whereHas('category', function ($q) use ($category) {
 
-            if ($pro->subvariants->count() > 0) {
+            $q->where('status', '=', '1')->where('id', $category->id);
 
-                foreach ($pro->subvariants as $orivar) {
+        })->with('subcategory')->wherehas('subcategory', function ($q) {
 
-                    $variant = $this->getVariant($orivar);
+            $q->where('status', '1');
 
-                    $variant = $variant->getData();
+        })->with('vender')->whereHas('vender', function ($query) use ($sellerSystem) {
 
-                    $mainprice = $this->getprice($pro, $orivar);
-
-                    $price = $mainprice->getData();
-
-                    $rating = $this->getproductrating($pro);
-
-                    if ($this->getprice($pro, $orivar)->getData()->offerprice != '0') {
-                        $mp = sprintf("%.2f", $this->getprice($pro, $orivar)->getData()->mainprice);
-                        $op = sprintf("%.2f", $this->getprice($pro, $orivar)->getData()->offerprice);
-
-                        $getdisprice = $mp - $op;
-
-                        $discount = $getdisprice / $mp;
-
-                        $offamount = $discount * 100;
-                    } else {
-                        $offamount = 0;
-                    }
-
-                    $wishlist = new WishlistController;
-
-                    $review = new ProductController;
-
-                    $result[] = array(
-                        'productid' => $pro->id,
-                        'productname' => $pro->getTranslations('name'),
-                        'variantid' => $orivar->id,
-                        'variantname' => $variant->value,
-                        'desciption' => array_map(function ($v) {
-                            return trim(strip_tags($v));
-                        }, $pro->getTranslations('des')),
-                        'mainprice' =>  (double) sprintf("%.2f", $this->getprice($pro, $orivar)->getData()->mainprice * $this->rate->exchange_rate),
-                        'offerprice' =>  (double) sprintf("%.2f", $this->getprice($pro, $orivar)->getData()->offerprice * $this->rate->exchange_rate),
-                        'pricein' => $this->rate->code,
-                        'symbol' => $this->rate->symbol,
-                        'rating' => (double) $rating,
-                        'review' => (int) $review->getProductReviews($pro)->count(),
-                        'off_in_percent' => (int) round($offamount),
-                        'thumbpath' => url('variantimages/thumbnails/'),
-                        'images' => $orivar->variantimages->main_image,
-                        'detail_page_url' => url('/api/details/' . $pro->id . '/' . $orivar->id . ''),
-                        'is_in_wishlist' => $wishlist->isItemInWishlist($orivar)
-                    );
-
-                }
-
+            if ($sellerSystem->vendor_enable == 1) {
+                $query->where('status', '=', '1')->where('is_verified', '1');
+            } else {
+                $query->where('status', '=', '1')->where('role_id', '=', 'a')->where('is_verified', '1');
             }
 
-        }
+        })->with('store')->whereHas('store', function ($query) {
+
+            return $query->where('status', '=', '1');
+
+        })->with('subvariants')->whereHas('subvariants', function ($query) {
+
+            $query->where('def', '=', '1');
+
+        })
+        ->with(['subvariants.variantimages'])
+        ->whereHas('subvariants.variantimages')
+        ->where('status', '=', '1')
+        ->orderBy('id', 'DESC')
+        ->get();
+
+        $review = new ProductController;
+
+        $wishlist = new WishlistController;
+
+        $categoryproducts_vp = $categoryproducts_vp->map(function ($q) use ($review, $wishlist) {
+
+            $orivar = $q->subvariants[0];
+            $mainprice = $this->getprice($q, $orivar);
+            $price = $mainprice->getData();
+
+            if ($this->getprice($q, $orivar)->getData()->offerprice != 0) {
+
+                $mp = sprintf("%.2f", $this->getprice($q, $orivar)->getData()->mainprice);
+                $op = sprintf("%.2f", $this->getprice($q, $orivar)->getData()->offerprice);
+
+                $getdisprice = $mp - $op;
+
+                $discount = $getdisprice / $mp;
+
+                $offamount = $discount * 100;
+            } else {
+                $offamount = 0;
+            }
+
+            $item['productid'] = $q->id;
+            $item['variantid'] = $orivar->id;
+            $item['productname'] = $q->getTranslations('name');
+            $item['variantname'] = variantname($orivar);
+            $item['type'] = 'v';
+            $item['mainprice'] = round($price->mainprice * $this->rate->exchange_rate, 2);
+            $item['offerprice'] = round($price->offerprice * $this->rate->exchange_rate, 2);
+            $item['pricein'] = $this->rate->code;
+            $item['symbol'] = $this->rate->symbol;
+            $item['rating'] = (double) get_product_rating($q->id);
+            $item['review'] = (int) $review->getProductReviews($q)->count();
+            $item['images'] = $orivar->variantimages->main_image ?? '';
+            $item['thumbpath'] = url('/variantimages/thumbnails');
+            $item['off_in_percent'] = (int) round($offamount);
+            $item['is_in_wishlist'] = (boolean) $wishlist->isItemInWishlist($orivar);
+            $item['detail_page_url'] = url('/api/details/' . $q->id . '/' . $orivar->id . '');
+
+            return $item;
+
+        });
+
+        $categoryproducts_sp = SimpleProduct::with('category')->whereHas('category', function ($q) use ($category) {
+
+            $q->where('id', $category->id)->where('status', '=', '1');
+
+        })->with('subcategory')->wherehas('subcategory', function ($q) {
+
+            $q->where('status', '1');
+
+        })->with('store')->whereHas('store', function ($query) {
+
+            return $query->where('status', '=', '1');
+
+        })->whereHas('store.user', function ($query) use ($sellerSystem) {
+
+            if ($sellerSystem->vendor_enable == 1) {
+                $query->where('status', '=', '1')->where('is_verified', '1');
+            } else {
+                $query->where('status', '=', '1')->where('role_id', '=', 'a')->where('is_verified', '1');
+            }
+
+        })
+        ->where('status', '=', '1')
+        ->orderBy('id', 'DESC')
+        ->get();
+
+        $categoryproducts_sp = $categoryproducts_sp->map(function ($sp) {
+
+            if ($sp->offer_price != 0) {
+
+                $getdisprice = $sp->price - $sp->offer_price;
+
+                $discount = $getdisprice / $sp->price;
+
+                $offamount = $discount * 100;
+            } else {
+                $offamount = 0;
+            }
+
+            $item['productid'] = $sp->id;
+            $item['variantid'] = 0;
+            $item['type'] = 's';
+            $item['variantname'] = NULL;
+            $item['productname'] = $sp->getTranslations('product_name');
+            $item['mainprice'] = round($sp->price * $this->rate->exchange_rate, 2);
+            $item['offerprice'] = round($sp->offer_price * $this->rate->exchange_rate, 2);
+            $item['pricein'] = $this->rate->code;
+            $item['symbol'] = $this->rate->symbol;
+            $item['rating'] = (double) simple_product_rating($sp->id);
+            $item['review'] = (int) $sp->reviews()->whereNotNull('review')->count();
+            $item['images'] = $sp->thumbnail;
+            $item['thumbpath'] = url('images/simple_products/');
+            $item['off_in_percent'] = (int) round($offamount);
+            $item['is_in_wishlist'] = inwishlist($sp->id);
+
+            return $item;
+
+        });
+
+        $result = $categoryproducts_sp->toBase()->merge($categoryproducts_vp)->shuffle();
 
         if (empty($result)) {
             $result[] = 'No Products Found in this category !';
         }
 
-        $category = array(
-            'id' => $cat->id,
-            'name' => $cat->getTranslations('title'),
+        $category_dtl = array(
+            'id' => $category->id,
+            'name' => $category->getTranslations('title'),
             'desciption' => array_map(function ($v) {
                 return trim(strip_tags($v));
-            }, $cat->getTranslations('description')),
-            'icon' => $cat->icon,
-            'image' => $cat->image,
+            }, $category->getTranslations('description')),
+            'icon' => $category->icon,
+            'image' => $category->image,
             'imagepath' => url('images/grandcategory/'),
         );
 
         $finalresponse = [
 
-            'category' => $category,
+            'category' => $category_dtl,
             'products' => $result,
 
         ];
@@ -1011,131 +1413,203 @@ class MainController extends Controller
 
         $validator = Validator::make($request->all(), [
             'secret' => 'required|string',
-            'currency' => 'required||string|max:3|min:3',
+            'currency' => 'required|max:3|min:3',
         ]);
 
         if ($validator->fails()) {
 
             $errors = $validator->errors();
-            
-			if($errors->first('secret')){
-				return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
+
+            if ($errors->first('secret')) {
+                return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
             }
 
-            if($errors->first('currency')){
-				return response()->json(['msg' => $errors->first('currency'), 'status' => 'fail']);
+            if ($errors->first('currency')) {
+                return response()->json(['msg' => $errors->first('currency'), 'status' => 'fail']);
             }
-            
+
         }
 
         $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
 
         if (!$key) {
-            return response()->json(['msg' => 'Invalid Secret Key !','status' => 'fail']);
+            return response()->json(['msg' => 'Invalid Secret Key !', 'status' => 'fail']);
         }
+
+        $sellerSystem = $this->sellerSystem;
 
         $rates = new CurrencyController;
 
         $this->rate = $rates->fetchRates($request->currency)->getData();
 
-        $subcat = Subcategory::find($id);
+        $subcategory = Subcategory::find($id);
 
-        if (!$subcat) {
-            return response()->json(['msg' => 'Subcategory not found !','status' => 'fail']);
+        if (!$subcategory) {
+            return response()->json(['msg' => 'Category not found !', 'status' => 'fail']);
         }
 
-        if ($subcat->status != 1) {
-            return response()->json(['msg' => 'Subcategory is not active !','status' => 'fail']);
+        if ($subcategory->status != 1) {
+            return response()->json(['msg' => 'Category is not active !', 'status' => 'fail']);
         }
 
-        $pros = $subcat->products;
+        $rates = new CurrencyController;
 
-        $result = array();
+        $this->rate = $rates->fetchRates(request()->currency)->getData();
 
-        $attributeName = array();
+        $categoryproducts_vp = Product::with('category')->whereHas('category', function ($q) use ($subcategory) {
 
-        foreach ($pros as $pro) {
+            $q->where('status', '=', '1')->where('id', $subcategory->category->id);
 
-            if ($pro->subvariants->count() > 0) {
+        })->with('subcategory')->wherehas('subcategory', function ($q) use($subcategory) {
 
-                foreach ($pro->subvariants as $orivar) {
+            $q->where('status', '1')->where('id',$subcategory->id);
 
-                    $variant = $this->getVariant($orivar);
+        })->with('vender')->whereHas('vender', function ($query) use ($sellerSystem) {
 
-                    $variant = $variant->getData();
-
-                    array_push($attributeName, $variant->attrName);
-
-                    $attributeName = array_unique($attributeName);
-
-                    $mainprice = $this->getprice($pro, $orivar);
-
-                    $price = $mainprice->getData();
-
-                    $rating = $this->getproductrating($pro);
-
-                    if ($this->getprice($pro, $orivar)->getData()->offerprice != '0') {
-                        $mp = sprintf("%.2f", $this->getprice($pro, $orivar)->getData()->mainprice);
-                        $op = sprintf("%.2f", $this->getprice($pro, $orivar)->getData()->offerprice);
-
-                        $getdisprice = $mp - $op;
-
-                        $discount = $getdisprice / $mp;
-
-                        $offamount = $discount * 100;
-                    } else {
-                        $offamount = 0;
-                    }
-
-                    $review = new ProductController;
-
-                    $wishlist = new WishlistController;
-
-                    $result[] = array(
-                        'productid' => $pro->id,
-                        'productname' => $pro->getTranslations('name'),
-                        'variantid' => $orivar->id,
-                        'variantname' => $variant->value,
-                        'desciption' => array_map(function ($v) {
-                            return trim(strip_tags($v));
-                        }, $pro->getTranslations('des')),
-                        'mainprice' =>  (double) sprintf("%.2f", $this->getprice($pro, $orivar)->getData()->mainprice * $this->rate->exchange_rate),
-                        'offerprice' =>  (double) sprintf("%.2f", $this->getprice($pro, $orivar)->getData()->offerprice * $this->rate->exchange_rate),
-                        'pricein' => $this->rate->code,
-                        'symbol' => $this->rate->symbol,
-                        'rating' => (double) $rating,
-                        'review' => (int) $review->getProductReviews($pro)->count(),
-                        'off_in_percent' => (int) round($offamount),
-                        'thumbpath' => url('variantimages/thumbnails/'),
-                        'images' => $orivar->variantimages->main_image,
-                        'detail_page_url' => url('/api/details/' . $pro->id . '/' . $orivar->id . ''),
-                        'is_in_wishlist' => $wishlist->isItemInWishlist($orivar)
-                    );
-
-                }
-
+            if ($sellerSystem->vendor_enable == 1) {
+                $query->where('status', '=', '1')->where('is_verified', '1');
+            } else {
+                $query->where('status', '=', '1')->where('role_id', '=', 'a')->where('is_verified', '1');
             }
 
-        }
+        })->with('store')->whereHas('store', function ($query) {
+
+            return $query->where('status', '=', '1');
+
+        })->with('subvariants')->whereHas('subvariants', function ($query) {
+
+            $query->where('def', '=', '1');
+
+        })
+        ->with(['subvariants.variantimages'])
+        ->whereHas('subvariants.variantimages')
+        ->where('status', '=', '1')
+        ->orderBy('id', 'DESC')
+        ->get();
+
+        $review = new ProductController;
+
+        $wishlist = new WishlistController;
+
+        $categoryproducts_vp = $categoryproducts_vp->map(function ($q) use ($review, $wishlist) {
+
+            $orivar = $q->subvariants[0];
+            $mainprice = $this->getprice($q, $orivar);
+            $price = $mainprice->getData();
+
+            if ($this->getprice($q, $orivar)->getData()->offerprice != 0) {
+
+                $mp = sprintf("%.2f", $this->getprice($q, $orivar)->getData()->mainprice);
+                $op = sprintf("%.2f", $this->getprice($q, $orivar)->getData()->offerprice);
+
+                $getdisprice = $mp - $op;
+
+                $discount = $getdisprice / $mp;
+
+                $offamount = $discount * 100;
+            } else {
+                $offamount = 0;
+            }
+
+            $item['productid'] = $q->id;
+            $item['variantid'] = $orivar->id;
+            $item['productname'] = $q->getTranslations('name');
+            $item['variantname'] = variantname($orivar);
+            $item['type'] = 'v';
+            $item['mainprice'] = round($price->mainprice * $this->rate->exchange_rate, 2);
+            $item['offerprice'] = round($price->offerprice * $this->rate->exchange_rate, 2);
+            $item['pricein'] = $this->rate->code;
+            $item['symbol'] = $this->rate->symbol;
+            $item['rating'] = (double) get_product_rating($q->id);
+            $item['review'] = (int) $review->getProductReviews($q)->count();
+            $item['images'] = $orivar->variantimages->main_image ?? '';
+            $item['thumbpath'] = url('/variantimages/thumbnails');
+            $item['off_in_percent'] = (int) round($offamount);
+            $item['is_in_wishlist'] = (boolean) $wishlist->isItemInWishlist($orivar);
+            $item['detail_page_url'] = url('/api/details/' . $q->id . '/' . $orivar->id . '');
+
+            return $item;
+
+        });
+
+        $categoryproducts_sp = SimpleProduct::with('category')->whereHas('category', function ($q) use ($subcategory) {
+
+            $q->where('id', $subcategory->category->id)->where('status', '=', '1');
+
+        })->with('subcategory')->wherehas('subcategory', function ($q) use($subcategory) {
+
+            $q->where('status', '1')->where('id',$subcategory->id);
+
+        })->with('store')->whereHas('store', function ($query) {
+
+            return $query->where('status', '=', '1');
+
+        })->whereHas('store.user', function ($query) use ($sellerSystem) {
+
+            if ($sellerSystem->vendor_enable == 1) {
+                $query->where('status', '=', '1')->where('is_verified', '1');
+            } else {
+                $query->where('status', '=', '1')->where('role_id', '=', 'a')->where('is_verified', '1');
+            }
+
+        })
+        ->where('status', '=', '1')
+        ->orderBy('id', 'DESC')
+        ->get();
+
+        $categoryproducts_sp = $categoryproducts_sp->map(function ($sp) {
+
+            if ($sp->offer_price != 0) {
+
+                $getdisprice = $sp->price - $sp->offer_price;
+
+                $discount = $getdisprice / $sp->price;
+
+                $offamount = $discount * 100;
+            } else {
+                $offamount = 0;
+            }
+
+            $item['productid'] = $sp->id;
+            $item['variantid'] = 0;
+            $item['type'] = 's';
+            $item['variantname'] = NULL;
+            $item['productname'] = $sp->getTranslations('product_name');
+            $item['mainprice'] = round($sp->price * $this->rate->exchange_rate, 2);
+            $item['offerprice'] = round($sp->offer_price * $this->rate->exchange_rate, 2);
+            $item['pricein'] = $this->rate->code;
+            $item['symbol'] = $this->rate->symbol;
+            $item['rating'] = (double) simple_product_rating($sp->id);
+            $item['review'] = (int) $sp->reviews()->whereNotNull('review')->count();
+            $item['images'] = $sp->thumbnail;
+            $item['thumbpath'] = url('images/simple_products/');
+            $item['off_in_percent'] = (int) round($offamount);
+            $item['is_in_wishlist'] = inwishlist($sp->id);
+
+            return $item;
+
+        });
+
+        $result = $categoryproducts_sp->toBase()->merge($categoryproducts_vp)->shuffle();
 
         if (empty($result)) {
             $result[] = 'No Products Found in this category !';
         }
 
-        $subcategory = array(
-            'id' => $subcat->id,
-            'name' => $subcat->getTranslations('title'),
+        $subcategory_dtl = array(
+            'id' => $subcategory->id,
+            'name' => $subcategory->getTranslations('title'),
             'desciption' => array_map(function ($v) {
                 return trim(strip_tags($v));
-            }, $subcat->getTranslations('description')),
-            'icon' => $subcat->icon,
-            'image' => $subcat->image,
+            }, $subcategory->getTranslations('description')),
+            'icon' => $subcategory->icon,
+            'image' => $subcategory->image,
             'imagepath' => url('images/grandcategory/'),
         );
 
         $finalresponse = [
 
-            'subcategory' => $subcategory,
+            'category' => $subcategory_dtl,
             'products' => $result,
 
         ];
@@ -1155,20 +1629,20 @@ class MainController extends Controller
         if ($validator->fails()) {
 
             $errors = $validator->errors();
-            
-			if($errors->first('secret')){
-				return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
+
+            if ($errors->first('secret')) {
+                return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
             }
-            
-            if($errors->first('currency')){
-				return response()->json(['msg' => $errors->first('currency'), 'status' => 'fail']);
-			}
+
+            if ($errors->first('currency')) {
+                return response()->json(['msg' => $errors->first('currency'), 'status' => 'fail']);
+            }
         }
 
         $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
 
         if (!$key) {
-            return response()->json(['msg' => 'Invalid Secret Key !','status' => 'fail']);
+            return response()->json(['msg' => 'Invalid Secret Key !', 'status' => 'fail']);
         }
 
         $rates = new CurrencyController;
@@ -1177,91 +1651,182 @@ class MainController extends Controller
 
         $childcat = Grandcategory::find($id);
 
+        $sellerSystem = $this->sellerSystem;
+
         if (!$childcat) {
-            return response()->json(['msg' =>  'Childcategory not found !','status' => 'fail']);
+            return response()->json(['msg' => 'Childcategory not found !', 'status' => 'fail']);
         }
 
         if ($childcat->status != 1) {
-            return response()->json(['msg' => 'Childcategory is not active !','status' => 'fail']);
+            return response()->json(['msg' => 'Childcategory is not active !', 'status' => 'fail']);
         }
 
-        $pros = $childcat->products;
+        $rates = new CurrencyController;
 
-        $result = array();
+        $this->rate = $rates->fetchRates(request()->currency)->getData();
 
-        foreach ($pros as $pro) {
+        $categoryproducts_vp = Product::with('category')->whereHas('category', function ($q) use ($childcat) {
 
-            if ($pro->subvariants->count() > 0) {
+            $q->where('status', '=', '1')->where('id', $childcat->subcategory->category->id);
 
-                foreach ($pro->subvariants as $orivar) {
+        })->with('subcategory')->wherehas('subcategory', function ($q) use($childcat) {
 
-                    $variant = $this->getVariant($orivar);
+            $q->where('status', '1')->where('id',$childcat->subcategory->id);
 
-                    $variant = $variant->getData();
+        })->with('childcat')->wherehas('childcat', function ($q) use($childcat) {
 
-                    $rating = $this->getproductrating($pro);
+            $q->where('status', '1')->where('id',$childcat->id);
 
-                    if ($this->getprice($pro, $orivar)->getData()->offerprice != '0') {
-                        $mp = sprintf("%.2f", $this->getprice($pro, $orivar)->getData()->mainprice);
-                        $op = sprintf("%.2f", $this->getprice($pro, $orivar)->getData()->offerprice);
+        })->with('vender')->whereHas('vender', function ($query) use ($sellerSystem) {
 
-                        $getdisprice = $mp - $op;
-
-                        $discount = $getdisprice / $mp;
-
-                        $offamount = $discount * 100;
-                    } else {
-                        $offamount = 0;
-                    }
-                    
-                    $review = new ProductController;
-
-                    $wishlist = new WishlistController;
-
-                    $result[] = array(
-                        'productid' => $pro->id,
-                        'productname' => $pro->getTranslations('name'),
-                        'variantid' => $orivar->id,
-                        'variantname' => $variant->value,
-                        'desciption' => array_map(function ($v) {
-                            return trim(strip_tags($v));
-                        }, $pro->getTranslations('des')),
-                        'mainprice' => (double) sprintf("%.2f", $this->getprice($pro, $orivar)->getData()->mainprice * $this->rate->exchange_rate),
-                        'offerprice' =>  (double) sprintf("%.2f", $this->getprice($pro, $orivar)->getData()->offerprice * $this->rate->exchange_rate),
-                        'pricein' => $this->rate->code,
-                        'symbol' => $this->rate->symbol,
-                        'rating' => (double) $rating,
-                        'review' => (int) $review->getProductReviews($pro)->count(),
-                        'off_in_percent' => (int) round($offamount),
-                        'thumbpath' => url('variantimages/thumbnails/'),
-                        'images' => $orivar->variantimages->main_image,
-                        'detail_page_url' => url('/api/details/' . $pro->id . '/' . $orivar->id . ''),
-                        'is_in_wishlist' => $wishlist->isItemInWishlist($orivar)
-                    );
-
-                }
-
+            if ($sellerSystem->vendor_enable == 1) {
+                $query->where('status', '=', '1')->where('is_verified', '1');
+            } else {
+                $query->where('status', '=', '1')->where('role_id', '=', 'a')->where('is_verified', '1');
             }
 
-        }
+        })->with('store')->whereHas('store', function ($query) {
+
+            return $query->where('status', '=', '1');
+
+        })->with('subvariants')->whereHas('subvariants', function ($query) {
+
+            $query->where('def', '=', '1');
+
+        })
+        ->with(['subvariants.variantimages'])
+        ->whereHas('subvariants.variantimages')
+        ->where('status', '=', '1')
+        ->orderBy('id', 'DESC')
+        ->get();
+
+        $review = new ProductController;
+
+        $wishlist = new WishlistController;
+
+        $categoryproducts_vp = $categoryproducts_vp->map(function ($q) use ($review, $wishlist) {
+
+            $orivar = $q->subvariants[0];
+            $mainprice = $this->getprice($q, $orivar);
+            $price = $mainprice->getData();
+
+            if ($this->getprice($q, $orivar)->getData()->offerprice != 0) {
+
+                $mp = sprintf("%.2f", $this->getprice($q, $orivar)->getData()->mainprice);
+                $op = sprintf("%.2f", $this->getprice($q, $orivar)->getData()->offerprice);
+
+                $getdisprice = $mp - $op;
+
+                $discount = $getdisprice / $mp;
+
+                $offamount = $discount * 100;
+            } else {
+                $offamount = 0;
+            }
+
+            $item['productid'] = $q->id;
+            $item['variantid'] = $orivar->id;
+            $item['productname'] = $q->getTranslations('name');
+            $item['variantname'] = variantname($orivar);
+            $item['type'] = 'v';
+            $item['mainprice'] = round($price->mainprice * $this->rate->exchange_rate, 2);
+            $item['offerprice'] = round($price->offerprice * $this->rate->exchange_rate, 2);
+            $item['pricein'] = $this->rate->code;
+            $item['symbol'] = $this->rate->symbol;
+            $item['rating'] = (double) get_product_rating($q->id);
+            $item['review'] = (int) $review->getProductReviews($q)->count();
+            $item['images'] = $orivar->variantimages->main_image ?? '';
+            $item['thumbpath'] = url('/variantimages/thumbnails');
+            $item['off_in_percent'] = (int) round($offamount);
+            $item['is_in_wishlist'] = (boolean) $wishlist->isItemInWishlist($orivar);
+            $item['detail_page_url'] = url('/api/details/' . $q->id . '/' . $orivar->id . '');
+
+            return $item;
+
+        });
+
+        $categoryproducts_sp = SimpleProduct::with('category')->whereHas('category', function ($q) use ($childcat) {
+
+            $q->where('id', $childcat->subcategory->category->id)->where('status', '=', '1');
+
+        })->with('subcategory')->wherehas('subcategory', function ($q) use($childcat) {
+
+            $q->where('status', '1')->where('id',$childcat->subcategory->id);
+
+        })->with('childcat')->wherehas('childcat', function ($q) use($childcat) {
+
+            $q->where('status', '1')->where('id',$childcat->id);
+
+        })->with('store')->whereHas('store', function ($query) {
+
+            return $query->where('status', '=', '1');
+
+        })->whereHas('store.user', function ($query) use ($sellerSystem) {
+
+            if ($sellerSystem->vendor_enable == 1) {
+                $query->where('status', '=', '1')->where('is_verified', '1');
+            } else {
+                $query->where('status', '=', '1')->where('role_id', '=', 'a')->where('is_verified', '1');
+            }
+
+        })
+        ->where('status', '=', '1')
+        ->orderBy('id', 'DESC')
+        ->get();
+
+        $categoryproducts_sp = $categoryproducts_sp->map(function ($sp) {
+
+            if ($sp->offer_price != 0) {
+
+                $getdisprice = $sp->price - $sp->offer_price;
+
+                $discount = $getdisprice / $sp->price;
+
+                $offamount = $discount * 100;
+            } else {
+                $offamount = 0;
+            }
+
+            $item['productid'] = $sp->id;
+            $item['variantid'] = 0;
+            $item['type'] = 's';
+            $item['variantname'] = NULL;
+            $item['productname'] = $sp->getTranslations('product_name');
+            $item['mainprice'] = round($sp->price * $this->rate->exchange_rate, 2);
+            $item['offerprice'] = round($sp->offer_price * $this->rate->exchange_rate, 2);
+            $item['pricein'] = $this->rate->code;
+            $item['symbol'] = $this->rate->symbol;
+            $item['rating'] = (double) simple_product_rating($sp->id);
+            $item['review'] = (int) $sp->reviews()->whereNotNull('review')->count();
+            $item['images'] = $sp->thumbnail;
+            $item['thumbpath'] = url('images/simple_products/');
+            $item['off_in_percent'] = (int) round($offamount);
+            $item['is_in_wishlist'] = inwishlist($sp->id);
+
+            return $item;
+
+        });
+
+        $result = $categoryproducts_sp->toBase()->merge($categoryproducts_vp)->shuffle();
 
         if (empty($result)) {
             $result[] = 'No Products Found in this category !';
         }
 
-        $chilcategory = array(
+        $subcategory_dtl = array(
             'id' => $childcat->id,
             'name' => $childcat->getTranslations('title'),
             'desciption' => array_map(function ($v) {
                 return trim(strip_tags($v));
             }, $childcat->getTranslations('description')),
+            'icon' => $childcat->icon,
             'image' => $childcat->image,
             'imagepath' => url('images/grandcategory/'),
         );
 
         $finalresponse = [
 
-            'subcategory' => $chilcategory,
+            'category' => $subcategory_dtl,
             'products' => $result,
 
         ];
@@ -1271,143 +1836,346 @@ class MainController extends Controller
 
     public function hotdeals(Request $request, $content)
     {
-        $hotdeals = Hotdeal::whereHas('pro')->whereHas('pro.subvariants')->where('status', '=', '1')->where('end', '>', date('Y-m-d'))->get();
-
-       
+        $sellerSystem = $this->sellerSystem;
 
         if (!isset($this->rate)) {
             $rates = new CurrencyController;
-
             $this->rate = $rates->fetchRates($request->currency)->getData();
         }
 
-        foreach ($hotdeals as $deal) {
+        $variant_product_hotdeals = Product::with('hotdeal')
+            ->whereHas('hotdeal', function ($query) {
 
-            if ($deal->pro->subvariants->count() > 0 && $deal->pro->status == '1') {
+                return $query->where('status', '1')->whereDate('end', '>=', now());
 
-                foreach ($deal->pro->subvariants as $key => $orivar) {
+            })
+            ->with('category')->whereHas('category', function ($q) {
 
-                    if ($orivar->def == '1') {
-                        $variant = $this->getVariant($orivar);
+            $q->where('status', '=', '1');
 
-                        $variant = $variant->getData();
+        })
+            ->with('subcategory')->whereHas('subcategory', function ($q) {
 
-                        $mainprice = $this->getprice($deal->pro, $orivar);
+            $q->where('status', '1');
 
-                        $price = $mainprice->getData();
+        })
+            ->with('vender')->whereHas('vender', function ($query) use ($sellerSystem) {
 
-                        $rating = $this->getproductrating($deal->pro);
+            if ($sellerSystem->vendor_enable == 1) {
+                $query->where('status', '=', '1')->where('is_verified', '1');
+            } else {
+                $query->where('status', '=', '1')->where('role_id', '=', 'a')->where('is_verified', '1');
+            }
 
-                        if ($this->getprice($deal->pro, $orivar)->getData()->offerprice != '0') {
-                            $mp = sprintf("%.2f", $this->getprice($deal->pro, $orivar)->getData()->mainprice);
-                            $op = sprintf("%.2f", $this->getprice($deal->pro, $orivar)->getData()->offerprice);
-    
-                            $getdisprice = $mp - $op;
-    
-                            $discount = $getdisprice / $mp;
-    
-                            $offamount = $discount * 100;
-                        } else {
-                            $offamount = 0;
-                        }
+        })
+            ->with('store')->whereHas('store', function ($query) {
 
-                        $review = new ProductController;
-                        
+            return $query->where('status', '=', '1');
 
-                        $content[] = array(
-                            'start_date' => $deal->start,
-                            'end_date' => $deal->end,
-                            'variantid' => $orivar->id,
-                            'productid' => $deal->pro->id,
-                            'productname' => $deal->pro->getTranslations('name'),
-                            'mainprice' => (double) sprintf("%.2f", $price->mainprice * $this->rate->exchange_rate),
-                            'offerprice' => (double) sprintf("%.2f", $price->offerprice * $this->rate->exchange_rate),
-                            'pricein' => $this->rate->code,
-                            'symbol' => $this->rate->symbol,
-                            'rating' => (double) $rating,
-                            'reviews' => (int) $review->getProductReviews($deal->pro)->count(),
-                            'off_in_percent' => (int) round($offamount),
-                            'thumbnail' => $orivar->variantimages->main_image,
-                            'thumbnail_path' => url('variantimages/thumbnails'),
-                            'otherimagepath' => url('variantimages/'),
-                            'otherimages' => $orivar->variantimages()->select('image1','image2','image3','image4','image5','image6')->get(),
-                            'tax_info' =>$deal->pro->tax_r == '' ? __("Exclusive of tax") : __("Inclusive of all taxes"),
-                            'hotdeal_bg_path' => url('images/hotdeal_backgrounds/'),
-                            'hotdeal_bg' => 'default.jpg'
-                        );
+        })
+            ->with('subvariants')->whereHas('subvariants', function ($query) {
+
+            $query->where('def', '=', '1');
+
+        })
+            ->with('subvariants.variantimages')
+            ->whereHas('subvariants.variantimages')
+            ->where('status', '=', '1')
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        if ($variant_product_hotdeals) {
+
+            $get_product_data = new MainController;
+
+            $variant_product_hotdeals = $variant_product_hotdeals->map(function ($q) use ($get_product_data) {
+
+                $orivar = $q->subvariants[0];
+
+                if (isset($orivar)) {
+
+                    $variant = $get_product_data->getVariant($orivar);
+                    $variant = $variant->getData();
+                    $mainprice = $get_product_data->getprice($q, $orivar);
+                    $price = $mainprice->getData();
+
+                    $mp = sprintf("%.2f", $get_product_data->getprice($q, $orivar)->getData()->mainprice);
+
+                    $op = sprintf("%.2f", $get_product_data->getprice($q, $orivar)->getData()->offerprice);
+
+                    $offamount = 0;
+
+                    if ($op != 0) {
+
+                        $getdisprice = $mp - $op;
+
+                        $discount = $getdisprice / $mp;
+
+                        $offamount = $discount * 100;
                     }
+
+                    $content['start_date'] = $q->hotdeal->start;
+                    $content['end_date'] = $q->hotdeal->end;
+                    $content['productid'] = $q->id;
+                    $content['type'] = 'v';
+                    $content['variantid'] = $orivar->id;
+                    $content['productname'] = $q->getTranslations('name');
+                    $content['tax_info'] = $q->tax_r == '' ? __("Exclusive of tax") : __("Inclusive of all taxes");
+                    $content['selling_start_at'] = $q->selling_start_at;
+                    $content['mainprice'] = ($price->mainprice * $this->rate->exchange_rate);
+                    $content['offerprice'] = ($price->offerprice * $this->rate->exchange_rate);
+                    $content['pricein'] = $this->rate->code;
+                    $content['symbol'] = $this->rate->symbol;
+                    $content['off_percent'] = (int) round($offamount);
+                    $content['thumbnail_path'] = url('/variantimages');
+                    $content['thumbnail'] = $orivar->variantimages->main_image;
+                    $content['rating'] = ProductRating::getReview($q);
+                    $content['hotdeal_bg_path'] = url('images/hotdeal_backgrounds/');
+                    $content['hotdeal_bg'] = 'default.jpg';
+                    $content['otherimagepath'] = url('variantimages/');
+                    $content['otherimages'] = $orivar->variantimages()->select('image1', 'image2', 'image3', 'image4', 'image5', 'image6')->get()->map(function ($image) {
+
+                        $item[]['image'] = $image->image1;
+                        $item[]['image'] = $image->image2;
+                        $item[]['image'] = $image->image3;
+                        $item[]['image'] = $image->image4;
+                        $item[]['image'] = $image->image5;
+                        $item[]['image'] = $image->image6;
+
+                        return $item;
+                    });
+
+                    $content['otherimages'] = $content['otherimages'][0];
+
+                    return $content;
 
                 }
 
-            }
+            });
 
+            $variant_product_hotdeals = $variant_product_hotdeals->filter();
         }
 
-        return $content;
+        $simple_products_hotdeals = SimpleProduct::with('hotdeal')
+            ->whereHas('hotdeal', function ($q) {
+
+                return $q->where('pre_order', '=', '0')
+                    ->where('status', '1')
+                    ->whereDate('end', '>=', now());
+
+            })->with('category')->whereHas('category', function ($q) {
+
+            $q->where('status', '=', '1');
+
+        })->with('subcategory')->wherehas('subcategory', function ($q) {
+
+            $q->where('status', '1');
+
+        })->with('store')->whereHas('store', function ($query) {
+
+            return $query->where('status', '=', '1');
+
+        })->whereHas('store.user', function ($query) use ($sellerSystem) {
+
+            if ($sellerSystem->vendor_enable == 1) {
+
+                $query->where('status', '=', '1')
+                    ->where('is_verified', '1');
+
+            } else {
+
+                $query->where('status', '=', '1')
+                    ->where('role_id', '=', 'a')
+                    ->where('is_verified', '1');
+
+            }
+
+        })
+            ->where('status', '=', '1')
+            ->get();
+
+        if ($simple_products_hotdeals) {
+
+            $simple_products_hotdeals = $simple_products_hotdeals->map(function ($sp) {
+
+                if ($sp->offerprice != 0) {
+                    $getdisprice = $sp->mainprice - $sp->offerprice;
+
+                    $discount = $getdisprice / $sp->mainprice;
+
+                    $offamount = $discount * 100;
+                }
+
+                $item['start_date'] = $sp->hotdeal->start;
+                $item['end_date'] = $sp->hotdeal->end;
+                $item['productid'] = $sp->id;
+                $item['variantid'] = 0;
+                $item['productname'] = $sp->getTranslations('product_name');
+                $item['mainprice'] = $sp->price * $this->rate->exchange_rate;
+                $item['offerprice'] = $sp->offer_price * $this->rate->exchange_rate;
+                $item['tax_info'] = __("Inclusive of all taxes");
+                $item['thumbnail_path'] = url('images/simple_products/');
+                $item['thumbnail'] = $sp->thumbnail;
+                $item['otherimagepath'] = url('/images/simple_products/gallery');
+                $item['otherimages'] = $sp->productGallery()->get(['image']);
+                $item['pricein'] = $this->rate->code;
+                $item['symbol'] = $this->rate->symbol;
+                $item['type'] = 's';
+                $item['rating'] = simple_product_rating($sp->id);
+
+                $item['off_percent'] = (int) round($offamount ?? 0);
+                $item['hotdeal_bg_path'] = url('images/hotdeal_backgrounds/');
+                $item['hotdeal_bg'] = 'default.jpg';
+
+                return $item;
+
+            });
+        }
+
+        return $simple_products_hotdeals->toBase()->merge($variant_product_hotdeals);
     }
 
     public function specialoffer($content)
     {
 
-        $specialOffers = SpecialOffer::where('status', '=', '1')->get();
+        $sellerSystem = $this->sellerSystem;
 
-        if (empty($specialOffers)) {
-            return response()->json('No Specialoffer created !');
-        }
+        $vp_specialoffers = Product::with('specialoffer')->whereHas('specialoffer', function ($query) {
 
-        foreach ($specialOffers as $sp) {
+            return $query->where('status', '1');
 
-            if (isset($sp->pro)) {
-                if (isset($sp->pro->subvariants)) {
+        })->with('category')->whereHas('category', function ($q) {
 
-                    foreach ($sp->pro->subvariants as $key => $orivar) {
+            $q->where('status', '=', '1');
 
-                        if ($orivar->def == '1') {
-                            $variant = $this->getVariant($orivar);
+        })->with('subcategory')->whereHas('subcategory', function ($q) {
 
-                            $variant = $variant->getData();
+            $q->where('status', '1');
 
-                            $mainprice = $this->getprice($sp->pro, $orivar);
+        })->with('vender')->whereHas('vender', function ($query) use ($sellerSystem) {
 
-                            $price = $mainprice->getData();
-
-                            $rating = $this->getproductrating($sp->pro);
-
-                            if ($this->getprice($sp->pro, $orivar)->getData()->offerprice != '0') {
-                                $mp = sprintf("%.2f", $this->getprice($sp->pro, $orivar)->getData()->mainprice);
-                                $op = sprintf("%.2f", $this->getprice($sp->pro, $orivar)->getData()->offerprice);
-        
-                                $getdisprice = $mp - $op;
-        
-                                $discount = $getdisprice / $mp;
-        
-                                $offamount = $discount * 100;
-                            } else {
-                                $offamount = 0;
-                            }
-
-                            $content[] = array(
-                                'productname' => $sp->pro->getTranslations('name'),
-                                'productid' => $sp->pro->id,
-                                'variantid' => $orivar->id,
-                                'mainprice' => (double) sprintf("%.2f", $price->mainprice * $this->rate->exchange_rate),
-                                'offerprice' => (double) sprintf("%.2f", $price->offerprice * $this->rate->exchange_rate),
-                                'pricein' => $this->rate->code,
-                                'symbol' => $this->rate->symbol,
-                                'rating' => (double) $rating,
-                                'thumbnail' => $orivar->variantimages->main_image,
-                                'off_in_percent' => (int) round($offamount)
-                            );
-                        }
-
-                    }
-
-                }
+            if ($sellerSystem->vendor_enable == 1) {
+                $query->where('status', '=', '1')->where('is_verified', '1');
+            } else {
+                $query->where('status', '=', '1')->where('role_id', '=', 'a')->where('is_verified', '1');
             }
 
+        })->with('store')->whereHas('store', function ($query) {
+
+            return $query->where('status', '=', '1');
+
+        })->with('subvariants')->whereHas('subvariants', function ($query) {
+
+            $query->where('def', '=', '1');
+
+        })
+            ->with('subvariants.variantimages')
+            ->whereHas('subvariants.variantimages')
+            ->where('status', '=', '1')
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        $vp_specialoffers = $vp_specialoffers->map(function ($sp) {
+
+            $orivar = $sp->subvariants[0];
+            $mainprice = $this->getprice($sp, $orivar);
+            $price = $mainprice->getData();
+
+            if ($this->getprice($sp, $orivar)->getData()->offerprice != 0) {
+
+                $mp = sprintf("%.2f", $this->getprice($sp, $orivar)->getData()->mainprice);
+                $op = sprintf("%.2f", $this->getprice($sp, $orivar)->getData()->offerprice);
+
+                $getdisprice = $mp - $op;
+
+                $discount = $getdisprice / $mp;
+
+                $offamount = $discount * 100;
+            } else {
+                $offamount = 0;
+            }
+
+            $content['productname'] = $sp->getTranslations('name');
+            $content['productid'] = $sp->id;
+            $content['variantid'] = $orivar->id;
+            $content['type'] = 'v';
+            $content['mainprice'] = (double) sprintf("%.2f", $price->mainprice * $this->rate->exchange_rate);
+            $content['offerprice'] = (double) sprintf("%.2f", $price->offerprice * $this->rate->exchange_rate);
+            $content['pricein'] = $this->rate->code;
+            $content['symbol'] = $this->rate->symbol;
+            $content['rating'] = (double) ProductRating::getReview($sp);
+            $content['thumbnail'] = $orivar->variantimages->main_image;
+            $content['thumb_path'] = url('/variantimages/thumbnails/');
+            $content['off_in_percent'] = (int) round($offamount);
+
+            return $content;
+
+        });
+
+        $sp_specialoffers = SimpleProduct::with('special_offer')
+            ->whereHas('special_offer', function ($q) {
+                return $q->where('status', '1');
+            })
+            ->with('category')->whereHas('category', function ($q) {
+
+            $q->where('status', '=', '1');
+
+        })->with('subcategory')->wherehas('subcategory', function ($q) {
+
+            $q->where('status', '1');
+
+        })->with('store')->whereHas('store', function ($query) {
+
+            return $query->where('status', '=', '1');
+
+        })->whereHas('store.user', function ($query) use ($sellerSystem) {
+
+            if ($sellerSystem->vendor_enable == 1) {
+                $query->where('status', '=', '1')->where('is_verified', '1');
+            } else {
+                $query->where('status', '=', '1')->where('role_id', '=', 'a')->where('is_verified', '1');
+            }
+
+        })
+            ->where('status', '=', '1')
+            ->get();
+
+        if ($sp_specialoffers) {
+
+            $sp_specialoffers = $sp_specialoffers->map(function ($sp) {
+
+                if ($sp->offer_price != 0) {
+
+                    $mp = $sp->price;
+                    $op = $sp->offer_price;
+
+                    $getdisprice = $mp - $op;
+
+                    $discount = $getdisprice / $mp;
+
+                    $offamount = $discount * 100;
+                } else {
+                    $offamount = 0;
+                }
+
+                $item['productname'] = $sp->getTranslations('product_name');
+                $item['productid'] = $sp->id;
+                $item['type'] = 's';
+                $item['mainprice'] = (double) sprintf("%.2f", $sp->price * $this->rate->exchange_rate);
+                $item['offerprice'] = (double) sprintf("%.2f", $sp->offer_price * $this->rate->exchange_rate);
+                $item['pricein'] = $this->rate->code;
+                $item['symbol'] = $this->rate->symbol;
+                $item['rating'] = (double) simple_product_rating($sp->id);
+                $item['thumbnail'] = $sp->thumbnail;
+                $item['thumb_path'] = url('images/simple_products/');
+                $item['off_in_percent'] = round($offamount);
+
+                return $item;
+
+            });
         }
 
-        return $content;
+        return $sp_specialoffers->merge($vp_specialoffers)->shuffle();
     }
 
     public function brands(Request $request)
@@ -1417,7 +2185,7 @@ class MainController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['msg' => 'Secret Key is required','status' => 'fail']);
+            return response()->json(['msg' => 'Secret Key is required', 'status' => 'fail']);
         }
 
         $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
@@ -1437,13 +2205,13 @@ class MainController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['msg' => 'Secret Key is required','status' => 'fail']);
+            return response()->json(['msg' => 'Secret Key is required', 'status' => 'fail']);
         }
 
         $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
 
         if (!$key) {
-            return response()->json(['msg' =>'Invalid Secret Key !', 'status' => 'fail']);
+            return response()->json(['msg' => 'Invalid Secret Key !', 'status' => 'fail']);
         }
 
         $page = Page::where('slug', '=', $slug)->first();
@@ -1458,13 +2226,13 @@ class MainController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['msg' => 'Secret Key is required','status' => 'fail']);
+            return response()->json(['msg' => 'Secret Key is required', 'status' => 'fail']);
         }
 
         $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
 
         if (!$key) {
-            return response()->json(['msg' => 'Invalid Secret Key !','status' => 'fail']);
+            return response()->json(['msg' => 'Invalid Secret Key !', 'status' => 'fail']);
         }
 
         $topmenu = Menu::orderBy('position', 'ASC')->get();
@@ -1479,13 +2247,13 @@ class MainController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['msg' => 'Secret Key is required','status' => 'fail']);
+            return response()->json(['msg' => 'Secret Key is required', 'status' => 'fail']);
         }
 
         $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
 
         if (!$key) {
-            return response()->json(['msg' => 'Invalid Secret Key !','status' => 'fail']);
+            return response()->json(['msg' => 'Invalid Secret Key !', 'status' => 'fail']);
         }
 
         $footermenus = FooterMenu::get();
@@ -1501,17 +2269,17 @@ class MainController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['msg' => 'Secret Key is required','status' => 'fail']);
+            return response()->json(['msg' => 'Secret Key is required', 'status' => 'fail']);
         }
 
         $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
 
         if (!$key) {
-            return response()->json(['msg' => 'Invalid Secret Key !','status' => 'fail']);
+            return response()->json(['msg' => 'Invalid Secret Key !', 'status' => 'fail']);
         }
 
         if (!Auth::check()) {
-            return response()->json(['msg' => "You're not logged in !",'status' => 'fail']);
+            return response()->json(['msg' => "You're not logged in !", 'status' => 'fail']);
         } else {
             $user = Auth::user();
             return response()->json($user);
@@ -1523,33 +2291,46 @@ class MainController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'secret' => 'required|string',
+            'currency' => 'required|string|max:3'
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['msg' => 'Secret Key is required','status' => 'fail']);
+
+            $errors = $validator->errors();
+
+            if ($errors->first('secret')) {
+                return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
+            }
+
+            if ($errors->first('currency')) {
+                return response()->json(['msg' => $errors->first('currency'), 'status' => 'fail']);
+            }
+
         }
 
         $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
 
         if (!$key) {
-            return response()->json(['msg' => 'Invalid Secret Key !','status' => 'fail']);
+            return response()->json(['msg' => 'Invalid Secret Key !', 'status' => 'fail']);
         }
 
         if (!Auth::check()) {
-            return response()->json(['msg' => "You're not logged in !",'status' => 'fail']);
+            return response()->json(['msg' => "You're not logged in !", 'status' => 'fail']);
         }
 
         $wallet = UserWallet::firstWhere('user_id', '=', Auth::user()->id);
+
+       
         $wallethistory = $wallet->wallethistory;
+
         return response()->json(['wallet' => $wallet, 'wallethistory' => $wallethistory]);
     }
 
     public function getuseraddress(Request $request)
     {
-       
 
         if (!Auth::check()) {
-            return response()->json(['msg' => "You're not logged in !",'status' => 'fail'],401);
+            return response()->json(['msg' => "You're not logged in !", 'status' => 'fail'], 401);
         }
 
         $address = array();
@@ -1566,21 +2347,21 @@ class MainController extends Controller
                 'pin_code' => $ad->pin_code,
                 'country' => array(
                     'id' => (int) $ad->country_id,
-                    'name' => $ad->getCountry ? $ad->getCountry->nicename : null
+                    'name' => $ad->getCountry ? $ad->getCountry->nicename : null,
                 ),
                 'state' => array(
                     'id' => (int) $ad->state_id,
-                    'name' => $ad->getstate ? $ad->getstate->name : null
+                    'name' => $ad->getstate ? $ad->getstate->name : null,
                 ),
                 'city' => array(
                     'id' => (int) $ad->city_id,
-                    'name' => $ad->getcity ? $ad->getcity->name : null
+                    'name' => $ad->getcity ? $ad->getcity->name : null,
                 ),
                 'defaddress' => $ad->defaddress,
             );
         }
 
-        return response()->json(['address' => $address,'status' => 'success']);
+        return response()->json(['address' => $address, 'status' => 'success']);
     }
 
     public function getuserbanks(Request $request)
@@ -1593,20 +2374,20 @@ class MainController extends Controller
 
             $errors = $validator->errors();
 
-			if($errors->first('secret')){
-				return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
-			}
-	
-		}
+            if ($errors->first('secret')) {
+                return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
+            }
+
+        }
 
         $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
 
         if (!$key) {
-            return response()->json(['msg' => 'Invalid Secret Key !','status' => 'fail']);
+            return response()->json(['msg' => 'Invalid Secret Key !', 'status' => 'fail']);
         }
 
         if (!Auth::check()) {
-            return response()->json(['msg' => "You're not logged in !",'status' => 'fail']);
+            return response()->json(['msg' => "You're not logged in !", 'status' => 'fail']);
         }
 
         $userbanklist = Auth::user()->banks;
@@ -1622,17 +2403,17 @@ class MainController extends Controller
         if ($validator->fails()) {
 
             $errors = $validator->errors();
-            
-			if($errors->first('secret')){
-				return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
-			}
-	
-		}
+
+            if ($errors->first('secret')) {
+                return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
+            }
+
+        }
 
         $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
 
         if (!$key) {
-            return response()->json(['msg' => 'Invalid Secret Key !','status' => 'fail']);
+            return response()->json(['msg' => 'Invalid Secret Key !', 'status' => 'fail']);
         }
 
         $faqs = Faq::all();
@@ -1651,16 +2432,16 @@ class MainController extends Controller
 
             $errors = $validator->errors();
 
-			if($errors->first('secret')){
-				return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
-			}
-	
-		}
+            if ($errors->first('secret')) {
+                return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
+            }
+
+        }
 
         $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
 
         if (!$key) {
-            return response()->json(['msg' => 'Invalid Secret Key !','status' => 'fail']);
+            return response()->json(['msg' => 'Invalid Secret Key !', 'status' => 'fail']);
         }
 
         $blogs = Blog::orderBy('id', 'DESC')->get();
@@ -1677,23 +2458,23 @@ class MainController extends Controller
         if ($validator->fails()) {
 
             $errors = $validator->errors();
-            
-			if($errors->first('secret')){
-				return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
-			}
-	
-		}
+
+            if ($errors->first('secret')) {
+                return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
+            }
+
+        }
 
         $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
 
         if (!$key) {
-            return response()->json(['msg' => 'Invalid Secret Key !','status' => 'fail']);
+            return response()->json(['msg' => 'Invalid Secret Key !', 'status' => 'fail']);
         }
 
         $blog = Blog::firstWhere('slug', '=', $slug);
 
         if (!isset($blog)) {
-            return response()->json(['msg' => '404 Blog post not found !','status' => 'fail']);
+            return response()->json(['msg' => '404 Blog post not found !', 'status' => 'fail']);
         }
 
         return response()->json($blog);
@@ -1709,21 +2490,21 @@ class MainController extends Controller
         if ($validator->fails()) {
 
             $errors = $validator->errors();
-            
-			if($errors->first('secret')){
-				return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
-			}
-	
-		}
+
+            if ($errors->first('secret')) {
+                return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
+            }
+
+        }
 
         $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
 
         if (!$key) {
-            return response()->json(['msg' => 'Invalid Secret Key !','status' => 'fail']);
+            return response()->json(['msg' => 'Invalid Secret Key !', 'status' => 'fail']);
         }
 
         if (!Auth::check()) {
-            return response()->json(['msg' => "You're not logged in !",'status' => 'fail']);
+            return response()->json(['msg' => "You're not logged in !", 'status' => 'fail']);
         }
 
         $notifications = auth()->user()->unreadNotifications->where('n_type', '!=', 'order_v');
@@ -1916,7 +2697,7 @@ class MainController extends Controller
 
             $overallrating = ($ratings_var / 2) / 10;
 
-            return sprintf('%.2f',$overallrating);
+            return sprintf('%.2f', $overallrating);
 
         } else {
             return $overallrating = 0;
@@ -1972,7 +2753,8 @@ class MainController extends Controller
         return response()->json(['value' => $othervariantName, 'attrName' => $loopgetattrname]);
     }
 
-    public function createaddress(Request $request){
+    public function createaddress(Request $request)
+    {
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
@@ -1989,46 +2771,45 @@ class MainController extends Controller
         if ($validator->fails()) {
 
             $errors = $validator->errors();
-            
-			if($errors->first('name')){
-				return response()->json(['msg' => $errors->first('name'), 'status' => 'fail']);
+
+            if ($errors->first('name')) {
+                return response()->json(['msg' => $errors->first('name'), 'status' => 'fail']);
             }
 
-            if($errors->first('email')){
-				return response()->json(['msg' => $errors->first('email'), 'status' => 'fail']);
+            if ($errors->first('email')) {
+                return response()->json(['msg' => $errors->first('email'), 'status' => 'fail']);
             }
 
-            if($errors->first('address')){
-				return response()->json(['msg' => $errors->first('address'), 'status' => 'fail']);
+            if ($errors->first('address')) {
+                return response()->json(['msg' => $errors->first('address'), 'status' => 'fail']);
             }
 
-            if($errors->first('phone')){
-				return response()->json(['msg' => $errors->first('phone'), 'status' => 'fail']);
+            if ($errors->first('phone')) {
+                return response()->json(['msg' => $errors->first('phone'), 'status' => 'fail']);
             }
 
-            if($errors->first('pincode')){
-				return response()->json(['msg' => $errors->first('pincode'), 'status' => 'fail']);
+            if ($errors->first('pincode')) {
+                return response()->json(['msg' => $errors->first('pincode'), 'status' => 'fail']);
             }
 
-            if($errors->first('country_id')){
-				return response()->json(['msg' => $errors->first('country_id'), 'status' => 'fail']);
+            if ($errors->first('country_id')) {
+                return response()->json(['msg' => $errors->first('country_id'), 'status' => 'fail']);
             }
 
-            if($errors->first('state_id')){
-				return response()->json(['msg' => $errors->first('state_id'), 'status' => 'fail']);
+            if ($errors->first('state_id')) {
+                return response()->json(['msg' => $errors->first('state_id'), 'status' => 'fail']);
             }
 
-            if($errors->first('city_id')){
-				return response()->json(['msg' => $errors->first('city_id'), 'status' => 'fail']);
+            if ($errors->first('city_id')) {
+                return response()->json(['msg' => $errors->first('city_id'), 'status' => 'fail']);
             }
 
-            if($errors->first('defaddress')){
-				return response()->json(['msg' => $errors->first('defaddress'), 'status' => 'fail']);
+            if ($errors->first('defaddress')) {
+                return response()->json(['msg' => $errors->first('defaddress'), 'status' => 'fail']);
             }
         }
 
-        if ($request->defaddress == 1)
-        {
+        if ($request->defaddress == 1) {
             //Remove any previous default address
             Address::where('user_id', Auth::user()->id)
                 ->where('defaddress', '=', 1)
@@ -2046,7 +2827,7 @@ class MainController extends Controller
             'state_id' => $request->state_id,
             'city_id' => $request->city_id,
             'defaddress' => $request->defaddress,
-            'user_id' => Auth::user()->id
+            'user_id' => Auth::user()->id,
         ]);
 
         $address = array(
@@ -2059,24 +2840,25 @@ class MainController extends Controller
             'pin_code' => $createdaddress->pin_code,
             'country' => array(
                 'id' => (int) $createdaddress->country_id,
-                'name' => $createdaddress->getCountry ? $createdaddress->getCountry->nicename : null
+                'name' => $createdaddress->getCountry ? $createdaddress->getCountry->nicename : null,
             ),
             'state' => array(
                 'id' => (int) $createdaddress->state_id,
-                'name' => $createdaddress->getstate ? $createdaddress->getstate->name : null
+                'name' => $createdaddress->getstate ? $createdaddress->getstate->name : null,
             ),
             'city' => array(
                 'id' => (int) $createdaddress->city_id,
-                'name' => $createdaddress->getcity ? $createdaddress->getcity->name : null
+                'name' => $createdaddress->getcity ? $createdaddress->getcity->name : null,
             ),
             'defaddress' => $createdaddress->defaddress,
         );
 
-        return response()->json(['msg' => 'Address created successfully', 'address' => $address,'status' => 'success' ]);
+        return response()->json(['msg' => 'Address created successfully', 'address' => $address, 'status' => 'success']);
 
     }
 
-    public function listbillingaddress(){
+    public function listbillingaddress()
+    {
 
         $address = array();
 
@@ -2092,25 +2874,24 @@ class MainController extends Controller
                 'type' => $ad->type,
                 'country' => array(
                     'id' => (int) $ad->country_id,
-                    'name' => $ad->countiess ? $ad->countiess->nicename : null
+                    'name' => $ad->countiess ? $ad->countiess->nicename : null,
                 ),
                 'state' => array(
                     'id' => (int) $ad->state,
-                    'name' => $ad->states ? $ad->states->name : null
+                    'name' => $ad->states ? $ad->states->name : null,
                 ),
                 'city' => array(
                     'id' => (int) $ad->city,
-                    'name' => $ad->cities ? $ad->cities->name : null
-                )
+                    'name' => $ad->cities ? $ad->cities->name : null,
+                ),
             );
         }
 
-        return response()->json(['billingaddress' =>$address,'status' => 'success']);
-    }   
+        return response()->json(['billingaddress' => $address, 'status' => 'success']);
+    }
 
-    public function createbillingaddress(Request $request){
-
-       
+    public function createbillingaddress(Request $request)
+    {
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
@@ -2120,47 +2901,47 @@ class MainController extends Controller
             'pincode' => 'required',
             'country_id' => 'required',
             'state_id' => 'required',
-            'city_id' => 'required'
+            'city_id' => 'required',
         ]);
 
         if ($validator->fails()) {
 
             $errors = $validator->errors();
-            
-			if($errors->first('name')){
-				return response()->json(['msg' => $errors->first('name'), 'status' => 'fail']);
+
+            if ($errors->first('name')) {
+                return response()->json(['msg' => $errors->first('name'), 'status' => 'fail']);
             }
 
-            if($errors->first('email')){
-				return response()->json(['msg' => $errors->first('email'), 'status' => 'fail']);
+            if ($errors->first('email')) {
+                return response()->json(['msg' => $errors->first('email'), 'status' => 'fail']);
             }
 
-            if($errors->first('address')){
-				return response()->json(['msg' => $errors->first('address'), 'status' => 'fail']);
+            if ($errors->first('address')) {
+                return response()->json(['msg' => $errors->first('address'), 'status' => 'fail']);
             }
 
-            if($errors->first('phone')){
-				return response()->json(['msg' => $errors->first('phone'), 'status' => 'fail']);
+            if ($errors->first('phone')) {
+                return response()->json(['msg' => $errors->first('phone'), 'status' => 'fail']);
             }
 
-            if($errors->first('pincode')){
-				return response()->json(['msg' => $errors->first('pincode'), 'status' => 'fail']);
+            if ($errors->first('pincode')) {
+                return response()->json(['msg' => $errors->first('pincode'), 'status' => 'fail']);
             }
 
-            if($errors->first('country_id')){
-				return response()->json(['msg' => $errors->first('country_id'), 'status' => 'fail']);
+            if ($errors->first('country_id')) {
+                return response()->json(['msg' => $errors->first('country_id'), 'status' => 'fail']);
             }
 
-            if($errors->first('state_id')){
-				return response()->json(['msg' => $errors->first('state_id'), 'status' => 'fail']);
+            if ($errors->first('state_id')) {
+                return response()->json(['msg' => $errors->first('state_id'), 'status' => 'fail']);
             }
 
-            if($errors->first('city_id')){
-				return response()->json(['msg' => $errors->first('city_id'), 'status' => 'fail']);
+            if ($errors->first('city_id')) {
+                return response()->json(['msg' => $errors->first('city_id'), 'status' => 'fail']);
             }
 
-            if($errors->first('defaddress')){
-				return response()->json(['msg' => $errors->first('defaddress'), 'status' => 'fail']);
+            if ($errors->first('defaddress')) {
+                return response()->json(['msg' => $errors->first('defaddress'), 'status' => 'fail']);
             }
         }
 
@@ -2174,7 +2955,7 @@ class MainController extends Controller
             'country_id' => $request->country_id,
             'state' => $request->state_id,
             'city' => $request->city_id,
-            'user_id' => Auth::user()->id
+            'user_id' => Auth::user()->id,
         ]);
 
         $address = array(
@@ -2187,23 +2968,24 @@ class MainController extends Controller
             'pincode' => $createdaddress->pincode,
             'country' => array(
                 'id' => (int) $createdaddress->country_id,
-                'name' => $createdaddress->countiess ? $createdaddress->countiess->nicename : null
+                'name' => $createdaddress->countiess ? $createdaddress->countiess->nicename : null,
             ),
             'state' => array(
                 'id' => (int) $createdaddress->state,
-                'name' => $createdaddress->states ? $createdaddress->states->name : null
+                'name' => $createdaddress->states ? $createdaddress->states->name : null,
             ),
             'city' => array(
                 'id' => (int) $createdaddress->city,
-                'name' => $createdaddress->cities ? $createdaddress->cities->name : null
-            )
+                'name' => $createdaddress->cities ? $createdaddress->cities->name : null,
+            ),
         );
 
-        return response()->json(['msg' => 'Billing address created successfully', 'billingaddress' => $address,'status' => 'success' ]);
+        return response()->json(['msg' => 'Billing address created successfully', 'billingaddress' => $address, 'status' => 'success']);
 
     }
 
-    public function listofcountries(Request $request){
+    public function listofcountries(Request $request)
+    {
 
         $validator = Validator::make($request->all(), [
             'secret' => 'required|string',
@@ -2212,30 +2994,29 @@ class MainController extends Controller
         if ($validator->fails()) {
 
             $errors = $validator->errors();
-            
-			if($errors->first('secret')){
-				return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
+
+            if ($errors->first('secret')) {
+                return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
             }
         }
 
         $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
 
         if (!$key) {
-            return response()->json(['msg' => 'Invalid Secret Key !','status' => 'fail']);
+            return response()->json(['msg' => 'Invalid Secret Key !', 'status' => 'fail']);
         }
 
-
-        $data = Country::join('allcountry', 'allcountry.iso3', '=', 'countries.country')->select('allcountry.id as id','allcountry.nicename as name')->get();
+        $data = Country::join('allcountry', 'allcountry.iso3', '=', 'countries.country')->select('allcountry.id as id', 'allcountry.nicename as name')->get();
 
         return response()->json([
             'countries' => $data,
-            'status' => 'success'
+            'status' => 'success',
         ]);
-
 
     }
 
-    public function listofstates(Request $request,$id){
+    public function listofstates(Request $request, $id)
+    {
 
         $validator = Validator::make($request->all(), [
             'secret' => 'required|string',
@@ -2244,25 +3025,26 @@ class MainController extends Controller
         if ($validator->fails()) {
 
             $errors = $validator->errors();
-            
-			if($errors->first('secret')){
-				return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
+
+            if ($errors->first('secret')) {
+                return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
             }
         }
 
         $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
 
         if (!$key) {
-            return response()->json(['msg' => 'Invalid Secret Key !','status' => 'fail']);
+            return response()->json(['msg' => 'Invalid Secret Key !', 'status' => 'fail']);
         }
 
-        $data = Allstate::where('country_id','=',$id)->get();
+        $data = Allstate::where('country_id', '=', $id)->get();
 
-        return response()->json(['states' => $data,'success' => 'success']);
+        return response()->json(['states' => $data, 'success' => 'success']);
 
     }
 
-    public function listofcities(Request $request,$id){
+    public function listofcities(Request $request, $id)
+    {
 
         $validator = Validator::make($request->all(), [
             'secret' => 'required|string',
@@ -2271,98 +3053,99 @@ class MainController extends Controller
         if ($validator->fails()) {
 
             $errors = $validator->errors();
-            
-			if($errors->first('secret')){
-				return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
+
+            if ($errors->first('secret')) {
+                return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
             }
         }
 
         $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
 
         if (!$key) {
-            return response()->json(['msg' => 'Invalid Secret Key !','status' => 'fail']);
+            return response()->json(['msg' => 'Invalid Secret Key !', 'status' => 'fail']);
         }
 
-        $data = Allcity::where('state_id','=',$id)->get();
+        $data = Allcity::where('state_id', '=', $id)->get();
 
-        return response()->json(['cities' => $data,'status' => 'success']);
+        return response()->json(['cities' => $data, 'status' => 'success']);
 
     }
 
-    public function searchcity(Request $request){
+    public function searchcity(Request $request)
+    {
 
         $validator = Validator::make($request->all(), [
             'secret' => 'required|string',
-            'name' => 'required|string'
+            'name' => 'required|string',
         ]);
 
         if ($validator->fails()) {
 
             $errors = $validator->errors();
-            
-			if($errors->first('secret')){
-				return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
+
+            if ($errors->first('secret')) {
+                return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
             }
 
-            if($errors->first('name')){
-				return response()->json(['msg' => $errors->first('name'), 'status' => 'fail']);
+            if ($errors->first('name')) {
+                return response()->json(['msg' => $errors->first('name'), 'status' => 'fail']);
             }
         }
 
         $result = Allcity::where('name', 'LIKE', '%' . $request->name . '%')
-        ->get();
+            ->get();
 
         $finalResult = array();
 
         foreach ($result as $key => $value) {
-           $finalResult[] = array(
-               'cityid' => $value->id,
-               'cityname' => $value->name,
-               'pincode' => $value->pincode,
-               'stateid' => $value->state ? $value->state->id : null,
-               'statename' => $value->state ? $value->state->name : null,
-               'countryid' => $value->state->country ? $value->state->country->id : null,
-               'countryname' => $value->state->country ? $value->state->country->nicename : null,
-           );
+            $finalResult[] = array(
+                'cityid' => $value->id,
+                'cityname' => $value->name,
+                'pincode' => $value->pincode,
+                'stateid' => $value->state ? $value->state->id : null,
+                'statename' => $value->state ? $value->state->name : null,
+                'countryid' => $value->state->country ? $value->state->country->id : null,
+                'countryname' => $value->state->country ? $value->state->country->nicename : null,
+            );
         }
 
-        if(count($finalResult) < 1){
+        if (count($finalResult) < 1) {
             return response()->json(
                 [
                     'msg' => 'No result found !',
-                    'status' => 'fail'
+                    'status' => 'fail',
                 ]
-                );
+            );
         }
 
         return response()->json($finalResult);
 
     }
 
-    public function fetchPinCodeAddressForGuest(Request $request){
+    public function fetchPinCodeAddressForGuest(Request $request)
+    {
 
         $validator = Validator::make($request->all(), [
             'secret' => 'required|string',
-            'pincode' => 'required|string'
+            'pincode' => 'required|string',
         ]);
 
         if ($validator->fails()) {
 
             $errors = $validator->errors();
-            
-			if($errors->first('secret')){
-				return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
+
+            if ($errors->first('secret')) {
+                return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
             }
 
-            if($errors->first('pincode')){
-				return response()->json(['msg' => $errors->first('pincode'), 'status' => 'fail']);
+            if ($errors->first('pincode')) {
+                return response()->json(['msg' => $errors->first('pincode'), 'status' => 'fail']);
             }
         }
 
-        if (strlen($request->pincode) > 12)
-        {
+        if (strlen($request->pincode) > 12) {
 
-            return response()->json(['msg' => 'Invalid Pincode','status' => 'fail']);
+            return response()->json(['msg' => 'Invalid Pincode', 'status' => 'fail']);
 
         }
 
@@ -2370,15 +3153,9 @@ class MainController extends Controller
 
         $result = array();
 
-       
-
         $queries2 = Allcity::where('pincode', 'LIKE', '%' . $term . '%')->get();
 
-        
-
-        foreach ($queries2 as $value)
-        {
-
+        foreach ($queries2 as $value) {
 
             $result[] = [
                 'cityid' => $value->id,
@@ -2392,42 +3169,42 @@ class MainController extends Controller
 
         }
 
-        if(count($result) < 1){
+        if (count($result) < 1) {
             return response()->json(
                 [
                     'msg' => 'No result found !',
-                    'status' => 'fail'
+                    'status' => 'fail',
                 ]
-                );
+            );
         }
 
         return response()->json($result);
-        
+
     }
 
-    public function fetchPinCodeAddressForAuthUser(Request $request){
+    public function fetchPinCodeAddressForAuthUser(Request $request)
+    {
 
         $validator = Validator::make($request->all(), [
-            'pincode' => 'required|string'
+            'pincode' => 'required|string',
         ]);
 
         if ($validator->fails()) {
 
             $errors = $validator->errors();
-            
-			if($errors->first('secret')){
-				return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
+
+            if ($errors->first('secret')) {
+                return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
             }
 
-            if($errors->first('pincode')){
-				return response()->json(['msg' => $errors->first('pincode'), 'status' => 'fail']);
+            if ($errors->first('pincode')) {
+                return response()->json(['msg' => $errors->first('pincode'), 'status' => 'fail']);
             }
         }
 
-        if (strlen($request->pincode) > 12)
-        {
+        if (strlen($request->pincode) > 12) {
 
-            return response()->json(['msg' => 'Invalid Pincode','status' => 'fail']);
+            return response()->json(['msg' => 'Invalid Pincode', 'status' => 'fail']);
 
         }
 
@@ -2435,18 +3212,15 @@ class MainController extends Controller
 
         $result = array();
 
-        if (Auth::check())
-        {
+        if (Auth::check()) {
             $queries = Address::where('user_id', Auth::user()
-                ->id)->where('pin_code', 'LIKE', '%' . $term . '%')->get();
+                    ->id)->where('pin_code', 'LIKE', '%' . $term . '%')->get();
         }
 
         $queries2 = Allcity::where('pincode', 'LIKE', '%' . $term . '%')->get();
 
-        if (Auth::check())
-        {
-            foreach ($queries as $value)
-            {
+        if (Auth::check()) {
+            foreach ($queries as $value) {
 
                 $address = strlen($value->address) > 100 ? substr($value->address, 0, 100) . "..." : $value->address;
 
@@ -2458,15 +3232,13 @@ class MainController extends Controller
                     'stateid' => $value->getstate ? $value->getstate->id : null,
                     'statename' => $value->getstate ? $value->getstate->name : null,
                     'countryid' => $value->getstate->getCountry ? $value->getstate->getCountry->country->id : null,
-                    'countryname' => $value->getstate->getCountry ? $value->getstate->getCountry->country->nicename : null
+                    'countryname' => $value->getstate->getCountry ? $value->getstate->getCountry->country->nicename : null,
                 ];
 
             }
         }
 
-        foreach ($queries2 as $value)
-        {
-
+        foreach ($queries2 as $value) {
 
             $result[] = [
                 'cityid' => $value->id,
@@ -2480,13 +3252,13 @@ class MainController extends Controller
 
         }
 
-        if(count($result) < 1){
+        if (count($result) < 1) {
             return response()->json(
                 [
                     'msg' => 'No result found !',
-                    'status' => 'fail'
+                    'status' => 'fail',
                 ]
-                );
+            );
         }
 
         return response()->json($result);

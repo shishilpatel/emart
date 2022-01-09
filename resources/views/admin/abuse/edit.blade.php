@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Edit Abuse')
+@section('title',__('Edit Abuse'))
 @section('body')
 
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
@@ -20,15 +20,16 @@
 
 <div class="contentbar">
   <div class="row">
-    @if ($errors->any())
-    <div class="alert alert-danger" role="alert">
-      @foreach($errors->all() as $error)
-      <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach
-    </div>
-    @endif
+   
     <div class="col-lg-12">
+      @if ($errors->any())
+      <div class="alert alert-danger" role="alert">
+        @foreach($errors->all() as $error)
+        <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true" style="color:red;">&times;</span></button></p>
+        @endforeach
+      </div>
+      @endif
       <div class="card m-b-30">
         <div class="card-header">
           <h5 class="box-title">{{ __('Edit') }} {{ __('Abuse') }}</h5>
@@ -42,7 +43,7 @@
  
             <div class="form-group col-md-12">
               <label class="control-label" for="first-name">
-                Abuse Words <span class="required">*</span>
+                {{__('Abuse Words')}} <span class="required">*</span>
               </label>
            
                 <input placeholder="Please enter Abuse Word" type="text" id="first-name" data-role="tagsinput"
@@ -54,7 +55,7 @@
                 Replace Words <span class="required">*</span>
               </label>
               
-                <input placeholder="Please enter Replace Word" type="text" id="first-name" name="rep"
+                <input placeholder="{{ __('Please enter Replace Word') }}" type="text" id="first-name" name="rep"
                   data-role="tagsinput" value=" {{$abuse->rep}} " class="form-control">
 
            
@@ -62,7 +63,7 @@
 
             <div class="form-group col-md-12">
               <label class="control-label " for="first-name">
-                Status
+                {{ __('Status') }}
               </label>
                 <br>
               
@@ -77,9 +78,9 @@
             </div>
         
             <div class="form-group col-md-12">
-              <button @if(env('DEMO_LOCK')==0) type="reset"  @else disabled title="This operation is disabled is demo !" @endif  class="btn btn-danger-rgba"><i class="fa fa-ban"></i> Reset</button>
-              <button @if(env('DEMO_LOCK')==0)  type="submit" @else disabled title="This operation is disabled is demo !" @endif  class="btn btn-primary-rgba"><i class="fa fa-check-circle"></i>
-                  Update</button>
+              <button @if(env('DEMO_LOCK')==0) type="reset"  @else disabled title="{{ __('This operation is disabled is demo !') }}" @endif  class="btn btn-danger-rgba"><i class="fa fa-ban"></i> {{ __('Reset') }}</button>
+              <button @if(env('DEMO_LOCK')==0)  type="submit" @else disabled title="{{ __('This operation is disabled is demo !') }}" @endif  class="btn btn-primary-rgba"><i class="fa fa-check-circle"></i>
+                  {{ __('Update') }}</button>
           </div>
           <div class="clear-both"></div>
           </form>

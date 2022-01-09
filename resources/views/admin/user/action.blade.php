@@ -8,7 +8,7 @@
 
     @can('users.delete')
       <a class="dropdown-item"@if(env('DEMO_LOCK')==0) data-toggle="modal" href="#deleteuser_{{ $id }}" @else
-      title="This action is disabled in demo !" disabled="disabled" @endif><i class="feather icon-delete mr-2"></i>{{ __("Delete")}}</a>
+      title="{{ __("This action is disabled in demo !") }}" disabled="disabled" @endif><i class="feather icon-delete mr-2"></i>{{ __("Delete")}}</a>
       @endcan
     </div>
 </div>
@@ -25,16 +25,18 @@
         <div class="delete-icon"></div>
       </div>
       <div class="modal-body text-center">
-        <h4 class="modal-heading">Are You Sure ?</h4>
-        <p>Do you really want to delete this user? This process cannot be undone.</p>
+        <h4 class="modal-heading">{{ __("Are You Sure ?") }}</h4>
+        <p>
+          {{__("Do you really want to delete this user? This process cannot be undone.")}}
+        </p>
       </div>
       <div class="modal-footer">
         <form method="post" action="{{url('admin/users/'.$id)}}" class="pull-right">
           {{csrf_field()}}
           {{method_field("DELETE")}}
 
-          <button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">No</button>
-          <button type="submit" class="btn btn-danger">Yes</button>
+          <button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">{{ __("NO") }}</button>
+          <button type="submit" class="btn btn-danger">{{ __("YES") }}</button>
         </form>
       </div>
     </div>

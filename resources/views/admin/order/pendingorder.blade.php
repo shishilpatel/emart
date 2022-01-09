@@ -1,13 +1,13 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Pending Orders - ')
+@section('title',__('Pending Orders - '))
 @section('body')
-​
+
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
-​
+
 @slot('heading')
 {{ __('Pending Orders') }}
 @endslot
-​
+
 @slot('menu2')
 {{ __("Pending Orders") }}
 @endslot
@@ -37,15 +37,15 @@
 								</div>
 								<div class="row">
 									<div class="col-md-8">
-										<p>Order By: <span>{{ $order['customername'] }}</span></p>
-										<p>Paid Via: <span>{{ $order['payment_method'] }}</span></p>
+										<p>{{__("Order By:")}} <span>{{ $order['customername'] }}</span></p>
+										<p>{{__("Paid Via:")}} <span>{{ $order['payment_method'] }}</span></p>
 									</div>
 									<div class="col-md-4">
 										<a @if(env('DEMO_LOCK') == 0) data-toggle="modal" data-target="#cancelFULLOrder{{ $order['id'] }}" @else disabled title="This action is disabled in demo !" @endif class="pull-right  btn btn-md btn-danger-rgba ml-2 mb-2">
 											<i class="feather icon-x-circle"></i> {{ __('Cancel') }}
 										</a>
 									
-											<button type="button" @if(env('DEMO_LOCK') == 0) data-toggle="modal" data-target="#confirm{{ $order['id'] }}" @else disabled="" title="This action cannot be done in demo !" @endif class="pull-right ml-2 btn btn-md btn-primary-rgba mb-2">
+											<button type="button" @if(env('DEMO_LOCK') == 0) data-toggle="modal" data-target="#confirm{{ $order['id'] }}" @else disabled="" title="{{ __('This action cannot be done in demo !') }}" @endif class="pull-right ml-2 btn btn-md btn-primary-rgba mb-2">
 												<i class="feather icon-check-circle"></i> {{ __('Confirm') }}
 											</button>
 									</div>
@@ -66,16 +66,18 @@
 								  <div class="delete-icon"></div>
 								</div>
 								<div class="modal-body text-center">
-								  <h4 class="modal-heading">Are You Sure ?</h4>
-								  <p>Do you really want to confirm this order ? it will confirm the whole order.</p>
+								  <h4 class="modal-heading">{{ __("Are You Sure ?") }}</h4>
+								  <p>
+									  {{__("Do you really want to confirm this order ? it will confirm the whole order.")}}
+								  </p>
 								</div>
 								<div class="modal-footer">
 									<form action="{{ route('quick.pay.full.order',$order['id']) }}" method="POST">
 										@csrf
 										<input type="hidden" name="status" value="processed">
 												  
-										 <button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">No</button>
-										<button type="submit" class="btn btn-danger">Yes</button>
+										 <button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">{{ __("NO") }}</button>
+										<button type="submit" class="btn btn-danger">{{ __("YES") }}</button>
 									  </form>
 								</div>
 							  </div>
@@ -102,15 +104,19 @@
 						  @csrf
 
 							<div class="form-group">
-							 <label for="">Choose Reason <span class="required">*</span></label>
+							 <label for="">{{__("Choose Reason")}} <span class="required">*</span></label>
 							  <select class="form-control select2" required="" name="comment" id="">
-								  <option value="">Please Choose Reason</option>
-								  <option value="Requested by User">Requested by User</option>
-								  <option value="Order Placed Mistakely">Order Placed Mistakely</option>
-								  <option value="Shipping cost is too much">Shipping cost is too much</option>
-								  <option value="Wrong Product Ordered">Wrong Product Ordered</option>
-								  <option value="Product is not match to my expectations">Product is not match to my expectations</option>
-								  <option value="Other">My Reason is not listed here</option>
+								  <option value="">{{ __("Please Choose Reason") }}</option>
+								  <option value="Requested by User">{{ __('Requested by User') }}</option>
+								  <option value="Order Placed Mistakely">{{ __("Order Placed Mistakely") }}</option>
+								  <option value="Shipping cost is too much">{{ __("Shipping cost is too much") }}</option>
+								  <option value="Wrong Product Ordered">{{ __("Wrong Product Ordered") }}</option>
+								  <option value="Product is not match to my expectations">
+									  {{__("Product is not match to my expectations")}}
+								  </option>
+								  <option value="Other">
+									  {{__("My Reason is not listed here")}}
+								  </option>
 							  </select>
 							</div>
 
@@ -121,10 +127,12 @@
 							@if($order->payment_method !='COD' && $order->payment_method !='BankTransfer')
 							   <div class="form-group">
 
-								  <label for="">Choose Refund Method:</label>
-								  <label><input required class="source_check" type="radio" value="orignal" name="source" />Orignal Source [{{ $order->payment_method }}] </label>&nbsp;&nbsp;
+								  <label for="">
+									  {{__("Choose Refund Method:")}}
+								  </label>
+								  <label><input required class="source_check" type="radio" value="orignal" name="source" />{{__("Orignal Source")}} [{{ $order->payment_method }}] </label>&nbsp;&nbsp;
 								  @if($user->banks->count()>0)
-								  <label><input required class="source_check" type="radio" value="bank" name="source" /> In Bank</label>
+								  <label><input required class="source_check" type="radio" value="bank" name="source" /> {{__("In Bank") }}</label>
 
 								  <select name="bank_id" id="bank_id" class="display-none form-control">
 									@foreach($user->banks as $bank)
@@ -133,7 +141,7 @@
 								  </select>
 
 								  @else
-								  <label><input type="radio" disabled="" /> In Bank  <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="right" title="Add a bank account in My Bank Account" aria-hidden="true"></i></label>
+								  <label><input type="radio" disabled="" /> {{__('In Bank')}}  <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="right" title="{{ __("Add a bank account in My Bank Account") }}" aria-hidden="true"></i></label>
 
 								  @endif
 								</div>
@@ -143,7 +151,7 @@
 							@else
 
 							 @if($user->banks->count()>0)
-								  <label><input required class="source_check" type="radio" value="bank" name="source" /> In Bank</label>
+								  <label><input required class="source_check" type="radio" value="bank" name="source" /> {{ __("In Bank") }}</label>
 
 								  <select name="bank_id" id="bank_id" class="display-none form-control">
 									@foreach($user->banks as $bank)
@@ -152,34 +160,41 @@
 								  </select>
 
 							@else
-								  <label><input type="radio" disabled="" /> In Bank  <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="right" title="Add a bank account in My Bank Account" aria-hidden="true"></i></label>
+								  <label><input type="radio" disabled="" /> {{__("In Bank")}}  <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="right" title="{{ __("Add a bank account in My Bank Account") }}" aria-hidden="true"></i></label>
 
 							@endif
 
 							@endif
 
 							<div class="alert alert-info">
-									<h5><i class="fa fa-info-circle"></i> Important !</h5>
+									<h5><i class="fa fa-info-circle"></i>{{ __("Important !") }}</h5>
 
 									<ol class="ol">
-									  <li>IF Original source is choosen than amount will be reflected to your orignal source in 1-2 days(approx).
+									  <li>
+										  {{__("IF Original source is choosen than amount will be reflected to your orignal source in 1-2 days(approx).")}}
 									  </li>
 
 									  <li>
-										IF Bank Method is choosen than make sure you added a bank account else refund will not procced. IF already added than it will take 14 days to reflect amount in your bank account (Working Days*).
+										{{__("IF Bank Method is choosen than make sure you added a bank account else refund will not procced. IF already added than it will take 14 days to reflect amount in your bank account (Working Days*).")}}
 									  </li>
 
-									  <li>Amount will be paid in original currency which used at time of placed order.</li>
+									  <li>
+										  {{__("Amount will be paid in original currency which used at time of placed order.")}}
+									  </li>
 
 									</ol>
 								</div>
 
 							<button type="submit" class="btn btn-md btn-primary">
-							  Procced...
+							  {{__("Procced...")}}
 							</button>
 							</form>
-							<p class="help-block">This action cannot be undone !</p>
-							<p class="help-block">It will take time please do not close or refresh window !</p>
+							<p class="help-block">
+								{{__("This action cannot be undone !")}}
+							</p>
+							<p class="help-block">
+								{{__("It will take time please do not close or refresh window !")}}
+							</p>
 						  </div>
 
 						</div>
@@ -202,7 +217,7 @@
 	</div>
 
 	@else
-		<h3 class="text-center">No Pending Orders !</h3>
+		<h3 class="text-center">{{ __("No Pending Orders !") }}</h3>
 	@endif
 
 

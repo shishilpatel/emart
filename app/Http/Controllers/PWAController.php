@@ -107,7 +107,7 @@ class PWAController extends Controller
 
         $env_keys_save->save();
 
-        notify()->success('PWA App Setting Updated !');
+        notify()->success(__('PWA App Setting Updated !'));
 
         return back();
 
@@ -117,7 +117,7 @@ class PWAController extends Controller
     {
 
         if(env('DEMO_LOCK') == 1){
-            notify()->error('This action is disabled in demo !');
+            notify()->error(__('This action is disabled in demo !'));
             return back();
         }
         
@@ -303,7 +303,7 @@ class PWAController extends Controller
         \Artisan::call('view:cache');
         \Artisan::call('view:clear');
 
-        notify()->success('Icons are updated !');
+        notify()->success(__('Icons are updated !'));
 
         return back();
     }

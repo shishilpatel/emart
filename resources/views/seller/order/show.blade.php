@@ -1,5 +1,5 @@
-@extends("admin.layouts.sellermaster")
-@section('title',"View Order : $inv_cus->order_prefix.$order->order_id | ")
+@extends("admin.layouts.sellermastersoyuz")
+@section('title',{{ __('View order',['orderid' => $inv_cus->order_prefix.$order->order_id]) }})
 @section('body')
 
 @component('seller.components.breadcumb',['secondactive' => 'active'])
@@ -22,14 +22,18 @@
 				<div class="card-header">
 					<div class="row">
 						<div class="col-md-8">
-							<h5 class="card-title">View Order #{{ $inv_cus->order_prefix.$order->order_id }}</h5>
+							<h5 class="card-title">
+								{{ __('View order',['orderid' => $inv_cus->order_prefix.$order->order_id]) }}
+							</h5>
 						</div>
 						<div class="col-md-4">
 							<a title="Print Order" href="{{ route('seller.print.order',$order->id) }}"
-								class="btn btn-primary-rgba pull-right"><i class="fa fa-print"></i> Print</a>
+								class="btn btn-primary-rgba pull-right"><i class="fa fa-print"></i> {{ __("Print") }}</a>
 
 							<a title="Edit Order" href="{{ route('seller.order.edit',$order->order_id) }}"
-								class="btn btn-success-rgba pull-right mr-2"><i class="fa fa-pencil"></i> Edit</a>
+								class="btn btn-success-rgba pull-right mr-2"><i class="fa fa-pencil"></i> 
+								{{__("Edit")}}
+							</a>
 						</div>
 					</div>
 
@@ -45,8 +49,7 @@
 						{{ ucfirst($order->payment_method) }} {{__("method and purchase proof you can view")}} <a
 							href="{{ url('images/purchase_proof/'.$order->purchase_proof) }}" data-lightbox="image-1"
 							data-title="{{__("Purchase proof for")}} {{ $order->order_id }}">{{ __("here") }}</a>
-						{{__("and")}} {{__("after verify you can
-							change the order status")}}.
+						{{__("and")}} {{__("after verify you can change the order status")}}.
 					</div>
 					@endif
 
@@ -61,31 +64,29 @@
 							{{ date('d-m-Y | h:i A',strtotime($cancellog->updated_at)) }} • Item
 							@if(isset($cancellog->singleOrder->variant))
 							<b>{{ $cancellog->singleOrder->variant->products->name }}({{ variantname($cancellog->singleOrder->variant->variant) }})
-								@else {{ $cancellog->singleOrder->simple_product->product_name }} </b> @endif has been
-							canceled
+								@else {{ $cancellog->singleOrder->simple_product->product_name }} </b> @endif {{__('has been canceled')}}
 
 							@if($cancellog->method_choosen == 'orignal')
 
-							and Amount <i class="{{ $order->paid_in }}"></i>{{ $cancellog->amount }}
-							is refunded to its orignal source with TXN ID: <b>{{ $cancellog->transaction_id }}</b>.
+							{{__('and Amount')}} <i class="{{ $order->paid_in }}"></i>{{ $cancellog->amount }}
+							{{__('is refunded to its orignal source with TXN ID')}}: <b>{{ $cancellog->transaction_id }}</b>.
 
 
 							@elseif($cancellog->method_choosen == 'bank')
 							@if($cancellog->is_refunded == 'completed')
-							and Amount <i class="{{ $order->paid_in }}"></i>{{ $cancellog->amount }}
-							is refunded to <b>{{ $cancellog->user->name }}'s</b> bank ac
+							{{__('and Amount')}} <i class="{{ $order->paid_in }}"></i>{{ $cancellog->amount }}
+							{{__("is refunded to")}} <b>{{ $cancellog->user->name }}'s</b> {{__('bank ac')}}
 							@if(isset($cancellog->bank->acno))
 							XXXX{{ substr($cancellog->bank->acno, -4) }} @endif with TXN ID
 							<b>{{ $cancellog->transaction_id }}
 								@if($cancellog->txn_fee !='') <br> (TXN FEE APPLIED) <b><i
 										class="{{ $order->paid_in }}"></i>{{ $cancellog->txn_fee }}</b> @endif</b>.
 							@else
-							and Amount <i class="{{ $order->paid_in }}"></i>{{ $cancellog->amount }}
-							is pending to <b>{{ $cancellog->user->name }}'s</b> bank ac
+							{{__('and Amount')}} <i class="{{ $order->paid_in }}"></i>{{ $cancellog->amount }}
+							{{__('is pending to')}} <b>{{ $cancellog->user->name }}'s</b> {{__('bank ac')}}
 							XXXX{{ substr($cancellog->bank->acno, -4) }}
-							with TXN ID/REF NO <b>{{ $cancellog->transaction_id }}</b> @if($cancellog->txn_fee !='')
-							<br> (TXN FEE
-							APPLIED) <b><i class="{{ $order->paid_in }}"></i>{{ $cancellog->txn_fee }}</b> @endif.
+							{{__('with TXN ID/REF NO')}} <b>{{ $cancellog->transaction_id }}</b> @if($cancellog->txn_fee !='')
+							<br> ({{__('TXN FEE APPLIED')}}) <b><i class="{{ $order->paid_in }}"></i>{{ $cancellog->txn_fee }}</b> @endif.
 							@endif
 							@endif
 						</p>
@@ -104,16 +105,16 @@
 
 
 								<p><i class="fa fa-info-circle"></i> {{ date('d-m-Y | h:i A',strtotime($rlogs->updated_at)) }} •
-									Item
+									{{__('Item')}}
 									@if(isset($rlogs->getorder->variant))
 									<b>{{ $rlogs->getorder->variant->products->name }}({{ variantname($rlogs->getorder->variant) }})
-										@else {{ $rlogs->getorder->simple_product->product_name }} </b> @endif has been
+										@else {{ $rlogs->getorder->simple_product->product_name }} </b> @endif {{__("has been")}}
 									@if($rlogs->getorder->status
 									== 'return_request')
-									requested for return
+									{{__('requested for return')}}
 									@else
 									@if($rlogs->getorder->status == 'ret_ref')
-									Returned and refunded
+									{{__("Returned and refunded")}}
 									@else
 									{{ ucfirst($rlogs->getorder->status) }}
 									@endif
@@ -121,26 +122,26 @@
 
 									@if($rlogs->method_choosen == 'orignal')
 
-									and Amount <i class="{{ $rlogs->getorder->order->paid_in }}"></i>{{ $rlogs->amount }}
-									is {{ $rlogs->status }} to its orignal source with TXN ID: <b>{{ $rlogs->txn_id }}</b>.
+									{{__('and amount')}} <i class="{{ $rlogs->getorder->order->paid_in }}"></i>{{ $rlogs->amount }}
+									is {{ $rlogs->status }} {{ __('to its orignal source with TXN ID') }}: <b>{{ $rlogs->txn_id }}</b>.
 
 
 									@elseif($rlogs->method_choosen == 'bank')
 									@if($rlogs->status == 'refunded')
-									and Amount <i class="{{ $rlogs->getorder->order->paid_in }}"></i>{{ $rlogs->amount }}
+									{{__('and amount')}} <i class="{{ $rlogs->getorder->order->paid_in }}"></i>{{ $rlogs->amount }}
 									is {{ $rlogs->status }} to <b>{{ $rlogs->user->name }}'s</b> bank ac
 									@if(isset($rlogs->bank->acno))
 									XXXX{{ substr($rlogs->bank->acno, -4) }} @endif with TXN ID: <b>{{ $rlogs->txn_id }}
 										@if($rlogs->txn_fee
-										!='') <br> (TXN FEE APPLIED) <b><i
+										!='') <br> ({{ __('TXN FEE APPLIED') }}) <b><i
 												class="{{ $rlogs->getorder->order->paid_in }}"></i>{{ $rlogs->txn_fee }}</b>
 										@endif</b>.
 									@else
-									and Amount <i class="{{ $order->paid_in }}"></i>{{ $rlogs->amount }}
-									is pending to <b>{{ $rlogs->user->name }}'s</b> bank ac @if(isset($rlogs->bank->acno))
-									XXXX{{ substr($rlogs->bank->acno, -4) }} @endif with TXN ID/REF NO:
+									{{__('and amount')}} <i class="{{ $order->paid_in }}"></i>{{ $rlogs->amount }}
+									{{__('is pending to')}} <b>{{ $rlogs->user->name }}'s</b> {{__('bank ac')}} @if(isset($rlogs->bank->acno))
+									XXXX{{ substr($rlogs->bank->acno, -4) }} @endif {{__('with TXN ID/REF NO')}}:
 									<b>{{ $rlogs->txn_id }}</b>
-									@if($rlogs->txn_fee !='') <br> (TXN FEE APPLIED) <b><i
+									@if($rlogs->txn_fee !='') <br> ({{ __('TXN FEE APPLIED') }}) <b><i
 											class="{{ $rlogs->getorder->order->paid_in }}"></i>{{ $rlogs->txn_fee }}</b> @endif.
 									@endif
 									@endif</p>
@@ -154,9 +155,15 @@
 					<table class="table table-striped">
 						<thead>
 							<tr>
-								<th>Customer Information</th>
-								<th>Shipping Address</th>
-								<th>Billing Address</th>
+								<th>
+									{{__('Customer Information')}}
+								</th>
+								<th>
+									{{__('Shipping Address')}}
+								</th>
+								<th>
+									{{__("Billing Address")}}
+								</th>
 							</tr>
 						</thead>
 
@@ -231,7 +238,7 @@
 					<table class="table table-striped">
 						<thead>
 							<th>
-								Order Summary
+								{{__("Order Summary")}}
 							</th>
 							<th></th>
 
@@ -241,23 +248,23 @@
 						<tbody>
 							<tr>
 								<td>
-									<p><b>Total Qty:</b> {{ $x->sum('qty') }}</p>
+									<p><b>{{__("Total Qty")}}:</b> {{ $x->sum('qty') }}</p>
 									</p>
-									<p><b>Order Total: <i
+									<p><b>{{__('Order Total')}}: <i
 												class="{{ $order->paid_in }}"></i>{{ sprintf("%.2f",$total) }}</b>
 									</p>
-									<p><b>Payment Recieved:</b> {{ ucfirst($order->payment_receive)  }}</p>
+									<p><b>{{__('Payment Recieved')}}:</b> {{ ucfirst($order->payment_receive)  }}</p>
 								</td>
 
 								<td>
-									<p><b>Payment Method: </b> {{ ucfirst($order->payment_method) }}
-										<p><b>Transcation ID:</b> <b><i>{{ $order->transaction_id }}</i></b></p>
+									<p><b>{{__("Payment Method")}}: </b> {{ ucfirst($order->payment_method) }}
+										<p><b>{{ __('Transcation ID') }}:</b> <b><i>{{ $order->transaction_id }}</i></b></p>
 
 
 								</td>
 
 								<td>
-									<p><b>Order Date:</b> {{ date('d/m/Y @ h:i a', strtotime($order->created_at)) }}</p>
+									<p><b>{{ __('Order Date') }}:</b> {{ date('d/m/Y @ h:i a', strtotime($order->created_at)) }}</p>
 								</td>
 							</tr>
 						</tbody>
@@ -275,14 +282,14 @@
 								({{ variantname($invoice->variant) }})
 
 							</small></b> @endif @if($invoice->simple_products)
-						{{ $invoice->simple_products->product_name }} @endif Customer has choosen Local Pickup.
+						{{ $invoice->simple_products->product_name }} @endif {{__("Customer has choosen Local Pickup")}}.
 						@if($invoice->status != 'delivered')
-						Estimated Delivery date: <span id="estddate{{ $invoice->id }}">
-							{{ $invoice->loc_deliv_date == '' ? "Yet to update" : date('d-m-Y',strtotime($invoice->loc_deliv_date)) }}
+						{{__("Estimated Delivery date")}}: <span id="estddate{{ $invoice->id }}">
+							{{ $invoice->loc_deliv_date == '' ? __("Yet to update") : date('d-m-Y',strtotime($invoice->loc_deliv_date)) }}
 
 							@else
-							Item Delivered On: <span id="estddate{{ $invoice->id }}">
-								{{ $invoice->loc_deliv_date == '' ? "Yet to update" : date('d-m-Y',strtotime($invoice->loc_deliv_date)) }}
+							{{__("Item Delivered On")}}: <span id="estddate{{ $invoice->id }}">
+								{{ $invoice->loc_deliv_date == '' ? __("Yet to update") : date('d-m-Y',strtotime($invoice->loc_deliv_date)) }}
 								@endif
 							</span>
 					</div>
@@ -291,19 +298,21 @@
 
 					<table class="table table-striped">
 						<thead>
-							<th>Order Details</th>
+							<th>
+								{{__('Order Details')}}
+							</th>
 						</thead>
 					</table>
 
 					<table class="table table-striped table-bordered">
 						<thead>
 							<tr>
-								<th>Invoice No</th>
-								<th>Item Name</th>
-								<th>Qty</th>
-								<th>Status</th>
-								<th>Pricing & Tax</th>
-								<th>Total</th>
+								<th>{{ __('Invoice Nos') }}</th>
+								<th>{{ __('Item Name') }}</th>
+								<th>{{ __('Qty') }}</th>
+								<th>{{ __('Status') }}</th>
+								<th>{{ __('Pricing & Tax') }}</th>
+								<th>{{ __('Total') }}</th>
 								<th>#</th>
 							</tr>
 						</thead>
@@ -321,7 +330,7 @@
 										<div class="col-md-4">
 											@if(isset($invoice->variant))
 											@php
-											$orivar = $invoice->variant;
+												$orivar = $invoice->variant;
 											@endphp
 											@if($invoice->variant->variantimages)
 											<img width="70px" class="object-fit"
@@ -362,12 +371,12 @@
 
 											<br>
 											@if($invoice->variant)
-											<small class="mleft22"><b>Sold By:</b>
+											<small class="mleft22"><b>{{ __('Sold By') }}:</b>
 												{{$invoice->variant->products->store->name}}</small>
 											@endif
 
 											@if($invoice->simple_product)
-											<small class="mleft22"><b>Sold By:</b>
+											<small class="mleft22"><b>{{ __('Sold By') }}:</b>
 												{{$invoice->simple_product->store->name}}</small>
 											@endif
 											<br>
@@ -380,7 +389,7 @@
 
 											<br>
 
-											<small class="mleft22"><b>Tax:</b> <i
+											<small class="mleft22"><b>{{ __("Tax") }}:</b> <i
 													class="{{ $invoice->order->paid_in }}"></i>{{ round(($invoice->tax_amount),2) }}
 
 												@if($invoice->variant)
@@ -397,9 +406,6 @@
 									</div>
 
 
-
-
-
 								</td>
 
 								<td>
@@ -414,37 +420,37 @@
 									@elseif($invoice->status == 'shipped')
 									<span class="label label-primary">{{ ucfirst($invoice->status) }}</span>
 									@elseif($invoice->status == 'return_request')
-									<span class="label label-warning">Return Request</span>
+									<span class="label label-warning">{{ __('Return Request') }}</span>
 									@elseif($invoice->status == 'returned')
-									<span class="label label-success">Returned</span>
+									<span class="label label-success">{{ __('Returned') }}</span>
 									@elseif($invoice->status == 'cancel_request')
-									<span class="label label-warning">Cancelation Request</span>
+									<span class="label label-warning">{{ __('Cancelation Request') }}</span>
 									@elseif($invoice->status == 'canceled')
-									<span class="label label-danger">Canceled</span>
+									<span class="label label-danger">{{ __('Canceled') }}</span>
 									@elseif($invoice->status == 'refunded')
-									<span class="label label-primary">Refunded</span>
+									<span class="label label-primary">{{ __('Refunded') }}</span>
 									@elseif($invoice->status == 'ret_ref')
-									<span class="label label-success">Returned & Refunded</span>
+									<span class="label label-success">{{ __('Returned & Refunded') }}</span>
 									@else
 									<span class="label label-default">{{ ucfirst($invoice->status) }}</span>
 									@endif
 								</td>
 
 								<td>
-									<b>Total Price:</b> <i class="{{ $invoice->order->paid_in }}"></i>
+									<b>{{ __('Total Price') }}:</b> <i class="{{ $invoice->order->paid_in }}"></i>
 
 									{{ round(($invoice->price*$invoice->qty),2) }}
 
 									<p></p>
-									<b>Total Tax:</b> <i
+									<b>{{__("Total Tax")}}:</b> <i
 										class="{{ $invoice->order->paid_in }}"></i>{{ round(($invoice->tax_amount * $invoice->qty),2) }}
 									<p></p>
-									<b>Shipping Charges:</b> <i
+									<b>{{__("Shipping Charges")}}:</b> <i
 										class="{{ $invoice->order->paid_in }}"></i>{{ round($invoice->shipping,2) }}
 									<p></p>
 
 
-									<small class="help-block">(Price & TAX Multiplied with Quantity)</small>
+									<small class="help-block">({{__("Price & TAX Multiplied with Quantity")}})</small>
 									<p></p>
 
 
@@ -458,12 +464,12 @@
 
 									<br>
 
-									<small>(Incl. of TAX & Shipping)</small>
+									<small>({{__('Incl. of TAX & Shipping')}})</small>
 								</td>
 
 								<th>
 									<a href="{{ route('seller.print.invoice',['orderid' => $order->order_id, 'id' => $invoice->id]) }}"
-										title="Print Invoice" href="#" class="btn btn-primary">
+										title="{{ __("Print Invoice") }}" href="#" class="btn btn-primary">
 										<i class="fa fa-print"></i>
 									</a>
 								</th>
@@ -475,9 +481,8 @@
 								<td></td>
 								<td></td>
 								<td></td>
-								<td><b>Subtotal</b></td>
-								<td><b><i
-											class="{{ $invoice->order->paid_in }}"></i>{{ $total - $hc - $giftcharge }}</b>
+								<td><b>{{ __('Subtotal') }}</b></td>
+								<td><b><i class="{{ $invoice->order->paid_in }}"></i>{{ $total - $hc - $giftcharge }}</b>
 								</td>
 								<td></td>
 							</tr>
@@ -487,8 +492,8 @@
 								<td></td>
 								<td></td>
 								<td></td>
-								<td><b>Coupon Discount</b></td>
-								<td><b>- <i
+								<td><b>{{ __('Coupon Discount') }}</b></td>
+								<td><b> - <i
 											class="{{ $invoice->order->paid_in }}"></i>{{ round($order->discount,2) }}</b>
 									({{ $order->coupon }})</td>
 								<td></td>
@@ -499,7 +504,7 @@
 								<td></td>
 								<td></td>
 								<td></td>
-								<td><b>Gift Packaging Charge</b></td>
+								<td><b>{{ __('Gift Packaging Charge') }}</b></td>
 								<td><b>+ <i class="{{ $invoice->order->paid_in }}"></i>{{ round($giftcharge,2) }}</b>
 								</td>
 								<td></td>
@@ -510,7 +515,7 @@
 								<td></td>
 								<td></td>
 								<td></td>
-								<td><b>Handling Charge</b></td>
+								<td><b>{{ __('Handling Charge') }}</b></td>
 								<td><b>+ <i class="{{ $invoice->order->paid_in }}"></i>{{ round($hc,2) }}</b>
 								</td>
 								<td></td>
@@ -521,7 +526,7 @@
 								<td></td>
 								<td></td>
 								<td></td>
-								<td><b>Grand Total</b></td>
+								<td><b>{{ __('Grand Total') }}</b></td>
 								<td><b><i class="{{ $invoice->order->paid_in }}"></i>
 
 										{{ round($total,2) }}
@@ -574,16 +579,13 @@
 								<small>{{ date('d-m-Y | h:i:a',strtotime($logs->updated_at)) }} • For Order
 									<b>{{ $orivar->products->name }} ({{variantname($orivar)}}) </b>
 									: @if($logs->user->role_id == 'a')
-									<span class="text-danger"><b>{{ $logs->user->name }}</b> (Admin)</span> changed status
-									to
+									<span class="text-danger"><b>{{ $logs->user->name }}</b> ({{ __('Admin') }})</span> {{__('changed status to')}}
 									<b>{{ $logs->log }}</b>
 									@elseif($logs->user->role_id == 'v')
-									<span class="text-primary"><b>{{ $logs->user->name }}</b> (Vendor)</span> changed
-									status to
+									<span class="text-primary"><b>{{ $logs->user->name }}</b> ({{__('Vendor')}})</span> {{__('changed status to')}}
 									<b>{{ $logs->log }}</b>
 									@else
-									<span class="text-success"><b>{{ $logs->user->name }}</b> (Customer)</span> changed
-									status to
+									<span class="text-success"><b>{{ $logs->user->name }}</b> ({{__('Customer')}})</span> {{__('changed status to')}}
 									<b>{{ $logs->log }}</b>
 									@endif
 
@@ -595,18 +597,15 @@
 
 								@if(isset($logs->simple_product) && $logs->simple_product->store->user->id ==
 								auth()->id())
-								<small>{{ date('d-m-Y | h:i:a',strtotime($logs->updated_at)) }} • For Order Item
+								<small>{{ date('d-m-Y | h:i:a',strtotime($logs->updated_at)) }} • {{__("For Order Item")}}
 									<b>{{ $logs->simple_product->product_name }}</b> @if($logs->user->role_id == 'a')
-									<span class="text-danger"><b>{{ $logs->user->name }}</b> (Admin)</span> changed status
-									to
+									<span class="text-danger"><b>{{ $logs->user->name }}</b> ({{__("Admin")}})</span> {{__('changed status to')}}
 									<b>{{ $logs->log }}</b>
 									@elseif($logs->user->role_id == 'v')
-									<span class="text-primary"><b>{{ $logs->user->name }}</b> (Vendor)</span> changed
-									status to
+									<span class="text-primary"><b>{{ $logs->user->name }}</b> ({{__('Vendor')}})</span> {{__('changed status to')}}
 									<b>{{ $logs->log }}</b>
 									@else
-									<span class="text-success"><b>{{ $logs->user->name }}</b> (Customer)</span> changed
-									status to
+									<span class="text-success"><b>{{ $logs->user->name }}</b> ({{__('Customer')}})</span> {{__('changed status to')}}
 									<b>{{ $logs->log }}</b>
 									@endif </small>
 								@endif

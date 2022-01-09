@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Add Social Icon |')
+@section('title',__('Add Social Icon |'))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -22,17 +22,18 @@
 @endcomponent
 <div class="contentbar">
   <div class="row">
-    @if ($errors->any())
-    <div class="alert alert-danger" role="alert">
-      @foreach($errors->all() as $error)
-      <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach
-    </div>
-    @endif
+    
 ​
 ​
     <div class="col-lg-12">
+      @if ($errors->any())
+      <div class="alert alert-danger" role="alert">
+        @foreach($errors->all() as $error)
+        <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button></p>
+        @endforeach
+      </div>
+      @endif
       <div class="card m-b-30">
         <div class="card-header">
           <h5>{{ __('Add Social Icon') }}</h5>
@@ -59,16 +60,16 @@
                     <div class="form-group">
                         <label class="text-dark">{{ __('Icon') }} <span class="text-danger">*</span></label>
                           <select name="icon" class="select2 form-control">
-                            <option value="youtube">Youtube</option>
-                            <option value="linkedin">LinkedIn</option>
-                            <option value="pintrest">Pinterest</option>
-                            <option value="rss">RSS FEED</option>
-                            <option value="googleplus">Google+</option>
-                            <option value="tw">Twitter</option>
-                            <option value="fb">Facebook</option>
-                            <option value="instagram">Instagram</option>
+                            <option value="youtube">{{ __("Youtube") }}</option>
+                            <option value="linkedin">{{ __("LinkedIn") }}</option>
+                            <option value="pintrest">{{ __("Pinterest") }}</option>
+                            <option value="rss">{{ __("RSS FEED") }}</option>
+                            <option value="googleplus">{{ __("Google+") }}</option>
+                            <option value="tw">{{ __("Twitter") }}</option>
+                            <option value="fb">{{ __("Facebook") }}</option>
+                            <option value="instagram">{{ __("Instagram") }}</option>
                           </select>
-                          <small class="txt-desc">Please choose icon</small>
+                          <small class="txt-desc">{{ __("Please choose icon") }}</small>
                     </div>
                 </div>
 
@@ -79,7 +80,7 @@
                       <input class="slider" type="checkbox" name="status" checked />
                       <span class="knob"></span>
                     </label><br>
-                    <small>(Please Choose Status) </small>
+                    <small>({{__("Please Choose Status")}}) </small>
                 </div>
                               
                 <!-- create and close button -->

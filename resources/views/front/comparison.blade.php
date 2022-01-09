@@ -178,12 +178,11 @@
 		                                  }
 
 
-		                                try{
-		                                  $url = url('details').'/'.$product->id.'?'.$name[0]['attr_name'].'='.$var_name[0].'&'.$name[1]['attr_name'].'='.$var_name[1];
-		                                }catch(Exception $e)
-		                                {
-		                                  $url = url('details').'/'.$product->id.'?'.$name[0]['attr_name'].'='.$var_name[0];
-		                                }
+										try {
+											$url = url('details') . '/'. str_replace(' ','-',$product->name)  .'/' . $product->id . '?' . $name[0]['attr_name'] . '=' . $var_name[0] . '&' . $name[1]['attr_name'] . '=' . $var_name[1];
+										} catch (\Exception $e) {
+											$url = url('details') . '/' .str_replace(' ','-',$product->name)  .'/' . $product->id . '?' . $name[0]['attr_name'] . '=' . $var_name[0];
+										}
 
                              		@endphp
 

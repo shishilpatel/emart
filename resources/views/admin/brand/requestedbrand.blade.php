@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','All Requested Brands')
+@section('title',__('All Requested Brands'))
 @section('body')
 @component('admin.component.breadcumb',['secondaryactive' => 'active'])
 @slot('heading')
@@ -17,7 +17,7 @@
 		<div class="col-lg-12">
 			<div class="card m-b-30">
 				<div class="card-header">
-					<h5 class="box-title"> All Requested Brands</h5>
+					<h5 class="box-title"> {{ __('All Requested Brands') }}</h5>
 				</div>
 				<div class="card-body">
 					<div class="table-responsive">
@@ -25,10 +25,10 @@
 
 							<thead>
 								<th>#</th>
-								<th>Brand Logo</th>
-								<th>Brand Name</th>
-								<th>Brand Proof</th>
-								<th>Action</th>
+								<th>{{ __('Brand Logo') }}</th>
+								<th>{{ __('Brand Name') }}</th>
+								<th>{{ __('Brand Proof') }}</th>
+								<th>{{ __('Action') }}</th>
 							</thead>
 
 							<tbody>
@@ -44,7 +44,7 @@
 											src='{{ url("images/brands/".$brand->image) }}' />
 
 										@else
-										<img title="Make a variant first !" 
+										<img title="{{ __('Make a variant first !') }}" 
 											src="{{ Avatar::create($brand->name)->toBase64() }}" />
 										@endif
 									</td>
@@ -66,7 +66,7 @@
 											{{csrf_field()}}
 											<span type="submit"
 												class="btn btn-sm btn-rounded  {{ $brand->status==1 ? "btn-success-rgba" : "btn-danger-rgba" }}">
-												{{ $brand->status ==1 ? 'Active' : 'Deactive' }}
+												{{ $brand->status == 1 ? __('Active') : __('Deactive') }}
 											</span>
 										</form>
 									</td>

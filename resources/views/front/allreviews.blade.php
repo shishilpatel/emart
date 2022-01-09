@@ -1,33 +1,7 @@
 @extends('front.layout.master')
-@section('title',$product->name.__('- All Reviews').' | ')
+@section('title',__(':productname - All Reviews |',['productname' => $product->name ?? $product->product_name]))
 @section('body')
- @foreach($product->subvariants as $key=> $orivar)
- @if($orivar->def ==1)
-	@php
-		  $var_name_count = count($orivar['main_attr_id']);
-	                                     
-		  $name;
-		  $var_name;
-		  $newarr = array();
 
-		  for($i = 0; $i<$var_name_count; $i++){
-		    $var_id =$orivar['main_attr_id'][$i];
-		    $var_name[$i] = $orivar['main_attr_value'][$var_id];
-		      
-		      $name[$i] = App\ProductAttributes::where('id',$var_id)->first();
-		     
-		  }
-
-
-		try{
-		  $url = url('details').'/'.$product->id.'?'.$name[0]['attr_name'].'='.$var_name[0].'&'.$name[1]['attr_name'].'='.$var_name[1];
-		}catch(Exception $e)
-		{
-		  $url = url('details').'/'.$product->id.'?'.$name[0]['attr_name'].'='.$var_name[0];
-		}
-	@endphp
-@endif
-@endforeach
 	<div class="container-fluid">
 		<br>
 		<div class="card-body bg-white all-review-main-block">
@@ -36,7 +10,7 @@
 
 				
 
-				<div class="col-md-3 col-sm-5">
+				<div class="col-md-4">
 					<div class="overall-rating-main-block left-sidebar">
                           <div class="overall-rating-block text-center">
                             @php
@@ -81,23 +55,32 @@
            </div>
 				</div>
 
-				<div class="col-md-9 col-sm-7 main-content">
+				<div class="col-md-8 main-content">
 					<br>
 					<div class="row">
-
-						<div class="col-lg-1 col-md-2 col-xs-3 viewall-img">
-							<img class="img-fluid" title="{{ $product->name }}" src="{{ url('variantimages/'.$orivar->variantimages['image2']) }}" alt="{{ $orivar->variantimages['image2'] }}">
-						</div>
+            @if($type == 'v')
+              <div class="col-lg-1 col-md-2 col-xs-3 viewall-img">
+                <img class="img-fluid" title="{{ $product->name }}" src="{{ url('variantimages/'.$product->subvariants[0]->variantimages['main_image']) }}" alt="{{ $product->subvariants[0]->variantimages['main_image'] }}">
+              </div>
+            @else
+              <div class="col-lg-1 col-md-2 col-xs-3 viewall-img">
+                <img class="img-fluid" title="{{ $product->product_name }}" src="{{ url('images/simple_products/'.$product->thumbnail) }}" alt="{{ $product->thumbnail }}">
+              </div>
+            @endif
 
 						<div class="col-lg-11 col-md-6 col-xs-9">
-							<h3><a href="{{ $url }}">{{ $product->name }}</a></h3>
+							<h3><a href="{{ $type == 'v' ? $product->getURL($product->subvariants[0]) : $product->slug() }}">{{ $type == 'v' ? $product->name : $product->product_name }}</a></h3>
 							<div class="pull-left">
 								<div class="star-ratings-sprite">
 									<span style="width:<?php echo $ratings_var; ?>%" class="star-ratings-sprite-rating"></span>
 								</div>
 							</div>
 							<br>
+              @if($type == 'v')
 							<p>{!! $product->des !!}</p>
+              @else 
+              <p>{!! $product->product_detail !!}</p>
+              @endif
 						</div>
 
 					</div>
@@ -160,7 +143,7 @@
         
         <div class="text-center">
           <a title="Go back" href="{{ url()->previous() }}" class="btn btn-md btn-primary">
-            <i class="fa fa-reply"></i> {{ __('Back') }}
+            <i class="fa fa-arrow-left"></i> {{ __('Back') }}
           </a>
         </div>    
         </div>

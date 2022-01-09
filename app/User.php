@@ -3,13 +3,14 @@
 namespace App;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Passport\HasApiTokens;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
-use Spatie\Permission\Traits\HasRoles;
+use Laravel\Passport\HasApiTokens;
+use Nwidart\Modules\Facades\Module;
 use SamuelNitsche\AuthLog\AuthLogable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -22,7 +23,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
 
     protected $fillable = [
-        'name', 'email', 'password', 'role_id', 'phonecode', 'mobile', 'city_id', 'country_id', 'state_id', 'phone', 'image', 'website', 'status', 'remember_token', 'apply_vender', 'gender', 'is_verified','google2fa_enable','google2fa_secret','refer_code','refered_from','subs_id','social_id'
+        'name', 'email', 'password', 'role_id', 'phonecode', 'mobile', 'city_id', 'country_id', 'state_id', 'phone', 'image', 'website', 'status', 'remember_token', 'apply_vender', 'gender', 'is_verified', 'google2fa_enable', 'google2fa_secret', 'refer_code', 'refered_from', 'subs_id', 'social_id', 'stripe_id'
     ];
 
     /**
@@ -104,14 +105,15 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne('App\UserWallet', 'user_id', 'id');
     }
 
-    public function routeNotificationForMsg91(){
-        
+    public function routeNotificationForMsg91()
+    {
+
         return "{$this->phonecode}{$this->mobile}";
     }
 
     public function routeNotificationForOneSignal()
     {
-        return ['include_external_user_ids' => [$this->id.""]];
+        return ['include_external_user_ids' => [$this->id . ""]];
     }
 
     // public function notifyAuthenticationLogVia()
@@ -119,20 +121,24 @@ class User extends Authenticatable implements MustVerifyEmail
     //     return ['mail'];
     // }
 
-    public function wishlistCollection(){
-        return $this->hasMany('App\User','user_id');
+    public function wishlistCollection()
+    {
+        return $this->hasMany('App\User', 'user_id');
     }
 
-    public function billingAddress(){
-        return $this->hasMany('App\BillingAddress','user_id');
+    public function billingAddress()
+    {
+        return $this->hasMany('App\BillingAddress', 'user_id');
     }
 
-    public function getReferals(){
-        return $this->hasMany('App\AffilateHistory','user_id');
+    public function getReferals()
+    {
+        return $this->hasMany('App\AffilateHistory', 'user_id');
     }
 
-    public function onetimereferdata(){
-        return $this->hasOne('App\AffilateHistory','refer_user_id','id');
+    public function onetimereferdata()
+    {
+        return $this->hasOne('App\AffilateHistory', 'refer_user_id', 'id');
     }
 
     public static function createReferCode()
@@ -141,9 +147,9 @@ class User extends Authenticatable implements MustVerifyEmail
         $aff_settings = Affilate::first();
 
         $seed = str_split('abcdefghijklmnopqrstuvwxyz'
-            . 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'); 
+            . 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
 
-        shuffle($seed); 
+        shuffle($seed);
 
         $rand = '';
         foreach (array_rand($seed, $aff_settings->code_limit) as $k) {
@@ -156,11 +162,23 @@ class User extends Authenticatable implements MustVerifyEmail
         return Str::upper($rand);
     }
 
-    public function sellersubscription(){
-        return $this->hasMany(SellerSubscription::class,'user_id');
+
+    public function sellersubscription()
+    {
+        if(Module::has('SellerSubscription') && Module::find('SellerSubscription')->isEnabled()){
+            return $this->hasMany(\Modules\SellerSubscription\Models\SellerSubscription::class, 'user_id');
+        }
     }
-    public function activeSubscription(){
-        return $this->hasOne(SellerSubscription::class,'id','subs_id');
+
+    public function activeSubscription()
+    {
+        if(Module::has('SellerSubscription') && Module::find('SellerSubscription')->isEnabled()){
+            return $this->hasOne(\Modules\SellerSubscription\Models\SellerSubscription::class, 'id', 'subs_id');
+        }
+    }
+
+    public function templates(){
+        return $this->hasMany(SizeChart::class,'user_id');
     }
 
 }

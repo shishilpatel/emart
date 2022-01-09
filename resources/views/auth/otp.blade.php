@@ -1,5 +1,5 @@
 @extends("front.layout.master")
-@section('title','Verify OTP | ')
+@section('title',__('Verify OTP').' | ')
 @section('body')
 @php
     require_once(base_path().'/app/Http/Controllers/price.php');

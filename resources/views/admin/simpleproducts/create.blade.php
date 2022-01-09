@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Create new product | ')
+@section('title',__('Create new product | '))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 
@@ -91,9 +91,9 @@
                                     <label class="text-dark">
                                         {{ __("Product Brand :") }} <span class="text-danger">*</span>
                                     </label>
-                                    <select data-placeholder="Please select brand" required="" name="brand_id"
+                                    <select data-placeholder="{{ __("Please Select") }}" required="" name="brand_id"
                                         class="select2 form-control">
-                                        <option value="">Please Select</option>
+                                        <option value="">{{ __("Please Select") }}</option>
                                         @if(!empty($brands_all))
                                         @foreach($brands_all as $brand)
                                         <option value="{{$brand->id}}"
@@ -111,10 +111,10 @@
                                     <label class="text-dark">
                                         Product Store : <span class="text-danger">*</span>
                                     </label>
-                                    <select data-placeholder="Please select store" required="" name="store_id"
+                                    <select data-placeholder="{{ __("Please select store") }}" required="" name="store_id"
                                         class="form-control select2">
 
-                                        <option value="">Please select store</option>
+                                        <option value="">{{ __("Please select store") }}</option>
 
                                         @foreach($stores as $store)
                                         <optgroup label="Store Owner • {{ $store->user->name }}">
@@ -129,6 +129,8 @@
                                 </div>
                             </div>
                         </div>
+
+
                         <div class="form-group">
                             <label class="text-dark">{{ __("Key Features :") }}
                             </label>
@@ -168,7 +170,7 @@
 
                                     <select data-placeholder="Please select subcategory" required=""
                                         name="subcategory_id" id="upload_id" class="form-control select2">
-                                        <option value="">Please Select</option>
+                                        <option value="">{{ __("Please Select") }}</option>
 
                                     </select>
                                 </div>
@@ -183,7 +185,7 @@
                                     </label>
                                     <select data-placeholder="Please select childcategory" name="child_id" id="grand"
                                         class="form-control select2">
-                                        <option value="">Please choose</option>
+                                        <option value="">{{ __("Please Select") }}</option>
 
                                     </select>
                                 </div>
@@ -191,13 +193,42 @@
 
                             </div>
 
-
-
                             <div class="col-md-12">
                                 <div class="form-group">
+                                    <label>{{ __("Also in :") }}</label>
+                                    <select multiple="multiple" name="other_cats[]" id="other_cats" class="form-control select2">
+                                        @foreach($categories as $category)
+                                            <option  {{ old('other_cats') != '' && in_array($category->id,old('other_cats')) ? "selected" : "" }} value="{{ $category->id }}">{{ $category->title }}</option>
+                                        @endforeach
+                                    </select>
+
+                                    <small class="text-primary">
+                                        <i class="feather icon-help-circle"></i> {{ __("If in list primary category is also present then it will auto remove from this after create product.") }}
+                                    </small>
+                                </div>
+
+                                
+                            </div>
+
+
+
+                            <div class="col-md-6">
+                                <div class="form-group">
                                     <label class="text-dark">{{ __("Product Tags :") }}</label>
-                                    <input placeholder="{{ __("Enter product tags by comma") }}" type="text"
+                                    <input data-role="tagsinput" placeholder="{{ __("Enter product tags by comma") }}" type="text"
                                         class="form-control" name="product_tags" value="{{ old('product_tags') }}">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="text-dark">{{ __('Select Size chart : ') }} </label>
+                                    <select name="size_chart" class="form-control select2">
+                                        <option value="NULL">{{ __('None') }}</option>
+                                        @foreach ($template_size_chart as $chartoption)
+                                            <option {{ old('size_chart') == $chartoption->id ? "selected" : "" }} value="{{ $chartoption->id }}">{{ $chartoption->template_name }} ({{ $chartoption->template_code }}) </option>
+                                        @endforeach 
+                                    </select>
                                 </div>
                             </div>
 
@@ -211,7 +242,7 @@
                                     </label>
 
                                     <input type="text" value="{{ old("sale_tag") }}" class="form-control"
-                                        name="sale_tag" placeholder="Exclusive">
+                                        name="sale_tag" placeholder="{{ __("Exclusive") }}">
                                 </div>
 
                             </div>
@@ -222,7 +253,7 @@
                                         {{ __("Product tag text color") }} :
                                     </label>
                                     <!-- ------------ -->
-                                    <div class="input-group initial-color" title="Using input value">
+                                    <div class="input-group initial-color">
                                         <input type="text" class="form-control input-lg" value="#000000"
                                             name="sale_tag_text_color" placeholder="#000000" />
                                         <span class="input-group-append">
@@ -330,7 +361,7 @@
                                             class="form-control">
                                         <div class="input-group-append">
                                             <span data-input="thumbnail"
-                                                class="bg-primary text-light midia-toggle input-group-text">Browse</span>
+                                                class="bg-primary text-light midia-toggle input-group-text">{{ __('Browse') }}</span>
                                         </div>
                                     </div>
 
@@ -352,7 +383,7 @@
                                             class="form-control">
                                         <div class="input-group-append">
                                             <span data-input="hover_thumbnail"
-                                                class="bg-primary text-light midia-toggle input-group-text">Browse</span>
+                                                class="bg-primary text-light midia-toggle input-group-text">{{ __('Browse') }}</span>
                                         </div>
 
 
@@ -399,7 +430,7 @@
                                             class="form-control">
                                         <div class="input-group-append">
                                             <span data-input="product_file"
-                                                class="bg-primary text-light file-toggle input-group-text">Browse</span>
+                                                class="bg-primary text-light file-toggle input-group-text">{{ __('Browse') }}</span>
                                         </div>
                                     </div>
 
@@ -420,8 +451,7 @@
                                         <span class="knob"></span>
                                     </label>
                                     <br>
-                                    <small class="text-muted"><i class="fa fa-question-circle"></i> {{ __("Toggle the product
-                                    status") }}</b></small>
+                                    <small class="text-muted"><i class="fa fa-question-circle"></i> {{ __("Toggle the product status") }}</b></small>
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -434,8 +464,7 @@
                                         <span class="knob"></span>
                                     </label>
                                     <br>
-                                    <small class="text-muted"><i class="fa fa-question-circle"></i> {{ __("Toggle to allow free
-                                    shipping on product.") }}</b></small>
+                                    <small class="text-muted"><i class="fa fa-question-circle"></i> {{ __("Toggle to allow free shipping on product.") }}</b></small>
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -448,8 +477,7 @@
                                         <span class="knob"></span>
                                     </label>
                                     <br>
-                                    <small class="text-muted"><i class="fa fa-question-circle"></i> {{ __("Toggle to allow product
-                                    is featured.") }}</b></small>
+                                    <small class="text-muted"><i class="fa fa-question-circle"></i> {{ __("Toggle to allow product is featured.") }}</b></small>
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -462,8 +490,7 @@
                                         <span class="knob"></span>
                                     </label>
                                     <br>
-                                    <small class="text-muted"><i class="fa fa-question-circle"></i> {{ __("Toggle to allow product
-                                    cancellation on order.") }}</b></small>
+                                    <small class="text-muted"><i class="fa fa-question-circle"></i> {{ __("Toggle to allow product cancellation on order.") }}</b></small>
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -476,21 +503,24 @@
                                         <span class="knob"></span>
                                     </label>
                                     <br>
-                                    <small class="text-muted"><i class="fa fa-question-circle"></i> {{ __("Toggle to allow COD on
-                                    product.") }}</b></small>
+                                    <small class="text-muted"><i class="fa fa-question-circle"></i> {{ __("Toggle to allow COD on product.") }}</b></small>
                                 </div>
                             </div>
 
                             <div class="form-group col-md-4">
 
                                 <label class="text-dark" for="">{{ __("Return Available :") }}</label>
-                                <select data-placeholder="Please choose an option" required=""
+                                <select data-placeholder="{{ __("Please choose an option") }}" required=""
                                     class="form-control select2" id="choose_policy" name="return_avbl">
-                                    <option value="">Please choose an option</option>
-                                    <option {{ old('return_avbl') =='1' ? "selected" : "" }} value="1">Return Available
+                                    <option value="">
+                                        {{__("Please choose an option")}}
                                     </option>
-                                    <option {{ old('return_avbl') =='0' ? "selected" : "" }} value="0">Return Not
-                                        Available</option>
+                                    <option {{ old('return_avbl') =='1' ? "selected" : "" }} value="1">
+                                        {{__("Return Available")}}
+                                    </option>
+                                    <option {{ old('return_avbl') =='0' ? "selected" : "" }} value="0">
+                                        {{__("Return Not Available")}}
+                                    </option>
                                 </select>
                                 <br>
                                 <small
@@ -503,9 +533,11 @@
                                 <label class="text-dark">
                                     {{ __("Select Return Policy :") }} <span class="text-danger">*</span>
                                 </label>
-                                <select data-placeholder="Please select return policy" name="policy_id"
+                                <select data-placeholder="{{ __("Please select return policy") }}" name="policy_id"
                                     class="form-control select2">
-                                    <option value="">Please select return policy</option>
+                                    <option value="">
+                                        {{__("Please select return policy")}}
+                                    </option>
 
                                     @foreach(App\admin_return_product::where('status','1')->get() as $policy)
                                     <option {{ old('policy_id') == $policy->id ? "selected" : "" }}

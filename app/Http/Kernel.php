@@ -62,7 +62,6 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'CheckAdmin' => \App\Http\Middleware\CheckAdmin::class,
         'is_vendor' => \App\Http\Middleware\IsVendor::class,
         'admin_access' => \App\Http\Middleware\AdminAccess::class,
         'sweetalert' => \UxWeb\SweetAlert\ConvertMessagesIntoSweetAlert::class,

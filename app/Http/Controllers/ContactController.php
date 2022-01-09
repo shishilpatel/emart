@@ -28,7 +28,7 @@ class ContactController extends Controller
 
             $mail = Genral::first();
             Mail::to($mail->email)->send(new Contact($request));
-            notify()->success('Message sent successfully !');
+            notify()->success(__('Message sent successfully !'));
             return back();
 
         }catch(\Exception $e){

@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="stylesheet" href="{{ url('css/bootstrap.min.css') }}" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ url('css/vendor/shards.min.css') }}">
     <link rel="stylesheet" href="{{url('css/font-awesome.min.css')}}">
     <link rel="stylesheet" href="{{ url('css/install.css') }}">
     <link rel="stylesheet" href="{{ url('css/bootstrap-iconpicker.min.css') }}">
@@ -134,7 +133,6 @@
     <script src="{{ url('front/vendor/js/ej.web.all.min.js') }}"></script>
     <script src="{{ url('front/vendor/js/popper.min.js') }}"></script>
     <script src="{{ url('js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ url('front/vendor/js/shards.min.js') }}"></script>
     <script>var baseUrl= "<?= url('/') ?>";</script>
     <script src="{{ url('js/minstaller.js') }}"></script>
     @notify_js

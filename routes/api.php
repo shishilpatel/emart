@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,24 +13,24 @@ use Illuminate\Support\Facades\Route;
 |
  */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 /** Single Homepage API */
-Route::get('homepage', 'Api\MainController@homepage');
-/**  */
 
-Route::get('/change-currency','Api\CurrencyController@changeCurrency');
+Route::get('homepage', 'Api\MainController@homepage');
+Route::get('get/tabbed/products/{catid}', 'Api\MainController@categoryproducts');
+
+/** Change Currency API */
+
+Route::get('/change-currency', 'Api\CurrencyController@changeCurrency');
 
 /** Login register and logout with refresh token api */
+
 Route::post('login', 'Api\Auth\LoginController@login');
 Route::post('social-login', 'Api\Auth\LoginController@socialLogin');
 Route::post('register', 'Api\Auth\RegisterController@register');
 
 /* Guest Cart */
 
-Route::post('guestcart/list','Api\CartController@guestCart');
+Route::post('guestcart/list', 'Api\CartController@guestCart');
 
 /** Three level Categories with product without products api */
 Route::get('categories', 'Api\MainController@categories');
@@ -60,7 +59,7 @@ Route::get('/blog/post/{slug}', 'Api\MainController@blogdetail');
 Route::middleware(['auth:api'])->group(function () {
 
     /** Logout and refresh tokens */
-    
+
     Route::post('logout', 'Api\Auth\LoginController@logout');
     Route::post('refresh', 'Api\Auth\LoginController@refresh');
 
@@ -68,51 +67,51 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('mywallet', 'Api\MainController@mywallet');
 
     Route::get('manageaddress', 'Api\MainController@getuseraddress');
-    Route::post('create-address','Api\MainController@createaddress');
+    Route::post('create-address', 'Api\MainController@createaddress');
 
-    Route::get('billing-address','Api\MainController@listbillingaddress');
-    Route::post('create-billing-address','Api\MainController@createbillingaddress');
+    Route::get('billing-address', 'Api\MainController@listbillingaddress');
+    Route::post('create-billing-address', 'Api\MainController@createbillingaddress');
 
     Route::get('mybanks', 'Api\MainController@getuserbanks');
     Route::get('notifications', 'Api\MainController@myNotifications');
-    
+
     /**Cart API's */
-    Route::get('cart','Api\CartController@yourCart');
-    Route::post('addtocart','Api\CartController@addToCart');
-    Route::post('guestcart/add','Api\CartController@guestCartStore');
-    Route::post('remove/cart/item','Api\CartController@cartItemRemove');
-    Route::post('clear-cart','Api\CartController@clearCart');
-    Route::post('increase-quantity/in/cart','Api\CartController@increaseQuantity');
+    Route::get('cart', 'Api\CartController@yourCart');
+    Route::post('addtocart', 'Api\CartController@addToCart');
+    Route::post('guestcart/add', 'Api\CartController@guestCartStore');
+    Route::post('remove/cart/item', 'Api\CartController@cartItemRemove');
+    Route::post('clear-cart', 'Api\CartController@clearCart');
+    Route::post('increase-quantity/in/cart', 'Api\CartController@increaseQuantity');
 
     /** Wishlist Collection & Wishlist */
     Route::get('wishlist', 'Api\ProductController@wishlist');
     Route::post('wishlist/remove/{wishlistid}', 'Api\ProductController@removeitemfromWishlist');
 
-    Route::get('wishlist/collection','Api\WishlistController@listCollection');
-    Route::get('wishlist/collection/{id}','Api\WishlistController@listCollectionItemsByID');
-    Route::post('wishlist/create-collection','Api\WishlistController@createCollection');
-    
+    Route::get('wishlist/collection', 'Api\WishlistController@listCollection');
+    Route::get('wishlist/collection/{id}', 'Api\WishlistController@listCollectionItemsByID');
+    Route::post('wishlist/create-collection', 'Api\WishlistController@createCollection');
+
     /** Apply Coupans */
-    Route::post('/apply-coupans','Api\CoupanApplyController@apply');
-    Route::post('/remove-coupan','Api\CoupanApplyController@removeCoupan');
+    Route::post('/apply-coupans', 'Api\CoupanApplyController@apply');
+    Route::post('/remove-coupan', 'Api\CoupanApplyController@removeCoupan');
 
     /** Pincode fetch with address for logged in user */
-    Route::get('/search/pincode/auth/','Api\MainController@fetchPinCodeAddressForAuthUser');
+    Route::get('/search/pincode/auth/', 'Api\MainController@fetchPinCodeAddressForAuthUser');
 
     /** Order Review  */
 
-    Route::post('/order-review','Api\OrderController@orderReview');
+    Route::post('/order-review', 'Api\OrderController@orderReview');
 
     /** Local Pickup apply and remove */
-    Route::post('/localpickup/apply','Api\OrderController@localpickupapply');
-    Route::post('/localpickup/remove','Api\OrderController@localpickupremove');
+    Route::post('/localpickup/apply', 'Api\OrderController@localpickupapply');
+    Route::post('/localpickup/remove', 'Api\OrderController@localpickupremove');
 
-    Route::post('/rpay/paymentid','Api\PaymentController@getPaymentID');
-    Route::post('/paytm/checksum/create','Api\PaymentController@createPaytmCheckSum');
+    Route::post('/rpay/paymentid', 'Api\PaymentController@getPaymentID');
+    Route::post('/paytm/checksum/create', 'Api\PaymentController@createPaytmCheckSum');
 
     /** Confirm Order API */
 
-    Route::post('/confirm/order','Api\PaymentController@confirmOrder');
+    Route::post('/confirm/order', 'Api\PaymentController@confirmOrder');
 
 });
 
@@ -122,25 +121,26 @@ Route::post('wishlist/add/{variantid}', 'Api\ProductController@additeminWishlist
 
 /** Product detail page */
 
-Route::get('details/{productid}/{variantid}', 'Api\ProductController@detailProduct');
+Route::get('details/{productid}/{variantid}/{type}', 'Api\ProductController@detailProduct');
 
 /* Delivery Location API*/
-Route::get('/delivery-check','Api\ProductController@checkPincode');
+Route::get('/delivery-check', 'Api\ProductController@checkPincode');
 
 /** General Configuration */
-Route::get('/configs','Api\ConfigController@getConfigs');
+Route::get('/configs', 'Api\ConfigController@getConfigs');
 
 /** Payment Methods */
-Route::get('/payment-list','Api\ConfigController@getPaymentMethods');
+Route::get('/payment-list', 'Api\ConfigController@getPaymentMethods');
 
 /** List of coutries , states, cities */
-Route::get('/countries','Api\MainController@listofcountries');
-Route::get('/states/{countryid}','Api\MainController@listofstates');
-Route::get('/city/{stateid}','Api\MainController@listofcities');
+Route::get('/countries', 'Api\MainController@listofcountries');
+Route::get('/states/{countryid}', 'Api\MainController@listofstates');
+Route::get('/city/{stateid}', 'Api\MainController@listofcities');
 
 /** Search Cities */
-Route::get('/search/city/','Api\MainController@searchcity');
+Route::get('/search/city/', 'Api\MainController@searchcity');
 
 /** Pincode fetch with address for guest user */
-Route::get('/search/pincode/guest/','Api\MainController@fetchPinCodeAddressForGuest');
-Route::get('/check-for-update','OtaUpdateController@checkforupate');
+Route::get('/search/pincode/guest/', 'Api\MainController@fetchPinCodeAddressForGuest');
+Route::get('/check-for-update', 'OtaUpdateController@checkforupate');
+Route::post('/verify/add-on', 'AddOnManagerController@verifycode');

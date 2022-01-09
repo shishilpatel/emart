@@ -25,14 +25,14 @@
             <div class="delete-icon"></div>
         </div>
         <div class="modal-body text-center">
-            <h4 class="modal-heading">Are You Sure ?</h4>
-            <p>Do you really want to restore this product <b>{{ $product_name[app()->getLocale()] ?? $product_name[config('translatable.fallback_locale')] }}</b>? This process cannot be undone.</p>
+            <h4 class="modal-heading">{{ __("Are You Sure ?") }}</h4>
+            <p> {{__("Do you really want to restore this product")}} <b>{{ $product_name[app()->getLocale()] ?? $product_name[config('translatable.fallback_locale')] }}</b>{{ __("? This process cannot be undone.") }}</p>
         </div>
         <div class="modal-footer">
             <form method="post" action="{{route('restore.simple.products',$id)}}" class="pull-right">
                 @csrf
-            <button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">No</button>
-            <button type="submit" class="btn btn-md bg-green">Yes</button>
+            <button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">{{ __("NO") }}</button>
+            <button type="submit" class="btn btn-md bg-green">{{ __("YES") }}</button>
             </form>
         </div>
         </div>
@@ -48,15 +48,15 @@
           <div class="delete-icon"></div>
         </div>
         <div class="modal-body text-center">
-          <h4 class="modal-heading">Are You Sure ?</h4>
-          <p>Do you really want to delete this product <b>{{ $product_name[app()->getLocale()] ?? $product_name[config('translatable.fallback_locale')] }}</b>? This process cannot be undone.</p>
+          <h4 class="modal-heading">{{ __("Are You Sure ?") }}</h4>
+          <p>{{__("Do you really want to delete this product")}} <b>{{ $product_name[app()->getLocale()] ?? $product_name[config('translatable.fallback_locale')] }}</b>{{ __("? This process cannot be undone.") }}</p>
         </div>
         <div class="modal-footer">
           <form method="post" action="{{route('force.trash.simple.products',$id)}}" class="pull-right">
             {{csrf_field()}}
             {{method_field("DELETE")}}
-            <button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">No</button>
-            <button type="submit" class="btn btn-danger">Yes</button>
+            <button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">{{ __("NO") }}</button>
+            <button type="submit" class="btn btn-danger">{{ __("YES") }}</button>
           </form>
         </div>
       </div>

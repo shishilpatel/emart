@@ -67,7 +67,7 @@ class ReturnProductController extends Controller
 
     public function index()
     {
-        abort_if(!auth()->user()->can('returnpolicy.view'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('returnpolicy.view'),403,__('User does not have the right permissions.'));
         $pro_return = admin_return_product::get();
         return view('admin.return_policy.index', compact('pro_return'));
     }
@@ -79,7 +79,7 @@ class ReturnProductController extends Controller
      */
     public function create()
     {
-        abort_if(!auth()->user()->can('returnpolicy.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('returnpolicy.create'),403,__('User does not have the right permissions.'));
         return view('admin.return_policy.add');
     }
 
@@ -92,7 +92,7 @@ class ReturnProductController extends Controller
     public function store(Request $request)
     {
 
-        abort_if(!auth()->user()->can('returnpolicy.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('returnpolicy.create'),403,__('User does not have the right permissions.'));
 
         $this->validate($request, [
             'des' => 'required|string|',
@@ -108,7 +108,7 @@ class ReturnProductController extends Controller
 
         $data->save();
 
-        return redirect('admin/return-policy')->with("added", "Return Policy Has Been Created !");
+        return redirect('admin/return-policy')->with("added", __("Return Policy Has Been Created !"));
     }
 
     /**
@@ -130,7 +130,7 @@ class ReturnProductController extends Controller
      */
     public function edit($id)
     {
-        abort_if(!auth()->user()->can('returnpolicy.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('returnpolicy.edit'),403,__('User does not have the right permissions.'));
 
         $policy = admin_return_product::findOrFail($id);
         return view("admin.return_policy.edit", compact("policy"));
@@ -145,13 +145,13 @@ class ReturnProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        abort_if(!auth()->user()->can('returnpolicy.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('returnpolicy.edit'),403,__('User does not have the right permissions.'));
 
         $brand = admin_return_product::findOrFail($id);
         $input = $request->all();
         $brand->update($input);
 
-        return redirect('admin/return-policy')->with('updated', 'Return Policy has been updated');
+        return redirect('admin/return-policy')->with('updated', __('Return Policy has been updated'));
     }
 
     /**
@@ -162,14 +162,14 @@ class ReturnProductController extends Controller
      */
     public function destroy($id)
     {
-        abort_if(!auth()->user()->can('returnpolicy.delete'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('returnpolicy.delete'),403,__('User does not have the right permissions.'));
 
         $daa = new admin_return_product;
         $obj = $daa->findorFail($id);
 
         $value = $obj->delete();
         if ($value) {
-            session()->flash("deleted", "Return Policy Has Been deleted");
+            session()->flash("deleted", __("Return Policy Has Been deleted"));
             return redirect("admin/return-policy");
         }
     }
@@ -189,7 +189,7 @@ class ReturnProductController extends Controller
         $obj->updated_at = date('Y-m-d H:i:s');
         $obj->save();
 
-        return redirect('admin/return_products_show')->with('updated', 'Return Product is update.');
+        return redirect('admin/return_products_show')->with('updated', __('Return Product is update.'));
     }
 
     public function cancel_product(Request $request, $id)
@@ -199,7 +199,7 @@ class ReturnProductController extends Controller
         $status = 0; 
 
         if (!isset($request->source)) {
-            notify()->error('Please add bank account first !');
+            notify()->error(__('Please add bank account first !'));
             return back();
         }
 
@@ -269,7 +269,7 @@ class ReturnProductController extends Controller
                         if ($findorder->order->payment_method == 'Wallet') {
 
                             if ($this->wallet_system != 1) {
-                                notify()->info('Wallet System is deactive currently ! please contact site master regrading this issue !');
+                                notify()->info(__('Wallet System is deactive currently ! please contact site master regrading this issue !'));
                                 return back();
                             }
 
@@ -324,7 +324,7 @@ class ReturnProductController extends Controller
                                 /** END */
 
                             } else {
-                                notify()->warning("Refund can't be proccesed as your wallet is deactive or not found !");
+                                notify()->warning(__("Refund can't be proccesed as your wallet is deactive or not found !"));
                                 return back();
                             }
 
@@ -475,8 +475,8 @@ class ReturnProductController extends Controller
                             }
 
                         } elseif ($findorder->order->payment_method == 'PayU') {
-                            Session::flash('warning', 'Error In PAYU SIDE Will added soon when PAYU solve it, use bank transfer method till that');
-                            notify()->error('Error In PAYU SIDE Will added soon when PAYU solve it use bank transfer method till that');
+                            Session::flash('warning', __('Error In PAYU SIDE Will added soon when PAYU solve it, use bank transfer method till that'));
+                            notify()->error(__('Error In PAYU SIDE Will added soon when PAYU solve it use bank transfer method till that'));
                             return back();
 
                         } elseif ($findorder->order->payment_method == 'Razorpay') {
@@ -636,7 +636,7 @@ class ReturnProductController extends Controller
                             }
 
                         } else {
-                            notify()->info('For Selected Payment Method Instant Refund is not available !');
+                            notify()->info(__('For Selected Payment Method Instant Refund is not available !'));
                             return back();
                         }
 
@@ -807,13 +807,13 @@ class ReturnProductController extends Controller
                     }
 
                     if ($findorder->order->payment_method == 'COD') {
-                        Session::flash('updated', 'Following Item has been cancelled successfully !'); //for admin
-                        notify()->success('Following Item has been cancelled successfully !');
+                        Session::flash('updated', __('Following Item has been cancelled successfully !')); //for admin
+                        notify()->success(__('Following Item has been cancelled successfully !'));
                         return back();
 
                     }
-                    Session::flash('added', 'Following Item has been cancelled successfully !');
-                    notify()->success('Following Item has been cancelled successfully !');
+                    Session::flash('added', __('Following Item has been cancelled successfully !'));
+                    notify()->success(__('Following Item has been cancelled successfully !'));
                     return back();
 
                 } else {
@@ -823,8 +823,8 @@ class ReturnProductController extends Controller
                 }
 
             } else {
-                Session::flash('warning', '401 Unauthorized Action !');
-                notify()->error('401 Unauthorized Action !');
+                Session::flash('warning', __('Unauthorized Action !'));
+                notify()->error(__('Unauthorized Action !'));
                 return back();
             }
 

@@ -7,6 +7,7 @@ use App\BankDetail;
 use App\Blog;
 use App\Brand;
 use App\Cart;
+use App\Category;
 use App\Commission;
 use App\CommissionSetting;
 use App\Country;
@@ -14,9 +15,11 @@ use App\Coupan;
 use App\CurrencyNew;
 use App\DetailAds;
 use App\Genral;
+use App\Grandcategory;
 use App\Http\Controllers\Web\HomeController;
 use App\Http\Requests\ApplyStoreRequest;
 use App\Mail\SendReviewMail;
+use App\Mostsearched;
 use App\Notifications\SendReviewNotification;
 use App\Order;
 use App\Product;
@@ -24,6 +27,7 @@ use App\ProductAttributes;
 use App\Seo;
 use App\SimpleProduct;
 use App\Store;
+use App\Subcategory;
 use App\TermsSettings;
 use App\Testimonial;
 use App\User;
@@ -105,19 +109,20 @@ class MainController extends Controller
         }
 
         if (empty($purchased)) {
-            notify()->error('Please purchase this product to rate & review !');
+            notify()->error(__('Please purchase this product to rate & review !'));
             return back();
         }
 
         $orders = UserReview::where('pro_id', $id)->first();
 
         if (empty($request->name)) {
-            return back()
-                ->with('failure', 'Please Login');
+
+            notify()->error(__('Please Login'));
+            return back();
         }
 
         if (isset($cusers)) {
-            notify()->error('You Have Already Rated This Product !');
+            notify()->error(__('You already rated this product !'));
             return back();
         }
 
@@ -139,13 +144,13 @@ class MainController extends Controller
                 if ($findprovendor->vender['role_id'] != 'a') {
                     $msg = 'A New pending review has been received on ' . $findprovendor->vender->name . ' product';
                 } else {
-                    $msg = 'A New pending review has been received on your product';
+                    $msg = __('A New pending review has been received on your product');
                 }
             } else {
                 if ($findprovendor->vender['role_id'] != 'a') {
                     $msg = 'A New pending rating has been received on ' . $findprovendor->vender->name . ' product';
                 } else {
-                    $msg = 'A New pending rating has been received on your product';
+                    $msg = __('A New pending rating has been received on your product');
                 }
             }
 
@@ -153,7 +158,7 @@ class MainController extends Controller
             /*Send Notification*/
             \Notification::send($admins, new SendReviewNotification($findprovendor->name, $msg));
 
-            notify()->success('Rated Successfully !');
+            notify()->success(__('Rated Successfully !'));
 
             /*Send mail*/
             try {
@@ -168,7 +173,7 @@ class MainController extends Controller
 
             return back();
         } else {
-            notify()->error('Thank you for purchase this product but please wait until product is delivered !');
+            notify()->error(__('Thank you for purchase this product but please wait until product is delivered !'));
             return back();
         }
     }
@@ -179,6 +184,23 @@ class MainController extends Controller
         $search = $request->keyword;
         
         $sellerSystem = $this->setting;
+
+
+        $ifwordExist = Mostsearched::where('keyword',$search)->first();
+
+        if(isset($ifwordExist)){
+            
+            $ifwordExist->count = $ifwordExist->count + 1;
+
+        }else{
+
+            $ifwordExist = new Mostsearched;
+            $ifwordExist->keyword = $search;
+            $ifwordExist->count = 1;
+            
+        }
+
+        $ifwordExist->save();
 
 
         if ($request->cat == 'all') {
@@ -542,9 +564,9 @@ class MainController extends Controller
 
     }
 
-    public function details_product($id)
+    public function details_product($slug,$id)
     {
-
+        
         require_once 'price.php';
 
         $pro = Product::with(['category' => function ($q) {
@@ -572,12 +594,12 @@ class MainController extends Controller
         $enable_hotdeal = Widgetsetting::where('name', 'hotdeals')->first();
 
         if (!$pro) {
-            notify()->error('Product not found !', "404");
+            notify()->error(__('Product not found !'), "404");
             return redirect('/');
         }
 
         if ($pro->status != '1') {
-            notify()->error('Product is not active !');
+            notify()->error(__('Product is not active !'));
             return redirect('/');
         }
 
@@ -665,7 +687,7 @@ class MainController extends Controller
             }
         } else {
             return back()
-                ->with("failure", "Please Log in to use this feature !");
+                ->with("failure", __("Please login to use this feature !"));
         }
     }
 
@@ -688,7 +710,7 @@ class MainController extends Controller
             return view('front.wishlist', compact('conversion_rate', 'data', 'wishcount'));
         } else {
 
-            notify()->error('Please log in to view wishlist !');
+            notify()->error(__('Please log in to view wishlist !'));
 
             return back();
         }
@@ -708,7 +730,7 @@ class MainController extends Controller
         DB::table('wishlists')
             ->where('user_id', $user)->where('pro_id', $id)->delete();
         return redirect('addtocart/' . $id);
-        return back()->with('failure', 'Item Removed From Wish List');
+        return back()->with('failure', __('Item removed from wishlist'));
     }
 
     public function check()
@@ -783,7 +805,7 @@ class MainController extends Controller
             $cart = Cart::where('user_id', $auth)->get();
         } else {
             return back()
-                ->with("failure", "You are not logged in.");
+                ->with("failure", __("You are not logged in !"));
         }
 
         $coupan = Coupan::where('code', $request->code)
@@ -794,24 +816,24 @@ class MainController extends Controller
             if (!empty($coupan['pro_id'])) {
                 if ($carts->product['id'] != $coupan['pro_id']) {
 
-                    return back()->with("failure", "Invalid Coupan Code... This Product.");
+                    return back()->with("failure", __("Invalid coupan code ! for this product."));
                 }
                 $cdate = date($coupan->expirey_dt);
                 if (!$coupan) {
-                    return back()->with("failure", "Invalid Coupan Code. Please Try Again.");
+                    return back()->with("failure", __("Invalid coupan code ! please try Again."));
                 } elseif ($coupan->status == 0) {
                     return back()
-                        ->with("failure", "Invalid Coupan Code. Please Try Again.");
+                        ->with("failure", __("Invalid coupan code ! Please try again."));
                 } elseif ($date > $cdate) {
-                    return back()->with("failure", "Coupan Code Is Expire. Please Try Again.");
+                    return back()->with("failure", __("Coupan code is expired ! Please try again."));
                 } elseif ($total < $coupan->minimum) {
 
                     return back()
-                        ->with("failure", "Minimum Cart Quantity.." . $coupan->minimum . "Then Coupan apply");
+                        ->with("failure", __('Minimum Cart Quantity :qty required to apply this coupan',['qty' => $coupan->minimum]));
                 }
                 if (!Auth::check()) {
                     return back()
-                        ->with("failure", "You are not logged in.");
+                        ->with("failure", __("You are not logged in !"));
                 }
                 $coupan_used = DB::table('used_coupans')->where('user_id', $auth)->first();
                 if (empty($coupan_used)) {
@@ -841,7 +863,7 @@ class MainController extends Controller
                     session()
                         ->put('coupan', ['id' => $coupan->id, 'name' => $coupan->code, 'discount' => $discount_amount, 'total' => $coupan->item($total, $carts->product['id'], $discount_amount)]);
 
-                    return back()->with("success", "Couapn Has Been Applied.");
+                    return back()->with("success", __("Coupan has been applied !"));
 
                 } else {
                     if ($coupan_used->used_coupan >= $coupan->max_use_coupan) {
@@ -871,7 +893,7 @@ class MainController extends Controller
                         session()
                             ->put('coupan', ['id' => $coupan->id, 'name' => $coupan->code, 'discount' => $discount_amount, 'total' => $coupan->item($total, $carts->product['id'], $discount_amount)]);
 
-                        return back()->with("success", "Couapn Has Been Applied.");
+                        return back()->with("success", __("Coupan has been applied."));
 
                     }
 
@@ -881,26 +903,25 @@ class MainController extends Controller
             if (!empty($coupan['category'])) {
                 if ($carts->product['category_id'] != $coupan['category']) {
 
-                    return back()->with("failure", "Invalid Coupan Code... This Category.");
+                    return back()->with("failure", __("Invalid coupan code for this category !"));
                 }
 
                 if ($carts->product['category_id'] == $coupan['category']) {
                     $cdate = date($coupan->expirey_dt);
                     if (!$coupan) {
-                        return back()->with("failure", "Invalid Coupan Code. Please Try Again.");
+                        return back()->with("failure", __("Invalid coupan code ! please try Again."));
                     } elseif ($coupan->status == 0) {
-                        return back()
-                            ->with("failure", "Invalid Coupan Code. Please Try Again.");
+                        return back()->with("failure", __("Invalid coupan code ! please try Again."));
                     } elseif ($date > $cdate) {
-                        return back()->with("failure", "Coupan Code Is Expire. Please Try Again.");
+                        return back()->with("failure", __("Coupan code is expired ! Please try again."));
                     } elseif ($total < $coupan->minimum) {
 
                         return back()
-                            ->with("failure", "Minimum Cart Quantity.." . $coupan->minimum . "Then Coupan apply");
+                        ->with("failure", __('Minimum Cart Quantity :qty required to apply this coupan',['qty' => $coupan->minimum]));
                     }
                     if (!Auth::check()) {
                         return back()
-                            ->with("failure", "You are not logged in.");
+                            ->with("failure", __("You are not logged in."));
                     }
                     $coupan_used = DB::table('used_coupans')->where('user_id', $auth)->first();
                     if (empty($coupan_used)) {
@@ -929,7 +950,7 @@ class MainController extends Controller
                         session()
                             ->put('coupan', ['id' => $coupan->id, 'name' => $coupan->code, 'discount' => $discount_amount, 'total' => $coupan->cat($total, $carts->product['category_id'], $discount_amount)]);
 
-                        return back()->with("success", "Couapn Has Been Applied.");
+                        return back()->with("success", __("Coupan has been applied."));
 
                     } else {
                         if ($coupan_used->used_coupan >= $coupan->max_use_coupan) {
@@ -958,7 +979,7 @@ class MainController extends Controller
                             session()
                                 ->put('coupan', ['id' => $coupan->id, 'name' => $coupan->code, 'discount' => $discount_amount, 'total' => $coupan->cat($total, $carts->product['category_id'], $discount_amount)]);
 
-                            return back()->with("success", "Couapn Has Been Applied.");
+                            return back()->with("success", __("Coupan has been applied !"));
 
                         }
 
@@ -973,43 +994,44 @@ class MainController extends Controller
             $cdate = date($coupan->expirey_dt);
         }
         if (!$coupan) {
-            return back()->with("failure", "Invalid Coupan Code. Please Try Again.");
+            return back()->with("failure", __("Invalid Coupan code. ! Please try again."));
         } elseif ($coupan->status == 0) {
             return back()
-                ->with("failure", "Invalid Coupan Code. Please Try Again.");
+                ->with("failure", __("Invalid Coupan code ! Please try again."));
         } elseif ($date > $cdate) {
-            return back()->with("failure", "Coupan Code Is Expire. Please Try Again.");
+            return back()->with("failure", __("Coupan code is expired ! Please try again."));
         } elseif ($total < $coupan->minimum) {
 
             return back()
-                ->with("failure", "Minimum Cart Quantity.." . $coupan->minimum . "Then Coupan apply");
+            ->with("failure", __('Minimum Cart Quantity :qty required to apply this coupan',['qty' => $coupan->minimum]));
+
         } else {
 
             $coupan_used = DB::table('used_coupans')->where('user_id', '1')
                 ->get();
-            $conversion_rate = json_decode($coupan_used, true);
+            $result = json_decode($coupan_used, true);
             $cdate = date($coupan->expirey_dt);
 
             if (!$coupan) {
-                return back()->with("failure", "Invalid Coupan Code. Please Try Again.");
+                return back()->with("failure", __("Invalid Coupan code ! Please try again."));
             } elseif ($coupan->status == 0) {
                 return back()
-                    ->with("failure", "Invalid Coupan Code. Please Try Again.");
+                    ->with("failure", __("Invalid Coupan code ! Please try again."));
             } elseif ($date > $cdate) {
                 return back()->with("failure", "Coupan Code Is Expire. Please Try Again.");
             } elseif ($total < $coupan->minimum) {
                 return back()
-                    ->with("failure", "Minimum Cart Quantity.." . $coupan->minimum . "Then Coupan apply");
+                ->with("failure", __('Minimum Cart Quantity :qty required to apply this coupan',['qty' => $coupan->minimum]));
             }
-            if (!empty($conversion_rate)) {
-                if ($conversion_rate['0']['used_coupan'] >= $coupan->max_use_coupan) {
+            if (!empty($result)) {
+                if ($result['0']['used_coupan'] >= $coupan->max_use_coupan) {
                     return back()
                         ->with("failure", "This Coupan Code Not For You. Please Try Again.");
                 }
             }
             session()
                 ->put('coupan', ['id' => $coupan->id, 'name' => $coupan->code, 'discount' => $coupan->amount, 'total' => $coupan->discount($total)]);
-            return back()->with("success", "Couapn Has Been Applied.");
+            return back()->with("success", "Coupan Has Been Applied.");
         }
     }
 
@@ -1018,7 +1040,7 @@ class MainController extends Controller
         session()
             ->forget('coupan');
         return back()
-            ->with("failure", "Couapn Has Been Removed.");
+            ->with("failure",__("Coupan Has Been Removed."));
     }
 
     public function comparisonList()
@@ -1053,7 +1075,7 @@ class MainController extends Controller
 
                 if ($firstProduct->child != $currentpro->child) {
                     notify()
-                        ->success('Only similar product can be compared');
+                        ->success(__('Only similar product can be compared'));
                     return back();
                     exit;
                 }
@@ -1075,23 +1097,23 @@ class MainController extends Controller
                 if ($avbl == 0) {
 
                     Session::push('comparison', ['proid' => $id]);
-                    notify()->success('Product added to your compare list !');
+                    notify()->success(__('Product added to your compare list !'));
                     return back();
                 } else {
                     notify()
-                        ->error('Product is already added to your comparison list !');
+                        ->error(__('Product is already added to your comparison list !'));
                     return back();
                 }
 
             } else {
                 notify()
-                    ->error('You can compare only 4 product at a time !');
+                    ->error(__('You can compare only 4 product at a time !'));
                 return back();
             }
 
         } else {
             Session::push('comparison', ['proid' => $id]);
-            notify()->success('Product added to your compare list !');
+            notify()->success(__('Product added to your compare list !'));
             return back();
         }
 
@@ -1109,7 +1131,7 @@ class MainController extends Controller
         }
 
         Session::put('comparison', $comp);
-        notify()->success('Item removed from comparison list !');
+        notify()->success(__('Item removed from comparison list !'));
         return back();
 
     }
@@ -1145,7 +1167,7 @@ class MainController extends Controller
 
         Session::put('currencyChanged', $status);
 
-        return response()->json('Currency Changed successfully !');
+        return response()->json(__('Currency changed successfully !'));
 
     }
 
@@ -1159,7 +1181,7 @@ class MainController extends Controller
         $sellerterm = TermsSettings::firstWhere('key', '=', 'seller-register-term');
 
         if (auth()->user()->store) {
-            notify()->warning('You already have one store !');
+            notify()->warning(__('You already have one store !'));
             return redirect('/');
         }
 
@@ -1217,11 +1239,11 @@ class MainController extends Controller
 
         if (env('ENABLE_SELLER_SUBS_SYSTEM') == 1) {
 
-            notify()->success('Please select your package and submit the store request !');
+            notify()->success(__('Please select your package and submit the store request !'));
             return redirect(route('front.seller.plans'));
 
         } else {
-            notify()->success('Store Has Been Created ! Once it\'s approved you can start selling your product !');
+            notify()->success(__('Store Has Been Created ! Once it\'s approved you can start selling your product !'));
             return redirect('/');
         }
 
@@ -1924,6 +1946,7 @@ class MainController extends Controller
                                                             ->orWhere('name', 'LIKE', '%' . $search . '%')
                                                             ->where('tags', 'LIKE', '%' . $search . '%')->whereIn('brand_id', $brand_names)
                                                             ->where('featured', '=', '1')
+                                                            ->orWhereJsonContains('other_cats', request()->catID)
                                                             ->where('category_id', $catid)
                                                             ->get();
 
@@ -1934,6 +1957,7 @@ class MainController extends Controller
                                         ->where('product_tags', 'LIKE', '%' . $search . '%')
                                         ->whereIn('brand_id', $brand_names)
                                         ->where('featured', '1')
+                                        ->orWhereJsonContains('other_cats', request()->catID)
                                         ->where('category_id', $catid);
 
                                 } else {
@@ -1942,6 +1966,7 @@ class MainController extends Controller
                                     ->orWhere('name', 'LIKE', '%' . $search . '%')
                                     ->where('tags', 'LIKE', '%' . $search . '%')
                                     ->whereIn('brand_id', $brand_names)
+                                    ->orWhereJsonContains('other_cats', request()->catID)
                                     ->where('category_id', $catid)
                                     ->get();
 
@@ -1949,6 +1974,7 @@ class MainController extends Controller
                                         ->orWhere('product_name', 'LIKE', '%' . $search . '%')
                                         ->where('product_tags', 'LIKE', '%' . $search . '%')
                                         ->whereIn('brand_id', $brand_names)
+                                        ->orWhereJsonContains('other_cats', request()->catID)
                                         ->where('category_id', $catid);
                                 }
 
@@ -1960,13 +1986,16 @@ class MainController extends Controller
                                                                 ->orWhere('name', 'LIKE', '%' . $search . '%')
                                                                 ->where('tags', 'LIKE', '%' . $search . '%')->whereIn('brand_id', $brand_names)
                                                                 ->where('featured', '=', '1')
-                                                                ->where('category_id', $catid)->get();
+                                                                ->orWhereJsonContains('other_cats', request()->catID)
+                                                                ->where('category_id', $catid)
+                                                                ->get();
 
                                         $simple_products = $s_product
                                             ->orWhere('product_name', 'LIKE', '%' . $search . '%')
                                             ->where('product_tags', 'LIKE', '%' . $search . '%')
                                             ->whereIn('brand_id', $brand_names)
                                             ->where('featured', '1')
+                                            ->orWhereJsonContains('other_cats', request()->catID)
                                             ->where('category_id', $catid);
 
                                     } else {
@@ -1975,6 +2004,7 @@ class MainController extends Controller
                                         ->orWhere('name', 'LIKE', '%' . $search . '%')
                                         ->where('tags', 'LIKE', '%' . $search . '%')
                                         ->whereIn('brand_id', $brand_names)
+                                        ->orWhereJsonContains('other_cats', request()->catID)
                                         ->where('category_id', $catid)
                                         ->get();
 
@@ -1982,6 +2012,7 @@ class MainController extends Controller
                                             ->orWhere('product_name', 'LIKE', '%' . $search . '%')
                                             ->where('product_tags', 'LIKE', '%' . $search . '%')
                                             ->whereIn('brand_id', $brand_names)
+                                            ->orWhereJsonContains('other_cats', request()->catID)
                                             ->where('category_id', $catid);
 
                                     }
@@ -2043,6 +2074,7 @@ class MainController extends Controller
                                         ->orWhere('name', 'LIKE', '%' . $search . '%')
                                         ->where('tags', 'LIKE', '%' . $search . '%')
                                         ->whereIn('brand_id', $brand_names)
+                                        ->orWhereJsonContains('other_cats', request()->catID)
                                         ->where('category_id', $catid)
                                         ->get();
 
@@ -2050,6 +2082,7 @@ class MainController extends Controller
                                         ->orWhere('product_name', 'LIKE', '%' . $search . '%')
                                         ->where('product_tags', 'LIKE', '%' . $search . '%')
                                         ->whereIn('brand_id', $brand_names)
+                                        ->orWhereJsonContains('other_cats', request()->catID)
                                         ->where('category_id', $catid);
                                 }
 
@@ -2088,6 +2121,7 @@ class MainController extends Controller
                                                     ->orWhere('name', 'LIKE', '%' . $search . '%')
                                                     ->where('tags', 'LIKE', '%' . $search . '%')
                                                     ->where('featured', '=', '1')
+                                                    ->orWhereJsonContains('other_cats', request()->catID)
                                                     ->where('category_id', $catid)
                                                     ->get();
 
@@ -2095,6 +2129,7 @@ class MainController extends Controller
                                         ->orWhere('product_name', 'LIKE', '%' . $search . '%')
                                         ->where('product_tags', 'LIKE', '%' . $search . '%')
                                         ->where('featured', 1)
+                                        ->orWhereJsonContains('other_cats', request()->catID)
                                         ->where('category_id', $catid);
 
                                 } else {
@@ -2102,12 +2137,14 @@ class MainController extends Controller
                                     $tag_products = $products
                                             ->orWhere('name', 'LIKE', '%' . $search . '%')
                                             ->where('tags', 'LIKE', '%' . $search . '%')
+                                            ->orWhereJsonContains('other_cats', request()->catID)
                                             ->where('category_id', $catid)
                                             ->get();
 
                                     $simple_products = $s_product
                                         ->orWhere('product_name', 'LIKE', '%' . $search . '%')
                                         ->where('product_tags', 'LIKE', '%' . $search . '%')
+                                        ->orWhereJsonContains('other_cats', request()->catID)
                                         ->where('category_id', $catid);
 
                                 }
@@ -2170,6 +2207,7 @@ class MainController extends Controller
                                         ->orWhere('name', 'LIKE', '%' . $search . '%')
                                         ->where('tags', 'LIKE', '%' . $search . '%')
                                         ->where('featured', '=', '1')
+                                        ->orWhereJsonContains('other_cats', request()->catID)
                                         ->where('category_id', $catid)->get();
 
                                     $tag_products = $featured_pros;
@@ -2178,6 +2216,7 @@ class MainController extends Controller
                                         ->orWhere('product_name', 'LIKE', '%' . $search . '%')
                                         ->where('product_tags', 'LIKE', '%' . $search . '%')
                                         ->where('featured', 1)
+                                        ->orWhereJsonContains('other_cats', request()->catID)
                                         ->where('category_id', $catid);
 
                                 } else {
@@ -2185,13 +2224,15 @@ class MainController extends Controller
                                     $tag_products = $products
                                                     ->orWhere('name', 'LIKE', '%' . $search . '%')
                                                     ->where('tags', 'LIKE', '%' . $search . '%')
+                                                    ->orWhereJsonContains('other_cats', request()->catID)
                                                     ->where('category_id', $catid)
                                                     ->get();
 
                                     $simple_products = $s_product
-                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                        ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                        ->where('category_id', $catid);
+                                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                        ->where('product_tags', 'LIKE', '%' . $search . '%')
+                                                        ->orWhereJsonContains('other_cats', request()->catID)
+                                                        ->where('category_id', $catid);
                                 }
 
                             }
@@ -2812,6 +2853,7 @@ class MainController extends Controller
                                                             ->orWhere('name', 'LIKE', '%' . $search . '%')
                                                             ->where('tags', 'LIKE', '%' . $search . '%')->whereIn('brand_id', $brand_names)
                                                             ->where('featured', '=', '1')
+                                                            ->orWhereJsonContains('other_cats', request()->catID)
                                                             ->where('category_id', $catid)
                                                             ->get();
 
@@ -2820,6 +2862,7 @@ class MainController extends Controller
                                         ->where('product_tags', 'LIKE', '%' . $search . '%')
                                         ->whereIn('brand_id', $brand_names)
                                         ->where('featured', '=', '1')
+                                        ->orWhereJsonContains('other_cats', request()->catID)
                                         ->where('category_id', $catid);
 
                                 } else {
@@ -2828,6 +2871,7 @@ class MainController extends Controller
                                             ->orWhere('name', 'LIKE', '%' . $search . '%')
                                             ->where('tags', 'LIKE', '%' . $search . '%')
                                             ->whereIn('brand_id', $brand_names)
+                                            ->orWhereJsonContains('other_cats', request()->catID)
                                             ->where('category_id', $catid)
                                             ->get();
 
@@ -2835,6 +2879,7 @@ class MainController extends Controller
                                         ->orWhere('product_name', 'LIKE', '%' . $search . '%')
                                         ->where('product_tags', 'LIKE', '%' . $search . '%')
                                         ->whereIn('brand_id', $brand_names)
+                                        ->orWhereJsonContains('other_cats', request()->catID)
                                         ->where('category_id', $catid);
                                 }
 
@@ -2948,6 +2993,7 @@ class MainController extends Controller
                                             ->orWhere('name', 'LIKE', '%' . $search . '%')
                                             ->where('tags', 'LIKE', '%' . $search . '%')
                                             ->where('featured', '=', '1')
+                                            ->orWhereJsonContains('other_cats', request()->catID)
                                             ->where('category_id', $catid)
                                             ->get();
 
@@ -2955,19 +3001,22 @@ class MainController extends Controller
                                         ->orWhere('product_name', 'LIKE', '%' . $search . '%')
                                         ->where('product_tags', 'LIKE', '%' . $search . '%')
                                         ->where('featured', '=', '1')
+                                        ->orWhereJsonContains('other_cats', request()->catID)
                                         ->where('category_id', $catid);
 
                             } else {
                                 $strings = $products
                                             ->orWhere('name', 'LIKE', '%' . $search . '%')
                                             ->where('tags', 'LIKE', '%' . $search . '%')
+                                            ->orWhereJsonContains('other_cats', request()->catID)
                                             ->where('category_id', $catid)
                                             ->get();
 
                                 $simple_products = $s_product
-                                ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                ->where('category_id', $catid);
+                                                    ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                    ->where('product_tags', 'LIKE', '%' . $search . '%')
+                                                    ->orWhereJsonContains('other_cats', request()->catID)
+                                                    ->where('category_id', $catid);
                             }
 
                             foreach ($request->tag as $url) {
@@ -3582,19 +3631,27 @@ class MainController extends Controller
 
                                 if ($featured == 1) {
 
-                                    $all_brands_products = $products->whereIn('brand_id', $brand_names)->where('featured', '=', '1')->where('category_id', $catid)->get();
+                                    $all_brands_products = $products->whereIn('brand_id', $brand_names)
+                                                            ->where('featured', '=', '1')
+                                                            ->orWhereJsonContains('other_cats', request()->catID)
+                                                            ->where('category_id', $catid)
+                                                            ->get();
 
                                     $simple_products = $s_product
                                         ->whereIn('brand_id', $brand_names)
                                         ->where('featured', '1')
+                                        ->orWhereJsonContains('other_cats', request()->category)
                                         ->where('category_id', $catid);
 
                                 } else {
 
-                                    $all_brands_products = $products->whereIn('brand_id', $brand_names)->where('category_id', $catid)->get();
+                                    $all_brands_products = $products->whereIn('brand_id', $brand_names)
+                                                            ->orWhereJsonContains('other_cats', request()->catID)
+                                                            ->where('category_id', $catid)->get();
 
                                     $simple_products = $s_product
                                         ->whereIn('brand_id', $brand_names)
+                                        ->orWhereJsonContains('other_cats', request()->catID)
                                         ->where('category_id', $catid);
                                 }
 
@@ -3703,17 +3760,23 @@ class MainController extends Controller
                             $testingarr = array();
 
                             if ($featured == 1) {
-                                $strings = $products->where('featured', '=', '1')
-                                    ->where('category_id', $catid)->get();
+                                $strings = $products
+                                            ->where('featured', '=', '1')
+                                            ->orWhereJsonContains('other_cats', request()->catID)
+                                            ->where('category_id', $catid)
+                                            ->get();
 
                                 $simple_products = $s_product
                                     ->where('featured', '1')
+                                    ->orWhereJsonContains('other_cats', request()->catID)
                                     ->where('category_id', $catid);
 
                             } else {
-                                $strings = $products->where('category_id', $catid)->get();
+
+                                $strings = $products->where('category_id', $catid)->orWhereJsonContains('other_cats', request()->catID)->get();
 
                                 $simple_products = $s_product
+                                    ->orWhereJsonContains('other_cats', request()->catID)
                                     ->where('category_id', $catid);
                             }
 
@@ -4342,40 +4405,59 @@ class MainController extends Controller
                             if (is_array($brand_names)) {
 
                                 if ($featured == 1) {
-                                    $all_brands_products = $products->whereIn('brand_id', $brand_names)->where('featured', '=', '1')
-                                        ->where('category_id', $catid)->get();
+                                    $all_brands_products = $products
+                                                            ->whereIn('brand_id', $brand_names)
+                                                            ->where('featured', '=', '1')
+                                                            ->orWhereJsonContains('other_cats', request()->catID)
+                                                            ->where('category_id', $catid)
+                                                            ->get();
+
                                     $featured_pros = $all_brands_products;
 
                                     $simple_products = $s_product
                                         ->whereIn('brand_id', $brand_names)
                                         ->where('featured', '1')
+                                        ->orWhereJsonContains('other_cats', request()->catID)
                                         ->where('category_id', $catid);
                                 } else {
-                                    $all_brands_products = $products->whereIn('brand_id', $brand_names)->where('category_id', $catid)->get();
+                                    $all_brands_products = $products->whereIn('brand_id', $brand_names)
+                                                            ->where('category_id', $catid)
+                                                            ->orWhereJsonContains('other_cats', request()->catID)
+                                                            ->get();
 
                                     $simple_products = $s_product
-                                        ->whereIn('brand_id', $brand_names)
-                                        ->where('category_id', $catid);
+                                                        ->whereIn('brand_id', $brand_names)
+                                                        ->orWhereJsonContains('other_cats', request()->catID)
+                                                        ->where('category_id', $catid);
                                 }
 
                                 if ($vararray != null) {
 
                                     if ($featured == 1) {
 
-                                        $all_brands_products = $products->whereIn('brand_id', $brand_names)->where('featured', '=', '1')
-                                            ->where('category_id', $catid)->get();
+                                        $all_brands_products = $products->whereIn('brand_id', $brand_names)
+                                                                ->where('featured', '=', '1')
+                                                                ->orWhereJsonContains('other_cats', request()->catID)
+                                                                ->where('category_id', $catid)
+                                                                ->get();
 
                                         $simple_products = $s_product
                                             ->whereIn('brand_id', $brand_names)
                                             ->where('featured', '1')
+                                            ->orWhereJsonContains('other_cats', request()->catID)
                                             ->where('category_id', $catid);
 
                                     } else {
 
-                                        $all_brands_products = $products->whereIn('brand_id', $brand_names)->where('category_id', $catid)->get();
+                                        $all_brands_products = $products
+                                                                ->whereIn('brand_id', $brand_names)
+                                                                ->orWhereJsonContains('other_cats', request()->catID)
+                                                                ->where('category_id', $catid)
+                                                                ->get();
 
                                         $simple_products = $s_product
                                             ->whereIn('brand_id', $brand_names)
+                                            ->orWhereJsonContains('other_cats', request()->catID)
                                             ->where('category_id', $catid);
 
                                     }
@@ -4432,10 +4514,15 @@ class MainController extends Controller
                                     $all_brands_products = $filledpro;
 
                                 } else {
-                                    $all_brands_products = $products->whereIn('brand_id', $brand_names)->where('category_id', $catid)->get();
+                                    $all_brands_products = $products
+                                                            ->whereIn('brand_id', $brand_names)
+                                                            ->orWhereJsonContains('other_cats', request()->catID)
+                                                            ->where('category_id', $catid)
+                                                            ->get();
 
                                     $simple_products = $s_product
                                         ->whereIn('brand_id', $brand_names)
+                                        ->orWhereJsonContains('other_cats', request()->catID)
                                         ->where('category_id', $catid);
 
                                 }
@@ -4463,18 +4550,23 @@ class MainController extends Controller
                                 if ($featured == 1) {
 
                                     $tag_products = $products->where('featured', '=', '1')
+                                        ->orWhereJsonContains('other_cats', request()->catID)
                                         ->where('category_id', $catid)->get();
 
                                     $simple_products = $s_product
                                         ->where('featured', '1')
+                                        ->orWhereJsonContains('other_cats', request()->catID)
                                         ->where('category_id', $catid);
 
                                 } else {
 
-                                    $tag_products = $products->where('category_id', $catid)->get();
+                                    $tag_products = $products->where('category_id', $catid)
+                                                    ->orWhereJsonContains('other_cats', request()->catID)
+                                                    ->get();
 
                                     $simple_products = $s_product
-                                        ->where('category_id', $catid);
+                                        ->where('category_id', $catid)
+                                        ->orWhereJsonContains('other_cats', request()->catID);
 
                                 }
 
@@ -4531,20 +4623,26 @@ class MainController extends Controller
                             } else {
                                 if ($featured == 1) {
 
-                                    $featured_pros = $products->where('featured', '=', '1')
-                                        ->where('category_id', $catid)->get();
+                                    $featured_pros = $products
+                                                    ->where('featured', '=', '1')
+                                                    ->orWhereJsonContains('other_cats', request()->catID)
+                                                    ->where('category_id', $catid)
+                                                    ->get();
+
                                     $tag_products = $featured_pros;
 
                                     $simple_products = $s_product
-                                        ->where('category_id', $catid)
-                                        ->where('featured', '1');
+                                        ->where('featured', '1')
+                                        ->orWhereJsonContains('other_cats', request()->catID)
+                                        ->where('category_id', $catid);
 
                                 } else {
 
-                                    $tag_products = $products->where('category_id', $catid)->get();
+                                    $tag_products = $products->where('category_id', $catid)
+                                                    ->orWhereJsonContains('other_cats', request()->catID)
+                                                    ->get();
 
-                                    $simple_products = $s_product
-                                        ->where('category_id', $catid);
+                                    $simple_products = $s_product->where('category_id', $catid)->orWhereJsonContains('other_cats', request()->catID);
                                 }
 
                             }
@@ -4705,11 +4803,57 @@ class MainController extends Controller
 
             $start_price = 1;
 
+            $seo = Seo::first();
+
             // $products = $this->paginate($products);
 
+            if(request()->keyword){
+                $title      = __('Showing all results for :keyword | :seotitle',['keyword' => request()->keyword, 'seotitle' => $seo->project_name]);
+                $seodes     = $title;
+            }
+            else if(request()->chid)
+            {
+                $findchid = Grandcategory::find(request()->chid);
+                $title    = __(':title - All products | :seotitle',['title' => $findchid->title, 'seotitle' => $seo->project_name]);
+                $seodes   = strip_tags($findchid->description);
+                $seoimage = url('images/grandcategory/'.$findchid->image);
+            }
+            else if(request()->sid)
+            {
+                $findsubcat = Subcategory::find(request()->sid);
+                $title      = __(':title - All products | :seotitle',['title' => $findsubcat->title, 'seotitle' => $seo->project_name]);
+                $seodes     = strip_tags($findsubcat->description);
+                $seoimage   = url('images/subcategory/'.$findsubcat->image);
+        
+            }else{
+        
+                $findcat    = Category::find(request()->catID);
+                $title      = __(':title - All products | :seotitle',['title' => $findcat->title, 'seotitle' => $seo->project_name]);
+                $seodes     = strip_tags($findcat->description);
+                $seoimage   = url('images/category/'.$findcat->image);
+        
+            }
+
+            $seoResponse = array(
+
+                'title'    => $title,
+                'seodes'   => $seodes,
+                'seoimage' => isset($seoimage) ? $seoimage : NULL,
+                'seourl'   => url()->full()
+            );
+
             return response()
-                ->json(['product' => view('front.cat.product', compact('outofstock', 'ratings', 'start_rat', 'a', 'start_price', 'tag_check', 'brand_names', 'conversion_rate', 'products', 'tags_pro', 'catid', 'sid', 'chid', 'start', 'end', 'starts', 'ends', 'slider', 'simple_products'))
-                        ->render(), 'variantProValues' => $variantProValues, 'variantProduct' => $variantProduct, 'sidebarbrands' => $sidebarbrands, 'tagsunique' => $tagsunique, 'ad' => View::make('front.filters.ads', compact('isad', 'conversion_rate'))->render()]);
+                ->json([
+
+                    'product' => view('front.cat.product', compact('outofstock', 'ratings', 'start_rat', 'a', 'start_price', 'tag_check', 'brand_names', 'conversion_rate', 'products', 'tags_pro', 'catid', 'sid', 'chid', 'start', 'end', 'starts', 'ends', 'slider', 'simple_products'))->render(), 
+                    'seosection' => $seoResponse, 
+                    'variantProValues' => $variantProValues, 
+                    'variantProduct' => $variantProduct, 
+                    'sidebarbrands' => $sidebarbrands, 
+                    'tagsunique' => $tagsunique, 
+                    'ad' => View::make('front.filters.ads', compact('isad', 'conversion_rate'))->render()
+
+                ]);
 
         } else {
             return "Error ! Something went wrong from our side";
@@ -4718,6 +4862,7 @@ class MainController extends Controller
     }
 
     //on load get filter data
+
     public function categoryf(Request $request)
     {
         
@@ -4804,19 +4949,18 @@ class MainController extends Controller
 
                             if ($featured == 1) {
 
-                                $all_brands_products = $products
-                                        ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                        ->where('tags', 'LIKE', '%' . $search . '%')
-                                        ->whereIn('brand_id', $brand_names)
-                                        ->where('featured', '=', '1')
-                                        ->where('grand_id', $chid)->get();
+                                $all_brands_products = $products->orWhere('name', 'LIKE', '%' . $search . '%')
+                                                        ->where('tags', 'LIKE', '%' . $search . '%')
+                                                        ->whereIn('brand_id', $brand_names)
+                                                        ->where('featured', '=', '1')
+                                                        ->where('grand_id', $chid)
+                                                        ->get();
 
-                                $simple_products = $s_product
-                                ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                ->whereIn('brand_id', $brand_names)
-                                ->where('featured', '=', '1')
-                                ->where('child_id', $chid);
+                                $simple_products =  $s_product->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                    ->where('product_tags', 'LIKE', '%' . $search . '%')
+                                                    ->whereIn('brand_id', $brand_names)
+                                                    ->where('featured', '=', '1')
+                                                    ->where('child_id', $chid);
 
                                 $testingarr = $all_brands_products;
 
@@ -5226,7 +5370,9 @@ class MainController extends Controller
                                     $all_brands_products = $products
                                         ->where('tags', 'LIKE', '%' . $search . '%')
                                         ->whereIn('brand_id', $brand_names)
-                                        ->where('category_id', $catid)->where('featured', '=', '1')
+                                        ->where('featured', '=', '1')
+                                        ->orWhereJsonContains('other_cats', request()->category)
+                                        ->where('category_id', $catid)
                                         ->get();
 
                                     $testingarr = $all_brands_products;
@@ -5236,6 +5382,7 @@ class MainController extends Controller
                                     ->where('product_tags', 'LIKE', '%' . $search . '%')
                                     ->where('featured', '=', '1')
                                     ->whereIn('brand_id', $brand_names)
+                                    ->orWhereJsonContains('other_cats', request()->category)
                                     ->where('category_id', $catid);
 
                                 } else {
@@ -5243,6 +5390,7 @@ class MainController extends Controller
                                     $all_brands_products = $products
                                         ->where('tags', 'LIKE', '%' . $search . '%')
                                         ->whereIn('brand_id', $brand_names)
+                                        ->orWhereJsonContains('other_cats', request()->category)
                                         ->where('category_id', $catid)
                                         ->get();
 
@@ -5252,6 +5400,7 @@ class MainController extends Controller
                                     ->orWhere('product_name', 'LIKE', '%' . $search . '%')
                                     ->where('product_tags', 'LIKE', '%' . $search . '%')
                                     ->whereIn('brand_id', $brand_names)
+                                    ->orWhereJsonContains('other_cats', request()->category)
                                     ->where('category_id', $catid);
                                 }
 
@@ -5323,21 +5472,29 @@ class MainController extends Controller
                                                     ->orWhere('name', 'LIKE', '%' . $search . '%')
                                                     ->where('tags', 'LIKE', '%' . $search . '%')
                                                     ->where('featured', '=', '1')
-                                                    ->where('category_id', $catid)->get();
+                                                    ->orWhereJsonContains('other_cats', request()->category)
+                                                    ->where('category_id', $catid)
+                                                    ->get();
 
                                     $simple_products = $s_product
                                     ->orWhere('product_name', 'LIKE', '%' . $search . '%')
                                     ->where('product_tags', 'LIKE', '%' . $search . '%')
                                     ->where('featured', '=', '1')
+                                    ->orWhereJsonContains('other_cats', request()->category)
                                     ->where('category_id', $catid);
 
                                 } else {
 
-                                    $tag_products = $products->where('tags', 'LIKE', '%' . $search . '%')->orWhere('name', 'LIKE', '%' . $search . '%')->where('category_id', $catid)->get();
+                                    $tag_products = $products->where('tags', 'LIKE', '%' . $search . '%')
+                                                    ->orWhere('name', 'LIKE', '%' . $search . '%')
+                                                    ->orWhereJsonContains('other_cats', request()->category)
+                                                    ->where('category_id', $catid)
+                                                    ->get();
 
                                     $simple_products = $s_product
                                     ->orWhere('product_name', 'LIKE', '%' . $search . '%')
                                     ->where('product_tags', 'LIKE', '%' . $search . '%')
+                                    ->orWhereJsonContains('other_cats', request()->category)
                                     ->where('category_id', $catid);
                                 }
 
@@ -5393,22 +5550,34 @@ class MainController extends Controller
                             } else {
 
                                 if ($featured == 1) {
-                                    $tag_products = $products->where('tags', 'LIKE', '%' . $search . '%')->orWhere('name', 'LIKE', '%' . $search . '%')->where('category_id', $catid)->where('featured', '=', '1')
-                                        ->get();
+
+                                    $tag_products = $products->where('tags', 'LIKE', '%' . $search . '%')
+                                                                ->orWhere('name', 'LIKE', '%' . $search . '%')
+                                                                ->where('category_id', $catid)
+                                                                ->orWhereJsonContains('other_cats', request()->category)
+                                                                ->where('featured', '=', '1')
+                                                                ->get();
+
                                     $featured_pros = $tag_products;
 
                                     $simple_products = $s_product
-                                    ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                    ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                    ->where('featured', '=', '1')
-                                    ->where('category_id', $catid);
+                                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                        ->where('product_tags', 'LIKE', '%' . $search . '%')
+                                                        ->where('featured', '=', '1')
+                                                        ->orWhereJsonContains('other_cats', request()->category)
+                                                        ->where('category_id', $catid);
 
                                 } else {
-                                    $tag_products = $products->where('tags', 'LIKE', '%' . $search . '%')->orWhere('name', 'LIKE', '%' . $search . '%')->where('category_id', $catid)->get();
+                                    $tag_products = $products->where('tags', 'LIKE', '%' . $search . '%')
+                                                            ->orWhere('name', 'LIKE', '%' . $search . '%')
+                                                            ->orWhereJsonContains('other_cats', request()->category)
+                                                            ->where('category_id', $catid)
+                                                            ->get();
 
                                     $simple_products = $s_product
                                     ->orWhere('product_name', 'LIKE', '%' . $search . '%')
                                     ->where('product_tags', 'LIKE', '%' . $search . '%')
+                                    ->orWhereJsonContains('other_cats', request()->category)
                                     ->where('category_id', $catid);
                                 }
 
@@ -5893,8 +6062,9 @@ class MainController extends Controller
                                 ->orWhere('name', 'LIKE', '%' . $search . '%')
                                 ->where('tags', 'LIKE', '%' . $search . '%')
                                 ->whereIn('brand_id', $brand_names)
-                                ->where('category_id', $catid)
                                 ->where('featured', '=', '1')
+                                ->orWhereJsonContains('other_cats', request()->category)
+                                ->where('category_id', $catid)
                                 ->get();
 
                                 $simple_products = $s_product
@@ -5902,16 +6072,25 @@ class MainController extends Controller
                                 ->where('product_tags', 'LIKE', '%' . $search . '%')
                                 ->whereIn('brand_id', $brand_names)
                                 ->where('featured', '1')
+                                ->orWhereJsonContains('other_cats', request()->category)
                                 ->where('category_id', $catid);
+                                
 
                             } else {
-                                $all_brands_products = $products->where('tags', 'LIKE', '%' . $search . '%')->orWhere('name', 'LIKE', '%' . $search . '%')->whereIn('brand_id', $brand_names)->where('category_id', $catid)->get();
+
+                                $all_brands_products = $products->where('tags', 'LIKE', '%' . $search . '%')
+                                                        ->orWhere('name', 'LIKE', '%' . $search . '%')
+                                                        ->whereIn('brand_id', $brand_names)
+                                                        ->where('category_id', $catid)
+                                                        ->orWhereJsonContains('other_cats', request()->category)
+                                                        ->get();
 
                                 $simple_products = $s_product
                                 ->orWhere('product_name', 'LIKE', '%' . $search . '%')
                                 ->where('product_tags', 'LIKE', '%' . $search . '%')
                                 ->whereIn('brand_id', $brand_names)
-                                ->where('category_id', $catid);
+                                ->where('category_id', $catid)
+                                ->orWhereJsonContains('other_cats', request()->category);
                             }
 
                             $all_tags = explode(',', $request->tag);
@@ -5999,26 +6178,34 @@ class MainController extends Controller
                         if ($featured == 1) {
 
                             $tag_products = $products
-                            ->orWhere('name', 'LIKE', '%' . $search . '%')
-                            ->where('tags', 'LIKE', '%' . $search . '%')
-                            ->where('featured', '=', "1")
-                            ->where('category_id', '=', $catid)
-                            ->get();
+                                            ->orWhere('name', 'LIKE', '%' . $search . '%')
+                                            ->where('tags', 'LIKE', '%' . $search . '%')
+                                            ->where('featured', '=', "1")
+                                            ->orWhereJsonContains('other_cats', request()->category)
+                                            ->where('category_id', '=', $catid)
+                                            ->get();
 
                             $simple_products = $s_product
-                                ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                ->where('featured', '1')
-                                ->where('category_id', $catid);
+                                                ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                ->where('product_tags', 'LIKE', '%' . $search . '%')
+                                                ->where('featured', '1')
+                                                ->orWhereJsonContains('other_cats', request()->category)
+                                                ->where('category_id', $catid);
+                                                
 
                         } else {
 
-                            $tag_products = $products->where('tags', 'LIKE', '%' . $search . '%')->orWhere('name', 'LIKE', '%' . $search . '%')->where('category_id', $catid)->get();
+                            $tag_products = $products->where('tags', 'LIKE', '%' . $search . '%')
+                                                    ->orWhere('name', 'LIKE', '%' . $search . '%')
+                                                    ->where('category_id', $catid)
+                                                    ->orWhereJsonContains('other_cats', request()->category)
+                                                    ->get();
 
                             $simple_products = $s_product
                                 ->orWhere('product_name', 'LIKE', '%' . $search . '%')
                                 ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                ->where('category_id', $catid);
+                                ->where('category_id', $catid)
+                                ->orWhereJsonContains('other_cats', request()->category);
                         }
 
                         $all_tags = explode(',', $request->tag);
@@ -6533,23 +6720,29 @@ class MainController extends Controller
                         if (is_array($brand_names)) {
 
                             if ($featured == 1) {
-                                $all_brands_products = $products->whereIn('brand_id', $brand_names)->where('category_id', $catid)->where('featured', '=', '1')
-                                    ->get();
+                                $all_brands_products = $products->whereIn('brand_id', $brand_names)
+                                                        ->where('featured', '=', '1')
+                                                        ->orWhereJsonContains('other_cats', request()->category)
+                                                        ->where('category_id', $catid)
+                                                        ->get();
                                 
                                 $simple_products = $s_product
                                 ->whereIn('brand_id', $brand_names)
                                 ->where('featured','1')
-                                ->where('category_id', $catid);
+                                ->where('category_id', $catid)
+                                ->orWhereJsonContains('other_cats', request()->category);
 
                             } else {
                                 $all_brands_products = $products
-                                ->whereIn('brand_id', $brand_names)
-                                ->where('category_id', $catid)
-                                ->get();
+                                                        ->whereIn('brand_id', $brand_names)
+                                                        ->where('category_id', $catid)
+                                                        ->orWhereJsonContains('other_cats', request()->category)
+                                                        ->get();
 
                                 $simple_products = $s_product
                                 ->whereIn('brand_id', $brand_names)
-                                ->where('category_id', $catid);
+                                ->where('category_id', $catid)
+                                ->orWhereJsonContains('other_cats', request()->category);
                             }
 
                             $all_tags = explode(',', $request->tag);
@@ -6635,18 +6828,27 @@ class MainController extends Controller
                         $testingarr = array();
 
                         if ($featured == 1) {
+
                             $tag_products = $products->where('featured', '=', "1")
-                                ->where('category_id', '=', $catid)->get();
+                                            ->orWhereJsonContains('other_cats', request()->category)
+                                            ->where('category_id', '=', $catid)
+                                            ->get();
 
                             $simple_products = $s_product
                             ->where('featured','1')
+                            ->orWhereJsonContains('other_cats', request()->category)
                             ->where('category_id', $catid);
+                            
 
                         } else {
-                            $tag_products = $products->where('category_id', $catid)->get();
+
+                            $tag_products = $products->where('category_id', $catid)
+                                            ->orWhereJsonContains('other_cats', request()->category)
+                                            ->get();
 
                             $simple_products = $s_product
-                            ->where('category_id', $catid);
+                            ->where('category_id', $catid)
+                            ->orWhereJsonContains('other_cats', request()->category);
                         }
 
                         $all_tags = explode(',', $request->tag);
@@ -7101,23 +7303,35 @@ class MainController extends Controller
 
                             if ($featured == 1) {
 
-                                $all_brands_products = $products->whereIn('brand_id', $brand_names)->where('category_id', $catid)->where('featured', '=', '1')
-                                    ->get();
+                                $all_brands_products = $products->whereIn('brand_id', $brand_names)
+                                                        ->where('category_id', $catid)
+                                                        ->orWhereJsonContains('other_cats', request()->category)
+                                                        ->where('featured', '=', '1')
+                                                        ->get();
+
                                 $testingarr = $all_brands_products;
 
                                 $simple_products = $s_product
                                 ->whereIn('brand_id', $brand_names)
-                                ->where('category_id',$catid)
-                                ->where('featured','1');
+                                ->where('featured','1')
+                                ->orWhereJsonContains('other_cats', request()->category)
+                                ->where('category_id',$catid);
+                                
 
                             } else {
 
-                                $all_brands_products = $products->whereIn('brand_id', $brand_names)->where('category_id', $catid)->get();
+                                $all_brands_products = $products->whereIn('brand_id', $brand_names)
+                                                        ->orWhereJsonContains('other_cats', request()->category)
+                                                        ->where('category_id', $catid)
+                                                        ->get();
+
                                 $testingarr = $all_brands_products;
 
                                 $simple_products = $s_product
                                 ->whereIn('brand_id', $brand_names)
+                                ->orWhereJsonContains('other_cats', request()->category)
                                 ->where('category_id',$catid);
+
                             }
 
                             if ($varValue != null) {
@@ -7183,19 +7397,24 @@ class MainController extends Controller
                         if ($varValue != null) {
 
                             if ($featured == 1) {
-                                $tag_products = $products->where('featured', '=', '1')
-                                    ->where('category_id', $catid)->get();
 
-                                $simple_products = $s_product
-                                ->where('category_id',$catid)
-                                ->where('featured','1');
+                                $tag_products = $products->where('featured', '=', '1')
+                                                ->orWhereJsonContains('other_cats', request()->category)
+                                                ->where('category_id', $catid)
+                                                ->get();
+
+                                $simple_products = $s_product->where('featured','1')
+                                                    ->orWhereJsonContains('other_cats', request()->category)
+                                                    ->where('category_id',$catid);
 
                             } else {
 
-                                $tag_products = $products->where('category_id', $catid)->get();
+                                $tag_products = $products->where('category_id', $catid)
+                                                ->orWhereJsonContains('other_cats', request()->category)
+                                                ->get();
 
-                                $simple_products = $s_product
-                                ->where('category_id',$catid);
+                                $simple_products = $s_product->where('category_id',$catid)
+                                                   ->orWhereJsonContains('other_cats', request()->category);
                             }
 
                             foreach ($tag_products as $pro) {
@@ -7250,19 +7469,33 @@ class MainController extends Controller
                         } else {
 
                             if ($featured == 1) {
-                                $tag_products = $products->where('category_id', $catid)->where('featured', '=', '1')
-                                    ->get();
+
+                              
+
+                                $tag_products = $products
+                                                ->where('featured', '=', '1')
+                                                ->orWhereJsonContains('other_cats', request()->category)
+                                                ->where('category_id', $catid)
+                                                ->get();
+
                                 $featured_pros = $tag_products;
 
                                 $simple_products = $s_product
-                                ->where('category_id',$catid)
-                                ->where('featured','1');
+                                ->where('featured','1')
+                                ->orWhereJsonContains('other_cats', request()->category)
+                                ->where('category_id',$catid);
+                                
+                                
 
                             } else {
-                                $tag_products = $products->where('category_id', $catid)->get();
 
-                                $simple_products = $s_product
-                                ->where('category_id',$catid);
+                                $tag_products = $products->where('category_id', $catid)
+                                                ->orWhereJsonContains('other_cats', request()->category)
+                                                ->get();
+                               
+                                $simple_products = $s_product->where('category_id',$catid)
+                                                   ->orWhereJsonContains('other_cats', request()->category);
+
                             }
 
                         }
@@ -7271,9 +7504,7 @@ class MainController extends Controller
 
                 }
             }
-        } else {
-
-        }
+        } 
 
          $sellerSystem = $this->setting;
 
@@ -7289,6 +7520,8 @@ class MainController extends Controller
                 $query->where('role_id','=','a')->where('status','=','1')->where('is_verified','1');
             })->where('status','1');
          }
+         
+
 
         $simple_products = $simple_products->get();
 
@@ -7467,7 +7700,7 @@ class MainController extends Controller
         $code = json_decode($code);
 
         if ($code->code == '') {
-            return back()->withInput()->withErrors(['domain' => 'Purchase code not found please contact support !']);
+            return back()->withInput()->withErrors(['domain' => __('Purchase code not found please contact support !')]);
         }
 
         $d = $request->domain;
@@ -7484,11 +7717,11 @@ class MainController extends Controller
 
             file_put_contents(public_path() . '/config.txt', $put);
 
-            notify()->success('Domain permission changed successfully !', 'Success');
+            notify()->success(__('Domain permission changed successfully !'), __('Success'));
 
             return redirect('/');
         } elseif ($data['msg'] == 'Already Register') {
-            return back()->withInput()->withErrors(['domain' => 'User is already registered !']);
+            return back()->withInput()->withErrors(['domain' => __('User is already registered !')]);
         } else {
             return back()->withInput()->withErrors(['domain' => $data['msg']]);
         }

@@ -87,11 +87,11 @@ class ReturnOrderController extends Controller
             if ($order->status != 'initiated') {
                 return view('admin.order.returnorder.detail', compact('inv_cus', 'order', 'orderid'));
             } else {
-                return back()->with('warning', 'Order not refunded yet !');
+                return back()->with('warning', __('Order not refunded yet !'));
             }
 
         } else {
-            return redirect()->route('return.order.index')->with('warning', '404 Return order not found !');
+            return redirect()->route('return.order.index')->with('warning', __('Return order not found !'));
         }
 
     }
@@ -103,11 +103,11 @@ class ReturnOrderController extends Controller
         $orderid = $rorder->getorder->order->order_id;
         if (isset($rorder)) {
             if ($rorder->status != 'initiated') {
-                return back()->with('warning', '400 Refund already initiated !');
+                return back()->with('warning', __('Refund already initiated !'));
             }
             return view('admin.order.returnorder.show', compact('rorder', 'orderid', 'inv_cus'));
         } else {
-            return redirect()->route('return.order.index')->with('warning', '404 Return order not found !');
+            return redirect()->route('return.order.index')->with('warning', __('Return order not found !'));
         }
 
     }
@@ -162,7 +162,7 @@ class ReturnOrderController extends Controller
                             if ($this->wallet_system == 1) {
                                 $status = $this->refundInWallet($request, $returnorder);
                             } else {
-                                return back()->with('warning', 'Wallet System is disabled !');
+                                return back()->with('warning', __('Wallet System is disabled !'));
                             }
 
                         }
@@ -200,7 +200,7 @@ class ReturnOrderController extends Controller
                             $status = $this->payviaPaystack($request, $returnorder);
 
                         } else {
-                            return back()->with('warning', 'For Selected Payment Source Instant refund is not available !');
+                            return back()->with('warning', __('For Selected Payment Source Instant refund is not available !'));
                         }
 
                         if ($status == true) {
@@ -271,15 +271,15 @@ class ReturnOrderController extends Controller
                     }
 
                 } else {
-                    return redirect(url('/admin/returnOrders'))->with('warning', 'Refund for this order already completed !');
+                    return redirect(url('/admin/returnOrders'))->with('warning', __('Refund for this order already completed !'));
                 }
 
             } else {
-                return redirect(url('/admin/returnOrders'))->with('warning', '404 Return order not found !');
+                return redirect(url('/admin/returnOrders'))->with('warning', __('Refund for this order already completed !'));
             }
 
         } else {
-            return redirect(url('/admin/returnOrders'))->with('failure', '401 Unauthorized action !');
+            return redirect(url('/admin/returnOrders'))->with('failure', __('Unauthorized action !'));
         }
     }
 
@@ -603,7 +603,7 @@ class ReturnOrderController extends Controller
                 return true;
 
             } else {
-                return 'Return already completed or insufficient balance !';
+                return __('Return already completed or insufficient balance !');
             }
 
         } catch (\Exception $e) {
@@ -736,7 +736,7 @@ class ReturnOrderController extends Controller
 
     public function payviaPayU($request, $returnorder)
     {
-        return 'Coming Soon ! Please use Bank Transfer !';
+        return __('Coming Soon ! Please use Bank Transfer !');
     }
 
     public function payviaBraintree($request, $returnorder)

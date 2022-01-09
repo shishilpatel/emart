@@ -1,5 +1,5 @@
 @extends('admin.layouts.sellermastersoyuz')
-@section('title','Edit Product: '. $product->product_name.' | ')
+@section('title',__('Edit Product - :product',['product' => $product->product_name]))
 @section('stylesheet')
 <link rel="stylesheet" href="{{ url("/css/lightbox.min.css") }}">
 @endsection
@@ -28,21 +28,24 @@
 @endcomponent
 
 <div class="contentbar">
-    @if ($errors->any())  
-    <div class="alert alert-danger" role="alert">
-    @foreach($errors->all() as $error)     
-    <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-        @endforeach  
-    </div>
-    @endif
+    
                             
                           
     <div class="row">
       <div class="col-lg-12">
+
+        @if ($errors->any())  
+            <div class="alert alert-danger" role="alert">
+                @foreach($errors->all() as $error)     
+                    <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button></p>
+                @endforeach  
+            </div>
+        @endif
+
         <div class="card m-b-30">
           <div class="card-header">
-            <h5 class="card-title">{{ __('Edit Product: '. $product->product_name.'') }}</h5>
+            <h5 class="card-title">{{ __('Edit Product - :product',['product' => $product->product_name]) }}</h5>
           </div>
           <div class="card-body">
             <ul class="nav nav-tabs custom-tab-line mb-3" id="defaultTabLine" role="tablist">
@@ -79,7 +82,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label>Product Name: <span class="required">*</span></label>
+                                                <label>{{ __("Product Name: ") }}<span class="required">*</span></label>
                                                 <input placeholder="{{ __("Enter product name") }}" required type="text"
                                                     value="{{ $product->product_name }}" class="form-control"
                                                     name="product_name">
@@ -89,17 +92,17 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>
-                                                    Product Brand: <span class="required">*</span>
+                                                    {{__("Product Brand:")}} <span class="required">*</span>
                                                 </label>
-                                                <select data-placeholder="Please select brand" required="" name="brand_id"
+                                                <select data-placeholder="{{ __("Please select brand") }}" required="" name="brand_id"
                                                     class="select2 form-control">
-                                                    <option value="">Please Select</option>
+                                                    <option value="">{{ __("Please Select") }}</option>
                                                     @if(!empty($brands_all))
-                                                    @foreach($brands_all as $brand)
-                                                    <option {{$product['brand_id'] == $brand['id'] ? "selected" : "" }}
-                                                        value="{{$brand->id}}">
-                                                        {{$brand->name}} </option>
-                                                    @endforeach
+                                                        @foreach($brands_all as $brand)
+                                                            <option {{$product['brand_id'] == $brand['id'] ? "selected" : "" }}
+                                                                value="{{$brand->id}}">
+                                                                {{$brand->name}} </option>
+                                                        @endforeach
                                                     @endif
                                                 </select>
                                             </div>
@@ -108,7 +111,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>
-                                                    Product Store: <span class="required">*</span>
+                                                    {{__('Product Store:')}} <span class="required">*</span>
                                                 </label>
                                                 <select data-placeholder="Please select store" required="" name="store_id"
                                                     class="form-control select2">
@@ -120,7 +123,7 @@
                                         
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label> Key Features :
+                                                <label> {{__('Key Features :')}}
                                                 </label>
                                                 <textarea class="form-control editor" name="key_features">{!! $product->key_features !!}</textarea>
                                             </div>
@@ -128,7 +131,7 @@
 
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label>Product Description: <span class="required">*</span></label>
+                                                <label>{{__('Product Description:')}} <span class="required">*</span></label>
                                                 <textarea placeholder="{{ __("Enter product details") }}" class="editor"
                                                     name="product_detail" id="product_detail" cols="30"
                                                     rows="10">{{ $product->product_detail }}</textarea>
@@ -137,7 +140,7 @@
                                         
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label>Product Category: <span class="required">*</span></label>
+                                                <label>{{__('Product Category:')}} <span class="required">*</span></label>
                                                 <select data-placeholder="{{ __("Please select category") }}"
                                                     name="category_id" id="category_id" class="form-control select2">
                                                     <option value="">{{ __("Please select category") }}</option>
@@ -152,10 +155,10 @@
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label>Product Subategory: <span class="required">*</span></label>
-                                                <select data-placeholder="Please select subcategory" required=""
+                                                <label>{{__('Product Subategory:')}} <span class="required">*</span></label>
+                                                <select data-placeholder="{{ __('Please select subcategory') }}" required=""
                                                     name="subcategory_id" id="upload_id" class="form-control select2">
-                                                    <option value="">Please Select</option>
+                                                    <option value="">{{ __('Please Select') }}</option>
                                                     @foreach($product->category->subcategory as $item)
                                                     <option {{ $item->id == $product->subcategory_id ? "selected" : "" }}
                                                         value="{{ $item->id }}">{{ $item->title }}</option>
@@ -168,11 +171,11 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>
-                                                    Childcategory:
+                                                    {{__("Childcategory:")}}
                                                 </label>
-                                                <select data-placeholder="Please select childcategory" name="child_id"
+                                                <select data-placeholder="{{ __('Please select childcategory') }}" name="child_id"
                                                     id="grand" class="form-control select2">
-                                                    <option value="">Please choose</option>
+                                                    <option value="">{{ __('Please choose') }}</option>
                                                     @foreach($product->subcategory->childcategory as $item)
                                                     <option {{ $item->id == $product->child_id ? "selected" : "" }}
                                                         value="{{ $item->id }}">{{ $item->title }}</option>
@@ -183,10 +186,37 @@
 
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label>Product Tags:</label>
+                                                <label>{{ __("Also in :") }}</label>
+                                                <select multiple="multiple" name="other_cats[]" id="other_cats" class="form-control select2">
+                                                    @foreach($categories->where('id','!=',$product->category_id) as $category)
+                                                        <option {{ $product->other_cats != '' && in_array($category->id,$product->other_cats) ? "selected" : "" }} value="{{ $category->id }}">{{ $category->title }}</option>
+                                                    @endforeach
+                                                </select>
+            
+                                                <small class="text-primary">
+                                                    <i class="feather icon-help-circle"></i> {{ __("If in list primary category is also present then it will auto remove from this after create product.") }}
+                                                </small>
+                                            </div>   
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>{{ __('Product Tags:') }}</label>
                                                 <input placeholder="{{ __("Enter product tags by comma") }}" type="text"
                                                     class="form-control" name="product_tags"
                                                     value="{{ $product->product_tags }}">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="text-dark">{{ __('Select Size chart : ') }} </label>
+                                                <select name="size_chart" class="form-control select2">
+                                                    <option value="NULL">{{ __('None') }}</option>
+                                                    @foreach ($template_size_chart as $chartoption)
+                                                        <option {{ $product->size_chart == $chartoption->id ? "selected" : "" }} value="{{ $chartoption->id }}">{{ $chartoption->template_name }} ({{ $chartoption->template_code }}) </option>
+                                                    @endforeach 
+                                                </select>
                                             </div>
                                         </div>
                                         
@@ -237,7 +267,7 @@
 
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label>Model No:</label>
+                                                <label>{{ __('Model No:') }}</label>
                                                 <input placeholder="{{ __("Enter product modal name or no.") }}" type="text"
                                                     class="form-control" name="model_no" value="{{ $product->model_no }}">
                                             </div>
@@ -245,7 +275,7 @@
 
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label>HSN/SAC : <span class="required">*</span></label>
+                                                <label>{{__('HSN/SAC :')}} <span class="required">*</span></label>
                                                 <input required placeholder="{{ __("Enter product HSN/SAC code") }}"
                                                     type="text" class="form-control" name="hsin"
                                                     value="{{ $product->hsin }}">
@@ -254,7 +284,7 @@
 
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label>SKU :</label>
+                                                <label>{{ __('SKU :') }}</label>
                                                 <input placeholder="{{ __("Enter product SKU code") }}" type="text"
                                                     class="form-control" name="sku" value="{{ $product->sku }}">
                                             </div>
@@ -264,9 +294,9 @@
                                     <div class="row">
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label>Price: <span class="required">*</span></label>
+                                                <label>{{__('Price:')}} <span class="required">*</span></label>
                                                 <input min="0" placeholder="{{ __("Enter product price") }}" required
-                                                    type="text" class="form-control simpleproduct" name="actual_selling_price"
+                                                    type="text" class="form-control" name="actual_selling_price"
                                                     step="0.01" value="{{ $product->actual_selling_price }}">
                                             </div>
 
@@ -274,18 +304,18 @@
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label>Offer Price: </label>
+                                                <label>{{__('Offer Price:')}} </label>
                                                 <input min="0" placeholder="{{ __("Enter product offer price") }}"
-                                                    type="text" class="form-control simpleproduct" name="actual_offer_price" step="0.01"
+                                                    type="text" class="form-control" name="actual_offer_price" step="0.01"
                                                     value="{{ $product->actual_offer_price }}">
                                             </div>
                                         </div>
 
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label>Tax: <span class="required">*</span> </label>
+                                                <label>{{__('Tax:')}} <span class="required">*</span> </label>
                                                 <input placeholder="{{ __("Enter product tax in %") }}" required
-                                                    type="text" class="form-control simpleproduct" name="tax" step="1"
+                                                    type="text" class="form-control" name="tax" step="1"
                                                     value="{{ $product->tax }}">
                                                     <small>({{__("This tax % will add in given price.")}})</small> 
                                             </div>
@@ -293,7 +323,7 @@
 
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label>Tax name: <span class="required">*</span></label>
+                                                <label>{{__('Tax name:')}} <span class="required">*</span></label>
                                                 <input placeholder="{{ __("Enter product name") }}" required type="text"
                                                     class="form-control" name="tax_name" value="{{ $product->tax_name }}">
                                             </div>
@@ -304,10 +334,10 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label>Product Thumbnail Image: </label>
+                                                <label>{{__('Product Thumbnail Image:')}} </label>
                                                 <div class="input-group">
                                                     <div class="input-group-prepend">
-                                                    <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                                                    <span class="input-group-text" id="inputGroupFileAddon01">{{ __('Upload') }}</span>
                                                     </div>
                                                     <div class="custom-file">
                                                     <input name="thumbnail" type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
@@ -324,10 +354,10 @@
 
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label>Product Hover Thumbnail Image:</label>
+                                                <label>{{ __('Product Hover Thumbnail Image:') }}</label>
                                                 <div class="input-group">
                                                     <div class="input-group-prepend">
-                                                    <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                                                    <span class="input-group-text" id="inputGroupFileAddon01">{{ __('Upload') }}</span>
                                                     </div>
                                                     <div class="custom-file">
                                                     <input name="hover_thumbnail" type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
@@ -344,10 +374,10 @@
 
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label>Product Gallery Images:</label>
+                                                <label>{{ __('Product Gallery Images:') }}</label>
                                                 <div class="input-group">
                                                     <div class="input-group-prepend">
-                                                    <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                                                    <span class="input-group-text" id="inputGroupFileAddon01">{{ __('Upload') }}</span>
                                                     </div>
                                                     <div class="custom-file">
                                                     <input multiple name="images[]"  type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
@@ -368,7 +398,7 @@
                                         <div
                                             class="{{ $product->product_file !='' ? "" : "display-none" }} product_file col-md-12">
                                             <div class="form-group">
-                                                <label>Update Downloadable Product File: <span
+                                                <label>{{ __('Update Downloadable Product File: ') }}<span
                                                         class="text-red">*</span></label>
                                                 <div class="input-group">
                                                     <div class="input-group-prepend">
@@ -389,7 +419,9 @@
                                         <div class="col-md-3">
 
                                             <div class="form-group">
-                                                <label>Status :</label>
+                                                <label>
+                                                    {{__('Status :')}}
+                                                </label>
                                                 <br>
                                                 <label class="switch">
                                                     <input type="checkbox" name="status"
@@ -397,14 +429,13 @@
                                                     <span class="knob"></span>
                                                 </label>
                                                 <br>
-                                                <small class="text-muted"><i class="fa fa-question-circle"></i> Toggle the
-                                                    product status</b>.</small>
+                                                <small class="text-muted"><i class="fa fa-question-circle"></i> {{ __('Toggle the product status') }}</b>.</small>
                                             </div>
                                         </div>
 
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label>Free Shipping :</label>
+                                                <label>{{ __('Free Shipping :') }}</label>
                                                 <br>
                                                 <label class="switch">
                                                     <input type="checkbox" name="free_shipping"
@@ -412,15 +443,13 @@
                                                     <span class="knob"></span>
                                                 </label>
                                                 <br>
-                                                <small class="text-muted"><i class="fa fa-question-circle"></i> Toggle to
-                                                    allow free
-                                                    shipping on product.</b></small>
+                                                <small class="text-muted"><i class="fa fa-question-circle"></i> {{__('Toggle to allow free shipping on product')}}.</b></small>
                                             </div>
                                         </div>
                                     
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label>Cancel available :</label>
+                                                <label>{{__("Cancel available")}} :</label>
                                                 <br>
                                                 <label class="switch">
                                                     <input type="checkbox" name="cancel_avbl"
@@ -428,14 +457,12 @@
                                                     <span class="knob"></span>
                                                 </label>
                                                 <br>
-                                                <small class="text-muted"><i class="fa fa-question-circle"></i> Toggle to
-                                                    allow product
-                                                    cancellation on order.</b></small>
+                                                <small class="text-muted"><i class="fa fa-question-circle"></i> {{__('Toggle to allow product cancellation on order')}}.</b></small>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label>Cash on delivery available :</label>
+                                                <label>{{__('Cash on delivery available')}} :</label>
                                                 <br>
                                                 <label class="switch">
                                                     <input type="checkbox" name="cod_avbl"
@@ -443,26 +470,23 @@
                                                     <span class="knob"></span>
                                                 </label>
                                                 <br>
-                                                <small class="text-muted"><i class="fa fa-question-circle"></i> Toggle to
-                                                    allow COD on
-                                                    product.</b></small>
+                                                <small class="text-muted"><i class="fa fa-question-circle"></i> {{__('Toggle to allow COD on product')}}.</b></small>
                                             </div>
                                         </div>
 
                                         <div class="form-group col-md-4">
 
-                                            <label for="">Return Available :</label>
+                                            <label for="">{{__("Return Available")}} :</label>
                                             <select data-placeholder="Please choose an option" required=""
                                                 class="form-control select2" id="choose_policy" name="return_avbl">
-                                                <option value="">Please choose an option</option>
+                                                <option value="">{{ __('Please choose an option') }}</option>
                                                 <option {{ $product['return_avbl'] =='1' ? "selected" : "" }} value="1">
-                                                    Return Available</option>
+                                                    {{ __('Return Available') }}</option>
                                                 <option {{ $product['return_avbl'] =='0' ? "selected" : "" }} value="0">
-                                                    Return Not Available</option>
+                                                    {{ __('Return Not Available') }}</option>
                                             </select>
                                             <br>
-                                            <small class="text-desc">(Please choose an option that return will be available
-                                                for this product or not)</small>
+                                            <small class="text-desc">({{ __('Please choose an option that return will be available for this product or not') }})</small>
 
 
                                         </div>
@@ -470,11 +494,11 @@
                                         <div id="policy"
                                             class="{{ $product['return_avbl'] == 1 ? '' : 'display-none' }} form-group col-md-4">
                                             <label>
-                                                Select Return Policy: <span class="required">*</span>
+                                                {{__('Select Return Policy')}}: <span class="required">*</span>
                                             </label>
-                                            <select data-placeholder="Please select return policy" name="policy_id"
+                                            <select data-placeholder="{{ __('Please select return policy') }}" name="policy_id"
                                                 class="form-control select2">
-                                                <option value="">Please select return policy</option>
+                                                <option value="">{{ __('Please select return policy') }}</option>
 
                                                 @foreach(App\admin_return_product::where('status','1')->get()
                                                 as $policy)
@@ -645,10 +669,10 @@
                     </form>
                 </div>
                 <div class="tab-pane fade" id="spectification-line" role="tabpanel" aria-labelledby="spectification-tab-line">
-                    <h5>Edit Product Specification</h5>
+                    <h5>{{ __('Edit Product Specification') }}</h5>
                     
                     <a type="button" class="btn btn-danger btn-md z-depth-0" data-toggle="modal"
-                        data-target="#bulk_delete"><i class="fa fa-trash"></i> Delete Selected</a>
+                        data-target="#bulk_delete"><i class="fa fa-trash"></i> {{ __('Delete Selected') }}</a>
                     <hr>
                     <form action="{{ route('pro.specs.store',$product->id) }}" method="POST">
                         @csrf
@@ -663,8 +687,8 @@
                                     </div>
 
                                 </th>
-                                <th>Key</th>
-                                <th>Value</th>
+                                <th>{{ __('Key') }}</th>
+                                <th>{{ __('Value') }}</th>
                                 <th>#</th>
                             </thead>
 
@@ -735,7 +759,7 @@
                             <!-- Modal content-->
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <div class="modal-title">Edit : <b>{{ $spec->prokeys }}</b></div>
+                                    <div class="modal-title">{{__('Edit')}} : <b>{{ $spec->prokeys }}</b></div>
                                 </div>
                                 <div class="modal-body">
                                     <form action="{{ route('pro.specs.update',$spec->id) }}" method="POST">
@@ -743,22 +767,22 @@
                                         
 
                                         <div class="form-group">
-                                            <label>Attribute Key:</label>
+                                            <label>{{ __('Attribute Key') }}:</label>
                                             <input required="" type="text" name="pro_key" value="{{ $spec->prokeys }}"
                                                 class="form-control">
                                         </div>
 
                                         <div class="form-group">
-                                            <label>Attribute Value:</label>
+                                            <label>{{ __('Attribute Value') }}:</label>
                                             <input required="" type="text" name="pro_val" value="{{ $spec->provalues }}"
                                                 class="form-control">
                                         </div>
 
 
                                         <button type="submit" class="btn btn-success"><i class="fa fa-save"></i>
-                                            Save</button>
+                                            {{ __('Save') }}</button>
                                         <button type="reset" class="btn btn-danger translate-y-3"
-                                            data-dismiss="modal">Cancel</button>
+                                            data-dismiss="modal">{{ __('Cancel') }}</button>
 
 
 
@@ -772,9 +796,6 @@
                     @endif
 
 
-
-
-
                 </div>
                 <div class="tab-pane fade" id="image-line" role="tabpanel" aria-labelledby="image-tab-line">
                     <div class="row">
@@ -784,9 +805,6 @@
                                 <div class="form-group">
                                     <label>{{ __("Upload Product 360° Image") }} <span class="text-red">*</span> </label>
                                     <div class="input-group">
-                                        <div class="input-group-prepend">
-                                        <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-                                        </div>
                                         <div class="custom-file">
                                         <input name="360_image[]" multiple="multiple" type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01" required>
                                         <label class="custom-file-label" for="inputGroupFile01"></label>
@@ -852,17 +870,17 @@
                 <div class="tab-pane fade" id="product-line" role="tabpanel" aria-labelledby="product-tab-line">
                     <div class="mb-2">
                         <a data-toggle="modal" data-target="#addFAQ" class="btn btn-success owtbtn"><i
-                                class="feather icon-plus-circle mr-1"></i> Add FAQ</a>
+                                class="feather icon-plus-circle mr-1"></i> {{ __('Add FAQ') }}</a>
                         <br>
                     </div>
                     <table id="example1" class="table table-bordered table-striped">
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Product Name</th>
-                                <th>Question</th>
-                                <th>Answer</th>
-                                <th>Action</th>
+                                <th>{{ __('Product Name') }}</th>
+                                <th>{{ __('Question') }}</th>
+                                <th>{{ __('Answer') }}</th>
+                                <th>{{  __('Action') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -907,8 +925,8 @@
                                     <div class="delete-icon"></div>
                                 </div>
                                 <div class="modal-body text-center">
-                                    <h4 class="modal-heading">Are You Sure ?</h4>
-                                    <p>Do you really want to delete this faq? This process cannot be undone.</p>
+                                    <h4 class="modal-heading">{{ __('Are You Sure ?') }}</h4>
+                                    <p>{{ __('Do you really want to delete this faq? This process cannot be undone') }}.</p>
                                 </div>
                                 <div class="modal-footer">
                                     <form method="post" action="{{url('admin/product_faq/'.$f->id)}}"
@@ -916,8 +934,8 @@
                                         {{csrf_field()}}
                                         {{method_field("DELETE")}}
                                         <button type="reset" class="btn btn-gray translate-y-3"
-                                            data-dismiss="modal">No</button>
-                                        <button type="submit" class="btn btn-danger">Yes</button>
+                                            data-dismiss="modal">{{ __('No') }}</button>
+                                        <button type="submit" class="btn btn-danger">{{ __('Yes') }}</button>
                                     </form>
                                 </div>
                             </div>
@@ -932,7 +950,7 @@
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="modal-title" id="myModalLabel">Edit FAQ: {{ $f->question }}</h4>
+                                    <h4 class="modal-title" id="myModalLabel">{{__('Edit FAQ')}}: {{ $f->question }}</h4>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                             aria-hidden="true">&times;</span></button>
                                   
@@ -942,18 +960,17 @@
                                         {{ method_field("PUT") }}
                                         @csrf
                                         <div class="form-group">
-                                            <label for="">Question: <span class="required">*</span></label>
+                                            <label for="">{{__('Question')}}: <span class="required">*</span></label>
                                             <input required="" type="text" name="question" value="{{ $f->question }}"
                                                 class="form-control">
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="">Answer: <span class="required">*</span></label>
+                                            <label for="">{{__('Answer')}}: <span class="required">*</span></label>
                                             <textarea required="" cols="10" id="answerarea" name="answer" rows="5"
                                                 class="form-control editor">{{ $f->answer }}</textarea>
                                             <input type="hidden" readonly name="pro_id" value="{{ $product->id }}">
-                                            <small class="text-muted"><i class="fa fa-question-circle"></i> Please enter
-                                                answer for above question ! </small>
+                                            <small class="text-muted"><i class="fa fa-question-circle"></i> {{__('Please enter answer for above question !')}} </small>
                                         </div>
 
                                         <button type="reset" class="btn btn-danger mr-1"><i class="fa fa-ban"></i> {{ __("Reset")}}</button>
@@ -974,7 +991,7 @@
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="modal-title" id="myModalLabel">Add new FAQ</h4>
+                                    <h4 class="modal-title" id="myModalLabel">{{__('Add new FAQ') }}</h4>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                             aria-hidden="true">&times;</span></button>
                                   
@@ -984,20 +1001,18 @@
                                         @csrf
                                         <input type="hidden" value="yes" name="simple_product">
                                         <div class="form-group">
-                                            <label for="">Question: <span class="required">*</span></label>
+                                            <label for="">{{ __('Question') }}: <span class="required">*</span></label>
                                             <input type="text" name="question" value="{{old('question')}}"
                                                 class="form-control">
-                                            <small class="text-muted"><i class="fa fa-question-circle"></i> Please write
-                                                question !</small>
+                                            <small class="text-muted"><i class="fa fa-question-circle"></i> {{__('Please write question !')}}</small>
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="">Answer: <span class="required">*</span></label>
+                                            <label for="">{{ __('Answer') }}: <span class="required">*</span></label>
                                             <textarea cols="10" id="editor1" name="answer" rows="5"
                                                 class="form-control">{{old('answer')}}</textarea>
                                             <input type="hidden" readonly name="pro_id" value="{{ $product->id }}">
-                                            <small class="text-muted"><i class="fa fa-question-circle"></i> Please enter
-                                                answer for above question ! </small>
+                                            <small class="text-muted"><i class="fa fa-question-circle"></i> {{__('Please enter answer for above question !')}} </small>
                                         </div>
 
                                       
@@ -1022,29 +1037,6 @@
 
 </div>
         
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-           
-            
-     
-
-
-
 @endsection
 @section('custom-script')
 <script src='{{ url('js/lightbox.min.js') }}' type='text/javascript'></script>

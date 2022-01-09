@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Add Return Policy | ')
+@section('title',__('Add Return Policy | '))
 @section('body')
 
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
@@ -25,15 +25,16 @@
 @endcomponent
 <div class="contentbar">
   <div class="row">
-    @if ($errors->any())
-    <div class="alert alert-danger" role="alert">
-      @foreach($errors->all() as $error)
-      <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach
-    </div>
-    @endif
+   
     <div class="col-lg-12">
+      @if ($errors->any())
+      <div class="alert alert-danger" role="alert">
+        @foreach($errors->all() as $error)
+        <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button></p>
+        @endforeach
+      </div>
+      @endif
       <div class="card m-b-30">
         <div class="card-header">
           <h5 class="box-title">{{ __('Add Return Policy') }}</h5>
@@ -52,7 +53,7 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label class="text-dark">{{ __('Policy Name :') }} <span class="text-danger">*</span></label>
-                        <input placeholder="Enter Policy Name" type="text" id="first-name" name="name" class="form-control" value="{{old('name')}}">
+                        <input placeholder="{{ __("Enter Policy Name") }}" type="text" id="first-name" name="name" class="form-control" value="{{old('name')}}">
                     </div>
                 </div>
 
@@ -61,7 +62,7 @@
                     <div class="form-group">
                         <label class="text-dark">{{ __('Amount :') }} <span class="text-danger">*</span></label>
                         <input placeholder="%" type="text" id="first-name" name="amount" class="form-control" value="{{old('amount')}}">
-                        <small>(Please enter amount in Percentage)</small>
+                        <small>({{__('Please enter amount in Percentage')}})</small>
                     </div>
                 </div>
 
@@ -69,7 +70,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label class="text-dark">{{ __('Return days :') }} <span class="text-danger">*</span></label>
-                        <input placeholder="Please enter product return days" type="text" id="first-name" name="days" class="form-control">
+                        <input placeholder="{{ __("Please enter product return days") }}" type="text" id="first-name" name="days" class="form-control">
                     </div>
                 </div>
 
@@ -77,8 +78,8 @@
                   <div class="col-md-12">
                     <div class="form-group">
                         <label class="text-dark">{{ __('Description') }} <span class="text-danger">*</span></label>
-                        <textarea id="editor1" name="des" class="@error('des') is-invalid @enderror" placeholder="Please Enter Description" value="{{old('des' ?? '')}}" required="">{{ old('des') }} </textarea>
-                        <small class="txt-desc">(Please Enter Return Description)</small>
+                        <textarea id="editor1" name="des" class="@error('des') is-invalid @enderror" value="{{old('des' ?? '')}}" required="">{{ old('des') }} </textarea>
+                        <small class="txt-desc">({{ __("Please rnter return policy description") }})</small>
                     </div>
                 </div>
 
@@ -87,17 +88,23 @@
                               
                 <div class="form-group col-md-6">
                   <label class="control-label" for="first-name">
-                    Return Accept By:
+                    {{__("Return Accept By:")}}
                   </label>
                 
                     <select class=" form-control select2" name="return_acp" id="">
-                      <option>Please choose</option>
-                      <option value="auto">Auto</option>
-                      <option value="admin">Admin</option>
-                      <option value="vender">Vender</option>
+                      <option>{{ __('Please choose') }}</option>
+                      <option value="auto">
+                        {{__('Auto')}}
+                      </option>
+                      <option value="admin">
+                        {{__("Admin")}}
+                      </option>
+                      <option value="vender">
+                        {{__("Vender")}}
+                      </option>
                     </select>
                    
-                    <small class="txt-desc">(Please Choose an option to select who can accept return)</small>
+                    <small class="txt-desc">({{__("Please Choose an option to select who can accept return")}})</small>
                   
                 </div>
 
@@ -108,7 +115,7 @@
                     <span class="knob"></span>
                     
                   </label><br>
-                  <small>(Please Choose Status )</small>
+                  <small>({{__('Please Choose Status')}})</small>
               </div>
                 <div class="col-md-12">
                     <div class="form-group">

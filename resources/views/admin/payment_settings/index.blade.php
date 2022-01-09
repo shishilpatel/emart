@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Payment Settings |')
+@section('title',__('Payment Settings |'))
 @section('body')
 
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
@@ -22,7 +22,9 @@
         <div class="col-md-4">
             <div class="card m-b-30">
                 <div class="card-header">
-                    <h5 class="box-title">Payment Settings</h5>
+                    <h5 class="box-title">
+                        {{ __('Payment Settings') }}
+                    </h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -31,43 +33,40 @@
                                 aria-orientation="vertical">
                                 <a class="nav-link active" id="v-pills-paypal-tab" data-toggle="pill"
                                     href="#v-pills-paypal" role="tab" aria-controls="v-pills-paypal"
-                                    aria-selected="true"><i class="fa fa-cc-paypal" aria-hidden="true"></i> Paypal
-                                    Payment Settings
+                                    aria-selected="true"><i class="fa fa-cc-paypal" aria-hidden="true"></i> {{__("Paypal")}}
+                                    {{ __('Payment Settings') }}
                                     <i title="{{ $configs->paypal_enable == 1 ? "Active" : "Deactive" }}"
                                     class="float-right mt-1 fa fa-circle {{ $configs->paypal_enable == 1 ? "text-success" : "text-danger" }}"
                                     aria-hidden="true"></i>
                                 </a>
                                 <a class="nav-link" id="v-pills-braintree-tab" data-toggle="pill"
                                     href="#v-pills-braintree" role="tab" aria-controls="v-pills-braintree"
-                                    aria-selected="false"><i class="fa fa-cc-discover" aria-hidden="true"></i> Braintree
-                                    Payment Settings
-                                    <i title="{{ $configs->braintree_enable == 1 ? "Active" : "Deactive" }}"
-                                        class="float-right mt-1 fa fa-circle {{ $configs->braintree_enable == 1 ? "text-success" : "text-danger" }}"
-                                        aria-hidden="true"></i>
+                                    aria-selected="false"><i class="fa fa-cc-discover" aria-hidden="true"></i> {{__("Braintree Payment Settings")}}
+                                    <i title="{{ $configs->braintree_enable == 1 ? "Active" : "Deactive" }}" class="float-right mt-1 fa fa-circle {{ $configs->braintree_enable == 1 ? "text-success" : "text-danger" }}" aria-hidden="true"></i>
                                 </a>
                                 <a class="nav-link" id="v-pills-stripe-tab" data-toggle="pill" href="#v-pills-stripe"
                                     role="tab" aria-controls="v-pills-stripe" aria-selected="false"><i
-                                        class="fa fa-cc-stripe" aria-hidden="true"></i> Stripe Payment Settings
+                                        class="fa fa-cc-stripe" aria-hidden="true"></i> {{__("Stripe Payment Settings")}}
                                         <i title="{{ $configs->stripe_enable == 1 ? "Active" : "Deactive" }}"
                                             class="float-right mt-1 fa fa-circle {{ $configs->stripe_enable == 1 ? "text-success" : "text-danger" }}"
                                             aria-hidden="true"></i>
                                     </a>
                                 <a class="nav-link" id="v-pills-paystack-tab" data-toggle="pill"
                                     href="#v-pills-paystack" role="tab" aria-controls="v-pills-paystack"
-                                    aria-selected="false"><i class="fa fa-product-hunt" aria-hidden="true"></i> Paystack
-                                    Payment Settings
+                                    aria-selected="false"><i class="fa fa-product-hunt" aria-hidden="true"></i> {{__("Paystack Payment Settings")}}
                                     
-                                    <i title="{{ $configs->paystack_enable == 1 ? "Active" : "Deactive" }}"
+                                    <i title="{{ $configs->paystack_enable == 1 ? __("Active") : __("Deactive") }}"
                                         class="float-right mt-1 fa fa-circle {{ $configs->paystack_enable == 1 ? "text-success" : "text-danger" }}"
                                         aria-hidden="true"></i>
 
                                 </a>
                                 <a class="nav-link" id="v-pills-payubiz-tab" data-toggle="pill" href="#v-pills-payubiz"
                                     role="tab" aria-controls="v-pills-payubiz" aria-selected="false"><i
-                                        class="fa fa-pied-piper-pp" aria-hidden="true"></i> PayuBiz/PayUMoney Payment
-                                    Settings
+                                        class="fa fa-pied-piper-pp" aria-hidden="true"></i> 
 
-                                    <i title="{{ $configs->payu_enable == 1 ? "Active" : "Deactive" }}"
+                                        {{__("PayuBiz/PayUMoney Payment Settings")}}
+
+                                    <i title="{{ $configs->payu_enable == 1 ? __("Active") : __("Deactive") }}"
                                         class="float-right mt-1 fa fa-circle {{ $configs->payu_enable == 1 ? "text-success" : "text-danger" }}"
                                         aria-hidden="true"></i>
                                 </a>
@@ -76,16 +75,16 @@
                                     aria-selected="false"><i class="fa fa-italic" aria-hidden="true"></i> Instamojo
                                     Payment Settings
 
-                                    <i title="{{ $configs->instamojo_enable == 1 ? "Active" : "Deactive" }}"
+                                    <i title="{{ $configs->instamojo_enable == 1 ? __("Active") : __("Deactive") }}"
                                         class="float-right mt-1 fa fa-circle {{ $configs->instamojo_enable == 1 ? "text-success" : "text-danger" }}"
                                         aria-hidden="true"></i>
 
                                 </a>
                                 <a class="nav-link" id="v-pills-paytm-tab" data-toggle="pill" href="#v-pills-paytm"
                                     role="tab" aria-controls="v-pills-paytm" aria-selected="false"><i
-                                        class="fa fa-credit-card-alt" aria-hidden="true"></i> Paytm Payment Settings
+                                        class="fa fa-credit-card-alt" aria-hidden="true"></i> {{__("Paytm Payment Settings")}}
 
-                                        <i title="{{ $configs->paytm_enable == 1 ? "Active" : "Deactive" }}"
+                                        <i title="{{ $configs->paytm_enable == 1 ? __("Active") : __("Deactive") }}"
                                             class="float-right mt-1 fa fa-circle {{ $configs->paytm_enable == 1 ? "text-success" : "text-danger" }}"
                                             aria-hidden="true"></i>
                                         
@@ -93,88 +92,85 @@
                                 <a class="nav-link" id="v-pills-razorpay-tab" data-toggle="pill"
                                     href="#v-pills-razorpay" role="tab" aria-controls="v-pills-razorpay"
                                     aria-selected="false"><i class="fa fa-connectdevelop" aria-hidden="true"></i>
-                                    Razorpay Payment Settings
+                                    {{__("Razorpay Payment Settings")}}
 
-                                    <i title="{{ $configs->razorpay == 1 ? "Active" : "Deactive" }}"
+                                    <i title="{{ $configs->razorpay == 1 ? __("Active") : __("Deactive") }}"
                                         class="float-right mt-1 fa fa-circle {{ $configs->razorpay == 1 ? "text-success" : "text-danger" }}"
                                         aria-hidden="true"></i>
 
                                 </a>
                                 <a class="nav-link" id="v-pills-payhere-tab" data-toggle="pill" href="#v-pills-payhere"
                                     role="tab" aria-controls="v-pills-payhere" aria-selected="false"><i
-                                        class="fa fa-paper-plane-o" aria-hidden="true"></i> PayHere Payment Settings
+                                        class="fa fa-paper-plane-o" aria-hidden="true"></i> {{__("PayHere Payment Settings")}}
 
-                                        <i title="{{ $configs->payhere_enable == 1 ? "Active" : "Deactive" }}"
+                                        <i title="{{ $configs->payhere_enable == 1 ? __("Active") : __("Deactive") }}"
                                             class="float-right mt-1 fa fa-circle {{ $configs->payhere_enable == 1 ? "text-success" : "text-danger" }}"
                                             aria-hidden="true"></i>    
                                 </a>
                                 <a class="nav-link" id="v-pills-cashfree-tab" data-toggle="pill"
                                     href="#v-pills-cashfree" role="tab" aria-controls="v-pills-cashfree"
-                                    aria-selected="false"><i class="fa fa-circle-o" aria-hidden="true"></i> Cashfree
-                                    Payment Settings
+                                    aria-selected="false"><i class="fa fa-circle-o" aria-hidden="true"></i> {{__("Cashfree Payment Settings")}}
 
-                                    <i title="{{ $configs->cashfree_enable == 1 ? "Active" : "Deactive" }}"
+                                    <i title="{{ $configs->cashfree_enable == 1 ? __("Active") : __("Deactive") }}"
                                         class="float-right mt-1 fa fa-circle {{ $configs->cashfree_enable == 1 ? "text-success" : "text-danger" }}"
                                         aria-hidden="true"></i>
 
                                 </a>
                                 <a class="nav-link" id="v-pills-skrill-tab" data-toggle="pill" href="#v-pills-skrill"
                                     role="tab" aria-controls="v-pills-skrill" aria-selected="false"> <i
-                                        class="fa fa-circle-o" aria-hidden="true"></i> Skrill Payment Settings
+                                        class="fa fa-circle-o" aria-hidden="true"></i> {{__("Skrill Payment Settings")}}
 
-                                        <i title="{{ $configs->skrill_enable == 1 ? "Active" : "Deactive" }}"
+                                        <i title="{{ $configs->skrill_enable == 1 ? __("Active") : __("Deactive") }}"
                                             class="float-right mt-1 fa fa-circle {{ $configs->skrill_enable == 1 ? "text-success" : "text-danger" }}"
                                             aria-hidden="true"></i>    
                                 </a>
                                 <a class="nav-link" id="v-pills-omise-tab" data-toggle="pill" href="#v-pills-omise"
                                     role="tab" aria-controls="v-pills-omise" aria-selected="false"> <i
-                                        class="fa fa-circle-o" aria-hidden="true"></i> Omise Payment Settings
+                                        class="fa fa-circle-o" aria-hidden="true"></i> {{__("Omise Payment Settings")}}
 
-                                        <i title="{{ $configs->omise_enable == 1 ? "Active" : "Deactive" }}"
+                                        <i title="{{ $configs->omise_enable == 1 ? __("Active") : __("Deactive") }}"
                                             class="float-right mt-1 fa fa-circle {{ $configs->omise_enable == 1 ? "text-success" : "text-danger" }}"
                                             aria-hidden="true"></i> 
 
                                     </a>
                                 <a class="nav-link" id="v-pills-moli-tab" data-toggle="pill" href="#v-pills-moli"
                                     role="tab" aria-controls="v-pills-moli" aria-selected="false"> <i
-                                        class="fa fa-circle-o" aria-hidden="true"></i> Moli Payment Settings
+                                        class="fa fa-circle-o" aria-hidden="true"></i> {{__('Moli Payment Settings')}}
                                     
-                                        <i title="{{ $configs->moli_enable == 1 ? "Active" : "Deactive" }}"
+                                        <i title="{{ $configs->moli_enable == 1 ? __("Active") : __("Deactive") }}"
                                             class="float-right mt-1 fa fa-circle {{ $configs->moli_enable == 1 ? "text-success" : "text-danger" }}"
                                             aria-hidden="true"></i> 
 
                                     </a>
                                 <a class="nav-link" id="v-pills-rave-tab" data-toggle="pill" href="#v-pills-rave"
                                     role="tab" aria-controls="v-pills-rave" aria-selected="false"> <i
-                                        class="fa fa-circle-o" aria-hidden="true"></i> Rave Payment Settings
+                                        class="fa fa-circle-o" aria-hidden="true"></i> {{__("Rave Payment Settings")}}
 
-                                        <i title="{{ $configs->rave_enable == 1 ? "Active" : "Deactive" }}"
+                                        <i title="{{ $configs->rave_enable == 1 ? __("Active") : __("Deactive") }}"
                                             class="float-right mt-1 fa fa-circle {{ $configs->rave_enable == 1 ? "text-success" : "text-danger" }}"
                                             aria-hidden="true"></i> 
 
                                     </a>
                                 <a class="nav-link" id="v-pills-sslcommerze-tab" data-toggle="pill"
                                     href="#v-pills-sslcommerze" role="tab" aria-controls="v-pills-sslcommerze"
-                                    aria-selected="false"> <i class="fa fa-circle-o" aria-hidden="true"></i> SSLCommerze
-                                    Payment Settings
-                                    <i title="{{ $configs->sslcommerze_enable == 1 ? "Active" : "Deactive" }}"
+                                    aria-selected="false"> <i class="fa fa-circle-o" aria-hidden="true"></i> {{__("SSLCommerze Payment Settings")}}
+                                    <i title="{{ $configs->sslcommerze_enable == 1 ? __("Active") : __("Deactive") }}"
                                         class="float-right mt-1 fa fa-circle {{ $configs->sslcommerze_enable == 1 ? "text-success" : "text-danger" }}"
                                         aria-hidden="true"></i> 
                                 </a>
                                 <a class="nav-link" id="v-pills-aamarpay-tab" data-toggle="pill"
                                     href="#v-pills-aamarpay" role="tab" aria-controls="v-pills-aamarpay"
-                                    aria-selected="false"> <i class="fa fa-circle-o" aria-hidden="true"></i> AAMARPAY
-                                    Payment Settings
+                                    aria-selected="false"> <i class="fa fa-circle-o" aria-hidden="true"></i> {{__("AAMARPAY Payment Settings")}}
 
-                                    <i title="{{ $configs->enable_amarpay == 1 ? "Active" : "Deactive" }}"
+                                    <i title="{{ $configs->enable_amarpay == 1 ? __("Active") : __("Deactive") }}"
                                         class="float-right mt-1 fa fa-circle {{ $configs->enable_amarpay == 1 ? "text-success" : "text-danger" }}"
                                         aria-hidden="true"></i> 
                                 </a>
                                 <a class="nav-link" id="v-pills-iyzico-tab" data-toggle="pill" href="#v-pills-iyzico"
                                     role="tab" aria-controls="v-pills-iyzico" aria-selected="false"> <i
-                                        class="fa fa-circle-o" aria-hidden="true"></i> iyzico Payment Settings
+                                        class="fa fa-circle-o" aria-hidden="true"></i> {{__("iyzico Payment Settings")}}
                                     
-                                        <i title="{{ $configs->iyzico_enable == 1 ? "Active" : "Deactive" }}"
+                                        <i title="{{ $configs->iyzico_enable == 1 ? __("Active") : __("Deactive") }}"
                                             class="float-right mt-1 fa fa-circle {{ $configs->iyzico_enable == 1 ? "text-success" : "text-danger" }}"
                                             aria-hidden="true"></i> 
 
@@ -227,8 +223,9 @@
 
                                 <a class="nav-link" id="v-pills-bank-tab" data-toggle="pill" href="#v-pills-bank"
                                     role="tab" aria-controls="v-pills-bank" aria-selected="false"> <i
-                                        class="fa fa-circle-o" aria-hidden="true"></i> Bank Transfer Payment
-                                    Settings</a>
+                                        class="fa fa-circle-o" aria-hidden="true"></i> 
+                                        {{__('Bank Transfer Payment Settings')}}
+                                    </a>
                             </div>
                         </div>
                     </div>
@@ -253,12 +250,13 @@
                                             @csrf
                                             <div class="card">
                                                 <div class="card-header">
-                                                    <label class="text-dark">Paypal Payment Settings</label>
+                                                    <label class="text-dark">
+                                                        {{__("Paypal Payment Settings")}}
+                                                    </label>
                                                     <div class="pull-right card-title"><a target="__blank"
-                                                            title="Get Your Keys From here"
+                                                            title="{{ __('Get Your Keys From here') }}"
                                                             href="https://developer.paypal.com/home/"><i
-                                                                class="fa fa-key" aria-hidden="true"></i> Get Your Keys
-                                                            From here</a>
+                                                                class="fa fa-key" aria-hidden="true"></i> {{ __('Get Your Keys From here') }}</a>
                                                     </div>
                                                 </div>
 
@@ -270,8 +268,8 @@
                                                         <input type="text" name="PAYPAL_CLIENT_ID"
                                                             value="{{ env('PAYPAL_CLIENT_ID') }}" class="form-control">
                                                         <small class="text-muted"><i class="fa fa-question-circle"></i>
-                                                            Enter your
-                                                            PAYPAL CLIENT ID</small>
+                                                            {{__("Enter your PAYPAL CLIENT ID")}}    
+                                                        </small>
                                                     </div>
 
                                                     <div id="psec"
@@ -280,14 +278,13 @@
                                                             :</label>
                                                         <!-- --------------- -->
                                                         <input id="paypl_secret" id="pps" type="password"
-                                                            placeholder="enter secret key" class="form-control"
+                                                            placeholder="{{ __("enter secret key") }}" class="form-control"
                                                             name="PAYPAL_SECRET" value="{{ env('PAYPAL_SECRET') }}">
-                                                        <span toggle="#pps"
-                                                            class="fa fa-fw fa-eye field_icon toggle-password1"></span>
+                                                        <span toggle="#pps" class="fa fa-fw fa-eye field_icon toggle-password1"></span>
                                                         <!-- --------------- -->
                                                         <small class="text-muted"><i class="fa fa-question-circle"></i>
-                                                            Enter your
-                                                            PAYPAL SECRET ID</small>
+                                                            {{__('Enter your PAYPAL SECRET ID')}}    
+                                                        </small>
                                                     </div>
 
                                                     <div id="pmode"
@@ -297,8 +294,8 @@
                                                         <input type="text" value="{{ env('PAYPAL_MODE') }}"
                                                             name="PAYPAL_MODE" class="form-control">
                                                         <small class="text-muted"><i class="fa fa-question-circle"></i>
-                                                            For Live use
-                                                            <b>live</b> and for Test use <b>test</b> as mode</small>
+                                                            {{__("For Live use")}}
+                                                            <b>live</b> {{__("and for Test use")}} <b>test</b> {{ __("as mode") }}</small>
                                                     </div>
 
 
@@ -307,17 +304,16 @@
                                                             {{ $configs->paypal_enable==1 ? "checked" : "" }} />
                                                         <span class="knob"></span>
                                                     </label><br>
-                                                    <small class="txt-desc">(Please Enable For Paypal Payment Gateway
-                                                        )</small>
+                                                    <small class="txt-desc">({{__("Please Enable For Paypal Payment Gateway")}})</small>
                                                 </div><br>
 
                                                 <div class="form-group">
                                                     <button type="reset" class="btn btn-danger mr-1"><i
                                                             class="fa fa-ban"></i> {{ __("Reset")}}</button>
                                                     <button @if(env('DEMO_LOCK')==0) type="submit" @else disabled
-                                                        title="This action is disabled in demo !" @endif type="submit"
+                                                        title="{{ __("This action is disabled in demo !") }}" @endif type="submit"
                                                         class="btn btn-md btn-primary">
-                                                        <i class="fa fa-check-circle"></i> Save Settings
+                                                        <i class="fa fa-check-circle"></i> {{__("Save Settings")}}
                                                     </button>
                                                 </div>
                                             </div>
@@ -336,10 +332,9 @@
                                                 <div class="card-header">
                                                     <label class="text-dark">Braintree Payment Settings</label>
                                                     <div class="pull-right card-title"><a target="__blank"
-                                                            title="Get Your Keys From here"
+                                                            title="{{ __('Get Your Keys From here') }}"
                                                             href="https://developers.braintreepayments.com/"><i
-                                                                class="fa fa-key" aria-hidden="true"></i> Get Your Keys
-                                                            From here</a></div>
+                                                                class="fa fa-key" aria-hidden="true"></i> {{ __('Get Your Keys From here') }} </a></div>
                                                 </div>
 
                                                 <div class="card-body">
@@ -454,10 +449,9 @@
                                                 <div class="card-header">
                                                     <label class="text-dark">Stripe Payment Settings</label>
                                                     <div class="pull-right card-title"><a target="__blank"
-                                                            title="Get Your Keys From here"
+                                                            title="{{ __('Get Your Keys From here') }}"
                                                             href="https://stripe.com/docs/development"><i
-                                                                class="fa fa-key" aria-hidden="true"></i> Get Your Keys
-                                                            From here</a></div>
+                                                                class="fa fa-key" aria-hidden="true"></i> {{ __('Get Your Keys From here') }} </a></div>
                                                 </div>
 
                                                 <div class="card-body">
@@ -482,14 +476,9 @@
                                                             name="STRIPE_SECRET" value="{{ env('STRIPE_SECRET') }}">
                                                         <span toggle="#password-field"
                                                             class="fa fa-fw fa-eye field_icon toggle-password31"></span>
-                                                        <!-- --------------- -->
-                                                        <!-- <input type="password" name="STRIPE_SECRET"
-                                                                     value="{{ env('STRIPE_SECRET') }}" class="form-control" id="strip_sec">
-                                                                 <span toggle="#strip_sec"
-                                                                     class="eye fa fa-fw fa-eye field-icon toggle-password"></span> -->
                                                         <small class="text-muted"><i class="fa fa-question-circle"></i>
-                                                            Enter your
-                                                            Stripe Secret Key</small>
+                                                            {{__("Enter your Stripe secret Key")}}    
+                                                        </small>
                                                     </div>
 
                                                     <label class="switch">
@@ -498,7 +487,7 @@
                                                             {{ $configs->stripe_enable==1 ? "checked" :"" }} />
                                                         <span class="knob"></span>
                                                     </label><br>
-                                                    <small class="help-block">(Enable it For Strip Payment Gateway
+                                                    <small class="help-block">({{__("Enable it For Strip Payment Gateway")}}
                                                         )</small>
                                                 </div><br>
 
@@ -506,9 +495,9 @@
                                                     <button type="reset" class="btn btn-danger mr-1"><i
                                                             class="fa fa-ban"></i> {{ __("Reset")}}</button>
                                                     <button @if(env('DEMO_LOCK')==0) type="submit" @else disabled
-                                                        title="This action is disabled in demo !" @endif type="submit"
+                                                        title="{{ __("This action is disabled in demo !") }}" @endif type="submit"
                                                         class="btn btn-md btn-primary">
-                                                        <i class="fa fa-check-circle"></i> Save Settings
+                                                        <i class="fa fa-check-circle"></i> {{__("Save Settings")}}
                                                     </button>
                                                 </div>
                                             </div>
@@ -527,9 +516,9 @@
                                                 <div class="card-header">
                                                     <label class="text-dark">Paystack Payment Settings</label>
                                                     <div class="pull-right card-title"><a target="__blank"
-                                                            title="Get Your Keys From here"
+                                                            title="{{ __('Get Your Keys From here') }}"
                                                             href="https://paystack.com/developers"><i class="fa fa-key"
-                                                                aria-hidden="true"></i> Get Your Keys From here</a>
+                                                                aria-hidden="true"></i> {{ __('Get Your Keys From here') }}</a>
                                                     </div>
                                                 </div>
 
@@ -546,8 +535,8 @@
                                                         <!-- --------------- -->
                                                         
                                                         <small class="text-muted"><i class="fa fa-question-circle"></i>
-                                                            Enter your
-                                                            Paystack Public Key</small>
+                                                            {{__('Enter your Paystack Public Key')}}    
+                                                        </small>
                                                     </div>
 
                                                     <div class="form-group eyeCy">
@@ -561,8 +550,8 @@
                                                             class="fa fa-fw fa-eye field_icon toggle-password42"></span>
                                                        
                                                         <small class="text-muted"><i class="fa fa-question-circle"></i>
-                                                            Enter your
-                                                            Paystack Secret Key</small>
+                                                            {{__("Enter your Paystack Secret Key")}}    
+                                                        </small>
                                                     </div>
 
                                                     <div class="form-group">
@@ -572,10 +561,10 @@
                                                         </label>
                                                         <input value="{{ env('PAYSTACK_PAYMENT_URL') }}"
                                                             name="PAYSTACK_PAYMENT_URL" type="text" class="form-control"
-                                                            placeholder="enter paystack payment url">
+                                                            placeholder="{{__("Enter your Paystack payment url")}}">
                                                         <small class="text-muted"><i class="fa fa-question-circle"></i>
-                                                            Enter your
-                                                            Paystack payment url</small>
+                                                            {{__("Enter your Paystack payment url")}}    
+                                                        </small>
                                                     </div>
 
                                                     <div class="form-group">
@@ -586,13 +575,13 @@
                                                             type="email" class="form-control"
                                                             placeholder="enter merchant email">
                                                         <small class="text-muted"><i class="fa fa-question-circle"></i>
-                                                            Enter your
-                                                            Paystack merchant url</small>
+                                                            {{__("Enter your Paystack merchant url")}}    
+                                                        </small>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label class="text-dark">
-                                                            PAYSTACK MERCHANT EMAIL: <span class="text-danger">*</span>
+                                                            {{__("PAYSTACK MERCHANT EMAIL:")}} <span class="text-danger">*</span>
                                                         </label>
                                                         <div class="input-group">
                                                             <input readonly value="{{ route('paystack.callback') }}"
@@ -601,15 +590,15 @@
                                                                 name="PAYSTACK_CALLBACK_URL"
                                                                 class="callback-url form-control">
                                                             <span class="input-group-addon" id="basic-addon2">
-                                                                <button title="Copy" type="button"
+                                                                <button title="{{ __("Copy") }}" type="button"
                                                                     class="copy btn btn-xs btn-default">
                                                                     <i class="fa fa-clipboard" aria-hidden="true"></i>
                                                                 </button>
                                                             </span>
                                                         </div>
                                                         <small class="text-muted"><i class="fa fa-question-circle"></i>
-                                                            Copy this
-                                                            Paystack callback url to your app</small>
+                                                            {{__("Copy this Paystack callback url to your app")}}    
+                                                        </small>
                                                     </div>
 
                                                     <div class="form-group">
@@ -619,8 +608,7 @@
                                                                 {{ $configs->paystack_enable == 1 ? "checked" :"" }} />
                                                             <span class="knob"></span>
                                                         </label><br>
-                                                        <small class="help-block">(Enable it For Paystack Payment
-                                                            Gateway )</small>
+                                                        <small class="help-block">({{__("Enable it For Paystack Payment Gateway ")}})</small>
                                                     </div>
                                                 </div>
 
@@ -628,9 +616,9 @@
                                                     <button type="reset" class="btn btn-danger mr-1"><i
                                                             class="fa fa-ban"></i> {{ __("Reset")}}</button>
                                                     <button @if(env('DEMO_LOCK')==0) type="submit" @else disabled
-                                                        title="This action is disabled in demo !" @endif
+                                                        title="{{ __("This action is disabled in demo !") }}" @endif
                                                         class="btn btn-md btn-primary"><i
-                                                            class="fa fa-check-circle"></i> Save Changes</button>
+                                                            class="fa fa-check-circle"></i> {{ __("Save Changes") }}</button>
                                                 </div>
 
                                             </div>
@@ -651,9 +639,9 @@
                                                     <label class="text-dark" for="MAIL_FROM_NAME"> PayU Money API
                                                         Setting (Indian Payment gateway) :</label>
                                                     <div class="pull-right card-title"><a target="__blank"
-                                                            title="Get Your Keys From here"
+                                                            title="{{ __('Get Your Keys From here') }}"
                                                             href="https://developer.payumoney.com/"><i class="fa fa-key"
-                                                                aria-hidden="true"></i> Get Your Keys From here</a>
+                                                                aria-hidden="true"></i> {{ __('Get Your Keys From here') }}</a>
                                                     </div>
                                                 </div>
 
@@ -667,8 +655,7 @@
                                                                 name="PAYU_DEFAULT" class="form-control"
                                                                 placeholder="PAYU DEFAULT MODE">
                                                             <small class="text-muted"><i
-                                                                    class="fa fa-question-circle"></i> If your account
-                                                                on PayUMoney use <b>money</b> else use<b>biz</b></small>
+                                                                    class="fa fa-question-circle"></i> {{__("If your account on PayUMoney use")}} <b>money</b> {{ __("else use") }}<b>biz</b></small>
                                                         </div>
 
                                                         <div class="form-group col-md-6">
@@ -677,9 +664,8 @@
                                                                 name="PAYU_METHOD" class="form-control"
                                                                 placeholder="PAYU DEFAULT METHOD">
                                                             <small class="text-muted"><i
-                                                                    class="fa fa-question-circle"></i> For Live use
-                                                                <b>secure</b> and for Test use <b>test</b> as
-                                                                mode</small>
+                                                                    class="fa fa-question-circle"></i> {{__("For Live use")}}
+                                                                <b>secure</b> {{__('and for Test use')}} <b>test</b> {{__('as mode')}}</small>
                                                         </div>
 
                                                         <div class="form-group col-md-6">
@@ -696,8 +682,9 @@
 
                                                             </div>
                                                             <small class="text-muted"><i
-                                                                    class="fa fa-question-circle"></i> Enter Payu
-                                                                merchant key</small>
+                                                                    class="fa fa-question-circle"></i> 
+                                                            {{__("Enter Payu merchant key")}}    
+                                                            </small>
                                                         </div>
 
                                                         <div class="form-group col-md-6">
@@ -713,8 +700,9 @@
                                                               
                                                             </div>
                                                             <small class="text-muted"><i
-                                                                    class="fa fa-question-circle"></i> Enter Payu
-                                                                merchant salt</small>
+                                                                    class="fa fa-question-circle"></i> 
+                                                                {{__("Enter Payu merchant salt")}}    
+                                                            </small>
                                                         </div>
 
                                                         <div class="form-group col-md-12">
@@ -723,14 +711,15 @@
                                                                 name="PAYU_AUTH_HEADER"
                                                                 value="{{ env('PAYU_AUTH_HEADER') }}">
                                                             <small class="text-muted"><i
-                                                                    class="fa fa-question-circle"></i> Enter payu auth
-                                                                header require only if your account is on
-                                                                payumoney</small>
+                                                                    class="fa fa-question-circle"></i> 
+                                                            {{__("Enter payu auth header require only if your account is on payumoney")}}    
+                                                            </small>
                                                         </div>
 
                                                         <div class="form-group col-md-12">
-                                                            <label for="PAY_U_MONEY_ACC">Is it a PayUMoney
-                                                                account?</label><br>
+                                                            <label for="PAY_U_MONEY_ACC">
+                                                                {{__("Is it a PayUMoney account?")}}
+                                                            </label><br>
 
                                                             <label class="switch">
                                                                 <input class="slider" type="checkbox"
@@ -742,17 +731,16 @@
                                                         </div>
 
                                                     </div>
-                                                    <label class="text-dark" for="PAYU_REFUND_URL"> PayU API REFUND
-                                                        URL:</label>
+                                                    <label class="text-dark" for="PAYU_REFUND_URL"> PayU API REFUND URL:</label>
                                                     <input type="text" value="{{ env('PAYU_REFUND_URL') }}"
                                                         name="PAYU_REFUND_URL" id="PAYU_REFUND_URL"
                                                         class="form-control">
 
                                                     <small class="text-muted">
-                                                        • For <b>Live</b> :
+                                                        • {{__("For")}} <b>Live</b> :
                                                         https://payumoney.com/treasury/merchant/refundPayment
                                                         <br>
-                                                        • For <b>Test</b> :
+                                                        • {{__("For")}} <b>Test</b> :
                                                         https://test.payumoney.com/treasury/merchant/refundPayment
                                                     </small>
                                                     <p></p>
@@ -762,7 +750,8 @@
                                                             {{ $configs->payu_enable == "1" ? "checked"  :"" }} />
                                                         <span class="knob"></span>
                                                     </label><br>
-                                                    <small class="txt-desc">(Enable it to active Payu Payment gateway)
+                                                    <small class="txt-desc">
+                                                        ({{__("Enable it to active Payu Payment gateway")}})
                                                     </small>
 
                                                 </div><br>
@@ -771,9 +760,9 @@
                                                     <button type="reset" class="btn btn-danger mr-1"><i
                                                             class="fa fa-ban"></i> {{ __("Reset")}}</button>
                                                     <button @if(env('DEMO_LOCK')==0) type="submit" @else disabled
-                                                        title="This action is disabled in demo !" @endif
+                                                        title="{{ __("This action is disabled in demo !") }}" @endif
                                                         class="btn btn-primary btn-md">
-                                                        <i class="fa fa-check-circle"></i> Save Setting
+                                                        <i class="fa fa-check-circle"></i> {{__("Save Setting")}}
                                                     </button>
                                                 </div>
                                             </div>
@@ -793,10 +782,9 @@
                                                     <label class="text-dark" for="MAIL_FROM_NAME">Instamojo API
                                                         Setting:</label>
                                                     <div class="float-right card-title"><a target="__blank"
-                                                            title="Get Your Keys From here"
+                                                            title="{{ __('Get Your Keys From here') }}"
                                                             href="https://www.instamojo.com/developers/"><i
-                                                                class="fa fa-key" aria-hidden="true"></i> Get Your Keys
-                                                            From here</a></div>
+                                                                class="fa fa-key" aria-hidden="true"></i> {{ __('Get Your Keys From here') }} </a></div>
                                                 </div>
 
                                                 <div class="card-body">
@@ -807,10 +795,10 @@
                                                         id="INSTAMOJO_URL" class="form-control">
 
                                                     <small class="text-muted">
-                                                        • For <b>Live</b> use <a
+                                                        • {{__("For")}} <b>Live</b> {{__("use")}} <a
                                                             href="#">https://instamojo.com/api/1.1/</a>
                                                         <br>
-                                                        • For <b>Test</b> use <a
+                                                        • {{__("For")}} <b>Test</b> {{__("use")}} <a
                                                             href="">https://test.instamojo.com/api/1.1/</a>
                                                     </small>
                                                     <p></p>
@@ -821,10 +809,10 @@
                                                         name="IM_REFUND_URL" id="IM_REFUND_URL" class="form-control">
 
                                                     <small class="text-muted">
-                                                        • For <b>Live</b> use <a
+                                                        • {{__("For")}} <b>Live</b> {{__("use")}} <a
                                                             href="#">https://instamojo.com/api/1.1/refunds/</a>
                                                         <br>
-                                                        • For <b>Test</b> use <a
+                                                        • {{__("For")}} <b>Test</b> {{__("use")}} <a
                                                             href="">https://test.instamojo.com/api/1.1/refunds/</a>
                                                     </small>
                                                     <p></p>
@@ -841,13 +829,11 @@
                                                     </div>
 
                                                     <small class="text-muted"><i class="fa fa-question-circle"></i>
-                                                        Please Enter
-                                                        Instamojo Private API Key </small>
+                                                        {{__("Please Enter Instamojo Private API Key")}} </small>
                                                     <p></p>
 
                                                     <div class="eyeCy">
-                                                        <label class="text-dark" for="IM_AUTH_TOKEN"> Private Auth
-                                                            Token:</label>
+                                                        <label class="text-dark" for="IM_AUTH_TOKEN"> Private Auth Token:</label>
                                                         <!-- --------------- -->
                                                         <input id="pass_log_id62" type="password" class="form-control"
                                                             name="IM_AUTH_TOKEN" value="{{ env('IM_AUTH_TOKEN') }}">
@@ -857,8 +843,7 @@
                                                     </div>
 
                                                     <small class="text-muted"><i class="fa fa-question-circle"></i>
-                                                        Please Enter
-                                                        Instamojo Auth Token </small>
+                                                        {{__("Please Enter Instamojo Auth Token")}} </small>
                                                     <p></p>
 
                                                     <!-- -------------------------- -->
@@ -869,17 +854,19 @@
                                                     </label><br>
                                                     
 
-                                                    <small class="txt-desc">(Enable it to active Instamojo Payment
-                                                        gateway )</small>
+                                                    <small class="txt-desc">({{__("Enable it to active Instamojo Payment gateway")}})</small>
                                                 </div><br>
 
                                                 <div class="form-group">
                                                     <button type="reset" class="btn btn-danger mr-1"><i
                                                             class="fa fa-ban"></i> {{ __("Reset")}}</button>
                                                     <button @if(env('DEMO_LOCK')==0) type="submit" @else disabled
-                                                        title="This action is disabled in demo !" @endif
+                                                        title="{{ __("This action is disabled in demo !") }}" @endif
                                                         class="btn btn-md btn-primary"><i
-                                                            class="fa fa-check-circle"></i> Save Setting</button>
+                                                            class="fa fa-check-circle"></i>
+                                                        
+                                                        {{__("Save Setting")}}
+                                                        </button>
                                                 </div>
 
                                             </div>
@@ -900,9 +887,9 @@
                                                 <div class="card-header">
                                                     <label class="text-dark"> Paytm API Setting:</label>
                                                     <div class="pull-right panel-title"><a target="__blank"
-                                                            title="Get Your Keys From here"
+                                                            title="{{ __('Get Your Keys From here') }}"
                                                             href="https://developer.paytm.com/docs/"><i class="fa fa-key"
-                                                                aria-hidden="true"></i> Get Your Keys From here</a>
+                                                                aria-hidden="true"></i> {{ __('Get Your Keys From here') }}</a>
                                                     </div>
                                                 </div>
                                                 <div class="card-body">
@@ -913,9 +900,9 @@
                                                         <input type="text" value="{{ env('PAYTM_ENVIRONMENT') }}"
                                                             name="PAYTM_ENVIRONMENT" id="PAYTM_ENVIRONMENT" type="password"
                                                             class="form-control">
-                                                        <small class="text-muted"><i class="fa fa-question-circle"></i> For
+                                                        <small class="text-muted"><i class="fa fa-question-circle"></i> {{__("For")}}
                                                             Live use
-                                                            <b>production</b> and for Test use <b>local</b> as
+                                                            <b>production</b> {{__("and for Test use")}} <b>local</b> as
                                                             ENVIRONMENT</small>
                                                     </div>
     
@@ -932,8 +919,8 @@
                                                                 class="fa fa-fw fa-eye field_icon toggle-password71"></span>
                                                            
                                                             <small class="text-muted"><i class="fa fa-question-circle"></i>
-                                                                Enter
-                                                                PAYTM MERCHANT ID</small>
+                                                                {{__("Enter PAYTM MERCHANT ID")}}    
+                                                            </small>
                                                         </div>
                                                     </div>
     
@@ -949,8 +936,8 @@
                                                                 class="fa fa-fw fa-eye field_icon toggle-password72"></span>
                                                           
                                                             <small class="text-muted"><i class="fa fa-question-circle"></i>
-                                                                Enter
-                                                                PAYTM MERCHANT KEY</small>
+                                                                {{__("Enter PAYTM MERCHANT KEY")}}    
+                                                            </small>
                                                         </div>
                                                     </div>
     
@@ -961,7 +948,7 @@
                                                         <span class="knob"></span>
                                                     </label><br>
                                                    
-                                                    <small>(Enable to activate Paytm Payment gateway )</small>
+                                                    <small>({{__("Enable to activate Paytm Payment gateway")}})</small>
     
                                                 </div><br>
     
@@ -969,9 +956,10 @@
                                                     <button type="reset" class="btn btn-danger mr-1"><i
                                                             class="fa fa-ban"></i> {{ __("Reset")}}</button>
                                                     <button @if(env('DEMO_LOCK')==0) type="submit" @else disabled
-                                                        title="This action is disabled in demo !" @endif
+                                                        title="{{ __("This action is disabled in demo !") }}" @endif
                                                         class="btn btn-md btn-primary"><i class="fa fa-check-circle"></i>
-                                                        Save Changes</button>
+                                                        {{__("Save Changes")}}    
+                                                    </button>
                                                 </div>
                                             </div>
 
@@ -988,9 +976,10 @@
                                                 <div class="card-header">
                                                     <label> RazorPay API Setting:</label>
                                                     <div class="float-right card-title"><a target="__blank"
-                                                            title="Get Your Keys From here" href="https://razorpay.com/docs/"><i
-                                                                class="fa fa-key" aria-hidden="true"></i> Get Your Keys From
-                                                            here</a>
+                                                            title="{{ __('Get Your Keys From here') }}" href="https://razorpay.com/docs/"><i
+                                                                class="fa fa-key" aria-hidden="true"></i> 
+                                                                {{__("Get Your Keys From here")}}
+                                                            </a>
                                                     </div>
                                                 </div>
                                                 <form action="{{ route('post.rpay.setting') }}" method="POST">
@@ -1008,7 +997,8 @@
                                                                     class="fa fa-fw fa-eye field_icon toggle-password81"></span>
                                                                 
                                                                 <small class="text-muted"><i class="fa fa-question-circle"></i>
-                                                                    Enter Razorpay API key</small>
+                                                                {{__("Enter Razorpay API key")}}    
+                                                                </small>
                                                             </div>
                                                         </div>
         
@@ -1024,8 +1014,8 @@
                                                                     class="fa fa-fw fa-eye field_icon toggle-password82"></span>
                                                                 
                                                                 <small class="text-muted"><i class="fa fa-question-circle"></i>
-                                                                    Enter
-                                                                    Razorpay secret key</small>
+                                                                    {{__("Enter Razorpay secret key")}}    
+                                                                </small>
                                                             </div>
                                                         </div>
                                                         <p></p>
@@ -1035,8 +1025,7 @@
                                                             <span class="knob"></span>
                                                         </label><br>
                                                        
-                                                        <small class="txt-desc">(Enable to activate Razorpay Payment gateway
-                                                            )</small>
+                                                        <small class="txt-desc">({{__("Enable to activate Razorpay Payment gateway")}})</small>
                                                         <br><br>
         
                                                     </div>
@@ -1045,10 +1034,10 @@
                                                         <button type="reset" class="btn btn-danger mr-1"><i
                                                                 class="fa fa-ban"></i> {{ __("Reset")}}</button>
                                                         <button @if(env('DEMO_LOCK')==0) type="submit" @else disabled
-                                                            title="This action is disabled in demo !" @endif
+                                                            title="{{ __('This action is disabled in demo !') }}" @endif
                                                             class="btn btn-md btn-primary"><i class="fa fa-check-circle"></i>
-                                                            Save
-                                                            Setting</button>
+                                                        {{__("Save Setting")}}    
+                                                        </button>
                                                     </div>
         
                                                 </form>
@@ -1067,14 +1056,13 @@
                                                 <div class="float-right card-title">
                                                     <a target="__blank" title="Get Your Test Keys From here"
                                                         href="https://sandbox.payhere.lk/account/signup/createaccount"><i
-                                                            class="fa fa-key" aria-hidden="true"></i> Get Your Test Keys
-                                                        From here
+                                                            class="fa fa-key" aria-hidden="true"></i> 
+                                                            {{__('Get Your Test Keys From here')}}
                                                     </a>
                                                     |
-                                                    <a target="__blank" title="Get Your Live Keys From here"
+                                                    <a target="__blank" title="{{__('Get Your Live Keys From here') }}"
                                                         href="https://www.payhere.lk/account/signup/createaccount"><i
-                                                            class="fa fa-key" aria-hidden="true"></i> Get Your Live Keys
-                                                        From here
+                                                            class="fa fa-key" aria-hidden="true"></i> {{__('Get Your Live Keys From here') }}
                                                     </a>
                                                 </div>
                                             </div>
@@ -1093,8 +1081,8 @@
                                                                 class="form-control">
     
                                                             <small class="text-muted"><i class="fa fa-question-circle"></i>
-                                                                Enter
-                                                                PAYHERE BUISNESS APP CODE</small>
+                                                                {{__("Enter PAYHERE BUISNESS APP CODE")}}    
+                                                            </small>
                                                         </div>
                                                     </div>
     
@@ -1109,8 +1097,9 @@
                                                             <span toggle="#password-field"
                                                                 class="fa fa-fw fa-eye field_icon toggle-password91"></span>
                                                             
-                                                            <small><i class="fa fa-question-circle"></i> Enter
-                                                                PAYHERE APP secret key</small>
+                                                            <small><i class="fa fa-question-circle"></i> 
+                                                                {{__('Enter PAYHERE APP secret key')}}    
+                                                            </small>
                                                         </div>
                                                     </div>
     
@@ -1123,8 +1112,8 @@
                                                                 type="text" class="form-control">
     
                                                             <small class="text-muted"><i class="fa fa-question-circle"></i>
-                                                                Enter
-                                                                PAYHERE MERCHANT ID CODE</small>
+                                                                {{__("Enter PAYHERE MERCHANT ID CODE")}}    
+                                                            </small>
                                                         </div>
                                                     </div>
     
@@ -1136,8 +1125,7 @@
                                                         <span class="knob"></span>
                                                     </label><br>
                                                     
-                                                    <small class="txt-desc">(Choose Payhere payment gateway
-                                                        enviourment.)</small>
+                                                    <small class="txt-desc">({{__("Choose Payhere payment gateway enviourment.")}})</small>
                                                     <br><br>
     
                                                     <label class="switch">
@@ -1148,7 +1136,7 @@
     
                                                   
     
-                                                    <small>(Enable to activate Payhere Payment gateway.)</small>
+                                                    <small>({{__("Enable to activate Payhere Payment gateway.")}})</small>
                                                     <br><br>
     
                                                 </div>
@@ -1157,10 +1145,10 @@
                                                     <button type="reset" class="btn btn-danger mr-1"><i
                                                             class="fa fa-ban"></i> {{ __("Reset")}}</button>
                                                     <button @if(env('DEMO_LOCK')==0) type="submit" @else disabled
-                                                        title="This action is disabled in demo !" @endif
+                                                        title="{{ __("This action is disabled in demo !") }}" @endif
                                                         class="btn btn-md btn-primary"><i class="fa fa-check-circle"></i>
-                                                        Save
-                                                        Setting</button>
+                                                    {{__("Save Setting")}}    
+                                                    </button>
                                                 </div>
     
                                             </form>
@@ -1177,10 +1165,9 @@
                                             <div class="card-header">
                                                 <label class="text-dark"> Cashfree Payment Settings:</label>
                                                 <div class="float-right card-title">
-                                                    <a target="__blank" title="Get Your Keys From here"
+                                                    <a target="__blank" title="{{ __('Get Your Keys From here') }}"
                                                         href="https://merchant.cashfree.com/merchants/signup"><i
-                                                            class="fa fa-key" aria-hidden="true"></i> Get Your Keys From
-                                                        here
+                                                            class="fa fa-key" aria-hidden="true"></i> {{__("Get Your Keys From here")}}
                                                     </a>
                                                 </div>
                                             </div>
@@ -1219,8 +1206,8 @@
                                                             value="{{ env('CASHFREE_END_POINT') }}">
     
                                                         <small class="text-muted">
-                                                            <i class="fa fa-question-circle"></i> • For <b>Live</b> use :
-                                                            https://api.cashfree.com | • For <b>Test</b> use :
+                                                            <i class="fa fa-question-circle"></i> • {{__("For")}} <b>Live</b> {{__("use")}} :
+                                                            https://api.cashfree.com | • {{__("For")}} <b>Test</b> {{__("use")}} :
                                                             https://test.cashfree.com
                                                         </small>
                                                     </div>
@@ -1235,7 +1222,7 @@
     
                                                       
     
-                                                        <small>(Enable to activate Cashfree Payment gateway.)</small>
+                                                        <small>({{ __("Enable to activate Cashfree Payment gateway.") }})</small>
                                                     </div>
     
                                                 </div>
@@ -1244,7 +1231,7 @@
                                                     <button type="reset" class="btn btn-danger mr-1"><i
                                                             class="fa fa-ban"></i> {{ __("Reset")}}</button>
                                                     <button type="submit" class="btn btn-primary btn-md">
-                                                        <i class="fa fa-check-circle"></i> Save Settings
+                                                        <i class="fa fa-check-circle"></i> {{__("Save Settings")}}
                                                     </button>
                                                 </div>
                                             </form>
@@ -1263,10 +1250,10 @@
 
                                                 <label class="text-dark"> Skrill Payment Settings:</label>
                                                 <div class="float-right card-title">
-                                                    <a target="__blank" title="Get Your Keys From here"
+                                                    <a target="__blank" title="{{ __('Get Your Keys From here') }}"
                                                         href="https://www.skrill.com/fileadmin/content/pdf/Skrill_Quick_Checkout_Guide.pdf"><i
-                                                            class="fa fa-key" aria-hidden="true"></i> Get Your Keys From
-                                                        here
+                                                            class="fa fa-key" aria-hidden="true"></i> 
+                                                            {{__("Get Your Keys From here")}}
                                                     </a>
                                                 </div>
     
@@ -1279,23 +1266,19 @@
                                                 <div class="card-body">
     
                                                     <div class="alert alert-success">
-                                                        <p><i class="fa fa-info-circle"></i> Important Note:</p>
+                                                        <p><i class="fa fa-info-circle"></i> {{ __("Important Note:") }}</p>
                                                         <ul>
                                                             <li>
-                                                                Skrill recommends that you open a merchant test account to
-                                                                help you become familiar with the Automated Payments
-                                                                Interface. Test accounts operate in the live environment,
-                                                                but funds cannot be sent from a test account to a live
-                                                                account.
+                                                                
+
+                                                                {{__("Skrill recommends that you open a merchant test account to help you become familiar with the Automated Payments Interface. Test accounts operate in the live environment, but funds cannot be sent from a test account to a live account.")}}
     
     
                                                             </li>
                                                             <li>
-                                                                To obtain a test account, please register a personal account
-                                                                at <a href="http://www.skrill.com"
-                                                                    target="__blank">http://www.skrill.com</a> , and then
-                                                                contact the Merchant Services team with the account details
-                                                                so that they can enable it.
+                                                                {{__("To obtain a test account, please register a personal account at")}}
+                                                                 <a href="http://www.skrill.com"
+                                                                    target="__blank">http://www.skrill.com</a> {{__(", and then contact the Merchant Services team with the account details so that they can enable it.")}}
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -1332,7 +1315,7 @@
     
                                                        
     
-                                                        <small>(Enable to activate Skrill Payment gateway.)</small>
+                                                        <small>({{ __("Enable to activate Skrill Payment gateway.") }})</small>
                                                     </div>
     
                                                 </div>
@@ -1341,7 +1324,7 @@
                                                     <button type="reset" class="btn btn-danger mr-1"><i
                                                             class="fa fa-ban"></i> {{ __("Reset")}}</button>
                                                     <button type="submit" class="btn btn-primary btn-md"><i
-                                                            class="fa fa-check-circle"></i> Save Settings
+                                                            class="fa fa-check-circle"></i> {{__('Save Settings')}}
                                                     </button>
                                                 </div>
                                             </form>
@@ -1359,10 +1342,9 @@
                                                 <div class="card-header">
                                                     <label> Omise Payment Settings:</label>
                                                     <div class="float-right card-title">
-                                                        <a target="__blank" title="Get Your Keys From here"
+                                                        <a target="__blank" title="{{ __('Get Your Keys From here') }}"
                                                             href="https://dashboard.omise.co/signup?locale=en&origin=direct"><i
-                                                                class="fa fa-key" aria-hidden="true"></i> Get Your Keys From
-                                                            here</a>
+                                                                class="fa fa-key" aria-hidden="true"></i> {{ __('Get Your Keys From here') }}</a>
                                                     </div>
                                                 </div>
         
@@ -1402,8 +1384,8 @@
                                                                 name="OMISE_API_VERSION" value="{{ env('OMISE_API_VERSION') }}">
         
                                                             <small class="text-muted">
-                                                                <b>• GET API VERSION <a target="__blank"
-                                                                        href="https://dashboard.omise.co/api-version/edit">HERE</a></b>
+                                                                <b>• {{__("GET API VERSION")}} <a target="__blank"
+                                                                        href="https://dashboard.omise.co/api-version/edit">{{ __("HERE") }}</a></b>
                                                             </small>
                                                         </div>
         
@@ -1416,8 +1398,7 @@
         
                                                            
         
-                                                            <small class="txt-desc">(Enable to activate Omise Payment
-                                                                gateway.)</small>
+                                                            <small class="txt-desc">({{ __("Enable to activate Omise Payment gateway.") }})</small>
                                                         </div>
         
                                                     </div>
@@ -1426,7 +1407,7 @@
                                                         <button type="reset" class="btn btn-danger mr-1"><i
                                                                 class="fa fa-ban"></i> {{ __("Reset")}}</button>
                                                         <button type="submit" class="btn btn-primary btn-md"><i
-                                                                class="fa fa-check-circle"></i> Save Settings</button>
+                                                                class="fa fa-check-circle"></i> {{ __("Save Settings") }}</button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -1443,10 +1424,11 @@
 
                                                     <label class="text-dark"> Mollie Payment Settings:</label>
                                                     <div class="float-right card-title">
-                                                        <a target="__blank" title="Get Your Keys From here"
+                                                        <a target="__blank" title="{{ __('Get Your Keys From here') }}"
                                                             href="https://www.mollie.com/dashboard/signup?lang=en"><i
-                                                                class="fa fa-key" aria-hidden="true"></i> Get Your Keys From
-                                                            here</a>
+                                                                class="fa fa-key" aria-hidden="true"></i> 
+                                                            {{__("Get Your Keys From here")}}    
+                                                        </a>
                                                     </div>
         
                                                 </div>
@@ -1481,7 +1463,7 @@
                                                             </label><br>
         
         
-                                                            <small>(Enable to activate Moli Payment gateway.)</small>
+                                                            <small>({{__("Enable to activate Moli Payment gateway.")}})</small>
                                                         </div>
         
                                                     </div>
@@ -1490,7 +1472,7 @@
                                                         <button type="reset" class="btn btn-danger mr-1"><i
                                                                 class="fa fa-ban"></i> {{ __("Reset")}}</button>
                                                         <button type="submit" class="btn btn-primary btn-md">
-                                                            <i class="fa fa-check-circle"></i> Save Settings
+                                                            <i class="fa fa-check-circle"></i> {{__("Save Settings")}}
                                                         </button>
                                                     </div>
                                                 </form>
@@ -1508,9 +1490,9 @@
 
                                                     <label class="text-dark">Rave Payment Settings:</label>
                                                     <div class="float-right card-title">
-                                                        <a target="__blank" title="Get Your Keys From here"
+                                                        <a target="__blank" title="{{ __('Get Your Keys From here') }}"
                                                             href="https://dashboard.flutterwave.com/login"><i class="fa fa-key"
-                                                                aria-hidden="true"></i> Get Your Keys From here
+                                                                aria-hidden="true"></i> {{ __('Get Your Keys From here') }}
                                                         </a>
                                                     </div>
         
@@ -1587,7 +1569,7 @@
                                                         </div>
         
                                                         <div class="form-group">
-                                                            <label class="text-dark" for="my-input">Status: <span
+                                                            <label class="text-dark" for="my-input">{{ __('Status:') }} <span
                                                                     class="text-danger">*</span></label>
                                                             <br>
                                                             <label class="switch">
@@ -1596,8 +1578,7 @@
                                                                 <span class="knob"></span>
                                                             </label><br>
                                                            
-                                                            <small class="txt-desc">(Enable to activate Rave Payment
-                                                                gateway.)</small>
+                                                            <small class="txt-desc">({{__("Enable to activate Rave Payment gateway.")}})</small>
                                                         </div>
         
                                                     </div>
@@ -1606,7 +1587,7 @@
                                                         <button type="reset" class="btn btn-danger mr-1"><i
                                                                 class="fa fa-ban"></i> {{ __("Reset")}}</button>
                                                         <button type="submit" class="btn btn-primary btn-md">
-                                                            <i class="fa fa-save"></i> Save Settings
+                                                            <i class="fa fa-save"></i> {{__("Save Settings")}}
                                                         </button>
                                                     </div>
                                                 </form>
@@ -1624,9 +1605,9 @@
 
                                                 <label class="text-dark">SSLCommerze Payment Settings:</label>
                                                 <div class="float-right card-title">
-                                                    <a target="__blank" title="Get Your Keys From here"
+                                                    <a target="__blank" title="{{ __('Get Your Keys From here') }}"
                                                         href="https://developer.sslcommerz.com/"><i class="fa fa-key"
-                                                            aria-hidden="true"></i> Get Your Keys From here
+                                                            aria-hidden="true"></i> {{ __('Get Your Keys From here') }}
                                                     </a>
                                                 </div>
     
@@ -1643,8 +1624,8 @@
                                                             name="API_DOMAIN_URL">
                                                         <small class="text-muted">
     
-                                                            <p>• For <b>Sandbox</b>, use "https://sandbox.sslcommerz.com" <br> •
-                                                                For <b>Live</b>, use "https://securepay.sslcommerz.com"</p>
+                                                            <p>• {{__('For') }} <b>Sandbox</b>, {{__("use")}} "https://sandbox.sslcommerz.com" <br> •
+                                                                {{__("For")}} <b>Live</b>, {{__("use")}} "https://securepay.sslcommerz.com"</p>
     
                                                         </small>
                                                     </div>
@@ -1655,7 +1636,7 @@
                                                             class="form-control" placeholder="enter store id">
                                                         <small class="text-muted">
     
-                                                            <i class="fa fa-question-circle"></i> Enter your store id
+                                                            <i class="fa fa-question-circle"></i> {{__("Enter your store id")}}
     
                                                         </small>
                                                     </div>
@@ -1663,8 +1644,7 @@
                                                     <div class="form-group">
                                                         <div class="eyeCy">
     
-                                                            <label class="text-dark" for="STORE_PASSWORD"> Store
-                                                                Password:</label>
+                                                            <label class="text-dark" for="STORE_PASSWORD"> {{ __("Store Password:") }}</label>
                                                             <!-- --------------- -->
                                                             <input id="pass_log_id151" type="password" class="form-control"
                                                                 name="STORE_PASSWORD" id="STORE_PASSWORD"
@@ -1674,8 +1654,9 @@
                                                             
     
                                                         </div>
-                                                        <small class="text-muted"><i class="fa fa-question-circle"></i> Enter
-                                                            store password</small>
+                                                        <small class="text-muted"><i class="fa fa-question-circle"></i>
+                                                            {{__("Enter store password")}}
+                                                        </small>
                                                     </div>
     
                                                     <div class="form-group">
@@ -1688,8 +1669,7 @@
                                                             <span class="knob"></span>
                                                         </label><br>
                                                     
-                                                        <small class="txt-desc">(Enable it to when it's when sandbox mode is
-                                                            true.) </small>
+                                                        <small class="txt-desc">({{ __("Enable it to when it's when sandbox mode is true.") }}) </small>
                                                     </div>
     
                                                     <div class="form-group">
@@ -1701,12 +1681,12 @@
                                                             <span class="knob"></span>
                                                         </label><br>
                                                     
-                                                        <small class="txt-desc">(Enable or disable sandbox by toggle it.)
+                                                        <small class="txt-desc">({{__("Enable or disable sandbox by toggle it.")}})
                                                         </small>
                                                     </div>
     
                                                     <div class="form-group">
-                                                        <label class="text-dark" for="">Status:</label><br>
+                                                        <label class="text-dark" for="">{{ __('Status:') }}</label><br>
                                                         <!-- ---------------------- -->
                                                         <label class="switch">
                                                             <input class="slider" type="checkbox" name="sslcommerze_enable"
@@ -1714,15 +1694,14 @@
                                                             <span class="knob"></span>
                                                         </label><br>
                                                     
-                                                        <small class="txt-desc">(Active or deactive payment gateway by toggling
-                                                            it.) </small>
+                                                        <small class="txt-desc">({{__("Active or deactive payment gateway by toggling it.")}}) </small>
                                                     </div>
     
                                                     <div class="form-group">
                                                         <button type="reset" class="btn btn-danger mr-1"><i
                                                                 class="fa fa-ban"></i> {{ __("Reset")}}</button>
                                                         <button type="submit" class="btn btn-md btn-primary">
-                                                            <i class="fa fa-save"></i> Save Settings
+                                                            <i class="fa fa-save"></i> {{__("Save Settings")}}
                                                         </button>
                                                     </div>
     
@@ -1741,9 +1720,9 @@
                                                 <div class="card-header">
                                                     <label class="text-dark">AAMARPAY Payment Settings:</label>
                                                     <div class="pull-right panel-title">
-                                                        <a target="__blank" title="Get Your Keys From here"
+                                                        <a target="__blank" title="{{ __('Get Your Keys From here') }}"
                                                             href="https://aamarpay.com/"><i class="fa fa-key"
-                                                                aria-hidden="true"></i> Get Your Keys From here
+                                                                aria-hidden="true"></i> {{ __('Get Your Keys From here') }}
                                                         </a>
                                                     </div>
                                                 </div>
@@ -1787,8 +1766,7 @@
         
                                                            
         
-                                                            <small class="txt-desc">(Enable to activate AAMARPAY sandbox
-                                                                payment.)</small>
+                                                            <small class="txt-desc">({{__("Enable to activate AAMARPAY sandbox payment.")}})</small>
                                                         </div>
         
                                                         <div class="form-group">
@@ -1798,8 +1776,7 @@
                                                                 <span class="knob"></span>
                                                             </label><br>
                                                             
-                                                            <small class="txt-desc">(Enable to activate AAMARPAY Payment
-                                                                gateway.)</small>
+                                                            <small class="txt-desc">({{__("Enable to activate AAMARPAY Payment gateway.")}})</small>
                                                         </div>
         
                                                     </div>
@@ -1808,7 +1785,7 @@
                                                         <button type="reset" class="btn btn-danger mr-1"><i
                                                                 class="fa fa-ban"></i> {{ __("Reset")}}</button>
                                                         <button type="submit" class="btn btn-primary btn-md">
-                                                            <i class="fa fa-check-circle"></i> Save Settings
+                                                            <i class="fa fa-check-circle"></i> {{__('Save Settings')}}
                                                         </button>
                                                     </div>
                                                 </form>
@@ -1824,12 +1801,11 @@
                                         <div class="card">
                                             <div class="card-header">
 
-                                                <label class="text-dark">iyzico Payment Settings:</label>
+                                                <label class="text-dark">{{ __("iyzico Payment Settings:") }}</label>
                                                 <div class="float-right card-title">
                                                     <a target="__blank" title="Get Your TEST Keys From here"
                                                         href="https://sandbox-merchant.iyzipay.com/auth/register"><i
-                                                            class="fa fa-key" aria-hidden="true"></i> Get Your TEST Keys
-                                                        From here
+                                                            class="fa fa-key" aria-hidden="true"></i> {{__('Get Your TEST Keys From here')}}
                                                     </a>
                                                 </div>
     
@@ -1845,8 +1821,8 @@
                                                             class="form-control" placeholder="enter IYZIPAY BASE URL"
                                                             name="IYZIPAY_BASE_URL">
                                                         <small class="text-muted">
-                                                            <p>• For <b>Sandbox</b>, use "https://sandbox-api.iyzipay.com" <br>
-                                                                • For <b>Live</b>, use "https://api.iyzipay.com"</p>
+                                                            <p>• {{__('For') }} <b>{{ __("Sandbox") }}</b>, {{__("use")}} "https://sandbox-api.iyzipay.com" <br>
+                                                                • {{__("For")}} <b>Live</b>, {{__("use")}} "https://api.iyzipay.com"</p>
                                                         </small>
                                                     </div>
         
@@ -1854,9 +1830,9 @@
                                                         <label class="text-dark">IYZIPAY API KEY:</label>
                                                         <input name="IYZIPAY_API_KEY" value="{{ env('IYZIPAY_API_KEY') }}"
                                                             type="text" class="form-control"
-                                                            placeholder="enter IYZIPAY API KEY ID">
+                                                            placeholder="{{ __("Enter IYZIPAY API KEY ID") }}">
                                                         <small class="text-muted">
-                                                            <i class="fa fa-question-circle"></i> Enter your IYZIPAY API KEY
+                                                            <i class="fa fa-question-circle"></i> {{__("Enter your IYZIPAY API KEY")}}
                                                         </small>
                                                     </div>
         
@@ -1875,12 +1851,11 @@
                                                            
         
                                                         </div>
-                                                        <small><i class="fa fa-question-circle"></i> Enter IYZIPAY SECRET KEY
-                                                            password</small>
+                                                        <small><i class="fa fa-question-circle"></i> {{ __("Enter IYZIPAY SECRET KEY password") }}</small>
                                                     </div>
         
                                                     <div class="form-group">
-                                                        <label class="text-dark" for="">Status:</label><br>
+                                                        <label class="text-dark" for="">{{ __('Status:') }}</label><br>
                                                         <label class="switch">
                                                             <input class="slider" type="checkbox" id="iyzico_enable"
                                                                 name="iyzico_enable"
@@ -1888,15 +1863,14 @@
                                                             <span class="knob"></span>
                                                         </label><br>
                                                        
-                                                        <small class="txt-desc">(Active or deactive payment gateway by toggling
-                                                            it.) </small>
+                                                        <small class="txt-desc">({{__("Active or deactive payment gateway by toggling it.")}}) </small>
                                                     </div>
         
                                                     <div class="form-group">
                                                         <button type="reset" class="btn btn-danger mr-1"><i
                                                                 class="fa fa-ban"></i> {{ __("Reset")}}</button>
                                                         <button type="submit" class="btn btn-md btn-primary">
-                                                            <i class="fa fa-save"></i> Save Settings
+                                                            <i class="fa fa-save"></i> {{__("Save Settings")}}
                                                         </button>
                                                     </div>
         
@@ -1967,17 +1941,19 @@
                                             <div class="panel panel-primary">
                                                 <div class="panel-heading">
                                                     <div class="panel-title">
-                                                        <label class="text-dark">Bank Payment Settings </label>
+                                                        <label class="text-dark">
+                                                            {{__("Bank Payment Settings")}}
+                                                        </label>
                                                     </div>
                                                 </div>
 
                                                 <div class="panel-body">
                                                     <div class="form-group">
                                                         <label class="text-dark">
-                                                            Bank Name <span class="text-danger">*</span>
+                                                            {{__("Bank Name:")}} <span class="text-danger">*</span>
                                                         </label>
 
-                                                        <input placeholder="Please enter bank name" type="text"
+                                                        <input placeholder="{{ __("Please enter bank name") }}" type="text"
                                                             id="first-name" name="bankname"
                                                             class="form-control col-md-7 col-xs-12"
                                                             value="{{$bank->bankname ?? ''}} ">
@@ -1985,11 +1961,11 @@
 
                                                     <div class="form-group">
                                                         <label class="text-dark">
-                                                            Branch Name <span class="text-danger">*</span>
+                                                            {{__("Branch Name:")}} <span class="text-danger">*</span>
                                                         </label>
 
 
-                                                        <input placeholder="Please enter branch name" type="text"
+                                                        <input placeholder="{{ __("Please enter branch name") }}" type="text"
                                                             id="first-name" name="branchname"
                                                             class="form-control col-md-7 col-xs-12"
                                                             value="{{$bank->branchname ?? ''}} ">
@@ -1997,21 +1973,21 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="text-dark">
-                                                            IFSC Code <span class="text-danger">*</span>
+                                                            {{__("IFSC Code:")}} <span class="text-danger">*</span>
                                                         </label>
 
 
-                                                        <input placeholder="Enter IFSC code" type="text" id="first-name"
+                                                        <input placeholder="{{ __("Enter IFSC code") }}" type="text" id="first-name"
                                                             name="ifsc" class="form-control col-md-7 col-xs-12"
                                                             value="{{$bank->ifsc ?? ''}} ">
 
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="text-dark">
-                                                            Account Number <span class="text-danger">*</span>
+                                                            {{__('Account Number')}} <span class="text-danger">*</span>
                                                         </label>
 
-                                                        <input placeholder="Enter account no." type="text"
+                                                        <input placeholder="{{ __("Enter account no.") }}" type="text"
                                                             id="first-name" name="account"
                                                             class="form-control col-md-7 col-xs-12"
                                                             value="{{$bank->account ?? ''}}">
@@ -2019,11 +1995,11 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="text-dark">
-                                                            Account Name <span class="text-danger">*</span>
+                                                            {{ __("Account Name ") }}<span class="text-danger">*</span>
                                                         </label>
 
 
-                                                        <input placeholder="Enter account name" type="text"
+                                                        <input placeholder="{{ __("Enter account name") }}" type="text"
                                                             id="first-name" value="{{$bank->acountname ?? ''}}"
                                                             name="acountname" class="form-control col-md-7 col-xs-12">
 
@@ -2035,10 +2011,9 @@
                                                     <button type="reset" class="btn btn-danger mr-1"><i
                                                             class="fa fa-ban"></i> {{ __("Reset")}}</button>
                                                     <button @if(env('DEMO_LOCK')==0) type="submit" @else disabled
-                                                        title="This action is disabled in demo !" @endif
+                                                        title="{{ __("This action is disabled in demo !") }}" @endif
                                                         class="btn btn-md btn-primary"><i
-                                                            class="fa fa-check-circle"></i> Save
-                                                        Changes</button>
+                                                            class="fa fa-check-circle"></i> {{ __("Save Changes") }}</button>
                                                 </div>
 
                                         </form>
@@ -2243,5 +2218,7 @@
         var input = $("#pass_log_id211");
         input.attr('type') === 'password' ? input.attr('type', 'text') : input.attr('type', 'password')
     });
+
+   
 </script>
 @endpush

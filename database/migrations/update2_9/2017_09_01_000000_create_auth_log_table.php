@@ -13,15 +13,17 @@ class CreateAuthLogTable extends Migration
      */
     public function up()
     {
-        Schema::create('auth_log', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->morphs('authenticatable');
-            $table->string('ip_address', 45)->nullable();
-            $table->text('platform')->nullable();
-            $table->text('browser')->nullable();
-            $table->timestamp('login_at')->nullable();
-            $table->timestamp('logout_at')->nullable();
-        });
+        if(!Schema::hasTable('auth_log')){
+            Schema::create('auth_log', function (Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->morphs('authenticatable');
+                $table->string('ip_address', 45)->nullable();
+                $table->text('platform')->nullable();
+                $table->text('browser')->nullable();
+                $table->timestamp('login_at')->nullable();
+                $table->timestamp('logout_at')->nullable();
+            });
+        }
     }
 
     /**

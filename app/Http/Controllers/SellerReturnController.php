@@ -49,19 +49,19 @@ class SellerReturnController extends Controller
 
             if($rorder->getorder->vender_id != auth()->id()){
 
-                return back()->with('warning','You cannot view other seller orders!');
+                return back()->with('warning',__('You cannot view other seller orders!'));
 
             }else{
 
                 if($rorder->status != 'initiated'){
-                    return back()->with('warning','Oops ! Refund already initiated !');
+                    return back()->with('warning',__('Oops ! Refund already initiated !'));
                 }
 
                 return view('seller.order.returnorders.show',compact('rorder','orderid','inv_cus'));
             }
 
         }else{
-            return redirect()->route('seller.return.index')->with('warning','404 Return order not found !');
+            return redirect()->route('seller.return.index')->with('warning',__('Return order not found !'));
         }   
     }
 
@@ -78,16 +78,16 @@ class SellerReturnController extends Controller
                
                  if($order->getorder->vender_id != auth()->id()){
                    
-                    return back()->with('warning','You cannot view other sellers orders');
+                    return back()->with('warning',__('You cannot view other sellers orders'));
                  }else{
                     return view('seller.order.returnorders.detail',compact('inv_cus','order','orderid'));
                  }
             }else {
-                return back()->with('warning','Order not refunded yet !');
+                return back()->with('warning',__('Order not refunded yet !'));
             }
 
         }else {
-            return redirect()->route('seller.return.index')->with('warning','404 Not found !');
+            return redirect()->route('seller.return.index')->with('warning',__('Order not found !'));
         }
 
        

@@ -76,7 +76,24 @@
       </select>
     </div>
 
-    <div class="form-group col-md-6">
+    <div class="col-md-12">
+      <div class="form-group">
+          <label>{{ __("Also in :") }}</label>
+          <select multiple="multiple" name="other_cats[]" id="other_cats" class="form-control select2">
+            @if(!empty($categorys))
+                @foreach($categorys->where('id','!=',$products->category_id) as $category)
+                    <option {{ $products->other_cats != '' && in_array($category->id,$products->other_cats) ? "selected" : "" }} value="{{ $category->id }}">{{ $category->title }}</option>
+                @endforeach
+            @endif
+          </select>
+
+          <small class="text-primary">
+              <i class="feather icon-help-circle"></i> {{ __("If in list primary category is also present then it will auto remove from this after create product.") }}
+          </small>
+      </div>
+  </div>
+
+    <div class="form-group col-md-4">
       <label>
         Store:
       </label>
@@ -89,7 +106,7 @@
 
     </div>
 
-    <div class="form-group last_btn col-md-6">
+    <div class="form-group last_btn col-md-4">
       <label>Upload product catlog:</label>
       <div class="input-group">
         <div class="input-group-prepend">
@@ -102,6 +119,18 @@
       </div>
     
       <small class="txt-desc">(Catlog file max size: 1MB ) | Supported files : pdf,docs,docx,ppt,txt</small>
+    </div>
+
+    <div class="col-md-4">
+      <div class="form-group">
+          <label class="text-dark">{{ __('Select Size chart : ') }} </label>
+          <select name="size_chart" class="form-control select2">
+              <option value="NULL">{{ __('None') }}</option>
+              @foreach ($template_size_chart as $chartoption)
+                  <option {{ $products->size_chart == $chartoption->id ? "selected" : "" }} value="{{ $chartoption->id }}">{{ $chartoption->template_name }} ({{ $chartoption->template_code }}) </option>
+              @endforeach 
+          </select>
+      </div>
     </div>
 
     <div class="form-group col-md-12">
@@ -456,7 +485,7 @@
         <option {{ $products->return_avbl=='0' ? "selected" : "" }} value="0">Return Not Available</option>
       </select>
       <br>
-      <small class="text-desc">(Please choose an option that return will be available for this product or not)</small>
+      <small class="text-desc">({{ __('Please choose an option that return will be available for this product or not') }})</small>
 
 
     </div>
@@ -464,10 +493,12 @@
     <div class="last_btn col-md-6 {{ $products->return_avbl == 1 ? "" : "display-none" }}"
       id="policy">
       <label>
-        Select Return Policy: <span class="required">*</span>
+        {{__('Select Return Policy')}}: <span class="required">*</span>
       </label>
       <select name="return_policy" class="form-control select2 col-md-7 col-xs-12">
-        <option value="">Please choose an option</option>
+        <option value="">
+          {{__("Please choose an option")}}
+        </option>
 
         @foreach(App\admin_return_product::where('status','1')->get() as $policy)
         <option @if(!empty($products)) {{ $products->return_policy == $policy->id ? "selected" : "" }} @endif
@@ -480,7 +511,7 @@
 
     <div class="form-group  col-md-12">
       <button type="reset" class="btn btn-danger mr-1"><i class="fa fa-ban"></i> {{ __("Reset")}}</button>
-      <button @if(env('DEMO_LOCK')==0) type="submit" @else disabled="" title="This action is disabled in demo !" @endif class="btn btn-primary"><i class="fa fa-check-circle"></i>
+      <button @if(env('DEMO_LOCK')==0) type="submit" @else disabled="" title="{{ __("This action is disabled in demo !") }}" @endif class="btn btn-primary"><i class="fa fa-check-circle"></i>
       {{ __("Update")}}</button>
       
     </div>

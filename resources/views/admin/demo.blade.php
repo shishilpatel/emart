@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Create a Import Demo')
+@section('title',__('Create a Import Demo'))
 @section('body')
 
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
@@ -20,15 +20,18 @@
 
 <div class="contentbar">
   <div class="row">
-    @if ($errors->any())
-    <div class="alert alert-danger" role="alert">
-      @foreach($errors->all() as $error)
-      <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach
-    </div>
-    @endif
+   
     <div class="col-lg-12">
+
+      @if ($errors->any())
+      <div class="alert alert-danger" role="alert">
+        @foreach($errors->all() as $error)
+        <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button></p>
+        @endforeach
+      </div>
+      @endif
+
       <div class="card m-b-30">
         <div class="card-header">
           <h5 class="box-title">{{ __('Import') }} {{ __('Demo') }}</h5>
@@ -37,7 +40,7 @@
             
            
                   <div class="col-md-12 p-2 mb-2 bg-success text-white rounded">
-                      <i class="fa fa-info-circle"></i> Note:
+                      <i class="fa fa-info-circle"></i> {{__('Note:')}}
                      
                     <ul>
                         <li>

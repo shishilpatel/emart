@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Edit Faq')
+@section('title',__('Edit Faq'))
 @section('body')
 
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
@@ -20,7 +20,7 @@
   <div class="widgetbar">
 
     <a href="{{url('admin/faq')}}" class="btn btn-primary-rgba mr-2"><i
-        class="feather icon-arrow-left mr-2"></i>Back</a>
+        class="feather icon-arrow-left mr-2"></i>{{ __("Back") }}</a>
   </div>
 </div>
 @endslot
@@ -28,18 +28,21 @@
 
 <div class="contentbar">
   <div class="row">
-    @if ($errors->any())
-    <div class="alert alert-danger" role="alert">
-      @foreach($errors->all() as $error)
-      <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach
-    </div>
-    @endif
+    
     <div class="col-lg-12">
+      @if ($errors->any())
+        <div class="alert alert-danger" role="alert">
+          @foreach($errors->all() as $error)
+          <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span></button></p>
+          @endforeach
+        </div>
+      @endif
       <div class="card m-b-30">
         <div class="card-header">
-          <h5 class="box-title">Edit Faq</h5>
+          <h5 class="box-title">
+            {{__('Edit Faq')}}
+          </h5>
         </div>
         <div class="card-body">
           <form id="demo-form2" method="post" enctype="multipart/form-data" action="{{url('admin/faq/'.$faq->id)}}"
@@ -48,11 +51,11 @@
             {{ method_field('PUT') }}
             <div class="form-group">
               <label class="control-label" for="first-name">
-                Question <span class="required">*</span>
+                {{__("Question")}} <span class="required">*</span>
               </label>
 
 
-              <input placeholder="Please enter Question" type="text" id="first-name" name="que" value="{{$faq->que}}"
+              <input placeholder="{{ __('Please enter Question') }}" type="text" id="first-name" name="que" value="{{$faq->que}}"
                 class="form-control col-md-12">
 
 
@@ -60,18 +63,18 @@
 
             <div class="form-group">
               <label class="control-label" for="first-name">
-                Answer <span class="required">*</span>
+                {{__("Answer")}} <span class="required">*</span>
               </label>
 
 
-              <textarea rows="5" cols="10" placeholder="Edit Answer" type="text" id="first-name" name="ans"
+              <textarea rows="5" cols="10" placeholder="{{ __("Edit Answer") }}" type="text" id="first-name" name="ans"
                 value="{{$faq->ans}}" class="form-control">{{$faq->ans}}</textarea>
 
 
             </div>
             <div class="form-group">
               <label class="control-label" for="first-name">
-                Status
+                {{__("Status")}}
               </label>
               <br>
               <label class="switch">
@@ -81,15 +84,15 @@
 
               </label>
               <br>
-              <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>(Please Choose Status)</small>
+              <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>({{__("Please Choose Status")}})</small>
             </div>
 
             <div class="form-group">
-              <button @if(env('DEMO_LOCK')==0) type="reset" @else disabled title="This operation is disabled is demo !"
-                @endif class="btn btn-danger"><i class="fa fa-ban"></i> Reset</button>
-              <button @if(env('DEMO_LOCK')==0) type="submit" @else disabled title="This operation is disabled is demo !"
+              <button @if(env('DEMO_LOCK')==0) type="reset" @else disabled title="{{ __('This operation is disabled is demo !') }}"
+                @endif class="btn btn-danger"><i class="fa fa-ban"></i> {{ __("Reset") }}</button>
+              <button @if(env('DEMO_LOCK')==0) type="submit" @else disabled title="{{ __('This operation is disabled is demo !') }}"
                 @endif class="btn btn-primary"><i class="fa fa-check-circle"></i>
-                Update</button>
+                {{ __("Update") }}</button>
             </div>
             <div class="clear-both"></div>
           </form>

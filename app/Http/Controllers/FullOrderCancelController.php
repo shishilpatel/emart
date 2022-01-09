@@ -63,7 +63,7 @@ class FullOrderCancelController extends Controller
         $invArray = collect();
 
         if (!isset($request->source)) {
-            notify()->error('Please add bank account first !');
+            notify()->error(__('Please add bank account first !'));
             return back();
         }
 
@@ -135,7 +135,7 @@ class FullOrderCancelController extends Controller
                     if ($order->payment_method == 'Wallet') {
 
                         if ($this->wallet_system != 1) {
-                            notify()->info('Wallet System is deactive currently ! please contact site master regrading this issue !');
+                            notify()->info(__('Wallet System is deactive currently ! please contact site master regrading this issue !'));
                             return back();
                         }
 
@@ -186,7 +186,7 @@ class FullOrderCancelController extends Controller
                             /** END */
 
                         } else {
-                            notify()->warning("Refund can't be proccesed as your wallet is deactive or not found !");
+                            notify()->warning(__("Refund can't be proccesed as your wallet is deactive or not found !"));
                             return back();
                         }
 
@@ -341,8 +341,8 @@ class FullOrderCancelController extends Controller
                         }
 
                     } elseif ($order->payment_method == 'PayU') {
-                        Session::flash('warning', 'Error In PAYU SIDE Will added soon when PAYU solve it use bank transfer method till that');
-                        notify()->error('PayU Instant Refund will add soon !');
+                        Session::flash('warning', __('Error In PAYU SIDE Will added soon when PAYU solve it use bank transfer method till that'));
+                        notify()->error(__('PayU Instant Refund will add soon !'));
                         return back();
                     } elseif ($order->payment_method == 'Paytm') {
                         $refund = PaytmWallet::with('refund');
@@ -495,7 +495,7 @@ class FullOrderCancelController extends Controller
                             $status = 1;
                         }
                     } else {
-                        notify()->info('For Selected Payment Method Instant Refund is not available !');
+                        notify()->info(__('For Selected Payment Method Instant Refund is not available !'));
                         return back();
                     }
 
@@ -699,15 +699,15 @@ class FullOrderCancelController extends Controller
                     }
                 }
                 /*End*/
-                Session::flash('updated', 'Following Order is Cancelled Successfully !');
-                notify()->success('Following Order is Cancelled Successfully !');
+                Session::flash('updated', __('Following Order is Cancelled Successfully !'));
+                notify()->success(__('Following Order is Cancelled Successfully !'));
                 return back();
 
             }
 
         } else {
-            Session::flash('warning', 'Unauthorized Action !');
-            notify()->error('Unauthorized Action !');
+            Session::flash('warning', __('Unauthorized Action !'));
+            notify()->error(__('Unauthorized Action !'));
             return back();
         }
 
@@ -744,7 +744,7 @@ class FullOrderCancelController extends Controller
         $newactivity->save();
 
         return back()
-            ->with('updated', 'Order Status Updated !');
+            ->with('updated', __('Order Status Updated !'));
 
     }
 
@@ -785,7 +785,7 @@ class FullOrderCancelController extends Controller
         $findCancelLog->save();
 
         return back()
-            ->with('updated', 'Order Status Updated !');
+            ->with('updated', __('Order Status Updated !'));
 
     }
 

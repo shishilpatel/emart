@@ -145,7 +145,7 @@ class SellerPaymenyController extends Controller
                     if ($row->ordertype == 'COD') {
                         $data = "<label class='label label-primary'>$row->ordertype</label>";
                     } else {
-                        $data = "<label class='label label-primary'>PREPAID</label>";
+                        $data = "<label class='label label-primary'>".__('PREPAID')."</label>";
                     }
 
                     return $data;
@@ -193,9 +193,9 @@ class SellerPaymenyController extends Controller
                 ->addColumn('type', function ($row) {
 
                     if ($row->paidvia == 'Bank') {
-                        return $html = '<label class="label label-success">Bank Transfer</label>';
+                        return $html = '<label class="label label-success">'.__('Bank Transfer').'</label>';
                     } elseif ($row->paidvia == 'Paypal') {
-                        return $html = '<label class="label label-primary">PayPal</label>';
+                        return $html = '<label class="label label-primary">'.__('PayPal').'</label>';
                     } elseif ($row->txn_type == 'manual') {
                         return $html = '<label class="label label-primary">' . ucfirst($row->paidvia) . '</label>';
                     }
@@ -242,7 +242,7 @@ class SellerPaymenyController extends Controller
         $check = SellerPayout::where('orderid', '=', $order->orderid)->first();
 
         if (isset($check)) {
-            notify()->warning(__("'For this order payout is already done to the seller !'"),'Warning !');
+            notify()->warning(__("For this order payout is already done to the seller !"),'Warning !');
             return back();
             exit(1);
         }
@@ -256,7 +256,7 @@ class SellerPaymenyController extends Controller
             return $this->payoutviaStripe();
 
         } else {
-            return back()->with('warning', 'Seller Not updated thier payment details !');
+            return back()->with('warning', __('Seller not updated thier payment details !'));
         }
 
     }
@@ -275,7 +275,7 @@ class SellerPaymenyController extends Controller
         $inv_cus = Invoice::first();
 
         if (isset($check)) {
-            return back()->with('warning', 'For this order payout is already done to the seller !');
+            return back()->with('warning', __('For this order payout is already done to the seller !'));
             exit(1);
         } else {
 
@@ -371,7 +371,7 @@ class SellerPaymenyController extends Controller
                     $today = date('Y-m-d');
     
                     if ($today <= $endOn) {
-                        return back()->with('warning', 'You cant pay to seller until product return policy not ended !');
+                        return back()->with('warning', __('You cant pay to seller until product return policy not ended !'));
                     } else {
     
                         return view('admin.seller.showdetail', compact('inv_cus', 'order'));
@@ -392,7 +392,7 @@ class SellerPaymenyController extends Controller
                     $today = date('Y-m-d');
 
                     if ($today <= $endOn) {
-                        return back()->with('warning', 'You cant pay to seller until product return policy not ended !');
+                        return back()->with('warning', __('You cant pay to seller until product return policy not ended !'));
                     } else {
 
                         return view('admin.seller.showdetail', compact('inv_cus', 'order'));
@@ -402,7 +402,7 @@ class SellerPaymenyController extends Controller
             }
 
         } else {
-            return back()->with('warning', 'Order details not found !');
+            return back()->with('warning', __('Order details not found !'));
         }
 
     }
@@ -457,7 +457,7 @@ class SellerPaymenyController extends Controller
             ->setEmailSubject("You have a new payout!");
         $senderItem = new PayoutItem();
         $senderItem->setRecipientType('Email')
-            ->setNote('Thanks for using our portal for selling your product!')
+            ->setNote(__('Thanks for using our portal for selling your product!'))
             ->setReceiver($sendemail)
             ->setSenderItemId($uniqid)
             ->setAmount(new \PayPal\Api\Currency('{
@@ -549,7 +549,7 @@ class SellerPaymenyController extends Controller
 
         } catch (\PayPal\Exception\PPConnectionException $ex) {
 
-            notify()->error( $ex->getData(),'Error !');
+            notify()->error( $ex->getData(),__('Error !'));
             exit(1);
 
         }
@@ -557,7 +557,7 @@ class SellerPaymenyController extends Controller
 
     public function payoutviaStripe()
     {
-        notify()->info('Coming soon !');
+        notify()->info(__('Coming soon !'));
         return back();
     }
 

@@ -1,5 +1,5 @@
-@extends("admin.layouts.sellermaster")
-@section('title','Import Product |')
+@extends("admin.layouts.sellermastersoyuz")
+@section('title',__("Import Product"))
 @section('body')
 
 @component('seller.components.breadcumb',['thirdactive' => 'active'])
@@ -32,7 +32,9 @@
 		<div class="col-md-12">
 			<div class="card m-b-30">
 				<div class="card-header">
-					<h5 class="card-title">Import Products</h5>
+					<h5 class="card-title">
+						{{__('Import Products')}}
+					</h5>
 				</div>
 				<div class="card-body">
 					<ul class="nav nav-tabs custom-tab-line mb-3" id="defaultTabLine" role="tablist">
@@ -46,22 +48,26 @@
 					</ul>
 					<div class="tab-content" id="defaultTabContentLine">
 						<div class="tab-pane fade show active" id="home-line" role="tabpanel" aria-labelledby="home-tab-line">
-							<a href="{{ url('files/ProductCSV.xlsx') }}" class="btn btn-primary mb-3"> <i class="feather icon-download mr-2"></i>Download Example For xls/csv File</a>
+							<a href="{{ url('files/ProductCSV.xlsx') }}" class="btn btn-primary mb-3"> <i class="feather icon-download mr-2"></i>{{ __('Download Example For xls/csv File') }}</a>
 							<form action="{{ route('seller.import.store') }}" method="POST" enctype="multipart/form-data">
 								{{ csrf_field() }}
 						
 							<div class="row">
 								<div class="form-group col-md-6">
-									<label for="file">Choose your xls/csv File :</label>
+									<label for="file">{{ __('Choose your xls/csv File') }} :</label>
 
 									<div class="input-group mb-3">
 										<div class="input-group-prepend">
-										  <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+										  <span class="input-group-text" id="inputGroupFileAddon01">
+											  {{__('Upload')}}
+										  </span>
 										</div>
 										<div class="custom-file">
 										  <input type="file" name="file" required="" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
 										  
-										  <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+										  <label class="custom-file-label" for="inputGroupFile01">
+											  {{__('Choose file')}}
+										  </label>
 										  @if ($errors->has('file'))
 										  <span class="invalid-feedback text-danger" role="alert">
 											  <strong>{{ $errors->first('file') }}</strong>
@@ -69,7 +75,7 @@
 						                  @endif
 										</div>
 									  </div>
-									  <button type="submit" class="btn btn-success"><i class="feather icon-download-cloud mr-1"></i> Import</button>
+									  <button type="submit" class="btn btn-success"><i class="feather icon-download-cloud mr-1"></i> {{ __('Import') }}</button>
 
 									
 									
@@ -82,15 +88,17 @@
 								<hr>
 						<div class="table-responsive">
 							<h4 class="card-title">{{ __('Instructions')}}</h4>
-							<h6><b>Follow the instructions carefully before importing the file.</b></h6>
-								<h6>The columns of the file should be in the following order.</h6>
+							<h6><b>{{ __('Follow the instructions carefully before importing the file.') }}</b></h6>
+								<h6>
+									{{__('The columns of the file should be in the following order.')}}
+								</h6>
 					
 								<table id="datatable-button" class="table table-striped table-bordered">
 									<thead>
 										<tr>
-											<th>Column No</th>
-											<th>Column Name</th>
-											<th>Description</th>
+											<th>{{ __('Column No') }}</th>
+											<th>{{ __('Column Name') }}</th>
+											<th>{{ __('Description') }}</th>
 										</tr>
 									</thead>
 					
@@ -585,32 +593,5 @@
 
 
 @endsection
-
-
-              
-            
-  
-     
-                 
-
-
-       
-				
-		
-			
-        
-            
-
-                          
-        
-            
-                  
-               
-  
-                 
- 
-  
-          
-              
-              
+           
              

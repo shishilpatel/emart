@@ -5,7 +5,7 @@
 
 		<tr>
 			<th>
-				Order Transcation ID:
+				{{__("Order Transcation ID:")}}
 			</th>
 
 			<td>
@@ -16,7 +16,7 @@
 
 		<tr>
 			<th>
-				REFUND Transcation ID:
+				{{__("REFUND Transcation ID:")}}
 			</th>
 
 			<td>
@@ -27,7 +27,7 @@
 
 		<tr>
 			<th>
-				REFUND Status:
+				{{ __('REFUND Status:') }}
 			</th>
 
 			<td>
@@ -37,7 +37,7 @@
 
 		<tr>
 			<th>
-				Refunded Amount:
+				{{__("Refunded Amount:")}}
 			</th>
 
 			<td>
@@ -47,7 +47,7 @@
 
 		<tr>
 			<th>
-				Total Order Amount:
+				{{__("Total Order Amount:")}}
 			</th>
 
 			<td>
@@ -57,7 +57,7 @@
 
 		<tr>
 			<th>
-				Created at:
+				{{__("Created at:")}}
 			</th>
 
 			<td>
@@ -70,7 +70,7 @@
 
 		<tr>
 			<th>
-				Order Transcation ID:
+				{{__("Order Transcation ID:")}}
 			</th>
 
 			<td>
@@ -82,7 +82,7 @@
 
 		<tr>
 			<th>
-				REFUND Transcation ID:
+				{{__("REFUND Transcation ID:")}}
 			</th>
 
 			<td>
@@ -93,7 +93,7 @@
 
 		<tr>
 			<th>
-				REFUND Status:
+				{{ __('REFUND Status:') }}
 			</th>
 
 			<td>
@@ -103,7 +103,7 @@
 
 		<tr>
 			<th>
-				Refunded Amount:
+				{{__("Refunded Amount:")}}
 			</th>
 
 			<td>
@@ -113,7 +113,7 @@
 
 		<tr>
 			<th>
-				Total Order Amount:
+				{{__("Total Order Amount:")}}
 			</th>
 
 			<td>
@@ -123,7 +123,7 @@
 
 		<tr>
 			<th>
-				Created at:
+				{{__("Created at:")}}
 			</th>
 
 			<td>
@@ -136,7 +136,7 @@
 
 		<tr>
 			<th>
-				Order Transcation ID:
+				{{__("Order Transcation ID:")}}
 			</th>
 
 			<td>
@@ -148,7 +148,7 @@
 
 		<tr>
 			<th>
-				REFUND Transcation ID:
+				{{__("REFUND Transcation ID:")}}
 			</th>
 
 			<td>
@@ -159,7 +159,7 @@
 
 		<tr>
 			<th>
-				REFUND Status:
+				{{ __('REFUND Status:') }}
 			</th>
 
 			<td>
@@ -169,7 +169,7 @@
 
 		<tr>
 			<th>
-				Refunded Amount:
+				{{__("Refunded Amount:")}}
 			</th>
 
 			<td>
@@ -179,7 +179,7 @@
 
 		<tr>
 			<th>
-				Total Order Amount:
+				{{__("Total Order Amount:")}}
 			</th>
 
 			<td>
@@ -189,7 +189,7 @@
 
 		<tr>
 			<th>
-				Created at:
+				{{__("Created at:")}}
 			</th>
 
 			<td>
@@ -200,7 +200,7 @@
 
 		<tr>
 			<th>
-				Order Transcation ID:
+				{{__("Order Transcation ID:")}}
 			</th>
 
 			<td>
@@ -212,7 +212,7 @@
 
 		<tr>
 			<th>
-				REFUND Transcation ID:
+				{{__("REFUND Transcation ID:")}}
 			</th>
 
 			<td>
@@ -223,7 +223,7 @@
 
 		<tr>
 			<th>
-				REFUND Status:
+				{{ __('REFUND Status:') }}
 			</th>
 
 			<td>
@@ -233,7 +233,7 @@
 
 		<tr>
 			<th>
-				Refunded Amount:
+				{{__("Refunded Amount:")}}
 			</th>
 
 			<td>
@@ -243,7 +243,7 @@
 
 		<tr>
 			<th>
-				Total Order Amount:
+				{{__("Total Order Amount:")}}
 			</th>
 
 			<td>
@@ -253,7 +253,7 @@
 
 		<tr>
 			<th>
-				Created at:
+				{{__("Created at:")}}
 			</th>
 
 			<td>
@@ -265,7 +265,7 @@
 
 		<tr>
 			<th>
-				Order Transcation ID:
+				{{__("Order Transcation ID:")}}
 			</th>
 
 			<td>
@@ -278,7 +278,7 @@
 
 		<tr>
 			<th>
-				REFUND Transcation ID:
+				{{__("REFUND Transcation ID:")}}
 			</th>
 
 			<td>
@@ -289,7 +289,7 @@
 
 		<tr>
 			<th>
-				REFUND Status:
+				{{ __('REFUND Status:') }}
 			</th>
 
 			<td>
@@ -299,7 +299,7 @@
 
 		<tr>
 			<th>
-				Refunded Amount:
+				{{__("Refunded Amount:")}}
 			</th>
 
 			<td>
@@ -309,7 +309,7 @@
 
 		<tr>
 			<th>
-				Total Order Amount:
+				{{__("Total Order Amount:")}}
 			</th>
 
 			<td>
@@ -319,7 +319,7 @@
 
 		<tr>
 			<th>
-				Created at:
+				{{__("Created at:")}}
 			</th>
 
 			<td>
@@ -331,7 +331,7 @@
 
 		<tr>
 			<th>
-				Order Transcation ID:
+				{{__("Order Transcation ID:")}}
 			</th>
 
 			<td>
@@ -343,7 +343,7 @@
 
 		<tr>
 			<th>
-				REFUND Transcation ID:
+				{{__("REFUND Transcation ID:")}}
 			</th>
 
 			<td>
@@ -354,7 +354,7 @@
 
 		<tr>
 			<th>
-				REFUND Status:
+				{{ __('REFUND Status:') }}
 			</th>
 
 			<td>
@@ -364,7 +364,7 @@
 
 		<tr>
 			<th>
-				Refunded Amount:
+				{{__("Refunded Amount:")}}
 			</th>
 
 			<td>
@@ -374,7 +374,7 @@
 
 		<tr>
 			<th>
-				Total Order Amount:
+				{{__("Total Order Amount:")}}
 			</th>
 
 			<td>
@@ -384,7 +384,7 @@
 
 		<tr>
 			<th>
-				Created at:
+				{{__("Created at:")}}
 			</th>
 
 			<td>
@@ -395,7 +395,7 @@
 
 		<tr>
 			<th>
-				Order Transcation ID:
+				{{__("Order Transcation ID:")}}
 			</th>
 
 			<td>
@@ -407,7 +407,7 @@
 
 		<tr>
 			<th>
-				REFUND Transcation ID:
+				{{__("REFUND Transcation ID:")}}
 			</th>
 
 			<td>
@@ -418,7 +418,7 @@
 
 		<tr>
 			<th>
-				REFUND Status:
+				{{ __('REFUND Status:') }}
 			</th>
 
 			<td>
@@ -428,7 +428,7 @@
 
 		<tr>
 			<th>
-				Refunded Amount:
+				{{__("Refunded Amount:")}}
 			</th>
 
 			<td>
@@ -438,7 +438,7 @@
 
 		<tr>
 			<th>
-				Total Order Amount:
+				{{__("Total Order Amount:")}}
 			</th>
 
 			<td>
@@ -448,7 +448,7 @@
 
 		<tr>
 			<th>
-				Created at:
+				{{__("Created at:")}}
 			</th>
 
 			<td>
@@ -460,7 +460,7 @@
 
 		<tr>
 			<th>
-				Order Transcation ID:
+				{{__("Order Transcation ID:")}}
 			</th>
 
 			<td>
@@ -473,7 +473,7 @@
 
 		<tr>
 			<th>
-				REFUND Transcation ID:
+				{{__("REFUND Transcation ID:")}}
 			</th>
 
 			<td>
@@ -484,7 +484,7 @@
 
 		<tr>
 			<th>
-				REFUND Status:
+				{{ __('REFUND Status:') }}
 			</th>
 
 			<td>
@@ -494,7 +494,7 @@
 
 		<tr>
 			<th>
-				Refunded Amount:
+				{{__("Refunded Amount:")}}
 			</th>
 
 			<td>
@@ -504,7 +504,7 @@
 
 		<tr>
 			<th>
-				Total Order Amount:
+				{{__('Total Order Amount:')}}
 			</th>
 
 			<td>
@@ -514,7 +514,7 @@
 
 		<tr>
 			<th>
-				Created at:
+				{{__("Created at:")}}
 			</th>
 
 			<td>
@@ -527,4 +527,4 @@
 	</thead>
 </table>
 
-<small class="pull-right">Last Update at: {{ date('d-m-Y | h:i A') }}</small>
+<small class="pull-right">{{__("Last Update at:")}} {{ date('d-m-Y | h:i A') }}</small>

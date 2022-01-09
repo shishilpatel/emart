@@ -14,11 +14,11 @@ class MaintainenceController extends Controller
     {
 
         if(env('DEMO_LOCK') == 1){
-            alert()->error('This Action is disabled in demo !', 'Action Disabled');
+            alert()->error(__('This Action is disabled in demo !'), __('Action Disabled'));
             return back();
         } 
         
-        abort_if(!auth()->user()->can('site-settings.maintenance-mode'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('site-settings.maintenance-mode'),403,__('User does not have the right permissions.'));
 
         $request->validate([
             'allowed_ips' => 'required',
@@ -47,12 +47,12 @@ class MaintainenceController extends Controller
 
         }
 
-        return back()->with('added', 'Maintenance Settings Updated !');
+        return back()->with('added', __('Maintenance settings updated !'));
     }
 
     public function getview()
     {
-        abort_if(!auth()->user()->can('site-settings.maintenance-mode'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('site-settings.maintenance-mode'),403,__('User does not have the right permissions.'));
         
         $data = Maintainence::first();
 

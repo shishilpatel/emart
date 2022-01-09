@@ -13,7 +13,7 @@ class AffilateController extends Controller
 {
     public function settings(){
 
-        abort_if(!auth()->user()->can('affiliatesystem.manage'), 403, 'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('affiliatesystem.manage'), 403, __('User does not have the right permissions.'));
 
         $af_settings = Affilate::first();
 
@@ -23,7 +23,7 @@ class AffilateController extends Controller
 
     public function update(Request $request){
 
-        abort_if(!auth()->user()->can('affiliatesystem.manage'), 403, 'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('affiliatesystem.manage'), 403, __('User does not have the right permissions.'));
 
         Affilate::updateorCreate([
             'id' => 1
@@ -35,7 +35,7 @@ class AffilateController extends Controller
             'enable_purchase' => $request->enable_purchase ? 1 : 0,
         ]);
 
-        notify()->success('Affiliate settings updated !');
+        notify()->success(__('Affiliate settings updated !'));
 
         return back();
 
@@ -70,7 +70,7 @@ class AffilateController extends Controller
 
     public function reports(){
 
-        abort_if(!auth()->user()->can('affiliatesystem.manage'), 403, 'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('affiliatesystem.manage'), 403, __('User does not have the right permissions.'));
 
         $af_settings = Affilate::first();
 

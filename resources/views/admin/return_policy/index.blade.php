@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Return Policy Settings | ')
+@section('title',__('Return Policy Settings | '))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -21,15 +21,16 @@
 @endcomponent
 <div class="contentbar">
   <div class="row">
-    @if ($errors->any())
-    <div class="alert alert-danger" role="alert">
-      @foreach($errors->all() as $error)
-      <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach
-    </div>
-    @endif
+    
     <div class="col-lg-12">
+      @if ($errors->any())
+        <div class="alert alert-danger" role="alert">
+          @foreach($errors->all() as $error)
+          <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span></button></p>
+          @endforeach
+        </div>
+      @endif
       <div class="card m-b-30">
         <div class="card-header">
           <h5 class="box-title">{{ __('Return Policy') }}</h5>
@@ -71,7 +72,7 @@
                               <button class="btn btn-round btn-primary-rgba" type="button" id="CustomdropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="feather icon-more-vertical-"></i></button>
                               <div class="dropdown-menu" aria-labelledby="CustomdropdownMenuButton1">
                                   
-                                  <a class="dropdown-item" href="{{url('admin/return_policy/edit/'.$banks->id)}}"><i class="feather icon-edit mr-2"></i>Edit</a>
+                                  <a class="dropdown-item" href="{{url('admin/return_policy/edit/'.$banks->id)}}"><i class="feather icon-edit mr-2"></i>{{ __("Edit") }}</a>
                                   
                                   <a class="dropdown-item btn btn-link" data-toggle="modal" data-target="#delete{{ $banks->id }}" >
                                       <i class="feather icon-delete mr-2"></i>{{ __("Delete") }}</a>
@@ -82,7 +83,7 @@
                               <div class="modal-dialog modal-sm">
                                   <div class="modal-content">
                                       <div class="modal-header">
-                                          <h5 class="modal-title" id="exampleSmallModalLabel">Delete</h5>
+                                          <h5 class="modal-title" id="exampleSmallModalLabel">{{ __("DELETE") }}</h5>
                                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                           <span aria-hidden="true">&times;</span>
                                           </button>
@@ -95,8 +96,8 @@
                                           <form method="post" action="{{url('admin/return_policy/destroy/'.$banks->id)}}" class="pull-right">
                                               {{csrf_field()}}
                                               {{method_field("DELETE")}}
-                                              <button type="reset" class="btn btn-secondary" data-dismiss="modal">No</button>
-                                              <button type="submit" class="btn btn-primary">Yes</button>
+                                              <button type="reset" class="btn btn-secondary" data-dismiss="modal">{{ __("No") }}</button>
+                                              <button type="submit" class="btn btn-primary">{{ __("YES") }}</button>
                                           </form>
                                       </div>
                                   </div>
@@ -116,11 +117,5 @@
   </div>
 </div>
         
-                      
-​
-​
-                                    
-                                    
-​                
-      
+   
 @endsection

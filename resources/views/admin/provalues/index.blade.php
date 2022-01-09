@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Manage All Options -')
+@section('title',__('Manage All Options -'))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -18,18 +18,21 @@
 @endcomponent
 <div class="contentbar">
   <div class="row">
-    @if ($errors->any())
-    <div class="alert alert-danger" role="alert">
-      @foreach($errors->all() as $error)
-      <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach
-    </div>
-    @endif
+    
     <div class="col-lg-12">
+
+		@if ($errors->any())
+			<div class="alert alert-danger" role="alert">
+			@foreach($errors->all() as $error)
+			<p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span></button></p>
+			@endforeach
+			</div>
+		@endif
+
       <div class="card m-b-30">
         <div class="card-header">
-          <h5 class="box-title">Option values for : <b>{{ $proattr->attr_name }}</b></h5>
+          <h5 class="box-title">{{__("Option values for :")}} <b>{{ $proattr->attr_name }}</b></h5>
         </div>
         <div class="card-body">
       
@@ -37,7 +40,9 @@
 			<div class="card-body">
 			<div class="row align-items-center">
 				<div class="col-12">
-				<p class="mb-0 text-white font-14"><i class="fa fa-info-circle" aria-hidden="true"></i> Once you created value option you can't Delete it ! You can only edit it</p>
+				<p class="mb-0 text-white font-14"><i class="fa fa-info-circle" aria-hidden="true"></i>
+					{{__('Once you created value option you can\'t Delete it ! You can only edit it')}}
+				</p>
 				
 				</div>
 				
@@ -47,7 +52,7 @@
 
 
 		<!-- form start -->
-		<h5>Add New Option Value for <b>{{ $proattr->attr_name }}</b></h5>
+		<h5>{{__("Add New Option Value for")}} <b>{{ $proattr->attr_name }}</b></h5>
 		<form method="post" enctype="multipart/form-data" action="{{ route('pro.val.store',$proattr->id) }}" data-parsley-validate class="form-horizontal form-label-left">
 		{{ csrf_field() }}
               <div class="row">
@@ -63,7 +68,7 @@
 					<label class="text-dark">{{ __('Choose color value :') }} </label>
 						
 						@if($proattr->attr_name == "Color" || $proattr->attr_name == "Colour")
-						<div class="input-group initial-color" title="Using input value">
+						<div class="input-group initial-color">
 								<input type="text" class="form-control input-lg" value="#000000"  name="unit_value" placeholder="#000000"/>
 								<span class="input-group-append">
 									<span class="input-group-text colorpicker-input-addon"><i></i></span>
@@ -103,8 +108,12 @@
 		<table class="table table-bordered table-striped">
 						<thead>
 							<th>#</th>
-							<th>Value</th>
-							<th>Action</th>
+							<th>
+								{{__("Value")}}
+							</th>
+							<th>
+								{{__("Action")}}
+							</th>
 						</thead>
 
 						<tbody>
@@ -214,8 +223,8 @@
 														<!-- main content end -->
 													</div>
 													<div class="modal-footer">
-														<button type="reset" class="btn btn-danger translate-y-3" data-dismiss="modal">Close</button>
-                										<button @if(env('DEMO_LOCK') == 0) onclick="submit('{{ $proval->id }}','{{ $proattr->id }}')" type="submit" @else title="This action is disabled in demo !" disabled="disabled"  @endif id="update" class="btn btn-primary"><i class="fa fa-check-circle"></i> Update</button>
+														<button type="reset" class="btn btn-danger translate-y-3" data-dismiss="modal">{{ __('Close') }}</button>
+                										<button @if(env('DEMO_LOCK') == 0) onclick="submit('{{ $proval->id }}','{{ $proattr->id }}')" type="submit" @else title="This action is disabled in demo !" disabled="disabled"  @endif id="update" class="btn btn-primary"><i class="fa fa-check-circle"></i> {{ __("Update") }}</button>
 													</div>
 												</div>
 											</div>

@@ -1,4 +1,4 @@
- <label for="name">Choose Childcategory:</label>
+ <label for="name">{{ __('Choose Childcategory:') }}</label>
             <ul class="list-group list-group-root well"> 
           <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
             <div class="panel panel-default">

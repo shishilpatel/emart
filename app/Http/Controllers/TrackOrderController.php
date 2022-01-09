@@ -26,7 +26,7 @@ class TrackOrderController extends Controller
             $error = $validator->errors();
 
             return response()->json([
-                'msg' => 'Tracking ID is required !',
+                'msg' => __('Tracking ID is required !'),
                 'status' => 'fail'
             ]);
         }

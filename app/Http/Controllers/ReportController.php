@@ -14,7 +14,7 @@ class ReportController extends Controller
     public function stockreport(Request $request)
     {
 
-        abort_if(!auth()->user()->can('reports.view'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('reports.view'),403,__('User does not have the right permissions.'));
 
         $products = AddSubVariant::with(['variantimages', 'products', 'products.store', 'products.vender'])
                     ->whereHas('products.store', function ($q) {
@@ -54,7 +54,7 @@ class ReportController extends Controller
     public function salesreport(Request $request)
     {   
 
-        abort_if(!auth()->user()->can('reports.view'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('reports.view'),403,__('User does not have the right permissions.'));
 
         $orders = Order::with(['invoices'])->whereHas('invoices')->where('status','1');
 
@@ -85,7 +85,7 @@ class ReportController extends Controller
 
     public function stockreportsp(){
 
-        abort_if(!auth()->user()->can('reports.view'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('reports.view'),403,__('User does not have the right permissions.'));
 
         $products = SimpleProduct::with(['store'])->whereHas('store',function($q){
                 $q->where('status','1');
@@ -117,7 +117,7 @@ class ReportController extends Controller
 
     public function mostviewproducts(Request $request){
 
-        abort_if(!auth()->user()->can('reports.view'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('reports.view'),403,__('User does not have the right permissions.'));
 
         $data = Product::orderByUniqueViews();
 

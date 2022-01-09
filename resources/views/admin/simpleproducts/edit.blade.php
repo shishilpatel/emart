@@ -1,25 +1,27 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Edit Product: '. $product->product_name.' | ')
+@section('title',__('Edit Product :product | ',['product' => $product->product_name]))
 @section('stylesheet')
 <link rel="stylesheet" href="{{ url("/css/lightbox.min.css") }}">
 @endsection
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
-@slot('heading')
-{{ __('Edit Product') }}
-@endslot
-@slot('menu1')
-{{ __("Product") }}
-@endslot
-@slot('menu2')
-{{ __("Edit Product") }}
-@endslot
+
+    @slot('heading')
+        {{ __('Edit Product') }}
+    @endslot
+    @slot('menu1')
+        {{ __("Product") }}
+    @endslot
+    @slot('menu2')
+        {{ __("Edit Product") }}
+    @endslot
 
 @slot('button')
 <div class="col-md-6">
     <div class="widgetbar">
-        <a href="{{ route('simple-products.index') }}" class="btn btn-primary-rgba"><i
-                class="feather icon-arrow-left mr-2"></i>{{ __("Back")}}</a>
+        <a href="{{ route('simple-products.index') }}" class="btn btn-primary-rgba">
+            <i class="feather icon-arrow-left mr-2"></i>{{ __("Back")}}
+        </a>
     </div>
 </div>
 @endslot
@@ -32,7 +34,7 @@
             <div class="alert alert-danger" role="alert">
                 @foreach($errors->all() as $error)
                 <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true" style="color:red;">&times;</span></button></p>
+                        <span aria-hidden="true">&times;</span></button></p>
                 @endforeach
             </div>
             @endif
@@ -95,7 +97,7 @@
 
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label class="text-dark">Product Name: <span
+                                                    <label class="text-dark">{{__("Product Name:")}} <span
                                                             class="text-danger">*</span></label>
                                                     <input placeholder="{{ __("Enter product name") }}" required
                                                         type="text" value="{{ $product->product_name }}"
@@ -106,17 +108,17 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="text-dark">
-                                                        Product Brand: <span class="text-danger">*</span>
+                                                        {{__("Product Brand:")}} <span class="text-danger">*</span>
                                                     </label>
                                                     <select data-placeholder="Please select brand" required=""
                                                         name="brand_id" class="select2 form-control">
                                                         <option value="">Please Select</option>
                                                         @if(!empty($brands_all))
                                                         @foreach($brands_all as $brand)
-                                                        <option
-                                                            {{$product['brand_id'] == $brand['id'] ? "selected" : "" }}
-                                                            value="{{$brand->id}}">
-                                                            {{$brand->name}} </option>
+                                                            <option {{$product['brand_id'] == $brand['id'] ? "selected" : "" }}
+                                                                value="{{$brand->id}}">
+                                                                {{$brand->name}} 
+                                                            </option>
                                                         @endforeach
                                                         @endif
                                                     </select>
@@ -126,12 +128,14 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="text-dark">
-                                                        Product Store: <span class="text-danger">*</span>
+                                                        {{__("Product Store:")}} <span class="text-danger">*</span>
                                                     </label>
-                                                    <select data-placeholder="Please select store" required=""
+                                                    <select data-placeholder="{{__("Please select store")}}" required=""
                                                         name="store_id" class="form-control select2">
 
-                                                        <option value="">Please select store</option>
+                                                        <option value="">
+                                                            {{__("Please select store")}}
+                                                        </option>
 
                                                         @foreach($stores as $store)
                                                         <optgroup label="Store Owner • {{ $store->user->name }}">
@@ -147,7 +151,7 @@
 
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label class="text-dark"> Key Features :
+                                                    <label class="text-dark"> {{__("Key Features:")}}
                                                     </label>
                                                     <textarea class="form-control editor" id="editor1"
                                                         name="key_features">{!! $product->key_features !!}</textarea>
@@ -156,7 +160,7 @@
 
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label class="text-dark">Product Description: <span
+                                                    <label class="text-dark">{{__("Product Description:")}} <span
                                                             class="text-danger">*</span></label>
                                                     <textarea placeholder="{{ __("Enter product details") }}"
                                                         class="editor" name="product_detail" id="editor1" cols="30"
@@ -166,8 +170,7 @@
 
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    <label class="text-dark">Product Category: <span
-                                                            class="text-danger">*</span></label>
+                                                    <label class="text-dark">{{__("Product Category:")}} <span class="text-danger">*</span></label>
                                                     <select data-placeholder="{{ __("Please select category") }}"
                                                         name="category_id" id="category_id"
                                                         class="form-control select2">
@@ -186,7 +189,7 @@
                                                     <label class="text-dark">Product Subcategory: <span
                                                             class="text-danger">*</span></label>
 
-                                                    <select data-placeholder="Please select subcategory" required=""
+                                                    <select data-placeholder="{{ __('Please select subcategory') }}" required=""
                                                         name="subcategory_id" id="upload_id"
                                                         class="form-control select2">
                                                         <option value="">Please Select</option>
@@ -217,10 +220,37 @@
 
                                             <div class="col-md-12">
                                                 <div class="form-group">
+                                                    <label>{{ __("Also in :") }}</label>
+                                                    <select multiple="multiple" name="other_cats[]" id="other_cats" class="form-control select2">
+                                                        @foreach($categories->where('id','!=',$product->category_id) as $category)
+                                                            <option {{ $product->other_cats != '' && in_array($category->id,$product->other_cats) ? "selected" : "" }} value="{{ $category->id }}">{{ $category->title }}</option>
+                                                        @endforeach
+                                                    </select>
+                
+                                                    <small class="text-primary">
+                                                        <i class="feather icon-help-circle"></i> {{ __("If in list primary category is also present then it will auto remove from this after create product.") }}
+                                                    </small>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
                                                     <label class="text-dark">Product Tags:</label>
-                                                    <input placeholder="{{ __("Enter product tags by comma") }}"
+                                                    <input data-role="tagsinput" placeholder="{{ __("Enter product tags by comma") }}"
                                                         type="text" class="form-control" name="product_tags"
                                                         value="{{ $product->product_tags }}">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="text-dark">{{ __('Select Size chart : ') }} </label>
+                                                    <select name="size_chart" class="form-control select2">
+                                                        <option value="NULL">{{ __('None') }}</option>
+                                                        @foreach ($template_size_chart as $chartoption)
+                                                            <option {{ $product->size_chart == $chartoption->id ? "selected" : "" }} value="{{ $chartoption->id }}">{{ $chartoption->template_name }} ({{ $chartoption->template_code }}) </option>
+                                                        @endforeach 
+                                                    </select>
                                                 </div>
                                             </div>
 
@@ -314,8 +344,8 @@
                                                     <label class="text-dark">Price: <span
                                                             class="text-danger">*</span></label>
                                                     <!-- -------------------------------- -->
-                                                    <input min="0" required type="text" placeholder="0"
-                                                        class="form-control simpleproduct" name="actual_selling_price"
+                                                    <input min="0" required type="number" placeholder="0"
+                                                        class="form-control" name="actual_selling_price"
                                                         step="0.01" value="{{ $product->actual_selling_price }}">
                                                 </div>
 
@@ -325,8 +355,8 @@
                                                 <div class="form-group">
                                                     <label class="text-dark">Offer Price: </label>
                                                     <!-- -------------------------------- -->
-                                                    <input min="0" required type="text" placeholder="0"
-                                                        class="form-control discount2" name="actual_offer_price"
+                                                    <input min="0" required type="number" placeholder="0"
+                                                        class="form-control" name="actual_offer_price"
                                                         step="0.01" value="{{ $product->actual_offer_price }}">
 
                                                 </div>
@@ -337,8 +367,8 @@
                                                     <label class="text-dark">Tax: <span class="text-danger">*</span>
                                                     </label>
                                                     <!-- -------------------------------- -->
-                                                    <input min="0" required type="text" placeholder="0"
-                                                        class="form-control simpleproduct" name="tax" step="0.01"
+                                                    <input min="0" required type="number" placeholder="0"
+                                                        class="form-control" name="tax" step="0.01"
                                                         value="{{ $product->tax }}">
 
                                                     <small>({{__("This tax % will add in given price.")}})</small>
@@ -369,7 +399,7 @@
                                                             class="form-control">
                                                         <div class="input-group-append">
                                                             <span data-input="thumbnail"
-                                                                class="bg-primary text-light midia-toggle input-group-text">Browse</span>
+                                                                class="bg-primary text-light midia-toggle input-group-text">{{ __('Browse') }}</span>
                                                         </div>
                                                     </div>
                                                     
@@ -389,7 +419,7 @@
                                                         <input readonly id="hover_thumbnail" name="hover_thumbnail" type="text" class="form-control">
                                                         <div class="input-group-append">
                                                             <span data-input="hover_thumbnail"
-                                                                class="bg-primary text-light midia-toggle input-group-text">Browse</span>
+                                                                class="bg-primary text-light midia-toggle input-group-text">{{ __('Browse') }}</span>
                                                         </div>
                 
                 
@@ -435,7 +465,7 @@
                                                             class="form-control">
                                                         <div class="input-group-append">
                                                             <span data-input="product_file"
-                                                                class="bg-primary text-light file-toggle input-group-text">Browse</span>
+                                                                class="bg-primary text-light file-toggle input-group-text">{{ __('Browse') }}</span>
                                                         </div>
                                                     </div>
 
@@ -686,7 +716,7 @@
                                         {{ __("Reset")}}</button>
                                     <button type="submit" class="btn btn-primary"><i class="fa fa-save mr-2"></i>
                                         {{ __("Update")}}</button>
-                                    <!-- <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle mr-2"></i> Update</button> -->
+                                    <!-- <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle mr-2"></i> {{ __("Update") }}</button> -->
                                 </div>
 
                             </form>
@@ -800,7 +830,7 @@
                                                     <div class="widgetbar">
                                                         <button type="button"
                                                             class="float-right btn btn-danger-rgba mr-2"
-                                                            data-toggle="modal" data-target="#bulk_delete"><i
+                                                            data-toggle="modal" data-target="#bulk_delete_spec"><i
                                                                 class="feather icon-trash mr-2"></i> Delete
                                                             Selected</button>
                                                     </div>
@@ -1171,7 +1201,7 @@
                                                                                                 {{ __("save")}}</button>
                                                                                             <button type="button"
                                                                                                 class="btn btn-danger"
-                                                                                                data-dismiss="modal">Close</button>
+                                                                                                data-dismiss="modal">{{ __('Close') }}</button>
                                                                                         </div>
                                                                                     </div>
 
@@ -1194,7 +1224,7 @@
                                                                     <div class="modal-content">
                                                                         <div class="modal-header">
                                                                             <h5 class="modal-title"
-                                                                                id="exampleSmallModalLabel">Delete</h5>
+                                                                                id="exampleSmallModalLabel">{{ __("DELETE") }}</h5>
                                                                             <button type="button" class="close"
                                                                                 data-dismiss="modal" aria-label="Close">
                                                                                 <span aria-hidden="true">&times;</span>
@@ -1214,9 +1244,9 @@
                                                                                 {{method_field("DELETE")}}
                                                                                 <button type="reset"
                                                                                     class="btn btn-secondary"
-                                                                                    data-dismiss="modal">No</button>
+                                                                                    data-dismiss="modal">{{ __("No") }}</button>
                                                                                 <button type="submit"
-                                                                                    class="btn btn-primary">Yes</button>
+                                                                                    class="btn btn-primary">{{ __("YES") }}</button>
                                                                             </form>
                                                                         </div>
                                                                     </div>
@@ -1277,7 +1307,7 @@
                                                                                     class="text-danger">*</span></label>
                                                                             <textarea cols="10" id="detail"
                                                                                 name="answer" rows="5"
-                                                                                class="form-control">{{old('answer')}}</textarea>
+                                                                                class="editor form-control">{{old('answer')}}</textarea>
                                                                             <input type="hidden" readonly name="pro_id"
                                                                                 value="{{ $product->id }}">
                                                                             <small class="text-muted"><i
@@ -1286,17 +1316,17 @@
                                                                             </small>
                                                                         </div>
                                                                     </div>
-
+                                                                    <input type="hidden" value="1" name="simple_product"/>
                                                                     <!-- save button -->
                                                                     <div class="col-md-12">
                                                                         <div class="form-group">
 
                                                                             <button type="submit"
-                                                                                class="btn btn-primary"><i
-                                                                                    class="fa fa-check-circle"></i>
-                                                                                {{ __("save")}}</button>
-                                                                            <button type="button" class="btn btn-danger"
-                                                                                data-dismiss="modal">Close</button>
+                                                                                class="btn btn-primary-rgba"><i
+                                                                                    class="feather icon-save"></i>
+                                                                                {{ __("Save")}}</button>
+                                                                            <button type="button" class="btn btn-danger-rgba"
+                                                                                data-dismiss="modal">{{ __('Close') }}</button>
                                                                         </div>
                                                                     </div>
 
@@ -1394,6 +1424,32 @@
     </div>
 </div>
 </div>
+
+<!-- Bulk Delete Modal -->
+<div id="bulk_delete_spec" class="delete-modal modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <div class="delete-icon"></div>
+        </div>
+        <div class="modal-body text-center">
+          <h4 class="modal-heading">{{ __("Are You Sure ?") }}</h4>
+          <p>Do you really want to delete these products? This process cannot be undone.</p>
+        </div>
+        <div class="modal-footer">
+          <form id="bulk_delete_form" method="post" action="{{ route('pro.specs.delete',$product->id) }}">
+            @csrf
+            {{ method_field('DELETE') }}
+            <button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">{{ __("NO") }}</button>
+            <button type="submit" class="btn btn-danger">{{ __("YES") }}</button>
+          </form>
+        </div>
+      </div>
+    </div>
+</div>
+
 @endsection
 @section('custom-script')
 <script src='{{ url('js/lightbox.min.js') }}' type='text/javascript'></script>

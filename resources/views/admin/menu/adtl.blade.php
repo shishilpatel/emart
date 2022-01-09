@@ -1,4 +1,4 @@
-<p><b>Linked to:</b> 
+<p><b>{{ __('Linked to:') }}</b> 
 	@if($link_by == 'page')
 		Custom Page
 	@elseif($link_by == 'url')
@@ -8,13 +8,13 @@
 	@endif
 </p>
 
-<p><b>Has Mega menu:</b> 
+<p><b>{{ __("Has Mega menu:") }}</b> 
 	@if($show_cat_in_dropdown == 1)
-		Yes
+		{{ __('Yes') }}
 	@elseif($show_child_in_dropdown == 1)
-		Yes
+		{{__("Yes")}}
     @else 
-    	No
+    	{{__("No")}}
 	@endif
 </p>
 
@@ -23,15 +23,15 @@
 	@if($icon != NULL || $icon != '')
 		<i class="fa {{ $icon }}"></i>
 	@else
-		Not set
+		{{__("Not set")}}
 	@endif
 </p>
 
 <p>
-	<b>Menu Tag:</b>
+	<b>{{ __('Menu Tag:') }}</b>
 	@if($menu_tag == 1)
-		Yes
+	{{__("Yes")}}
 	@else
-		Not set
+	{{__("Not set")}}
 	@endif
 </p>

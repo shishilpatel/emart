@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','View order #'.$order->order_id.' | ')
+@section('title',__('Viw order # :order | ',['order' => $order->order_id]))
 @section('body')
 @component('admin.component.breadcumb',['secondaryactive' => 'active'])
 
@@ -35,12 +35,12 @@
                     <!-- Content Header (Page header) -->
         
                         <h4>
-                            Order Status : 
+                            {{__('Order Status')}} : 
                             <span title="{{ ucfirst(str_replace('_',' ',$order->order_status)) }}" class="badge badge-success">{{ ucfirst(str_replace('_',' ',$order->order_status)) }}</span>
                         </h4>
                         <hr>
                         <h3>
-                            Invoice
+                            {{__('Invoice')}}
                             <small>#{{ $order->order_id }}</small>
                         </h3>
         
@@ -52,34 +52,34 @@
                         <!-- info row -->
                         <div class="row invoice-info">
                             <div class="col-md-4 invoice-col">
-                                From
+                                {{__('From')}}
                                 <address>
                                     <strong>{{ $store->name }}</strong><br>
                                     {{$store->address}}<br>
                                     {{ $store->city['name'] }},{{ $store->state['name'] }},{{ $store->country['nicename'] }}<br>
                                     {{ $store->pin_code }} <br>
-                                    Phone: {{ $store->mobile }}<br>
-                                    Email: {{ $store->email }}
+                                    {{__('Phone')}}: {{ $store->mobile }}<br>
+                                    {{__('Email')}}: {{ $store->email }}
                                 </address>
                             </div>
                             <!-- /.col -->
                             <div class="col-md-4 invoice-col">
-                                To
+                                {{__('To')}}
                                 <address>
                                     <strong>{{ $order->customer_name }}</strong><br>
                                     {{ $order->customer_shipping_address }}<br>
                                     {{ $order->cities['name'] }},{{ $order->states['name'] }},{{ $order->country['nicename'] }}<br>
                                     {{ $order->customer_pincode }} <br>
-                                    Phone: {{ $order->customer_phone }}<br>
-                                    Email: {{ $order->customer_email }}
+                                    {{__('Phone')}}: {{ $order->customer_phone }}<br>
+                                    {{__('Email')}}: {{ $order->customer_email }}
                                 </address>
                             </div>
                             <!-- /.col -->
                             <div class="col-md-4 invoice-col">
-                                <b>Date: {{ date('d/m/Y',strtotime($order->invoice_date)) }}</b>
+                                <b>{{__('Date')}}: {{ date('d/m/Y',strtotime($order->invoice_date)) }}</b>
                                 <br>
-                                <b>Order ID:</b> {{ $order->order_id }}<br>
-                                <b>Payment Method:</b> {{ $order->payment_method }}<br>
+                                <b>{{__('Order ID')}}:</b> {{ $order->order_id }}<br>
+                                <b>{{__('Payment Method')}}:</b> {{ $order->payment_method }}<br>
         
                             </div>
                             <!-- /.col -->
@@ -93,11 +93,11 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Product</th>
-                                            <th>Gross Price</th>
-                                            <th>Qty.</th>
-                                            <th>Tax</th>
-                                            <th>Subtotal</th>
+                                            <th>{{ __('Product') }}</th>
+                                            <th>{{ __('Gross Price') }}</th>
+                                            <th>{{ __('Qty.') }}</th>
+                                            <th>{{ __('Tax') }}</th>
+                                            <th>{{ __('Subtotal') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -141,10 +141,10 @@
                                     <div class="card border mt-2">
                                         <div class="card-body">
 
-                                            <p class="lead text-dark">Payment Methods:</p>
+                                            <p class="lead text-dark">{{ __('Payment Methods') }}:</p>
                                             <blockquote>{{ $order->payment_method }}</blockquote>
                                             @if($order['additional_note'] != NULL)
-                                                <p class="lead text-dark">Addtional Note:</p>
+                                                <p class="lead text-dark">{{ __('Addtional Note') }}:</p>
                                             {!! $order['additional_note'] !!}
                                             @endif
                                         </div>
@@ -158,38 +158,38 @@
                                 <div class="table-responsive">
                                     <table class="table">
                                         <tr>
-                                            <th style="width:50%">Subtotal:</th>
+                                            <th style="width:50%">{{ __('Subtotal') }}:</th>
                                             <td>{{ sprintf('%.2f',$order['subtotal']) }}<i class="fa {{ $defCurrency->currency_symbol }}"></i></td>
                                         </tr>
                                         <tr>
-                                            <th>Tax:</th>
+                                            <th>{{ __('Tax') }}:</th>
                                             <td>
                                                 {{ sprintf('%.2f',$order['total_tax']) }}<i class="fa {{ $defCurrency->currency_symbol }}"></i> ({{ $order['tax_rate'] }}%)
                                                 <br>
                                                 @if($store->state['id'] != $order->states['id'])
                                                 
-                                                <small>(IGST) {{ sprintf('%.2f',$order['total_tax']) }}<i class="fa {{ $defCurrency->currency_symbol }}"></i> ({{ $order['tax_rate'] }}%) </small>
+                                                <small>({{ __('IGST') }}) {{ sprintf('%.2f',$order['total_tax']) }}<i class="fa {{ $defCurrency->currency_symbol }}"></i> ({{ $order['tax_rate'] }}%) </small>
                                                 <br>
                                                 @endif
                                                 @if($store->state['id'] == $order->states['id'])
-                                                <small>(SGST) {{ sprintf('%.2f',$order['total_tax']/2) }}<i class="fa {{ $defCurrency->currency_symbol }}"></i> ({{ sprintf("%.2f",$order['tax_rate']/2) }}%) </small>
+                                                <small>({{ __('SGST') }}) {{ sprintf('%.2f',$order['total_tax']/2) }}<i class="fa {{ $defCurrency->currency_symbol }}"></i> ({{ sprintf("%.2f",$order['tax_rate']/2) }}%) </small>
                                                 <br>
-                                                <small>(CGST) {{ sprintf('%.2f',$order['total_tax']/2) }}<i class="fa {{ $defCurrency->currency_symbol }}"></i> ({{ sprintf("%.2f",$order['tax_rate']/2) }}%) </small>
+                                                <small>({{ __('CGST') }}) {{ sprintf('%.2f',$order['total_tax']/2) }}<i class="fa {{ $defCurrency->currency_symbol }}"></i> ({{ sprintf("%.2f",$order['tax_rate']/2) }}%) </small>
                                                 <br>
                                                 
                                                 @endif
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th>Shipping:</th>
+                                            <th>{{ __('Shipping') }}:</th>
                                             <td>{{ sprintf('%.2f',$order['total_shipping']) }} <i class="fa {{ $defCurrency->currency_symbol }}"></i></td>
                                         </tr>
                                         <tr>
-                                            <th>Adjustable Amount:</th>
+                                            <th>{{__('Adjustable Amount')}}:</th>
                                             <td>{{ sprintf('%.2f',$order['adjustable_amount']) }} <i class="fa {{ $defCurrency->currency_symbol }}"></i></td>
                                         </tr>
                                         <tr>
-                                            <th>Total:</th>
+                                            <th>{{__("Total")}}:</th>
                                             <td>{{ sprintf('%.2f',$order['grand_total']) }} <i class="fa {{ $defCurrency->currency_symbol }}"></i></td>
                                         </tr>
                                         <tr>
@@ -217,7 +217,8 @@
                             <div class="col-md-12">
                                 
                             <a onclick="window.print()"  class="btn btn-primary-rgba"><i class="feather icon-printer"></i>
-                                    Print</a>
+                                {{__("Print")}}        
+                            </a>
                               
                             
                             </div>

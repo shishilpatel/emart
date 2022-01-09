@@ -17,12 +17,11 @@
                
 
                 <b-tab @click="loadTab('all')" title="All">
-                    <product-slider v-if="tabbed_products" :products="tabbed_products" :date="date" :lang="lang" :fallbacklang="fallbacklang" :login="login" :guest_price="guest_price"></product-slider>
+                    <product-slider v-if="tabbed_products" :products="tabbed_products" :date="date" :lang="lang" :fallbacklang="fallbacklang" :login="login" :guest_price="guest_price" :starbadge="false"></product-slider>
                 </b-tab>
 
                 <b-tab @click="loadTab(cat.id)" v-for="(cat,index) in tabbed_cats" :key="index" :title="cat.title[lang]  ? cat.title[lang] : cat.title[fallbacklang]">
-                    <product-slider v-if="!loading" :products="allproducts" :date="date" :lang="lang" :fallbacklang="fallbacklang"
-                        :login="login" :guest_price="guest_price"></product-slider>
+                    <product-slider v-if="!loading" :products="allproducts" :date="date" :lang="lang" :fallbacklang="fallbacklang" :login="login" :guest_price="guest_price" :starbadge="false"></product-slider>
                     <div v-else>
                         <slider-skelton :item="6"></slider-skelton>
                     </div>

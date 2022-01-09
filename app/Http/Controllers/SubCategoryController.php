@@ -7,10 +7,9 @@ use App\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Image;
 
 
-class SubcategoryController extends Controller
+class SubCategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,7 +18,7 @@ class SubcategoryController extends Controller
      */ 
     public function index()
     {
-        abort_if(!auth()->user()->can('subcategory.view'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('subcategory.view'),403,__('User does not have the right permissions.'));
 
         $subcategory = Subcategory::orderBy('position','ASC')->get();
 
@@ -33,7 +32,7 @@ class SubcategoryController extends Controller
      */
     public function create()
     {
-        abort_if(!auth()->user()->can('subcategory.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('subcategory.create'),403,__('User does not have the right permissions.'));
 
         $parent = Category::all();
 
@@ -42,7 +41,7 @@ class SubcategoryController extends Controller
 
     public function import(Request $request){
 
-        abort_if(!auth()->user()->can('category.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('category.create'),403,__('User does not have the right permissions.'));
 
         $validator = Validator::make(
             [
@@ -57,7 +56,7 @@ class SubcategoryController extends Controller
         );
 
         if ($validator->fails()) {
-            notify()->error('Invalid file !');
+            notify()->error(__('Invalid file !'));
             return back();
         }
 
@@ -87,9 +86,15 @@ class SubcategoryController extends Controller
 
             });
 
-            Storage::delete('/excel/'.$filename);
+            try{
 
-            notify()->success('Subcategories imported successfully !');
+                unlink(storage_path().'/excel/'.$filename);
+
+            }catch(\Exception $e){
+
+            }
+
+            notify()->success(__('Subcategories imported successfully !'));
 
             return back();
 
@@ -109,18 +114,14 @@ class SubcategoryController extends Controller
     public function store(Request $request)
     {  
 
-        abort_if(!auth()->user()->can('subcategory.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('subcategory.create'),403,__('User does not have the right permissions.'));
         
         $request->validate([
             
             "title"=>"required",
             
 
-        ],[
-
-            "title.required"=>"Subcategory Name is needed",
-            
-          ]);
+        ]);
 
         $data  = new Subcategory;
         $input = array_filter($request->all());
@@ -136,7 +137,7 @@ class SubcategoryController extends Controller
             if(!str_contains($request->image, '.png') && !str_contains($request->image, '.jpg') && !str_contains($request->image, '.jpeg') && !str_contains($request->image, '.webp') && !str_contains($request->image, '.gif')){
                     
                 return back()->withInput()->withErrors([
-                    'image' => 'Invalid image type for subcategory thumbnail'
+                    'image' => __('Invalid image type for subcategory thumbnail')
                 ]);
 
             }
@@ -151,7 +152,7 @@ class SubcategoryController extends Controller
 
          $data->create($input);
         
-        return redirect()->route('subcategory.index')->with("added","Sub Category Has Been Added");
+        return redirect()->route('subcategory.index')->with("added",__("Subcategory Has Been Added"));
     }
 
 
@@ -163,7 +164,7 @@ class SubcategoryController extends Controller
      */
     public function reposition(Request $request)
     {
-        abort_if(!auth()->user()->can('subcategory.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('subcategory.edit'),403,__('User does not have the right permissions.'));
 
         if($request->ajax()){
 
@@ -189,7 +190,7 @@ class SubcategoryController extends Controller
      */
     public function edit($id)
     {
-        abort_if(!auth()->user()->can('subcategory.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('subcategory.edit'),403,__('User does not have the right permissions.'));
 
         $parent = Category::all();
 
@@ -207,7 +208,7 @@ class SubcategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        abort_if(!auth()->user()->can('subcategory.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('subcategory.edit'),403,__('User does not have the right permissions.'));
 
         $subcat = Subcategory::findOrFail($id);
 
@@ -215,7 +216,7 @@ class SubcategoryController extends Controller
             'title' => 'required',
             'parent_cat' => 'required'
         ],[
-            'parent_cat.required' => 'Please Select Parent Category'
+            'parent_cat.required' => __('Please Select Parent Category')
         ]);
 
         $subcat->title = $request->title;
@@ -240,7 +241,7 @@ class SubcategoryController extends Controller
             if(!str_contains($request->image, '.png') && !str_contains($request->image, '.jpg') && !str_contains($request->image, '.jpeg') && !str_contains($request->image, '.webp') && !str_contains($request->image, '.gif')){
                     
                 return back()->withInput()->withErrors([
-                    'image' => 'Invalid image type for subcategory thumbnail'
+                    'image' => __('Invalid image type for subcategory thumbnail')
                 ]);
 
             }
@@ -251,7 +252,7 @@ class SubcategoryController extends Controller
 
         $subcat->save();
 
-        return redirect()->route('subcategory.index')->with("updated","Subcategory Has Been Updated !");
+        return redirect()->route('subcategory.index')->with("updated",__("Subcategory has been updated !"));
 
     }
 
@@ -263,13 +264,13 @@ class SubcategoryController extends Controller
      */
     public function destroy($id)
     {
-        abort_if(!auth()->user()->can('subcategory.delete'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('subcategory.delete'),403,__('User does not have the right permissions.'));
 
         $category = Subcategory::find($id);
 
 
         if(count($category->products)>0){
-            return back()->with('warning','Subcategory cant be deleted as its linked to products !');
+            return back()->with('warning',__('Subcategory can\'t be deleted as its linked to products !'));
         }
 
         if ($category->image != '' && file_exists(public_path() . '/images/subcategory/' . $category->image)) {
@@ -279,7 +280,7 @@ class SubcategoryController extends Controller
         $value = $category->delete();
 
         if($value){
-            session()->flash("deleted","Subcategory Has Been Deleted !");
+            session()->flash("deleted",__("Subcategory has been deleted !"));
             return redirect("admin/subcategory");
         }
     }

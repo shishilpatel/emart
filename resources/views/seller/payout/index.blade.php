@@ -1,5 +1,5 @@
 @extends('admin.layouts.sellermastersoyuz')
-@section('title', 'Completed Payments')
+@section('title', __('Completed Payments'))
 @section('body')
 
 @component('seller.components.breadcumb',['secondactive' => 'active'])
@@ -15,18 +15,19 @@
 @endcomponent
 
 <div class="contentbar">
-  @if ($errors->any())  
-  <div class="alert alert-danger" role="alert">
-  @foreach($errors->all() as $error)     
-  <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-  <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach  
-  </div>
-  @endif
+  
                           
             
   <div class="row">
     <div class="col-lg-12">
+      @if ($errors->any())  
+        <div class="alert alert-danger" role="alert">
+        @foreach($errors->all() as $error)     
+          <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button></p>
+        @endforeach  
+        </div>
+      @endif
       <div class="card m-b-30">
         <div class="card-header">
           <h5 class="card-title">{{ __('Completed Payments') }}</h5>
@@ -58,22 +59,22 @@
                      #
                    </th>
                    <th>
-                     Transfer TYPE
+                     {{__('Transfer TYPE')}}
                    </th>
                    <th>
-                     Order ID
+                     {{__('Order ID')}}
                    </th>
                    <th>
-                     Amount
+                     {{__("Amount")}}
                    </th>
                    <th>
-                     Seller Details
+                     {{__("Seller Details")}}
                    </th>
                    <th>
-                     Paid On
+                     {{__("Paid On")}}
                    </th>
                    <th>
-                     Action
+                     {{__("Action")}}
                    </th>
                  </thead>
      
@@ -95,7 +96,7 @@
       <div class="modal-content">
           <div class="modal-header">
               
-            <h5 class="modal-title" id="exampleStandardModalLabel">Track Payout Status</h5>
+            <h5 class="modal-title" id="exampleStandardModalLabel">{{ __('Track Payout Status') }}</h5>
               <button type="button" class="float-right close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
               </button>
@@ -106,7 +107,7 @@
           </div>
           </div>
           <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal">{{ __('Close') }}</button>
               
           </div>
       </div>

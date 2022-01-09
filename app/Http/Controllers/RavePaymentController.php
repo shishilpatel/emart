@@ -23,13 +23,13 @@ class RavePaymentController extends Controller
         $total = sprintf("%.2f",$total * $conversion_rate);
 
         if (sprintf("%.2f",$request->actualtotal) != $total) {
-            notify()->error('Payment has been modifed !','Please try again !');
+            notify()->error(__('Payment has been modifed !'),__('Please try again !'));
             return redirect(route('order.review'));
 
         }
 
         if(session()->get('currency')['id'] != 'NGN'){
-            notify()->warning('Currency not supported !');
+            notify()->warning(__('Currency not supported !'));
             return redirect(route('order.review'));
         }
 
@@ -56,7 +56,7 @@ class RavePaymentController extends Controller
 
         }else{
 
-            notify()->error('Payment Failed !');
+            notify()->error(__('Payment Failed !'));
             $failedTranscations = new FailedTranscations();
             $failedTranscations->txn_id = 'RAVE_FAILED_' . Str::uuid();
             $failedTranscations->user_id = auth()->id();

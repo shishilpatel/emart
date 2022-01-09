@@ -7,7 +7,7 @@
   </form>
   <p></p>
     <button class="btn btn-sm btn-danger" @if(env('DEMO_LOCK') == 0) data-toggle="modal" href="#{{$id}}deletestore" @else disabled title="This action is disabled in demo !" @endif>
-        <i class="fa fa-trash-o" aria-hidden="true"></i> Delete
+        <i class="fa fa-trash-o" aria-hidden="true"></i> {{__("Delete")}}
     </button>
   
     <div id="{{ $id }}deletestore" class="delete-modal modal fade" role="dialog">
@@ -19,8 +19,8 @@
               <div class="delete-icon"></div>
             </div>
             <div class="modal-body text-center">
-              <h4 class="modal-heading">Are You Sure ?</h4>
-              <p>Do you really want to delete this <b>{{ $name }}</b> request? This process cannot be undone.</p>
+              <h4 class="modal-heading">{{ __("Are You Sure ?") }}</h4>
+              <p>{{__("Do you really want to delete this")}} <b>{{ $name }}</b> {{__("request? This process cannot be undone.")}}</p>
             </div>
             <div class="modal-footer">
               <form method="post" action="{{url('admin/stores/'.$id)}}" class="pull-right">
@@ -28,8 +28,8 @@
                   {{method_field("DELETE")}}
                                  
             
-                <button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">No</button>
-                <button type="submit" class="btn btn-danger">Yes</button>
+                <button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">{{ __("NO") }}</button>
+                <button type="submit" class="btn btn-danger">{{ __("YES") }}</button>
               </form>
             </div>
           </div>

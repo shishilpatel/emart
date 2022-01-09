@@ -2,7 +2,7 @@
   <button class="btn btn-round btn-primary-rgba" type="button" id="CustomdropdownMenuButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="feather icon-more-vertical-"></i></button>
   <div class="dropdown-menu" aria-labelledby="CustomdropdownMenuButton3">
     
-    @if(!in_array($id,['1','2','3','4']))
+    @if(!in_array($id,['1','2','3','4','5']))
       <a class="dropdown-item"   href="{{ route('roles.edit',$id) }}"><i class="feather icon-edit mr-2"></i>{{ __("Edit")}}</a>
     @else 
     <p class="dropdown-item" >
@@ -28,23 +28,24 @@
         <div class="delete-icon"></div>
       </div>
       <div class="modal-body text-center">
-        <h4 class="modal-heading">Are You Sure ?</h4>
-        <p>Do you really want to delete this role <b>{{ $name }}</b> ? <b> By Clicking YES IF any user attach to this role will be unroled !</b> This process cannot be undone.</p>
+        <h4 class="modal-heading">
+          {{__('Are You Sure ?')}}
+        </h4>
+        <p>{{__('Do you really want to delete this role')}} <b>{{ $name }}</b> ? <b> {{__("By Clicking YES IF any user attach to this role will be unroled !</b> This process cannot be undone")}}.</p>
       </div>
       <div class="modal-footer">
         <form method="post" action="{{ route('roles.destroy',$id) }}" class="pull-right">
           {{csrf_field()}}
           {{method_field("DELETE")}}
 
-          <button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">No</button>
-          <button type="submit" class="btn btn-danger">Yes</button>
+          <button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">
+            {{__('No')}}
+          </button>
+          <button type="submit" class="btn btn-danger">
+            {{__('Yes')}}
+          </button>
         </form>
       </div>
     </div>
   </div>
 </div>
-
-
-
-  
-

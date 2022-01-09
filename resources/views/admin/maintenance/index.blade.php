@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Maintenance Mode')
+@section('title',__('Maintenance Mode'))
 @section('body')
 @component('admin.component.breadcumb',['secondaryactive' => 'active'])
 @slot('heading')
@@ -12,15 +12,18 @@
 @endcomponent
 <div class="contentbar">
     <div class="row">
-      @if ($errors->any())
-      <div class="alert alert-danger" role="alert">
-        @foreach($errors->all() as $error)
-        <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-        @endforeach
-      </div>
-      @endif
+      
       <div class="col-lg-12">
+
+        @if ($errors->any())
+        <div class="alert alert-danger" role="alert">
+          @foreach($errors->all() as $error)
+          <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span></button></p>
+          @endforeach
+        </div>
+        @endif
+
         <div class="card m-b-30">
           <div class="card-header">
             <h5 class="box-title">{{ __('Setting') }} {{ __('Maintenance Mode') }}</h5>
@@ -29,7 +32,7 @@
             <form action="{{ route('get.m.post') }}" method="POST">
                 @csrf
                 <div class="form-group">
-                    <label>Allowed IP's: </label>
+                    <label>{{__('Allowed IP\'s')}}: </label>
                     <br>
                     <select required class="form-control select2" name="allowed_ips[]" multiple="multiple" id="allowed_ips">
                         @if(isset($data->allowed_ips))
@@ -45,12 +48,12 @@
                     @enderror
                     <br>
                     <small class="help-block text-info">
-                        <i class="fa fa-question-circle"></i> <b>Your IP is: <span class="text-dark">{{ Request::ip() }}</span></b>
+                        <i class="fa fa-question-circle"></i> <b>{{__('Your IP is:')}} <span class="text-dark">{{ Request::ip() }}</span></b>
                     </small>
                 </div>
 
                 <div class="form-group">
-                    <label>Maintenance mode message <span class="text-danger">*</span></label>
+                    <label>{{__("Maintenance mode message")}} <span class="text-danger">*</span></label>
                     <textarea class="editor form-control" name="message" id="message" cols="30" rows="10">@if($data) {!! $data->message !!} @else {{ old('message') }} @endif</textarea>
                     @error('message')
                         <span class="invalid-feedback text-danger" role="alert">
@@ -60,20 +63,20 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Enable Maintenance mode:</label>
+                    <label>{{ __('Enable Maintenance mode:') }}</label>
                     <br>
                     <label class="switch">
                         <input type="checkbox" name="status" {{ isset($data) && $data->status == 1 ? "checked" : "" }}>
                         <span class="knob"></span>
                     </label>
                     <br>
-                    <small class="text-info"><i class="fa fa-question-circle"></i> Turn On the toggle to enable Maintenance mode</small>
+                    <small class="text-info"><i class="fa fa-question-circle"></i> {{ __('Turn On the toggle to enable Maintenance mode') }}</small>
                 </div>
 
                 <div class="form-group">
-                    <button type="reset" class="btn btn-danger-rgba"><i class="fa fa-ban"></i> Reset</button>
+                    <button type="reset" class="btn btn-danger-rgba"><i class="fa fa-ban"></i> {{ __("Reset") }}</button>
                     <button type="submit" class="btn btn-primary-rgba"><i class="fa fa-check-circle"></i>
-                        Update</button>
+                        {{ __("Update") }}</button>
                 </div>
                 <div class="clear-both"></div>
             </form>

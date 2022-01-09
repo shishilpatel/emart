@@ -1,5 +1,5 @@
 @extends("front/layout.master")
-@section('title','Order Placed Successfully |')
+@section('title',__('Order Placed Successfully |'))
 @section("body")
 <br>
 <div class="body-content">
@@ -17,8 +17,8 @@
                             <h2 class="text-success">{{ __('staticwords.Thankyou') }} !!!</h2>
                             <p class="my-4">{{ __("staticwords.orderplacedsuccesstext") }} #{{ app('request')->input('orderid') ?? '' }}</p>
                             <div class="button-list">
-                            <a href="{{ app('request')->input('orderid') ? route('user.view.order',app('request')->input('orderid')) : '#' }}" role="button" class="btn btn-primary font-16"><i class="feather icon-map-pin "></i>View Order</a>
-                            <a href="{{ url('/') }}" role="button" class="btn btn-success font-16"><i class="feather icon-file-text"></i>Continue Shopping</a>
+                            <a href="{{ app('request')->input('orderid') ? route('user.view.order',app('request')->input('orderid')) : '#' }}" role="button" class="btn btn-primary font-16"><i class="feather icon-map-pin "></i>{{ __("View Order") }}</a>
+                            <a href="{{ url('/') }}" role="button" class="btn btn-success font-16"><i class="feather icon-file-text"></i>{{ __('Continue Shopping')  }}</a>
                             </div>
                         </div>
                     </div>

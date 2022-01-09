@@ -7,7 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Unirest\\' => array($vendorDir . '/apimatic/unirest-php/src', $vendorDir . '/mashape/unirest-php/src'),
-    'Sabberworm\\CSS' => array($vendorDir . '/sabberworm/php-css-parser/lib'),
     'Requests' => array($vendorDir . '/rmccue/requests/library'),
     'PayPal' => array($vendorDir . '/paypal/rest-api-sdk-php/lib'),
     'Orangehill\\Iseed' => array($vendorDir . '/orangehill/iseed/src'),

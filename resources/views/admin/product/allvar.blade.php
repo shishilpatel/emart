@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','View  All Variants - ')
+@section('title',__('View  All Variants - '))
 @section('body')
 ​
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
@@ -25,17 +25,18 @@
 @endcomponent
 <div class="contentbar">
   <div class="row">
-    @if ($errors->any())
-    <div class="alert alert-danger" role="alert">
-      @foreach($errors->all() as $error)
-      <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach
-    </div>
-    @endif
-​
+    
 ​
     <div class="col-lg-12">
+		@if ($errors->any())
+			<div class="alert alert-danger" role="alert">
+			@foreach($errors->all() as $error)
+				<p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span></button></p>
+			@endforeach
+			</div>
+		@endif
+​
       <div class="card m-b-30">
         <div class="card-header">
           <h5>{{ __('View Variants') }}</h5>
@@ -47,10 +48,14 @@
 			<thead>
 				<tr>
 					<th>#</th>
-					<th>Variant Detail</th>
-					<th>Pricing Details</th>
-					<th>Added / Updated On</th>
-					<th>Action</th>
+					<th>{{ __('Variant Detail') }}</th>
+					<th>{{ __("Pricing Details") }}</th>
+					<th>
+						{{__('Added / Updated On')}}
+					</th>
+					<th>
+						{{__("Action")}}
+					</th>
 				</tr>
 			</thead>
 
@@ -114,10 +119,10 @@
 
 
 
-								<p><b>Additional Price: </b> {{ $sub->price }}</p>
-								<p><b>Min Qty. For Order:</b> {{ $sub->min_order_qty }}</p>
+								<p><b>{{__("Additional Price:")}} </b> {{ $sub->price }}</p>
+								<p><b>{{ __('Min Qty. For Order:') }}</b> {{ $sub->min_order_qty }}</p>
 
-								<p><b>Stock :</b> {{ $sub->stock }} | <b>Max Qty. For Order:</b>
+								<p><b>{{ __("Stock :") }}</b> {{ $sub->stock }} | <b>{{__("Max Qty. For Order")}}:</b>
 									{{ $sub->max_order_qty }}</p>
 							</div>
 
@@ -129,13 +134,13 @@
 					<td class="v-middle">
 
 						@if($pro->vender_offer_price !=null)
-						<p>Discounted Price : <b>{{ $pro->offer_price }}</b></p>
-						<p>Selling Price : <b>{{ $pro->price }}</b></p>
+						<p>{{__('Discounted Price :')}} <b>{{ $pro->offer_price }}</b></p>
+						<p>{{__("Selling Price :")}} <b>{{ $pro->price }}</b></p>
 						@else
-						<p>Selling Price : <b>{{ $pro->price }}</b></p>
+						<p>{{__("Selling Price :")}} <b>{{ $pro->price }}</b></p>
 						@endif
 
-						<p>(<b>Incl. Admin Commission in this rate</b>)</p>
+						<p>(<b>{{ __("Incl. Admin Commission in this rate") }}</b>)</p>
 					</td>
 
 					<td>
@@ -166,7 +171,7 @@
 							class="dropdown-item">
 							<i class="feather icon-eye mr-2"></i>{{ __("View") }}
 						</a>
-							<a class="dropdown-item" href="{{ route('edit.var',$sub->id) }}"><i class="feather icon-edit mr-2"></i>Edit</a>
+							<a class="dropdown-item" href="{{ route('edit.var',$sub->id) }}"><i class="feather icon-edit mr-2"></i>{{ __("Edit") }}</a>
 							<a class="dropdown-item btn btn-link" data-toggle="modal" data-target="#deletevar{{ $sub->id }}" >
 								<i class="feather icon-delete mr-2"></i>{{ __("Delete") }}</a>
 							</a>
@@ -201,15 +206,17 @@
 				<div class="delete-icon"></div>
 			</div>
 			<div class="modal-body text-center">
-				<h4 class="modal-heading">Are You Sure ?</h4>
-				<p>Do you really want to delete this variant? This process cannot be undone.</p>
+				<h4 class="modal-heading">{{ __("Are You Sure ?") }}</h4>
+				<p>
+					{{__("Do you really want to delete this variant? This process cannot be undone.")}}
+				</p>
 			</div>
 			<div class="modal-footer">
 				<form method="post" action="{{ route('del.var',$sub->id) }}" class="pull-right">
 					{{csrf_field()}}
 					{{method_field("DELETE")}}
-					<button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">No</button>
-					<button type="submit" class="btn btn-danger">Yes</button>
+					<button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">{{ __("NO") }}</button>
+					<button type="submit" class="btn btn-danger">{{ __("YES") }}</button>
 				</form>
 			</div>
 		</div>
@@ -217,14 +224,4 @@
 </div>
 @endforeach
 
-  @endsection
-
-<!-- css for image start -->
-<style>
-    .img-circle{
-   height:80px;
-   width:80px;
-   border-radius:50%;
-}
-</style>
-<!-- css for image end -->
+@endsection

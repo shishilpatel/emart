@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','All Cities')
+@section('title',__('All Cities'))
 @section('body')
 @component('admin.component.breadcumb',['secondaryactive' => 'active'])
 @slot('heading')
@@ -28,7 +28,7 @@
         <div class="col-lg-12">
             <div class="card m-b-30">
                 <div class="card-header">
-                    <h5 class="box-title"> All Cities</h5>
+                    <h5 class="box-title"> {{  __('All Cities') }}</h5>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
@@ -36,10 +36,10 @@
                       <thead>
                         <tr class="table-heading-row">
                           
-                          <th>ID</th>
-                          <th>City </th>
-                          <th>State </th>
-                          <th>Country</th>
+                          <th>{{ __('ID') }}</th>
+                          <th>{{ __('City') }}</th>
+                          <th>{{__("State")}} </th>
+                          <th>{{ __('Country') }}</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -57,7 +57,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">Add New State</h4>
+        <h4 class="modal-title" id="myModalLabel">{{ __('Add New State') }}</h4>
 
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
       </div>
@@ -71,7 +71,7 @@
                       
                       <div class="form-group col-md-12">
                         <label>
-                          Select Country: <span class="text-danger">*</span>
+                          {{__('Select Country:')}} <span class="text-danger">*</span>
                         </label>
                         <select id="country_id" required data-placeholder="{{ __("Select country") }}" class="select2 form-control">
                         
@@ -85,7 +85,7 @@
                       
                       <div class="form-group col-md-10">
                         <label class="" for="first-name">
-                          Select State: <span class="text-danger">*</span>
+                          {{__('Select State:')}} <span class="text-danger">*</span>
                         </label>
                         <select id="upload_id" required name="state_id" data-placeholder="{{ __("Select state") }}" class="select2 form-control">
                             
@@ -105,20 +105,20 @@
                 </div>
 
           <div class="form-group">
-            <label>Enter City Name: <span class="text-danger">*</span></label>
+            <label>Enter {{ __('City Name') }}: <span class="text-danger">*</span></label>
             <input value="{{ old('name') }}" required type="text" class="form-control" name="name" placeholder="Enter city name">
           </div>
 
           <div class="form-group">
-            <label>Enter City Pin/Zip or postal code: @if($pincodesystem == 1) <span class="text-danger">*</span> @endif</label>
+            <label>Enter {{ __('City Pin/Zip or postal code:') }} @if($pincodesystem == 1) <span class="text-danger">*</span> @endif</label>
             <input {{ $pincodesystem == 1 ? "required" : "" }} value="{{ old('pincode') }}"  type="text" class="form-control" name="pincode" placeholder="Enter city pin/zip or postal code">
           </div>
 
           <div class="form-group">
             <button type="reset" class="btn btn-danger"><i class="fa fa-ban"></i>
-              Reset</button>
+              {{ __("Reset") }}</button>
             <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i>
-              Create</button>
+              {{ __("Create") }}</button>
           </div>
 
           <div class="clear-both"></div>
@@ -144,7 +144,7 @@
         <form action="{{ route('state.store') }}" method="POST">
           @csrf
           <div class="form-group">
-            <label>Select Country: <span class="text-danger">*</span></label>
+            <label>{{__("Select Country:")}} <span class="text-danger">*</span></label>
             <select required name="country_id" class="form-control select2">
               @foreach(App\Allcountry::orderBy('name','ASC')->get() as $country)
                 <option {{ old('value') == $country['id'] ? "selected" : "" }} value="{{ $country['id'] }}">{{ $country['nicename'] }}</option>
@@ -152,15 +152,15 @@
             </select>
           </div>
           <div class="form-group">
-            <label>Enter State Name: <span class="text-danger">*</span></label>
+            <label>{{__("Enter State Name:")}} <span class="text-danger">*</span></label>
             <input value="{{ old('name') }}" required type="text" class="form-control" name="name" placeholder="Enter state name">
           </div>
 
           <div class="form-group">
             <button type="reset" class="btn btn-danger"><i class="fa fa-ban"></i>
-              Reset</button>
+              {{ __("Reset") }}</button>
             <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i>
-              Create</button>
+              {{ __("Create") }}</button>
           </div>
 
           <div class="clear-both"></div>

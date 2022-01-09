@@ -5,16 +5,17 @@
 **********************************************************************************************************  -->
 <!--
   Template Name: emart - Laravel Multi-Vendor Ecommerce Advanced CMS
-  Version: 2.9.0
+  Version: 3.1.0
   Author: Media City
 -->
 
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" @if(isset($selected_language) && $selected_language->
-rtl_available == 1) dir="rtl" @endif>
+
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" @if(selected_lang()->rtl_available == 1) dir="rtl" @endif>
 
 <head>
+  
   @if(env('GOOGLE_TAG_MANAGER_ID') != '' && env('GOOGLE_TAG_MANAGER_ENABLED') == true)
-  @include('googletagmanager::head')
+    @include('googletagmanager::head')
   @endif
 
   @if(env('FACEBOOK_PIXEL_ID') != '')
@@ -62,6 +63,7 @@ rtl_available == 1) dir="rtl" @endif>
   <meta name="robots" content="all">
   @yield('meta_tags')
   <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta name="fallback_locale" content="{{ config('app.fallback_locale') }}">
   <!-- Theme Header Color -->
   <meta name="theme-color" content="#157ED2">
   <title>@yield('title') {{ $title }} </title>
@@ -606,6 +608,10 @@ rtl_available == 1) dir="rtl" @endif>
                   @include('esewa::front.sliderlogo')
                 @endif
 
+                @if(config('senangpay.ENABLE') == 1 && Module::has('Senangpay') && Module::find('Senangpay')->isEnabled())
+                  @include('senangpay::front.sliderlogo')
+                @endif
+
               </div>
             </div>
 
@@ -678,7 +684,7 @@ rtl_available == 1) dir="rtl" @endif>
   <script src="{{ url('js/master.js') }}"></script>
 
   <!-- Default Front JS -->
-  @if(isset($selected_language) && $selected_language->rtl_available == 1)
+  @if(selected_lang()->rtl_available == 1)
   <!-- RTL OWL JS-->
   <script src="{{url('front/js/default.js')}}"></script>
 
@@ -688,11 +694,13 @@ rtl_available == 1) dir="rtl" @endif>
   @endif
   <script>
     var baseUrl = @json(url('/'));
-    @if(isset($selected_language) && $selected_language->rtl_available == 1)
-    var rtl = true;
+
+    @if(selected_lang()->rtl_available == 1)
+      var rtl = true;
     @else
-    var rtl = false;
+      var rtl = false;
     @endif
+
   </script>
 
   <script src="{{ url('js/app.js') }}"></script>

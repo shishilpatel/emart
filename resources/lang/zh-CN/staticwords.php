@@ -281,6 +281,7 @@ return array (
   'SignInwithFacebook' => '用Facebook登录',
   'SignInwithGitLab' => '使用GitLab登录',
   'SignInwithGoogle' => '使用Google登录',
+  'SignInwithTwitter' => '',
   'SignUpwithFacebook' => '用Facebook注册',
   'SignUpwithGitLab' => '使用Gitlab注册',
   'SignUpwithGoogle' => '使用Google注册',

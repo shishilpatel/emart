@@ -4,7 +4,18 @@
 	<div class="container-fluid">
 		<div class="bg-white">
 			 <div class="user_header"><h6 class="user_m">
-			 	{{ __('staticwords.ReturnProduct') }} {{ $productname }} @if(isset($findvar)) ({{ variantname($findvar) }} @endif)
+			 	{{ __('staticwords.ReturnProduct') }} @if(isset($findvar))
+				 <a>
+					 <b>{{$findvar->products->name}}</b>
+					 <small>({{ variantname($findvar) }})</small>
+				 </a>
+			 @else 
+
+				 <a>
+					 <b>{{$order->simple_product->product_name}}</b>
+				 </a>
+
+			 @endif @if(isset($findvar)) ({{ variantname($findvar) }} @endif
         	</h6>
         	</div>
 			<br>
@@ -177,26 +188,16 @@
 						
 
 								<label class="font-weight-bold">{{ __('staticwords.ChooseReasonforReturningtheProduct') }}: <span class="required">*</span></label>
-						
-							
-								<select required name="reason_return" id="" class="row col-12 form-control margin-left-0">
-									<option value="">{{ __('staticwords.PleaseChooseReason') }}</option>
 
-						              <option value="Order Placed Mistakely">
-						              	{{ __('Order Placed Mistakely') }}
-						              </option>
-						              <option value="Shipping cost is too much">
-						              	{{ __('Shipping cost is too much') }}
-						              </option>
-						              <option value="Wrong Product Ordered">
-						              	{{ __('Wrong Product Ordered') }}
-						              </option>
-						              <option value="Product is not match to my expectations">
-						              	{{ __('Product is not match to my expectations') }}
-						              </option>
-						              <option value="Other">
-						              	{{ __('My Reason is not listed here') }}
-						              </option>
+								<select class="row col-12 form-control margin-left-0" required="" name="reason_return" id="">
+									<option value="">{{ __('staticwords.PleaseChooseReason') }}</option>
+									
+									  @forelse(App\RMA::where('status','=','1')->get() as $rma)
+										<option value="{{ $rma->reason }}">{{ $rma->reason }}</option>
+									  @empty
+										<option value="Other">{{ __('My Reason is not listed here') }}</option>
+									  @endforelse
+									  
 								</select>
 							
 						
@@ -224,7 +225,7 @@
 							@if($order->cashback != '')
 							<p>
 								- {{ __("Cashback amount of ") }} <b><i class="{{ $order->order->paid_in }}"></i>@infloat($order->cashback)</b> {{ __("dedcuted from final refund amount ") }}
-								<b><i class="{{ $order->order->paid_in }}"></i> {{price_format(Crypt::decrypt($rfm) + $order->cashback)}}</b>
+								<b><i class="{{ $order->order->paid_in }}"></i> {{ price_format($paidAmount + $order->cashback)}}</b>
 							</p>
 							@endif
 

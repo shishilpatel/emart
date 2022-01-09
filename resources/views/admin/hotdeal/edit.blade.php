@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Edit Hot Deal | ')
+@section('title',__('Edit Hotdeal | '))
 @section('body')
 
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
@@ -13,14 +13,14 @@
 @endslot
 
 @slot('menu2')
-{{ __("Edit Hot Deals") }}
+{{ __("Edit Hotdeal") }}
 @endslot
 @slot('button')
 <div class="col-md-6">
   <div class="widgetbar">
 
     <a href="{{url('admin/hotdeal')}}" class="btn btn-primary-rgba mr-2"><i
-        class="feather icon-arrow-left mr-2"></i>Back</a>
+        class="feather icon-arrow-left mr-2"></i>{{ __("Back") }}</a>
   </div>
 </div>
 @endslot
@@ -28,18 +28,21 @@
 
 <div class="contentbar">
   <div class="row">
-    @if ($errors->any())
-    <div class="alert alert-danger" role="alert">
-      @foreach($errors->all() as $error)
-      <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach
-    </div>
-    @endif
+    
     <div class="col-lg-12">
+
+      @if ($errors->any())
+        <div class="alert alert-danger" role="alert">
+          @foreach($errors->all() as $error)
+          <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span></button></p>
+          @endforeach
+        </div>
+      @endif
+
       <div class="card m-b-30">
         <div class="card-header">
-          <h5 class="box-title">Edit Hot Deal</h5>
+          <h5 class="box-title">{{ __("Edit Hot Deal") }}</h5>
         </div>
         <div class="card-body">
           <form id="demo-form2" method="post" enctype="multipart/form-data"
@@ -50,7 +53,7 @@
             <div class="row">
               <div class="form-group col-md-6">
                 <label class="control-label" for="first-name">
-                  Created Date
+                  {{__("Created Date")}}
                 </label>
 
 
@@ -68,7 +71,7 @@
 
               <div class="form-group col-md-6">
                 <label class="control-label" for="first-name">
-                  Expire Date
+                  {{__("Expire Date")}}
                 </label>
 
 
@@ -96,11 +99,11 @@
 
               <div class="{{ $hotdeal->simple_pro_id == '' ? 'd-none' : 'd-block' }} simpleproduct form-group col-md-6">
                 <label class="control-label" for="first-name">
-                  Select Simple Product <span class="required">*</span>
+                  {{  __('Select Simple Product') }} <span class="required">*</span>
                 </label>
 
                 <select name="simple_pro_id" class="form-control select2 col-md-12">
-                  <option value="">Please Select Product</option>
+                  <option value="">{{ __("Please Select Product") }}</option>
                   @foreach($simple_products as $key => $sp)
                   <option {{ $hotdeal->simple_pro_id == $key ? 'selected="selected"' : '' }} value="{{$key}}">{{$sp}}
                   </option>
@@ -112,14 +115,15 @@
 
               <div class="{{ $hotdeal->pro_id == 0 ? 'd-none' : 'd-block' }} variantproduct form-group col-md-6">
                 <label class="control-label" for="first-name">
-                  Select variant product <span class="required">*</span>
+                  {{  __('Select Variant Product') }} <span class="required">*</span>
                 </label>
 
                 <select name="pro_id" class="form-control select2">
-                  <option value="">Please Select Product</option>
+                  <option value="">{{ __('Please Select Product') }}</option>
                   @foreach($products as $key => $pro)
-                  <option value="{{$key}}" {{ $hotdeal->pro_id == $key ? 'selected="selected"' : '' }}>
-                    {{$pro}}</option>
+                    <option value="{{$key}}" {{ $hotdeal->pro_id == $key ? 'selected="selected"' : '' }}>
+                      {{$pro}}
+                    </option>
                   @endforeach
                 </select>
 
@@ -127,7 +131,7 @@
 
               <div class="form-group col-md-6">
                 <label class="control-label" for="first-name">
-                  Status
+                  {{__("Status")}}
                 </label>
                 <br>
                 <label class="switch">
@@ -140,19 +144,18 @@
 
                 <br>
 
-                <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>(Please Choose Hotdeal
-                  Status)</small>
+                <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>({{__("Please Choose Hotdeal Status")}})</small>
 
               </div>
 
               <div class="form-group col-md-12">
                 <button @if(env('DEMO_LOCK')==0) type="reset" @else disabled
-                  title="This operation is disabled is demo !" @endif class="btn btn-danger"><i class="fa fa-ban"></i>
-                  Reset</button>
+                  title="{{ __('This operation is disabled is demo !') }}" @endif class="btn btn-danger"><i class="fa fa-ban"></i>
+                  {{ __("Reset") }}</button>
                 <button @if(env('DEMO_LOCK')==0) type="submit" @else disabled
-                  title="This operation is disabled is demo !" @endif class="btn btn-primary"><i
+                  title="{{ __('This operation is disabled is demo !') }}" @endif class="btn btn-primary"><i
                     class="fa fa-check-circle"></i>
-                  Update</button>
+                  {{ __("Update") }}</button>
               </div>
               <div class="clear-both"></div>
           </form>

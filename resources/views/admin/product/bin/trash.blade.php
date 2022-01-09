@@ -1,6 +1,5 @@
-
-@extends(!in_array('Seller',auth()->user()->getRoleNames()->toArray()) ? "admin.layouts.master" : "admin.layouts.sellermaster")
-
+@extends(!in_array('Seller',auth()->user()->getRoleNames()->toArray()) ? "admin.layouts.master" : "admin.layouts.sellermastersoyuz")
+@section('title',__('Trash'))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -33,9 +32,15 @@
                         <table  id="productTable" class="table table-striped table-bordered">
                             <thead>
                             <th>#</th>
-                            <th>Product Name</th>
-                            <th>Status</th>
-                            <th>Action</th>
+                            <th>
+                                {{__("Product Name")}}
+                            </th>
+                            <th>
+                                {{__("Status")}}
+                            </th>
+                            <th>
+                                {{__("Action")}}
+                            </th>
                             </thead>
                             <tbody>
                             </tbody>

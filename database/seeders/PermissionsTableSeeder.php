@@ -1155,6 +1155,30 @@ class PermissionsTableSeeder extends Seeder
                 'created_at' => '2021-06-07 10:14:15',
                 'updated_at' => '2021-06-07 10:14:15',
             ),
+            142 => 
+            array (
+                'id' => 143,
+                'name' => 'mediamanager.manage',
+                'guard_name' => 'web',
+                'created_at' => '2021-11-22 18:09:23',
+                'updated_at' => '2021-11-22 18:09:23',
+            ),
+            143 => 
+            array (
+                'id' => 144,
+                'name' => 'chat.manage',
+                'guard_name' => 'web',
+                'created_at' => '2021-11-22 18:10:34',
+                'updated_at' => '2021-11-22 18:10:34',
+            ),
+            144 => 
+            array (
+                'id' => 145,
+                'name' => 'sizechart.manage',
+                'guard_name' => 'web',
+                'created_at' => '2021-11-22 18:10:46',
+                'updated_at' => '2021-11-22 18:10:46',
+            ),
         ));
         
         

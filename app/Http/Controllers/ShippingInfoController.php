@@ -12,12 +12,6 @@ use Session;
 use DataTables;
 use Avatar;
 
-/*==========================================
-=            Author: Media City            =
-    Author URI: https://mediacity.co.in
-=            Author: Media City            =
-=            Copyright (c) 2020            =
-==========================================*/
 
 class ShippingInfoController extends Controller
 {
@@ -123,10 +117,10 @@ class ShippingInfoController extends Controller
             	return $row->title;
             })
             ->addColumn('sub', function($row){
-            	return isset($row->subcategory) ? $row->title : 'Subcategory not found !';
+            	return isset($row->subcategory) ? $row->title : __('Subcategory not found !');
             })
             ->addColumn('main', function($row){
-            	return isset($row->category) ? $row->title : 'Subcategory not found !';
+            	return isset($row->category) ? $row->title : __('Subcategory not found !');
             })
             ->addColumn('details', function($row){
             	return strip_tags($row->details ?? '-');

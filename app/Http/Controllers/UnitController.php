@@ -16,7 +16,7 @@ class UnitController extends Controller
      */
     public function index()
     {
-        abort_if(!auth()->user()->can('units.view'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('units.view'),403,__('User does not have the right permissions.'));
         $units = Unit::get();
         return view('admin.unit.index',compact('units'));
     }
@@ -31,14 +31,14 @@ class UnitController extends Controller
      */
     public function store(Request $request)
     {
-        abort_if(!auth()->user()->can('units.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('units.create'),403,__('User does not have the right permissions.'));
 
           $findsameval = Unit::where('title',$request->title)->first();
 
           if (isset($findsameval)) {
             if(strcasecmp($request->title, $findsameval->title)==0)
               {
-                 return back()->with('warning','Option Already Added !');
+                 return back()->with('warning',__('Option Already Added !'));
               }  
           }
             
@@ -53,7 +53,7 @@ class UnitController extends Controller
           $unit = Unit::create($input);  
           $unit->save();
 
-          return back()->with('added', 'Unit has been Created !');
+          return back()->with('added', __('Unit has been Created !'));
     }
 
    
@@ -67,7 +67,7 @@ class UnitController extends Controller
      */
     public function update(Request $request, $id)
     {
-        abort_if(!auth()->user()->can('units.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('units.edit'),403,__('User does not have the right permissions.'));
 
         $unit = Unit::findOrFail($id);
         $input = $request->all();  
@@ -77,7 +77,7 @@ class UnitController extends Controller
         if (isset($findsameval)) {
             if(strcasecmp($findsameval->title, $request->title)==0 && $unit->id != $findsameval->id)
             {
-                return back()->with('warning','Option Already There !');
+                return back()->with('warning',__('Option Already There !'));
             } 
         }else
         {
@@ -93,7 +93,7 @@ class UnitController extends Controller
                 
 
 
-          return redirect('admin/unit')->with('updated', 'Unit has been updated !');
+          return redirect('admin/unit')->with('updated', __('Unit has been updated !'));
     }
     
 
@@ -105,13 +105,13 @@ class UnitController extends Controller
      */
     public function destroy($id)
     {
-        abort_if(!auth()->user()->can('units.delete'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('units.delete'),403,__('User does not have the right permissions.'));
 
         $cat = Unit::find($id);
        
 
          if($cat->linkedAttributes->count() > 0){
-            return back()->with('warning',"Unit Can't be deleted as it linked to some Product attributes !");
+            return back()->with('warning',__("Unit Can't be deleted as it linked to some Product attributes !"));
          }
 
         $findunitvals = UnitValues::where('unit_id',$id)->get();
@@ -121,7 +121,7 @@ class UnitController extends Controller
         }
 
         $cat->delete();
-        session()->flash("deleted","Unit Has Been Deleted !");
+        session()->flash("deleted",__("Unit has been deleted !"));
         return redirect("admin/unit");
          
     }
@@ -139,8 +139,8 @@ class UnitController extends Controller
             'unit_values' => 'required',
             'short_code'  => 'required'
         ],[
-            'unit_values.required' => 'Value cannot be empty !',
-            'short_code.required'  => 'Short Code is require !'
+            'unit_values.required' => __('Value cannot be empty !'),
+            'short_code.required'  => __('Short code is require !')
         ]);
 
        $unitval = new UnitValues;
@@ -151,7 +151,7 @@ class UnitController extends Controller
       if (isset($findsameval)) {
 
           if(strcasecmp($findsameval->unit_values, $request->unit_values)==0){
-            return back()->with('warning','Option Already Added !');
+            return back()->with('warning',__('Option already added !'));
           }
  
       }
@@ -163,7 +163,7 @@ class UnitController extends Controller
 
        $unitval->save();
 
-       return back()->with('added','Value Added Successfully !');
+       return back()->with('added',__('Value added successfully !'));
     }
 
     public function editValue(Request $request,$id)
@@ -172,8 +172,8 @@ class UnitController extends Controller
             'unit_values' => 'required',
             'short_code'  => 'required'
         ],[
-            'unit_values.required' => 'Value cannot be empty !',
-            'short_code.required'  => 'Short Code is required !'
+            'unit_values.required' => __('Value cannot be empty !'),
+            'short_code.required'  => __('Short code is required !')
         ]);
 
 
@@ -188,7 +188,7 @@ class UnitController extends Controller
         if (isset($findsameval)) {
             if(strcasecmp($findsameval->unit_values, $request->unit_values)==0 && $unitval->id != $findsameval->id)
             {   
-                return back()->with('warning','Option Already There !');
+                return back()->with('warning',__('Option already there !'));
             }
 
         }
@@ -198,7 +198,7 @@ class UnitController extends Controller
             
             if(strcasecmp($findshortcode->short_code,$request->short_code)==0 && $unitval->id != $findshortcode->id)
             {   
-                return back()->with('warning','Short Code Already There !');
+                return back()->with('warning',__('Short code already there !'));
             }
         }
             
@@ -210,7 +210,7 @@ class UnitController extends Controller
 
         
 
-         return back()->with('added','Value Updated Successfully !');
+         return back()->with('added',__('Value updated successfully !'));
     }
 
     public function unitvaldelete($id)
@@ -218,11 +218,11 @@ class UnitController extends Controller
         $unitval = UnitValues::findOrFail($id);
 
         if($unitval->units->linkedAttributes->count() > 0){
-            return back()->with('warning',"Unit value can't be deleted as it's linked to some product attributes !");        
+            return back()->with('warning',__("Unit value can't be deleted as it's linked to some product attributes !"));        
         }
 
         $unitval->delete();
 
-        return back()->with('deleted','Value Deleted Successfully !');
+        return back()->with('deleted',__('Value deleted successfully !'));
     }
 }

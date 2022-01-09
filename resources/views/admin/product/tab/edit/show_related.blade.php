@@ -1,8 +1,5 @@
 <br>
 <div class="row">
-	<!-- <div class="col-md-3">
-			<label class="text-dark">Show Related Product Manually:</label>
-	</div> -->
 
 	<div class="col-md-12">
 	<label class="text-dark">{{ __("Show Related Product Manually :") }}</label><br>
@@ -26,7 +23,7 @@
 	</div>
 	<div class="col-md-12">
 		<p class="help-block">
-				<b>(If this turned on you can manually select related product for this particular product else if its turned off related product will show accodring to product's subcategory.)</b>
+				<b>({{__("If this turned on you can manually select related product for this particular product else if its turned off related product will show accodring to product's subcategory.")}})</b>
 		</p>
 	</div>
 	
@@ -37,7 +34,7 @@
 				{{ __("Related Products") }}
 			</div>
 
-			<a data-toggle="modal" data-target="#relProModal" class="pull-right btn btn-primary-rgba">+ Add/Update Related Products</a> 
+			<a data-toggle="modal" data-target="#relProModal" class="pull-right btn btn-primary-rgba">+ {{ __('Add/Update Related Products') }}</a> 
 	</div>
 
 	<div class="box-body">

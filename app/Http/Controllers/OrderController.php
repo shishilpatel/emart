@@ -28,7 +28,7 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
-        abort_if(!auth()->user()->can('order.view'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('order.view'),403,__('User does not have the right permissions.'));
 
         $all_orders = Order::with(['user' => function($q){
             return $q->select('id','name');
@@ -50,11 +50,11 @@ class OrderController extends Controller
                         ->addIndexColumn()
                         ->addColumn('order_type',function($row){
                             if($row->payment_method != 'COD' && $row->payment_method != 'BankTransfer'){
-                                return '<label class="badge badge-success">PREPAID</label>';
+                                return '<label class="badge badge-success">'.__('PREPAID').'</label>';
                             }elseif ($row->payment_method == 'BankTransfer') {
-                                return '<label class="badge badge-info">PREPAID</label>';
+                                return '<label class="badge badge-info">'.__('PREPAID').'</label>';
                             }else{
-                                return '<label class="badge badge-primary">COD</label>';
+                                return '<label class="badge badge-primary">'.__('COD').'</label>';
                             }
                         })
                         ->addColumn('order_id',function($row) {
@@ -88,7 +88,7 @@ class OrderController extends Controller
 
     public function bulkdelete(Request $request)
     {
-        abort_if(!auth()->user()->can('order.delete'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('order.delete'),403,__('User does not have the right permissions.'));
 
 
         $validator = Validator::make($request->all() , ['checked' => 'required', ]);
@@ -96,7 +96,7 @@ class OrderController extends Controller
         if ($validator->fails())
         {
 
-            return back()->with('warning', 'Please select one of them to delete');
+            return back()->with('warning', __('Please select one of them to delete'));
         }
 
         $orders = Order::whereIn('id',$request->checked)->with('invoices')->get();
@@ -109,7 +109,7 @@ class OrderController extends Controller
 
         });
 
-        notify()->success('Selected Orders Deleted Successfully !','Success');
+        notify()->success(__('Selected Orders Deleted Successfully !'),'Success');
 
         return redirect()
             ->route('order.index');
@@ -126,7 +126,7 @@ class OrderController extends Controller
 
         if (!isset($order))
         {
-            notify()->error('Order not found or has been deleted !');
+            notify()->error(__('Order not found or has been deleted !'));
             return redirect('/');
         }
 
@@ -177,7 +177,7 @@ class OrderController extends Controller
                 }
                 else
                 {
-                    notify()->error('Invoice not available yet !');
+                    notify()->error(__('Invoice not available yet !'));
                     return back();
                 }
             }
@@ -196,7 +196,7 @@ class OrderController extends Controller
 
     public function getCancelOrders()
     {
-        abort_if(!auth()->user()->can('order.view'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('order.view'),403,__('User does not have the right permissions.'));
 
         $inv_cus = Invoice::first();
         
@@ -211,7 +211,7 @@ class OrderController extends Controller
 
     public function pendingorder(){
 
-        abort_if(!auth()->user()->can('order.view'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('order.view'),403,__('User does not have the right permissions.'));
 
 
         $inv_cus = Invoice::first();
@@ -226,7 +226,7 @@ class OrderController extends Controller
 
     public function QuickOrderDetails(Request $request){
 
-            abort_if(!auth()->user()->can('order.view'),403,'User does not have the right permissions.');
+            abort_if(!auth()->user()->can('order.view'),403,__('User does not have the right permissions.'));
 
             $order = Order::where('id',$request->orderid)
                     ->whereHas('invoices')
@@ -249,7 +249,7 @@ class OrderController extends Controller
 
     public function show($id)
     {
-        abort_if(!auth()->user()->can('order.view'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('order.view'),403,__('User does not have the right permissions.'));
 
         $order = Order::where('order_id', $id)->whereHas('invoices')->whereHas('user')->where('status','=','1')->first();
 
@@ -261,7 +261,7 @@ class OrderController extends Controller
     public function editOrder($orderid)
     {
 
-        abort_if(!auth()->user()->can('order.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('order.edit'),403,__('User does not have the right permissions.'));
 
         $order = Order::where('order_id', $orderid)->whereHas('invoices')->whereHas('user')->where('status','=','1')->first();
 
@@ -272,7 +272,7 @@ class OrderController extends Controller
 
     public function printOrder($id)
     {
-        abort_if(!auth()->user()->can('order.view'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('order.view'),403,__('User does not have the right permissions.'));
 
         $order =  Order::find($id);
 
@@ -316,7 +316,7 @@ class OrderController extends Controller
         $data = Order::create($input);
         $data->save();
         return back()
-            ->with('updated', 'Order has been updated');
+            ->with('updated', __('Order has been updated'));
     }
 
     /**
@@ -334,7 +334,7 @@ class OrderController extends Controller
      */
     public function edit($id)
     {
-        abort_if(!auth()->user()->can('order.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('order.edit'),403,__('User does not have the right permissions.'));
 
         $order = Order::findOrFail($id);
         $order_status = order::all();
@@ -350,7 +350,7 @@ class OrderController extends Controller
      */
     public function update(Request $request, $id)
     {
-        abort_if(!auth()->user()->can('order.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('order.edit'),403,__('User does not have the right permissions.'));
 
         $order = Order::findOrFail($id);
         $input = $request->all();
@@ -415,7 +415,7 @@ class OrderController extends Controller
             /*END*/
         }
 
-        return redirect('admin/order')->with('updated', 'Order Status has been updated !');
+        return redirect('admin/order')->with('updated', __('Order Status has been updated !'));
     }
 
     /**
@@ -427,7 +427,7 @@ class OrderController extends Controller
     public function destroy($id)
     {   
 
-        abort_if(!auth()->user()->can('order.delete'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('order.delete'),403,__('User does not have the right permissions.'));
 
         $order = Order::findorFail($id);
 
@@ -436,7 +436,7 @@ class OrderController extends Controller
         $order->save();
 
         session()
-            ->flash("deleted", "Order Has Been deleted");
+            ->flash("deleted", __("Order has been deleted"));
         return redirect("admin/order");
 
     }
@@ -455,12 +455,12 @@ class OrderController extends Controller
 
     public function downloadDigitalProduct(Request $request,$id){
 
-        abort_if(!auth()->check(),403,'Download permission denied !');
+        abort_if(!auth()->check(),403,__('Download permission denied !'));
 
         $order = InvoiceDownload::findorfail($id);
 
         if($order->status != 'delivered'){
-            notify()->error("Download permission denied !");
+            notify()->error(__("Download permission denied !"));
             return back();
         }
 
@@ -468,12 +468,12 @@ class OrderController extends Controller
         $filename = $product->product_file;
 
         if (env('DEMO_LOCK') == 1) {
-            notify()->error("This action is disabled in demo !");
+            notify()->error(__("This action is disabled in demo !"));
             return back();
         }
 
         if (!$request->hasValidSignature()) {
-            notify()->error('Download Link is invalid or expired !');
+            notify()->error(__('Download Link is invalid or expired !'));
             return back();
         }
 
@@ -482,7 +482,7 @@ class OrderController extends Controller
         $fileContent = @file_get_contents($filePath);
 
         if(!$fileContent){
-            notify()->error("File not found contact your seller with order id !");
+            notify()->error(__("File not found contact your seller with order id !"));
             return back();
         }
 
@@ -539,11 +539,11 @@ class OrderController extends Controller
                         })
                         ->addColumn('order_type',function($row){
                             if($row->payment_method != 'COD' && $row->payment_method != 'BankTransfer'){
-                                return '<label class="badge badge-success">PREPAID</label>';
+                                return '<label class="badge badge-success">'.__('PREPAID').'</label>';
                             }elseif ($row->payment_method == 'BankTransfer') {
-                                return '<label class="badge badge-info">PREPAID</label>';
+                                return '<label class="badge badge-info">'.__('PREPAID').'</label>';
                             }else{
-                                return '<label class="badge badge-primary">COD</label>';
+                                return '<label class="badge badge-primary">'.__("COD").'</label>';
                             }
                         })
                         ->editColumn('paid_amount',function($row){

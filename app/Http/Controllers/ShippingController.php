@@ -53,16 +53,12 @@ class ShippingController extends Controller
             "name"=>"required",
             
             
-        ],[
-
-            "name.required"=>"Shipping Fild is Required",
-            
-          ]);
+        ]);
 
         $input = $request->all(); 
         $data = shipping::create($input);
         $data->save();
-        return back()->with('category_message', 'Shipping has been updated'); 
+        return back()->with('category_message', __('Shipping has been updated')); 
     }
     
 
@@ -112,7 +108,7 @@ class ShippingController extends Controller
 
           $shipping->update($input);
 
-          notify()->success('Shipping has been updated','Updated !');
+          notify()->success(__('Shipping has been updated'),__('Updated !'));
 
           return redirect('admin/shipping');
 
@@ -132,7 +128,7 @@ class ShippingController extends Controller
          //print_r($obj); die;
          $value = $obj->delete();
          if($value){
-            session()->flash("category_message","Shipping Has Been deleted");
+            session()->flash("deleted",__("Shipping Has Been deleted"));
              return redirect("admin/shipping");
          }
     }
@@ -155,7 +151,7 @@ class ShippingController extends Controller
             Product::query()->where('free_shipping','=','0')->update(['free_shipping' => '0' ,'shipping_id' => $id]);
         }
         
-        Session::flash('success', 'Default shipping method has been changed now.');
+        Session::flash('success', __('Default shipping method has been changed now.'));
         return View::make('admin.shipping.message');
     }
 

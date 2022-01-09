@@ -57,7 +57,7 @@ class OfflineOrderController extends Controller
 
       $orderchart->labels($totalorder->pluck('month'));
 
-      $orderchart->title('Total Orders in '.date('Y'))->label('Sales')->dataset('Sales', 'area', $totalorder->pluck('count'))->options([
+      $orderchart->title(__('Total Orders in :year',['year' => date('Y')]))->label(__('Sales'))->dataset(__("Month"), 'area', $totalorder->pluck('count'))->options([
           'fill' => 'true',
           'borderColor' => '#51C1C0',
           'shadow' => true
@@ -106,9 +106,9 @@ class OfflineOrderController extends Controller
                     return $date;
                 })
                 ->addColumn('updated_at', function ($row) {
-                    $date =  '<small><b>Date: </b>'.date('d-m-Y', strtotime($row->updated_at)).'</small>';
+                    $date =  '<small><b>'.__('Date: ').'</b>'.date('d-m-Y', strtotime($row->updated_at)).'</small>';
                     $date .= '<p class="border border-bottom"></p>';
-                    $date .=  '<small><b>Time: </b>'.date('h:i a', strtotime($row->updated_at)).'</small>';
+                    $date .=  '<small><b>'.__("Time: ").'</b>'.date('h:i a', strtotime($row->updated_at)).'</small>';
                     return $date;
                 })
                 ->editColumn('action', 'offlinebilling.action')
@@ -239,10 +239,10 @@ class OfflineOrderController extends Controller
                 }
 
             } else {
-                return back()->withErrors('Please create at least one product')->withInput();
+                return back()->withErrors(__('Please create at least one product'))->withInput();
             }
 
-            notify()->success('Order created successfully !', "$order->order_id");
+            notify()->success(__('Order created successfully !'), "$order->order_id");
 
             return redirect(route('offline-orders.index'));
 
@@ -279,7 +279,7 @@ class OfflineOrderController extends Controller
         $store = Store::first();
         if(!$order || $request->order_id){
             
-            notify()->error('404 | Order not found !');
+            notify()->error(__('Order not found !'));
             return redirect(route('offline-orders.index'));
         }
 
@@ -292,7 +292,7 @@ class OfflineOrderController extends Controller
         $store = Store::first();
         if(!$order || $request->order_id){
             
-            notify()->error('404 | Order not found !');
+            notify()->error(__('Order not found !'));
             return redirect(route('offline-orders.index'));
         }
 
@@ -312,7 +312,7 @@ class OfflineOrderController extends Controller
 
         if(!$order || $request->order_id){
             
-            notify()->error('404 | Order not found !');
+            notify()->error(__('Order not found !'));
             return redirect(route('offline-orders.index'));
         }
 
@@ -346,7 +346,7 @@ class OfflineOrderController extends Controller
                 if($errors->first('order_id')){
     
                     return back()->withErrors([
-                        'order_id' => 'Order ID has already been taken !'
+                        'order_id' => __('Order ID has already been taken !')
                     ]);
                    
                 }
@@ -435,14 +435,14 @@ class OfflineOrderController extends Controller
                 }
 
             } else {
-                return back()->withErrors('Please create at least one product')->withInput();
+                return back()->withErrors(__('Please create at least one product'))->withInput();
             }
 
-                notify()->success('Order updated successfully !', "$order->order_id");
+                notify()->success(__('Order updated successfully !'), "$order->order_id");
 
                 return redirect(route('offline-orders.index'));
             }else{
-                notify()->error('404 | Order not found !');
+                notify()->error(__('Order not found !'));
                 return redirect(route('offline-orders.index'));
             }
 
@@ -462,14 +462,14 @@ class OfflineOrderController extends Controller
         $order = OfflineOrder::find($id);
 
         if(!isset($order)){
-            notify()->error('404 | Order not found !');
+            notify()->error(__('Order not found !'));
             return redirect(route('offline-orders.index'));
         }
 
         $order->orderItems()->delete();
         $order->delete();
 
-        notify()->success('Order has been deleted !');
+        notify()->success(__('Order has been deleted !'));
         return redirect(route('offline-orders.index'));
     }
 

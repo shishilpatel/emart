@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Edit Category | ')
+@section('title',__("Edit Category | "))
 @section('body')
 
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
@@ -19,8 +19,7 @@
 <div class="col-md-6">
   <div class="widgetbar">
 
-  <a href="{{url('admin/category')}}" class="btn btn-primary-rgba mr-2"><i
-      class="feather icon-arrow-left mr-2"></i>Back</a>
+  <a href="{{url('admin/category')}}" class="btn btn-primary-rgba mr-2"><i class="feather icon-arrow-left mr-2"></i> {{ __("Back") }}</a>
 </div>
 </div>
 @endslot
@@ -28,18 +27,21 @@
 
 <div class="contentbar">
   <div class="row">
-    @if ($errors->any())
-    <div class="alert alert-danger" role="alert">
-      @foreach($errors->all() as $error)
-      <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach
-    </div>
-    @endif
+    
     <div class="col-lg-12">
+
+      @if ($errors->any())
+        <div class="alert alert-danger" role="alert">
+          @foreach($errors->all() as $error)
+          <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span></button></p>
+          @endforeach
+        </div>
+      @endif
+
       <div class="card m-b-30">
         <div class="card-header">
-          <h5 class="box-title">Edit Category</h5>
+          <h5 class="box-title">{{ __('Edit Category') }}</h5>
         </div>
         <div class="card-body">
 
@@ -49,27 +51,27 @@
             {{ method_field('PUT') }}
             <div class="form-group">
               <label class="control-label" for="first-name">
-                Category: <span class="required">*</span>
+                {{__('Category')}}: <span class="required">*</span>
               </label>
 
-              <input placeholder="Please enter category name" type="text" id="first-name" name="title"
+              <input placeholder="{{ __('Please enter category name') }}" type="text" id="first-name" name="title"
                 value="{{$cat->title}}" class="form-control col-md-12">
 
 
             </div>
             <div class="form-group">
-              <label class="control-label" for="first-name"> Description <span class="required">*</span>
+              <label class="control-label" for="first-name"> {{__('Description')}} <span class="required">*</span>
               </label>
 
               <textarea cols="2" id="editor1" name="description" rows="5">
               {{ucfirst($cat->description)}}
              </textarea>
-              <small class="txt-desc">(Please Enter Description)</small>
+              <small class="txt-desc">({{ __('Please Enter Description') }})</small>
             </div>
 
             <div class="form-group">
               <label class="control-label" for="first-name">
-                Icon:
+                {{__('Icon')}}:
               </label>
 
               <div class="input-group">
@@ -83,7 +85,7 @@
               </div>
             </div>
             <div class="form-group">
-              <label class="control-label" for="first-name"> Image:
+              <label class="control-label" for="first-name"> {{__("Image")}}:
               </label>
 
               <div class="mb-2">
@@ -100,18 +102,17 @@
                     class="form-control">
                 <div class="input-group-append">
                     <span data-input="image"
-                        class="bg-primary text-light midia-toggle input-group-text">Browse</span>
+                        class="bg-primary text-light midia-toggle input-group-text">{{ __('Browse') }}</span>
                 </div>
               </div>
 
-              <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>(Please choose a
-                Image)</small>
+              <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>({{__('Please choose Image')}})</small>
 
 
             </div>
             <div class="form-group">
               <label class="control-label" for="first-name">
-                Featured:
+                {{__("Featured:")}}
               </label>
               <br>
               <label class="switch">
@@ -122,15 +123,14 @@
 
               </label>
               <br>
-              <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>(If enabled than Category will
-                be featured)</small>
+              <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>({{__("If enabled than Category will be featured")}})</small>
 
 
 
             </div>
             <div class="form-group">
               <label class="control-label" for="first-name">
-                Status:
+                {{__('Status')}}:
               </label>
               <br>
               <label class="switch">
@@ -141,17 +141,17 @@
 
               </label>
               <br>
-              <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>(Please Choose Status)</small>
+              <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>({{__("Please Choose Status")}})</small>
 
 
             </div>
 
             <div class="form-group">
-              <button @if(env('DEMO_LOCK')==0) type="reset" @else disabled title="This operation is disabled is demo !"
-                @endif class="btn btn-danger"><i class="fa fa-ban"></i> Reset</button>
-              <button @if(env('DEMO_LOCK')==0) type="submit" @else disabled title="This operation is disabled is demo !"
+              <button @if(env('DEMO_LOCK')==0) type="reset" @else disabled title="{{ __('This operation is disabled is demo !') }}"
+                @endif class="btn btn-danger"><i class="fa fa-ban"></i> {{ __("Reset") }}</button>
+              <button @if(env('DEMO_LOCK')==0) type="submit" @else disabled title="{{ __('This operation is disabled is demo !') }}"
                 @endif class="btn btn-primary"><i class="fa fa-check-circle"></i>
-                Update</button>
+                {{ __("Update") }}</button>
             </div>
             <div class="clear-both"></div>
           </form>

@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Offline Payment Gateway')
+@section('title',__('Offline Payment Gateway'))
 @section('body')
 @component('admin.component.breadcumb',['secondaryactive' => 'active'])
 @slot('heading')
@@ -34,7 +34,7 @@
             <div class="alert alert-danger" role="alert">
               @foreach($errors->all() as $error)
               <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true" style="color:red;">&times;</span></button></p>
+                  <span aria-hidden="true">&times;</span></button></p>
               @endforeach
             </div>
             @endif
@@ -42,7 +42,9 @@
 
             <div class="card m-b-30">
                 <div class="card-header">
-                    <h5 class="box-title">All Offline Payment Gateway'</h5>
+                    <h5 class="box-title">
+                        {{__("All Offline Payment Gateway")}}
+                    </h5>
                 </div>
                 <div class="card-body">
                 
@@ -53,10 +55,10 @@
                                     #
                                 </th>
                                 <th>
-                                    Payment Gateway Name
+                                    {{__("Payment Gateway Name")}}
                                 </th>
                                 <th>
-                                    Action
+                                    {{__('Action')}}
                                 </th>
                             </thead>
                             <tbody>
@@ -72,7 +74,7 @@
                                             <div class="dropdown-menu" aria-labelledby="CustomdropdownMenuButton1">
                                               @can('childcategory.edit')
                                               <a class="dropdown-item" data-toggle="modal" data-target="#editPaymentmethod{{ $m->id }}"><i
-                                                  class="feather icon-edit mr-2"></i>Edit</a>
+                                                  class="feather icon-edit mr-2"></i>{{  __('Edit') }}</a>
                                               @endcan
                       
                                               @can('childcategory.delete')
@@ -110,7 +112,7 @@
                         
                                                     <div class="form-group">
                                                         <label for="">
-                                                            Payment method name: <span class="text-danger">*</span>
+                                                            {{__("Payment method name:")}} <span class="text-danger">*</span>
                                                         </label>
                                                         <input required type="text" value="{{ $m['payment_name'] }}" name="payment_name"
                                                             class="form-control" />
@@ -118,7 +120,7 @@
                         
                                                     <div class="form-group">
                                                         <label for="">
-                                                            Payment Instructions : <span class="text-danger">*</span>
+                                                            {{__("Payment Instructions:")}} <span class="text-danger">*</span>
                                                         </label>
                         
                                                         <textarea name="description" id="" cols="30" rows="5"
@@ -128,7 +130,7 @@
                         
                                                     <div class="form-group">
                                                         <label for="">
-                                                            Image :
+                                                            {{__("Image :")}}
                                                         </label>
                                                         <div class="input-group">
 
@@ -136,7 +138,7 @@
                                                                 class="form-control">
                                                             <div class="input-group-append">
                                                                 <span data-input="thumbnail{{ $m['id'] }}"
-                                                                    class="bg-primary text-light midia-toggle input-group-text">Browse</span>
+                                                                    class="bg-primary text-light midia-toggle input-group-text">{{ __('Browse') }}</span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -152,9 +154,9 @@
                                                     </div>
                         
                                                     <div class="form-group">
-                                                        <button @if(env('DEMO_LOCK')==0) type="reset"  @else disabled title="This operation is disabled is demo !" @endif  class="btn btn-danger"><i class="fa fa-ban"></i> Reset</button>
-                                                        <button @if(env('DEMO_LOCK')==0)  type="submit" @else disabled title="This operation is disabled is demo !" @endif  class="btn btn-primary"><i class="fa fa-check-circle"></i>
-                                                            Update</button>
+                                                        <button @if(env('DEMO_LOCK')==0) type="reset"  @else disabled title="{{ __('This operation is disabled is demo !') }}" @endif  class="btn btn-danger"><i class="fa fa-ban"></i> {{ __("Reset") }}</button>
+                                                        <button @if(env('DEMO_LOCK')==0)  type="submit" @else disabled title="{{ __('This operation is disabled is demo !') }}" @endif  class="btn btn-primary"><i class="fa fa-check-circle"></i>
+                                                            {{ __("Update") }}</button>
                                                     </div>
                         
                                                 </form>
@@ -170,7 +172,7 @@
                                     <div class="modal-dialog modal-sm">
                                       <div class="modal-content">
                                         <div class="modal-header">
-                                          <h5 class="modal-title" id="exampleSmallModalLabel">Delete</h5>
+                                          <h5 class="modal-title" id="exampleSmallModalLabel">{{ __("DELETE") }}</h5>
                                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                           </button>
@@ -183,8 +185,8 @@
                                           <form method="post" action="{{ route('manual.payment.gateway.update',$m->id) }}}}" class="pull-right">
                                             {{csrf_field()}}
                                             {{method_field("DELETE")}}
-                                            <button type="reset" class="btn btn-danger-rgba" data-dismiss="modal">No</button>
-                                            <button type="submit" class="btn btn-primary-rgba">Yes</button>
+                                            <button type="reset" class="btn btn-danger-rgba" data-dismiss="modal">{{ __("No") }}</button>
+                                            <button type="submit" class="btn btn-primary-rgba">{{ __("YES") }}</button>
                                           </form>
                                         </div>
                                       </div>
@@ -222,7 +224,7 @@
 
                         <div class="form-group">
                             <label for="">
-                                Payment method name: <span class="text-danger">*</span>
+                                {{__('Payment method name:')}} <span class="text-danger">*</span>
                             </label>
                             <input required type="text" value="{{ old('payment_name') }}" name="payment_name"
                                 class="form-control" />
@@ -230,7 +232,7 @@
 
                         <div class="form-group">
                             <label for="">
-                                Payment Instructions : <span class="text-danger">*</span>
+                                {{__('Payment Instructions :')}} <span class="text-danger">*</span>
                             </label>
 
                             <textarea name="description" id="" cols="30" rows="5"
@@ -240,7 +242,7 @@
 
                         <div class="form-group">
                             <label for="">
-                                Image :
+                                {{__("Image :")}}
                             </label>
                             <div class="input-group">
 
@@ -248,13 +250,15 @@
                                     class="form-control">
                                 <div class="input-group-append">
                                     <span data-input="thumbnail"
-                                        class="bg-primary text-light midia-toggle input-group-text">Browse</span>
+                                        class="bg-primary text-light midia-toggle input-group-text">{{ __('Browse') }}</span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label>Status :</label>
+                            <label>
+                                {{__('Status :')}}
+                            </label>
                             <br>
                             <label class="switch">
                                 <input id="status" type="checkbox" name="status" {{ old('status') ? "checked" : "" }} checked>
@@ -264,9 +268,9 @@
 
                         <div class="form-group">
                             <button type="reset" class="btn btn-danger-rgba"><i class="fa fa-ban"></i>
-                              Reset</button>
+                              {{ __("Reset") }}</button>
                             <button type="submit" class="btn btn-primary-rgba"><i class="fa fa-check-circle"></i>
-                              Create</button>
+                              {{ __("Create") }}</button>
                           </div>
               
                           <div class="clear-both"></div>

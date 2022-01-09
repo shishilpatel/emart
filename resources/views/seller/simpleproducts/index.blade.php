@@ -1,5 +1,5 @@
 @extends('admin.layouts.sellermastersoyuz')
-@section('title','All Products ')
+@section('title',__('All Products'))
 @section('body')
 
 @component('seller.components.breadcumb',['secondactive' => 'active'])
@@ -14,19 +14,19 @@
 @slot('button')
 <div class="col-md-6">
     <div class="widgetbar">
-        @if(env('ENABLE_SELLER_SUBS_SYSTEM') == 1)
+        @if(Module::has('SellerSubscription') && Module::find('SellerSubscription')->isEnabled())
         @if(getPlanStatus() == 1 && ((auth()->user()->products()->count() + auth()->user()->store->simple_products->count()) + auth()->user()->store->simple_products->count()) < auth()->user()->activeSubscription->plan->product_create)
             @if(auth()->user()->activeSubscription->plan->csv_product == 1)
-                <a title="Import products" href="{{ route('seller.import.product') }}" class="btn btn-success-rgba mr-2"><i class="feather icon-download mr-1"></i> Import Products</a>
+                <a title="Import products" href="{{ route('seller.import.product') }}" class="btn btn-success-rgba mr-2"><i class="feather icon-download mr-1"></i> {{ __('Import Products') }}</a>
                 
             @endif
 
-            <a href="{{ route("simple-products.create") }}" class="btn btn-primary-rgba"><i class="feather icon-plus mr-2"></i> Add Product</a>
+            <a href="{{ route("simple-products.create") }}" class="btn btn-primary-rgba"><i class="feather icon-plus mr-2"></i> {{ __('Add Product') }}</a>
         @endif
         @else
-        <a title="Import products" href="{{ route('seller.import.product') }}" class="btn btn-success-rgba mr-2"><i class="feather icon-download mr-1"></i> Import Products</a>
-        <a href="{{ route("simple-products.create") }}" class="btn btn-primary-rgba"><i class="feather icon-plus mr-2"></i> Add Product</a>
-        <a href="{{ route("simple-products.create") }}" class="btn btn-primary-rgba"><i class="feather icon-plus mr-2"></i> Add Product</a>
+        <a title="{{ __('Import products') }}" href="{{ route('seller.import.product') }}" class="btn btn-success-rgba mr-2"><i class="feather icon-download mr-1"></i> {{ __('Import Products') }}</a>
+        <a href="{{ route("simple-products.create") }}" class="btn btn-primary-rgba"><i class="feather icon-plus mr-2"></i> {{__('Add Product') }}</a>
+        <a href="{{ route("simple-products.create") }}" class="btn btn-primary-rgba"><i class="feather icon-plus mr-2"></i> {{ __('Add Product') }}</a>
         @endif
       <a href="{{ route("trash.simple.products") }}" class="btn btn-danger-rgba mr-2">
         <i class="feather icon-trash-2 mr-1"></i> {{__("Trash") }}
@@ -52,12 +52,12 @@
                       <table id="d_products" class="table table-striped table-bordered">
                         <thead>
                             <th>#</th>
-                            <th>Product Image</th>
-                            <th>Product ID</th>
-                            <th>Product Name</th>
-                            <th>Product Pricing</th>
-                            <th>Product Status</th>
-                            <th>Action</th>
+                            <th>{{ __('Product Image') }}</th>
+                            <th>{{ __('Product ID') }}</th>
+                            <th>{{ __('Product Name') }}</th>
+                            <th>{{ __('Product Pricing') }}</th>
+                            <th>{{ __('Product Status') }}</th>
+                            <th>{{ __('Action') }}</th>
                         </thead>
                          
                        

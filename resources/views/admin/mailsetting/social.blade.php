@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Edit Social Login Settings')
+@section('title',__('Edit Social Login Settings'))
 @section('body')
 
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
@@ -31,24 +31,22 @@
 								aria-orientation="vertical">
 								<a class="nav-link active" id="v-pills-facebook-tab" data-toggle="pill"
 									href="#v-pills-facebook" role="tab" aria-controls="v-pills-facebook"
-									aria-selected="true"><i class="feather icon-facebook mr-2"></i>Facebook Login
-									Settings</a>
+									aria-selected="true"><i class="feather icon-facebook mr-2"></i>{{ __('Facebook Login Settings') }}</a>
 								<a class="nav-link" id="v-pills-google-tab" data-toggle="pill" href="#v-pills-google"
 									role="tab" aria-controls="v-pills-google" aria-selected="false"><i
-										class="fa fa-google-plus mr-2"></i>Google Login Settings</a>
+										class="fa fa-google-plus mr-2"></i>{{ __('Google Login Settings') }}</a>
 								<a class="nav-link" id="v-pills-twitter-tab" data-toggle="pill" href="#v-pills-twitter"
 									role="tab" aria-controls="v-pills-twitter" aria-selected="false"><i
-										class="feather icon-twitter mr-2"></i>Twitter Login Settings</a>
+										class="feather icon-twitter mr-2"></i>{{ __('Twitter Login Settings') }}</a>
 								<a class="nav-link" id="v-pills-amazon-tab" data-toggle="pill" href="#v-pills-amazon"
 									role="tab" aria-controls="v-pills-amazon mr-2" aria-selected="false"><i
-										class="fa fa-amazon mr-2"></i>Amazon Login Settings</a>
+										class="fa fa-amazon mr-2"></i>{{ __('Amazon Login Settings') }}</a>
 								<a class="nav-link" id="v-pills-gitlab-tab" data-toggle="pill" href="#v-pills-gitlab"
 									role="tab" aria-controls="v-pills-gitlab" aria-selected="false"><i
-										class="feather icon-gitlab mr-2"></i>Gitlab Login Settings</a>
+										class="feather icon-gitlab mr-2"></i>{{ __('Gitlab Login Settings') }}</a>
 								<a class="nav-link" id="v-pills-linkedin-tab" data-toggle="pill"
 									href="#v-pills-linkedin" role="tab" aria-controls="v-pills-linkedin"
-									aria-selected="false"><i class="feather icon-facebook mr-2"></i>Linkedin Login
-									Settings</a>
+									aria-selected="false"><i class="feather icon-facebook mr-2"></i>{{ __('Linkedin Login Settings') }}</a>
 
 							</div>
 						</div>
@@ -71,15 +69,15 @@
 											method="POST">
 											{{ csrf_field() }}
 
-											<label for="">Client ID:</label>
-											<input type="text" placeholder="enter client ID" class="form-control"
+											<label for="">{{__("Client ID")}}:</label>
+											<input type="text" placeholder="{{ __("enter client ID") }}" class="form-control"
 												name="FACEBOOK_CLIENT_ID" value="{{ env('FACEBOOK_CLIENT_ID') }}">
 											<br>
 
 											<div class="form-group eyeCy">
 
-												<label for="">Client Secret Key:</label>
-												<input type="password" placeholder="enter secret key"
+												<label for="">{{__("Client Secret Key")}}:</label>
+												<input type="password" placeholder="{{ __('enter secret key') }}"
 													class="form-control" id="fb_secret" name="FACEBOOK_CLIENT_SECRET"
 													value="{{ env('FACEBOOK_CLIENT_SECRET') }}">
 
@@ -87,7 +85,7 @@
 													class="inline-flex fa fa-fw fa-eye field-icon toggle-password2"></span>
 
 											</div>
-											<label for="">Callback URL:</label>
+											<label for="">{{__('Callback URL')}}:</label>
 											<div class="input-group">
 												<input value="{{ route('social.login.callback','facebook') }}"
 													type="text"
@@ -95,19 +93,18 @@
 													name="FB_CALLBACK_URL" value="{{ env('FB_CALLBACK_URL') }}"
 													class="callback-url form-control">
 												<span class="input-group-addon" id="basic-addon2">
-													<button title="Copy" type="button"
+													<button title="{{ __("Copy") }}" type="button"
 														class="copy btn btn-xs btn-default">
 														<i class="fa fa-clipboard" aria-hidden="true"></i>
 													</button>
 												</span>
 											</div>
 											<small class="text-info">
-												<i class="fa fa-question-circle"></i> Copy the callback url and paste in
-												your app
+												<i class="fa fa-question-circle"></i> {{__("Copy the callback url and paste in your app")}}
 											</small>
 											<br><br>
 											<div class="form-group">
-												<label for=""><i class="fa fa-facebook"></i> Enable Facebook Login:
+												<label for=""><i class="fa fa-facebook"></i> {{__("Enable Facebook Login")}}:
 												</label>
 												<br>
 												<label class="switch">
@@ -117,8 +114,8 @@
 												</label>
 											</div>
 											<button @if(env('DEMO_LOCK')==0) type="submit" @else disabled
-												title="This action is disabled in demo !" @endif
-												class="btn btn-md btn-primary"><i class="fa fa-save"></i> Save Setting
+												title="{{  __('This action is disabled in demo !') }}" @endif
+												class="btn btn-md btn-primary"><i class="fa fa-save"></i> {{__('Save Setting')}}
 											</button>
 											<br><br>
 										</form>
@@ -129,14 +126,14 @@
 											method="POST">
 											{{ csrf_field() }}
 
-											<label for="">Client ID:</label>
-											<input name="GOOGLE_CLIENT_ID" type="text" placeholder="enter client ID"
+											<label for="">{{  __('Client ID:') }}</label>
+											<input name="GOOGLE_CLIENT_ID" type="text" placeholder="{{  __('enter client ID') }}"
 												class="form-control" value="{{ env('GOOGLE_CLIENT_ID') }}">
 											<br>
 
 											<div class="eyeCy">
 
-												<label for="">Client Secret Key:</label>
+												<label for="">{{ __('Client Secret Key:') }}</label>
 												<input type="password" name="GOOGLE_CLIENT_SECRET"
 													value="{{ env('GOOGLE_CLIENT_SECRET') }}"
 													placeholder="enter secret key" class="form-control" id="gsecret">
@@ -147,7 +144,7 @@
 											</div>
 
 											<br>
-											<label for="">Callback URL:</label>
+											<label for="">{{ __('Callback URL:') }}</label>
 											<div class="input-group">
 												<input type="text"
 													placeholder="https://yoursite.com/login/public/google/callback"
@@ -177,7 +174,7 @@
 												</label>
 											</div>
 											<button @if(env('DEMO_LOCK')==0) type="submit" @else disabled
-												title="This action is disabled in demo !" @endif
+												title="{{  __('This action is disabled in demo !') }}" @endif
 												class="btn btn-md btn-primary"><i class="fa fa-save"></i> Save
 												Setting</button>
 											<br><br>
@@ -189,14 +186,14 @@
 											method="POST">
 											{{ csrf_field() }}
 
-											<label for="">Client ID:</label>
-											<input type="text" placeholder="enter client ID" class="form-control"
+											<label for="">{{  __('Client ID:') }}</label>
+											<input type="text" placeholder="{{  __('enter client ID') }}" class="form-control"
 												name="TWITTER_API_KEY" value="{{ env('TWITTER_API_KEY') }}">
 											<br>
 
 											<div class="form-group eyeCy">
 
-												<label for="">Client Secret Key:</label>
+												<label for="">{{ __('Client Secret Key:') }}</label>
 												<input type="password" placeholder="enter secret key"
 													class="form-control" id="tw_secret" name="TWITTER_SECRET_KEY"
 													value="{{ env('TWITTER_SECRET_KEY') }}">
@@ -205,7 +202,7 @@
 													class="inline-flex fa fa-fw fa-eye field-icon toggle-password2"></span>
 
 											</div>
-											<label for="">Callback URL:</label>
+											<label for="">{{ __('Callback URL:') }}</label>
 											<div class="input-group">
 												<input value="{{ route('social.login.callback','twitter') }}"
 													type="text"
@@ -220,12 +217,11 @@
 												</span>
 											</div>
 											<small class="text-info">
-												<i class="fa fa-question-circle"></i> Copy the callback url and paste in
-												your app
+												<i class="fa fa-question-circle"></i> {{__("Copy the callback url and paste in your app.")}}
 											</small>
 											<br><br>
 											<div class="form-group">
-												<label for=""><i class="fa fa-twitter"></i> Enable Twitter Login:
+												<label for=""><i class="fa fa-twitter"></i> {{__('Enable Twitter Login:')}}
 												</label>
 												<br>
 												<label class="switch">
@@ -235,8 +231,8 @@
 												</label>
 											</div>
 											<button @if(env('DEMO_LOCK')==0) type="submit" @else disabled
-												title="This action is disabled in demo !" @endif
-												class="btn btn-md btn-primary"><i class="fa fa-save"></i> Save Setting
+												title="{{  __('This action is disabled in demo !') }}" @endif
+												class="btn btn-md btn-primary"><i class="fa fa-save"></i> {{__('Save Setting')}}
 											</button>
 											<br><br>
 										</form>
@@ -247,15 +243,15 @@
 											method="POST">
 											{{ csrf_field() }}
 
-											<label for="">Client ID:</label>
-											<input type="text" placeholder="enter client ID" class="form-control"
+											<label for="">{{  __('Client ID:') }}</label>
+											<input type="text" placeholder="{{  __('enter client ID') }}" class="form-control"
 												name="AMAZON_LOGIN_ID" value="{{ env('AMAZON_LOGIN_ID') }}">
 											<br>
 
 											<div class="form-group eyeCy">
 
-												<label for="">Client Secret Key:</label>
-												<input type="password" placeholder="enter secret key"
+												<label for="">{{ __('Client Secret Key:') }}</label>
+												<input type="password" placeholder="{{ __('enter secret key') }}"
 													class="form-control" id="amz_secret" name="AMAZON_LOGIN_SECRET"
 													value="{{ env('AMAZON_LOGIN_SECRET') }}">
 
@@ -263,7 +259,7 @@
 													class="inline-flex fa fa-fw fa-eye field-icon toggle-password2"></span>
 
 											</div>
-											<label for="">Callback URL:</label>
+											<label for="">{{ __('Callback URL:') }}</label>
 											<div class="input-group">
 												<input value="{{ route('social.login.callback','amazon') }}" type="text"
 													placeholder="https://yoursite.com/public/login/amazon/callback"
@@ -278,12 +274,11 @@
 												</span>
 											</div>
 											<small class="text-info">
-												<i class="fa fa-question-circle"></i> Copy the callback url and paste in
-												your app
+												<i class="fa fa-question-circle"></i> {{__("Copy the callback url and paste in your app.")}}
 											</small>
 											<br><br>
 											<div class="form-group">
-												<label for=""><i class="fa fa-amazon"></i> Enable Amazon Login: </label>
+												<label for=""><i class="fa fa-amazon"></i> {{__('Enable Amazon Login:')}} </label>
 												<br>
 												<label class="switch">
 													<input id="amazon_enable" type="checkbox" name="amazon_enable"
@@ -292,8 +287,8 @@
 												</label>
 											</div>
 											<button @if(env('DEMO_LOCK')==0) type="submit" @else disabled
-												title="This action is disabled in demo !" @endif
-												class="btn btn-md btn-primary"><i class="fa fa-save"></i> Save Setting
+												title="{{  __('This action is disabled in demo !') }}" @endif
+												class="btn btn-md btn-primary"><i class="fa fa-save"></i> {{__('Save Setting')}}
 											</button>
 											<br><br>
 										</form>
@@ -304,15 +299,15 @@
 											method="POST">
 											{{ csrf_field() }}
 
-											<label for="">Gitlab Client ID:</label>
-											<input type="text" placeholder="enter gitlab client ID" class="form-control"
+											<label for="">{{ __('Gitlab Client ID:') }}</label>
+											<input type="text" placeholder="{{ __('enter gitlab client ID') }}" class="form-control"
 												name="GITLAB_CLIENT_ID" value="{{ env('GITLAB_CLIENT_ID') }}">
 											<br>
 
 											<div class="eyeCy">
 
-												<label for="">Gitlab Client Secret Key:</label>
-												<input type="password" placeholder="enter gitlab client secret key"
+												<label for="">{{ __('Gitlab Client Secret Key:') }}</label>
+												<input type="password" placeholder="{{ __('enter gitlab client secret key') }}"
 													class="form-control" id="gitlab_secret" name="GITLAB_CLIENT_SECRET"
 													value="{{ env('GITLAB_CLIENT_SECRET') }}">
 
@@ -330,7 +325,7 @@
 													value="{{ route('social.login.callback','gitlab') }}"
 													class="callback-url form-control">
 												<span class="input-group-addon" id="basic-addon2">
-													<button title="Copy" type="button"
+													<button title="{{ __('Copy') }}" type="button"
 														class="copy btn btn-xs btn-default">
 														<i class="fa fa-clipboard" aria-hidden="true"></i>
 													</button>
@@ -338,12 +333,11 @@
 
 											</div>
 											<small class="text-info">
-												<i class="fa fa-question-circle"></i> Copy the callback url and paste in
-												your app
+												<i class="fa fa-question-circle"></i> {{__("Copy the callback url and paste in your app")}}
 											</small>
 											<br><br>
 											<div class="form-group">
-												<label for=""><i class="fa fa-gitlab"></i> Enable GitLab Login: </label>
+												<label for=""><i class="fa fa-gitlab"></i> {{__("Enable GitLab Login:")}} </label>
 												<br>
 												<label class="switch">
 													<input id="ENABLE_GITLAB" type="checkbox" name="ENABLE_GITLAB"
@@ -353,9 +347,8 @@
 											</div>
 
 											<button @if(env('DEMO_LOCK')==0) type="submit" @else disabled
-												title="This action is disabled in demo !" @endif
-												class="btn btn-md btn-primary"><i class="fa fa-save"></i> Save
-												Setting</button>
+												title="{{  __('This action is disabled in demo !') }}" @endif
+												class="btn btn-md btn-primary"><i class="fa fa-save"></i> {{ __('Save Setting') }}</button>
 
 											<br><br>
 
@@ -367,15 +360,15 @@
 											method="POST">
 											{{ csrf_field() }}
 
-											<label for="">LINKEDIN Client ID:</label>
-											<input type="text" placeholder="enter gitlab client ID" class="form-control"
+											<label for="">{{ __("LINKEDIN Client ID:") }}</label>
+											<input type="text" placeholder="{{ __('enter gitlab client ID') }}" class="form-control"
 												name="LINKEDIN_CLIENT_ID" value="{{ env('LINKEDIN_CLIENT_ID') }}">
 											<br>
 
 											<div class="eyeCy">
 
-												<label for="">LINKEDIN Client Secret Key:</label>
-												<input type="password" placeholder="enter LINKEDIN  client secret key"
+												<label for="">{{ __("LINKEDIN Client Secret Key:") }}</label>
+												<input type="password" placeholder="{{ __('enter LINKEDIN client secret key') }}"
 													class="form-control" id="LINKEDIN_SECRET" name="LINKEDIN_SECRET"
 													value="{{ env('LINKEDIN_SECRET') }}">
 
@@ -385,7 +378,7 @@
 											</div>
 
 											<br>
-											<label for="">LINKEDIN Callback URL:</label>
+											<label for="">{{ __("LINKEDIN Callback URL:") }}</label>
 											<div class="input-group">
 												<input type="text"
 													placeholder="https://yoursite.com/public/login/linkedin/callback"
@@ -401,13 +394,11 @@
 
 											</div>
 											<small class="text-info">
-												<i class="fa fa-question-circle"></i> Copy the callback url and paste in
-												your app
+												<i class="fa fa-question-circle"></i> {{__("Copy the callback url and paste in your app")}}
 											</small>
 											<br><br>
 											<div class="form-group">
-												<label for=""><i class="fa fa-linkedin-square"></i> Enable Linkedin
-													Login:
+												<label for=""><i class="fa fa-linkedin-square"></i> {{__("Enable Linkedin Login")}}:
 												</label>
 												<br>
 												<label class="switch">
@@ -418,9 +409,10 @@
 											</div>
 
 											<button @if(env('DEMO_LOCK')==0) type="submit" @else disabled
-												title="This action is disabled in demo !" @endif
-												class="btn btn-md btn-primary"><i class="fa fa-save"></i> Save
-												Setting</button>
+												title="{{  __('This action is disabled in demo !') }}" @endif
+												class="btn btn-md btn-primary"><i class="fa fa-save"></i>
+												{{__("Save Settings")}}
+											</button>
 
 											<br><br>
 

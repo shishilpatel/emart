@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Inhouse Order Reports |')
+@section('title',__('Inhouse Order Reports | '))
 @section('stylesheet')
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 @endsection

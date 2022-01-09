@@ -224,7 +224,7 @@ class AdminController extends Controller
 
         /*Creating Userbarchart*/
 
-        $months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        $months = [__('January'), __('February'), __('March'), __('April'), __('May'), __('June'), __('July'), __('August'), __('September'), __('October'), __('November'), __('December')];
 
         $userdata = collect();
 
@@ -252,7 +252,8 @@ class AdminController extends Controller
 
         $userchart->labels($months);
 
-        $userchart->title('Monthly Registered Users in ' . date('Y'))->dataset('Monthly Registered Users', 'bar', $userdata)->options([
+        $userchart->title(__('Monthly Registered Users in :year',['year' => date('Y')]))->dataset(__('Monthly Registered Users'), 'bar', $userdata)->options([
+
             'fill' => 'true',
             'shadow' => 'true',
             'borderWidth' => '1',
@@ -279,7 +280,7 @@ class AdminController extends Controller
 
         $orderchart->labels($totalorder->pluck('month'));
 
-        $orderchart->title('Total Orders in ' . date('Y'))->label('Sales')->dataset('Total Sale', 'area', $totalorder->pluck('count'))->options([
+        $orderchart->title(__('Total Orders in :year',['year' => date('Y')]))->label(__('Sales'))->dataset(__('Total Sale'), 'area', $totalorder->pluck('count'))->options([
             'fill' => 'true',
             'fillColor' => 'rgba(77, 150, 218, 0.8)',
             'color' => '#4d96da',
@@ -311,7 +312,7 @@ class AdminController extends Controller
 
         $piechart->minimalist(true);
 
-        $piechart->title('User Distribution')->dataset('User Distribution', 'pie', $piedata->pluck('count'))->options([
+        $piechart->title(__('User Distribution'))->dataset(__('User Distribution'), 'pie', $piedata->pluck('count'))->options([
             'fill' => 'true',
             'shadow' => true,
         ])->color($fillColors2);

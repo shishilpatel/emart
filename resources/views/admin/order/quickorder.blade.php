@@ -16,7 +16,7 @@
 	</div>
 
 	<div class="card-body with-border">
-		<p><b>Order from</b></p>
+		<p><b>{{ __("Order from") }}</b></p>
 		<p>{{ $order->user->name }}</p>
 		<p><i class="fa fa-envelope-o" aria-hidden="true"></i> {{ $order->user->email }}</p>
 		@if($order->user->mobile)
@@ -60,7 +60,7 @@
 				<div class="col-md-5">
 					<i class="{{ $order['paid_in'] }}"></i> {{ $suborder->price + $suborder->tax_amount + $suborder->shipping }}
 					<br>
-					<small>(Incl. of Tax & Shipping).</small>
+					<small>({{__("Incl. of Tax & Shipping")}}).</small>
 				</div>
 			</div>
 			
@@ -72,7 +72,7 @@
 		<div class="row">
 
 			<div class="col-md-4">
-				<span><b>Subtotal: </b></span>
+				<span><b>{{__("Subtotal")}}: </b></span>
 			<br>
 		
 				@if($order->discount != 0)
@@ -84,7 +84,7 @@
 
 			@if($order->discount != 0)
 				<div class="col-md-4">
-					<b>Coupon discount: </b><br>
+					<b>{{__('Coupon discount:')}} </b><br>
 				
 					<i class="{{ $order['paid_in'] }}"></i> {{ sprintf("%.2f",$order['discount']) }}
 				</div>
@@ -92,7 +92,7 @@
 
 				@if($order->gift_charge != 0)
 					<div class=" col-md-4">
-						<b>Gift Pkg. charges: </b>
+						<b>{{__("Gift Pkg. charges")}}: </b>
 					<br>
 						+ <i class="{{ $order['paid_in'] }}"></i> {{ sprintf("%.2f",$order->gift_charge) }}
 					</div>
@@ -100,7 +100,7 @@
 				
 				@if($order->handlingcharge != 0)
 					<div class="col-md-4">
-						<b>Handling charges: </b>
+						<b>{{__("Handling charges")}}: </b>
 				<br>
 						+ <i class="{{ $order['paid_in'] }}"></i> {{ sprintf("%.2f",$order->handlingcharge) }}
 					</div>
@@ -122,15 +122,17 @@
 
 		<div class="row mt-md-2">
 			<div class="col-md-4">
-				<p><b>Paid by:</b></p>
+				<p><b>{{__("Paid by")}}:</b></p>
 				<p>{{ $order->payment_method }}</p>
 			
 			
 			</div>
 
 			<div class="col-md-4">
-				<p><b>Payment received</b></p>
-				<p>Yes</p>
+				<p><b>{{ __("Payment received") }}</b></p>
+				<p>
+					{{__("Yes")}}
+				</p>
 			
 			</div>
 

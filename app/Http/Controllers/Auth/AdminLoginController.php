@@ -28,14 +28,14 @@ class AdminLoginController extends Controller
 
             if(!auth()->user()->can('login.can')){
                 Auth::logout();
-                $errors = new MessageBag(['email' => 'Login access blocked !']);
+                $errors = new MessageBag(['email' => __('Login access blocked !')]);
                 return back()->withErrors($errors)->withInput($request->except('password'));
             }
 
             return redirect()->intended( route('admin.main') );
         }
         // Authentication failed, redirect back to the login form
-        return redirect()->back()->withErrors(['email' => 'Email or password is invalid or your account is deactive/ unverified'])->withInput( $request->only('email', 'remember') );
+        return redirect()->back()->withErrors(['email' => __('These credentials do not match our records.')])->withInput( $request->only('email', 'remember') );
     }
     /**
      * Log the user out of the application.

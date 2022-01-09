@@ -168,8 +168,8 @@ if(isset($getInvoice->simple_product)){
 					@endphp
 
 					<div>{{ $bcity }}, {{ $bstate }}, {{ $bcountry }}, {{ $getInvoice->order->billing_address['pincode'] ?? '' }}</div>
-					<div>Email: {{ $getInvoice->order->billing_address['email'] }}</div>
-					<div>Phone: {{ $getInvoice->order->billing_address['mobile'] }}</div>
+					<div>{{__("Email")}}: {{ $getInvoice->order->billing_address['email'] }}</div>
+					<div>{{ __('Phone') }}: {{ $getInvoice->order->billing_address['mobile'] }}</div>
 				</div>
 			</div>
 			<div class="table-responsive-sm">
@@ -291,11 +291,11 @@ if(isset($getInvoice->simple_product)){
 							@php
 
 								$data = array(
-									'Sold By'      => $store->name,
-									'Invoice No.'  => $inv_cus->order_prefix.$getInvoice->order->order_id,
-									'Invoice Date' => date('d M,Y',strtotime($getInvoice->created_at)),
-									'Amount' 	   => $getInvoice->order->discount == 0 ? $getInvoice->order->paid_in_currency.' '.round( $getInvoice->qty*($getInvoice->price+$getInvoice->tax_amount)+$getInvoice->handlingcharge+$getInvoice->shipping+$getInvoice->gift_charge,2) : $getInvoice->order->paid_in_currency.' '.round( $getInvoice->qty*($getInvoice->price+$getInvoice->tax_amount)-$getInvoice->discount+$getInvoice->handlingcharge+$getInvoice->shipping+$getInvoice->gift_charge,2),
-									'Invoice link' => url()->current(),
+									__('Sold By')      => $store->name,
+									__('Invoice No.')  => $inv_cus->order_prefix.$getInvoice->order->order_id,
+									__('Invoice Date') => date('d M,Y',strtotime($getInvoice->created_at)),
+									__('Amount') 	   => $getInvoice->order->discount == 0 ? $getInvoice->order->paid_in_currency.' '.round( $getInvoice->qty*($getInvoice->price+$getInvoice->tax_amount)+$getInvoice->handlingcharge+$getInvoice->shipping+$getInvoice->gift_charge,2) : $getInvoice->order->paid_in_currency.' '.round( $getInvoice->qty*($getInvoice->price+$getInvoice->tax_amount)-$getInvoice->discount+$getInvoice->handlingcharge+$getInvoice->shipping+$getInvoice->gift_charge,2),
+									__('Invoice link') => url()->current(),
 								);
 
 								$data = json_encode($data,true);

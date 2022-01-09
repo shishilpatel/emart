@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Invoice Setting |')
+@section('title',__('Invoice Setting |'))
 @section('body')
 ​
 @component('admin.component.breadcumb',['fourthactive' => 'active'])
@@ -19,17 +19,19 @@
 @endcomponent
 <div class="contentbar">
     <div class="row">
-		@if ($errors->any())  
-		<div class="alert alert-danger" role="alert">
-		@foreach($errors->all() as $error)     
-		<p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-		<span aria-hidden="true" style="color:red;">&times;</span></button></p>
-			@endforeach  
-		</div>
-		@endif
+		
   
    
 		<div class="col-lg-12">
+
+			@if ($errors->any())  
+			<div class="alert alert-danger" role="alert">
+			@foreach($errors->all() as $error)     
+			<p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">&times;</span></button></p>
+				@endforeach  
+			</div>
+			@endif
 		
 			<div class="card m-b-30">
 		
@@ -41,12 +43,11 @@
 					<div class="card-body">
 						<ul class="nav nav-tabs custom-tab-line mb-3" id="defaultTabLine" role="tablist">
 							<li class="nav-item">
-								<a class="nav-link active" id="home-tab-line" data-content="If order have only 1 item than its count in single canceled orders."  data-toggle="tab" href="#home-line" role="tab" aria-controls="home-line" aria-selected="true"><i class="feather icon-truck mr-2"></i>
-									Return Completed @if($countC>0) <span class="badge">{{$countC}}@endif</a>
+								<a class="nav-link active" id="home-tab-line" data-content="{{ __("If order have only 1 item than its count in single canceled orders.") }}"  data-toggle="tab" href="#home-line" role="tab" aria-controls="home-line" aria-selected="true"><i class="feather icon-truck mr-2"></i>
+									{{__("Return Completed")}} @if($countC>0) <span class="badge">{{$countC}}@endif</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" id="profile-tab-line" data-content="If order have more than 1 item than its count in Bulk canceled orders." data-toggle="tab" href="#profile-line" role="tab" aria-controls="profile-line" aria-selected="false"><i class="feather icon-truck mr-2"></i>
-									Pending Returns @if($countP>0) <span class="badge">{{$countP}}@endif</a>
+								<a class="nav-link" id="profile-tab-line" data-content="{{ __('If order have more than 1 item than its count in Bulk canceled orders.') }}" data-toggle="tab" href="#profile-line" role="tab" aria-controls="profile-line" aria-selected="false"><i class="feather icon-truck mr-2"></i> {{__("Pending Returns")}} @if($countP>0) <span class="badge"> {{$countP}} @endif</a>
 							</li>
 							
 						</ul>
@@ -60,16 +61,16 @@
 												#
 											</th>
 											<th>
-												Order ID
+												{{__("Order ID")}}
 											</th>
 											<th>
-												Item
+												{{__("Item")}}
 											</th>
 											<th>
-												Refunded Amount
+												{{__('Refunded Amount')}}
 											</th>
 											<th>
-												Refund Status
+												{{__("Refund Status")}}
 											</th>
 				
 										</thead>
@@ -84,7 +85,7 @@
 													<td><b>#{{ $inv_cus->order_prefix.$order->getorder->order->order_id }}</b>
 															<br>
 															<small>
-																<a title="View Refund Detail" href="{{  route('return.order.detail',$order->id)  }}">View Detail</a> 
+																<a title="{{ __("View Refund Detail") }}" href="{{  route('return.order.detail',$order->id)  }}">{{ __("View Detail") }}</a> 
 															</small>
 													</td>
 													<td>
@@ -128,19 +129,19 @@
 												#
 											</th>
 											<th>
-												Order TYPE
+												{{__("Order TYPE")}}
 											</th>
 											<th>
-												OrderID
+												{{__("OrderID")}}
 											</th>
 											<th>
-												Pending Amount
+												{{__("Pending Amount")}}
 											</th>
 											<th>
-												Requested By
+												{{__("Requested By")}}
 											</th>
 											<th>
-												Requested on
+												{{__("Requested on")}}
 											</th>
 										</thead>
 										
@@ -152,18 +153,18 @@
 														<td>
 															@if($order->getorder->order->payment_method != 'COD')
 																<label class="label label-success">
-																	PREPAID
+																	{{__("PREPAID")}}
 																</label>
 															@else
 																<label class="label label-primary">
-																	COD
+																	{{__("COD")}}
 																</label>
 															@endif
 														</td>
 														<td><b>#{{ $inv_cus->order_prefix.$order->getorder->order->order_id }}</b>
 															<br>
 															<small>
-																<a href="{{ route('return.order.show',$order->id) }}">UPDATE ORDER</a>
+																<a href="{{ route('return.order.show',$order->id) }}">{{ __("UPDATE ORDER") }}</a>
 															</small>
 														</td>
 														<td>

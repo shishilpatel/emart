@@ -7,7 +7,7 @@
 
         <div class="col-md-12">
             <div class="form-group">
-                <label>Enable Cashback system :</label>
+                <label>{{__('Enable Cashback system')}} :</label>
                 <br>
                 <label class="switch">
                   <input id="enable" type="checkbox" name="enable"

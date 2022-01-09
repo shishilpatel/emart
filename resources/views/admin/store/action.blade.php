@@ -2,7 +2,7 @@
     <button class="btn btn-round btn-primary-rgba" type="button" id="CustomdropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="feather icon-more-vertical-"></i></button>
     <div class="dropdown-menu" aria-labelledby="CustomdropdownMenuButton1">
         @can('stores.edit')
-        <a class="dropdown-item" href="{{url('admin/stores/'.$id.'/edit')}}"><i class="feather icon-edit mr-2"></i>Edit</a>
+        <a class="dropdown-item" href="{{url('admin/stores/'.$id.'/edit')}}"><i class="feather icon-edit mr-2"></i>{{ __("Edit") }}</a>
         @endcan
         @can('stores.delete')
         <a class="dropdown-item btn btn-link" data-toggle="modal" data-target="#delete1{{$id}}" ><i class="feather icon-delete mr-2"></i>{{ __("Delete") }}</a>                               
@@ -15,7 +15,7 @@
   <div class="modal-dialog modal-sm">
       <div class="modal-content">
           <div class="modal-header">
-              <h5 class="modal-title" id="exampleSmallModalLabel">Delete</h5>
+              <h5 class="modal-title" id="exampleSmallModalLabel">{{ __("DELETE") }}</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
               </button>
@@ -28,8 +28,8 @@
               <form method="post" action="{{url('admin/stores/'.$id)}}" class="pull-right">
                   {{csrf_field()}}
                   {{method_field("DELETE")}}
-                  <button type="reset" class="btn btn-secondary" data-dismiss="modal">No</button>
-                  <button type="submit" class="btn btn-primary">Yes</button>
+                  <button type="reset" class="btn btn-secondary" data-dismiss="modal">{{ __("No") }}</button>
+                  <button type="submit" class="btn btn-primary">{{ __("YES") }}</button>
               </form>
           </div>
       </div>

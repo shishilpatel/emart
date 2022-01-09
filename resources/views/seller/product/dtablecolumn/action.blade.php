@@ -23,13 +23,13 @@
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleSmallModalLabel">Delete</h5>
+                <h5 class="modal-title" id="exampleSmallModalLabel">{{ __('Delete') }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p class="text-muted">Do you really want to delete this product? This process cannot be undone.</p>
+                <p class="text-muted">{{ __('Do you really want to delete this product') }}? {{__('This process cannot be undone.')}}</p>
             </div>
             <div class="modal-footer">
               <form method="post" action="{{route('my.products.destroy',$id)}}" class="pull-right">

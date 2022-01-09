@@ -570,3 +570,19 @@
     border-radius: .2em;
     text-transform: uppercase;
 }
+
+.product-info {
+  position: relative;
+  z-index: 9999;
+}
+
+#chat-body {
+  scroll-behavior: smooth;
+}
+.removeFrmWish i {
+  color: #FFF;
+}
+.product-x {
+  position: relative!important;
+  z-index: auto;
+}

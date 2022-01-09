@@ -1,5 +1,5 @@
 @extends('admin.layouts.sellermastersoyuz')
-@section('title', 'Commission Setting')
+@section('title', __('Commission Setting'))
 @section('body')
 
 @component('seller.components.breadcumb',['thirdactive' => 'active'])
@@ -107,23 +107,4 @@
     </div>
   </div>
 </div>
-				
-		
-			
-        
-            
-
-                          
-        
-            
-                  
-               
-  
-  @endsection
-                 
- 
-  
-          
-              
-              
-             
+@endsection

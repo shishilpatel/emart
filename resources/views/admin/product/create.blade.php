@@ -1,17 +1,17 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Add New Product |')
+@section('title',__('Add New Product |'))
 @section('body')
 ​
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 ​
 @slot('heading')
-{{ __('Add New Product') }}
+  {{ __('Add New Product') }}
 @endslot
 @slot('menu1')
-{{ __("Product") }}
+  {{ __("Product") }}
 @endslot
 @slot('menu2')
-{{ __("Add New Product") }}
+  {{ __("Add New Product") }}
 @endslot
 ​
 @slot('button')
@@ -25,17 +25,18 @@
 @endcomponent
 <div class="contentbar">
   <div class="row">
-    @if ($errors->any())
-    <div class="alert alert-danger" role="alert">
-      @foreach($errors->all() as $error)
-      <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach
-    </div>
-    @endif
+   
 ​
 ​
     <div class="col-lg-12">
+      @if ($errors->any())
+      <div class="alert alert-danger" role="alert">
+        @foreach($errors->all() as $error)
+        <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button></p>
+        @endforeach
+      </div>
+      @endif
       <div class="card m-b-30">
         <div class="card-header">
           <h5>{{ __('Add Product') }}</h5>
@@ -54,7 +55,9 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="exampleModalCenterTitle">Product Tax Information(PTI)</h4>
+        <h4 class="modal-title" id="exampleModalCenterTitle">
+          {{__('Product Tax Information(PTI)')}}
+        </h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -76,24 +79,22 @@
               <div class="card-body">
                 <table class="table table-bordered table-striped">
                   <tr>
-                    <th>Tax Name
+                    <th>{{__("Tax Name")}}
                       <img src="{{(url('images/info.png'))}}" class="height-15" data-toggle="popover"
-                        data-content="You Want to Choose Tax Class Then Apply same Tax Class And Tax Rate .">
+                        data-content="{{ __('You Want to Choose Tax Class Then Apply same Tax Class And Tax Rate.') }}">
                     </th>
-                    <th>Tax Rate</th>
-                    <th>Priority
-                      <img src="{{(url('images/info.png'))}}" class="height-15" data-toggle="popover" data-content="1 Priority Is Higher Priority And All Numeric Number Is Lowest Priority,
-                      Priority Are Accept Is Numeric Number.">
+                    <th>
+                      {{__("Tax Rate")}}
                     </th>
-                    <th>Based On <img src="{{(url('images/info.png'))}}" class="height-15" data-toggle="popover"
-                        data-content="You Want To Choose Billing address.. 
-                   Then Billing Address And Zone Address Are Same Then Tax Will Be Applied,
-                    And You Will Be Choose Store Address then Store Addrss And User Billing Address Is Same Then Tax Will Be Apply  .">
+                    <th>
+                      {{__('Priority')}}
+                      <img src="{{(url('images/info.png'))}}" class="height-15" data-toggle="popover" data-content="{{ __('1 Priority Is Higher Priority And All Numeric Number Is Lowest Priority, Priority Are Accept Is Numeric Number.') }}">
                     </th>
-                    <th>Zone Details<img src="{{(url('images/info.png'))}}" class="height-15" data-toggle="popover"
-                        data-content="You Want To Choose Billing address.. 
-                   Then Billing Address And Zone Address Are Same Then Tax Will Be Applied,
-                    And You Will Be Choose Store Address then Store Addrss And User Billing Address Is Same Then Tax Will Be Apply  .">
+                    <th>{{__('Based On')}} <img src="{{(url('images/info.png'))}}" class="height-15" data-toggle="popover"
+                        data-content="{{ __('You Want To Choose Billing address Then Billing Address And Zone Address Are Same Then Tax Will Be Applied, And You Will Be Choose Store Address then Store Addrss And User Billing Address Is Same Then Tax Will Be Apply') }}">
+                    </th>
+                    <th>{{ __("Zone Details") }}<img src="{{(url('images/info.png'))}}" class="height-15" data-toggle="popover"
+                        data-content="{{ __('You Want To Choose Billing address Then Billing Address And Zone Address Are Same Then Tax Will Be Applied, And You Will Be Choose Store Address then Store Addrss And User Billing Address Is Same Then Tax Will Be Apply.') }}">
                     </th>
                   </tr>
                   @if(isset($protax->priority))

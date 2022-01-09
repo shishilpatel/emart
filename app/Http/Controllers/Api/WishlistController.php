@@ -22,19 +22,19 @@ class WishlistController extends Controller
 
             if ($validator->fails()) {
                 $errors = $validator->errors();
-            
-                if($errors->first('name')){
+
+                if ($errors->first('name')) {
                     return response()->json(['msg' => $errors->first('name'), 'status' => 'fail']);
                 }
             }
 
             /** Find if he already created that wishlist with that name */
 
-            $ifExist = WishlistCollection::where('name',$request->name)->where('user_id',Auth::user()->id)->first();
+            $ifExist = WishlistCollection::where('name', $request->name)->where('user_id', Auth::user()->id)->first();
 
-            if(isset($ifExist)){
-                
-                return response()->json(['msg' => 'Collection with this name already exist !','status' => 'fail']);
+            if (isset($ifExist)) {
+
+                return response()->json(['msg' => 'Collection with this name already exist !', 'status' => 'fail']);
 
             }
 
@@ -43,10 +43,10 @@ class WishlistController extends Controller
                 'user_id' => Auth::user()->id,
             ]);
 
-            return response()->json(['msg' => $request->name . ' collection created successfully !','status' => 'success','collection_id' => $c->id ]);
+            return response()->json(['msg' => $request->name . ' collection created successfully !', 'status' => 'success', 'collection_id' => $c->id]);
 
         } else {
-            return response()->json(['msg' => 'You\re not logged in !','status' => 'fail']);
+            return response()->json(['msg' => 'You\re not logged in !', 'status' => 'fail']);
         }
 
     }
@@ -55,7 +55,7 @@ class WishlistController extends Controller
     {
 
         if (!Auth::guard('api')->check()) {
-            return response()->json(['msg' => 'You\re not logged in !','status' => 'fail']);
+            return response()->json(['msg' => 'You\'re not logged in !', 'status' => 'fail']);
         }
 
         $collection = WishlistCollection::where('user_id', '=', Auth::user()->id)->get();
@@ -64,13 +64,12 @@ class WishlistController extends Controller
             'id' => 0,
             'collectionname' => 'Favorites',
             'url' => url('api/wishlist'),
-            'iteminlist' => Auth::user()->wishlist()->where('collection_id','=',NULL)->count(),
+            'iteminlist' => Auth::user()->wishlist()->where('collection_id', '=', null)->count(),
             'imagepath' => url('variantimages/thumbnails/'),
             'topImages' => $this->topCollectionItemImages(0) != '' ? $this->topCollectionItemImages(0) : null,
         );
 
-        foreach ($collection as $coll) {
-
+        $collection->each(function ($coll) {
             $result[] = array(
                 'id' => $coll->id,
                 'collectionname' => $coll->name,
@@ -79,10 +78,9 @@ class WishlistController extends Controller
                 'imagepath' => url('variantimages/thumbnails/'),
                 'topImages' => $this->topCollectionItemImages($coll) != '' ? $this->topCollectionItemImages($coll) : null,
             );
+        });
 
-        }
-
-        return response()->json(['collection' => $result,'status' => 'success']);
+        return response()->json(['collection' => $result, 'status' => 'success']);
 
     }
 
@@ -93,34 +91,28 @@ class WishlistController extends Controller
 
         if ($coll != '0') {
 
-            foreach ($coll->items->take(8) as $item) {
+            foreach ($coll->items->take(4) as $item) {
 
-                if (isset($item->variant)) {
+                if (isset($item->variant) && isset($item->variant->variantimages)) {
 
-                    if (isset($item->variant->variantimages)) {
-
-                        array_push($images, $item->variant->variantimages['main_image']);
-
-                    }
+                    array_push($images, $item->variant->variantimages['main_image']);
 
                 }
 
             }
+
         } else {
 
-            foreach (Auth::user()->wishlist as $item) {
+            auth()->user()->wishlist()->take(6)->each(function($item){
 
-                if (isset($item->variant)) {
+                if (isset($item->variant) && isset($item->variant->variantimages)) {
 
-                    if (isset($item->variant->variantimages)) {
-
-                        array_push($images, $item->variant->variantimages['main_image']);
-
-                    }
+                    array_push($images, $item->variant->variantimages['main_image']);
 
                 }
 
-            }
+            });
+
 
         }
 
@@ -133,21 +125,22 @@ class WishlistController extends Controller
     public function listCollectionItemsByID(Request $request, $id)
     {
 
+        
         $validator = Validator::make($request->all(), [
             'currency' => 'required|max:3|min:3',
         ]);
 
         if ($validator->fails()) {
             $errors = $validator->errors();
-            
-			if($errors->first('currency')){
-				return response()->json(['msg' => $errors->first('currency'), 'status' => 'fail']);
-			}
+
+            if ($errors->first('currency')) {
+                return response()->json(['msg' => $errors->first('currency'), 'status' => 'fail']);
+            }
         }
 
         if (!Auth::guard('api')->check()) {
 
-            return response()->json(['msg' => 'You\re not logged in !','status' => 'fail']);
+            return response()->json(['msg' => 'You\'re not logged in !', 'status' => 'fail']);
 
         }
 
@@ -163,7 +156,7 @@ class WishlistController extends Controller
             'items' => count($this->collectionItem($collection, $request->currency)) > 0 ? $this->collectionItem($collection, $request->currency) : 'No items in this collection !',
         );
 
-        return response()->json(['data' => $result,'status' => 'success']);
+        return response()->json(['data' => $result, 'status' => 'success']);
 
     }
 
@@ -211,21 +204,20 @@ class WishlistController extends Controller
 
     }
 
-    public function isItemInWishlist($variant){
+    public function isItemInWishlist($variant)
+    {
 
-        
+        if (Auth::guard('api')->check()) {
 
-        if(Auth::guard('api')->check()){
+            $result = Wishlist::where('user_id', Auth::guard('api')->user()->id)->where('pro_id', $variant->id)->first();
 
-            $result = Wishlist::where('user_id',Auth::guard('api')->user()->id)->where('pro_id',$variant->id)->first();
-
-           if(isset($result)){
+            if (isset($result)) {
                 return 1;
-           }else{
-               return 0;
-           }
+            } else {
+                return 0;
+            }
 
-        }else{
+        } else {
 
             return 0;
 

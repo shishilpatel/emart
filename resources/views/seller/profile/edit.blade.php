@@ -1,5 +1,5 @@
 @extends('admin.layouts.sellermastersoyuz')
-@section('title', 'Edit Profile | ')
+@section('title', __('Edit Profile'))
 @section('body')
 
 @component('seller.components.breadcumb',['secondactive' => 'active'])
@@ -15,18 +15,21 @@
 @endcomponent
 
 <div class="contentbar">
-  @if ($errors->any())
-  <div class="alert alert-danger" role="alert">
-    @foreach($errors->all() as $error)
-    <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-    @endforeach
-  </div>
-  @endif
+ 
 
 
   <div class="row">
     <div class="col-lg-9">
+
+      @if ($errors->any())
+      <div class="alert alert-danger" role="alert">
+        @foreach($errors->all() as $error)
+        <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button></p>
+        @endforeach
+      </div>
+      @endif
+
       <div class="card m-b-30">
         <div class="card-header">
           <h5 class="card-title">{{ __('Edit Profile') }}</h5>
@@ -37,36 +40,36 @@
             <div class="row">
 
               <div class="form-group col-md-6">
-                <label for="">Name : <span class="required">*</span></label>
-                <input placeholder="Please enter name" type="text" name="name" value="{{auth()->user()->name}}"
+                <label for="">{{__("Name")}} : <span class="required">*</span></label>
+                <input placeholder="{{ __('Please enter name') }}" type="text" name="name" value="{{auth()->user()->name}}"
                   class="form-control">
 
               </div>
 
               <div class="form-group col-md-6">
-                <label>Buisness Email : <span class="required">*</span></label>
-                <input placeholder="Please enter email" type="text" name="email" value="{{auth()->user()->email}} "
+                <label>{{ __('Buisness Email') }} : <span class="required">*</span></label>
+                <input placeholder="{{ __('Please enter email') }}" type="text" name="email" value="{{auth()->user()->email}} "
                   class="form-control">
               </div>
 
               <div class="form-group col-md-6">
-                <label for="">Phone :</label>
-                <input placeholder="Please Enter phone no." type="text" name="phone" value="{{auth()->user()->phone}}"
+                <label for="">{{__("Phone")}} :</label>
+                <input placeholder="{{ __('Please Enter phone no.') }}" type="text" name="phone" value="{{auth()->user()->phone}}"
                   class="form-control">
               </div>
 
               <div class="form-group col-md-6">
                 <label>
-                  Mobile : <span class="required">*</span>
+                  {{__('Mobile')}} : <span class="required">*</span>
                 </label>
 
                 <div class="row no-gutter">
                   <div class="col-md-12">
                     <div class="input-group">
 
-                      <input required pattern="[0-9]+" title="Invalid mobile no." placeholder="1" type="text"
+                      <input required pattern="[0-9]+" title="{{ __('Invalid mobile no.') }}" placeholder="1" type="text"
                         name="phonecode" value="{{auth()->user()->phonecode}}" class="col-md-2 form-control">
-                      <input required pattern="[0-9]+" title="Invalid mobile no." placeholder="Please enter mobile no."
+                      <input required pattern="[0-9]+" title="{{ __('Invalid mobile no.') }}" placeholder="{{ __('Please enter mobile no.') }}"
                         type="text" name="mobile" value="{{auth()->user()->mobile}}" class="col-md-10 form-control">
                     </div>
                   </div>
@@ -77,10 +80,10 @@
 
 
               <div class="form-group col-md-4">
-                <label>Country : <span class="required">*</span></label>
+                <label>{{__('Country')}} : <span class="required">*</span></label>
                 <select data-placeholder="Please select country" class="form-control select2" name="country_id"
                   id="country_id">
-                  <option value="">Please Choose</option>
+                  <option value="">{{ __('Please Choose') }}</option>
                   @foreach($country as $c)
 
                   <option value="{{$c->id}}" {{ $c->id == auth()->user()->country_id ? 'selected="selected"' : '' }}>
@@ -91,10 +94,10 @@
               </div>
 
               <div class="form-group col-md-4">
-                <label>State : <span class="required">*</span></label>
-                <select data-placeholder="Please select state" required name="state_id" class="form-control select2"
+                <label>{{__('State')}} : <span class="required">*</span></label>
+                <select data-placeholder="{{ __('Please select state') }}" required name="state_id" class="form-control select2"
                   id="upload_id">
-                  <option value="">Please choose</option>
+                  <option value="">{{ __('Please choose') }}</option>
                   @foreach($states as $c)
                   <option value="{{$c->id}}" {{ $c->id == auth()->user()->state_id ? 'selected="selected"' : '' }}>
                     {{$c->name}}
@@ -104,9 +107,9 @@
               </div>
 
               <div class="form-group col-md-4">
-                <label for="">City :</label>
-                <select data-placeholder="Please select city" name="city_id" id="city_id" class="form-control select2">
-                  <option value="">Please Choose</option>
+                <label for="">{{ __('City') }} :</label>
+                <select data-placeholder="{{ __('Please select city') }}" name="city_id" id="city_id" class="form-control select2">
+                  <option value="">{{ __('Please select city') }}</option>
                   @foreach($citys as $key=>$c)
 
                   <option value="{{ $key }}" {{ $key == auth()->user()->city_id ? 'selected' : '' }}>
@@ -120,13 +123,12 @@
                 <label for="exampleInputSlug"> {{ __('Choose Profile picture :') }}<sup
                     class="redstar text-danger">*</sup></label><br>
                 <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-                  </div>
                   <div class="custom-file">
                     <input type="file" name="image" class="custom-file-input" id="inputGroupFile01"
                       aria-describedby="inputGroupFileAddon01">
-                    <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                    <label class="custom-file-label" for="inputGroupFile01">
+                      {{__('Choose file')}}
+                    </label>
                   </div>
                 </div>
               </div>
@@ -134,17 +136,17 @@
                 <label class="check">
                   <input type="checkbox" id="check" name="update_password" value="test">
                   <span class="checkmark"></span>
-                  Want To Update password
+                    {{__('Want To Update password')}}
                 </label>
               </div>
 
               <div class="col-md-12 passwordshow hide">
                 <div class="row">
                   <div class="form-group col-md-6">
-                    <label for="">Password : <span class="required">*</span></label>
+                    <label for="">{{__('Password')}} : <span class="required">*</span></label>
                     <div class="input-group">
                       <input name="password" type="password" id="id_password" class="form-control"
-                        autocomplete="current-password" placeholder="Enter new password">
+                        autocomplete="current-password" placeholder="{{ __('Enter new password') }}">
                       <div class="input-group-prepend">
                         <span class="input-group-text"> <i id="togglePassword" class="fa fa-eye"></i></span>
                       </div>
@@ -154,9 +156,9 @@
 
 
                   <div class="form-group col-md-6">
-                    <label for="">Confirm Password : <span class="required">*</span></label>
+                    <label for="">{{__("Confirm Password")}} : <span class="required">*</span></label>
                     <div class="input-group">
-                      <input placeholder="Enter password again to confirm" id="id_password1" type="password"
+                      <input placeholder="{{ __('Enter password again to confirm') }}" id="id_password1" type="password"
                         name="password_confirmation" class="form-control">
                       <div class="input-group-prepend">
                         <span class="input-group-text"> <i id="togglePassword1" class="fa fa-eye"></i></span>
@@ -170,7 +172,7 @@
 
             <div class="form-group">
               <button type="reset" class="btn btn-danger mr-1"><i class="fa fa-ban"></i> {{ __("Reset")}}</button>
-              <button @if(env('DEMO_LOCK')==0) type="submit" @else title="This action is disabled in demo !"
+              <button @if(env('DEMO_LOCK')==0) type="submit" @else title="{{ __('This action is disabled in demo !') }}"
                 disabled="disabled" @endif class="btn btn-primary"><i class="fa fa-check-circle"></i>
                 {{ __("Update")}}</button>
             </div>
@@ -205,17 +207,19 @@
                 {{__("Location not updated")}}
                 @endif</p>
 
-              <p><span class="badge badge-primary-inverse">Seller</span></p>
+              <p><span class="badge badge-primary-inverse">
+                 SELLER
+                </span></p>
             </div>
             <div class="card-footer text-center">
               <div class="row">
                 <div class="col-6 border-right">
                   <h5>{{ count(Auth::user()->products) }}</h5>
-                  <p class="my-2">TOTAL PRODUCTS</p>
+                  <p class="my-2">{{ __('TOTAL PRODUCTS') }}</p>
                 </div>
                 <div class="col-6">
                   <h5>{{ Auth::user()->purchaseorder->count() }}</h5>
-                  <p class="my-2">TOTAL PURCHASE</p>
+                  <p class="my-2">{{ __('TOTAL PURCHASE') }}</p>
                 </div>
               </div>
             </div>
@@ -232,7 +236,7 @@
   @section('custom-script')
 
   <script>
-    var baseUrl = "<?= url('/') ?>";
+    var baseUrl = @json(url('/'));
   </script>
   <script src="{{ url('js/ajaxlocationlist.js') }}"></script>
 

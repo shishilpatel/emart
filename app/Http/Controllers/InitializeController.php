@@ -32,7 +32,7 @@ class InitializeController extends Controller
 
             return redirect()->route('installApp');
         } elseif ($data['msg'] == 'Already Register') {
-            return redirect()->route('verifylicense')->withErrors(['User is already registered']);
+            return redirect()->route('verifylicense')->withErrors([__('User is already registered')]);
         } else {
             notify()->error($data['msg']);
             return back()->withErrors([$data['msg']]);
@@ -64,7 +64,7 @@ class InitializeController extends Controller
 
                 );
 
-                $file = json_encode($lic_json);
+                $file = json_encode($lic_json,JSON_PRETTY_PRINT);
 
                 $filename = 'license.json';
 
@@ -83,7 +83,7 @@ class InitializeController extends Controller
                 );
             }
         } else {
-            $message = "Failed to validate";
+            $message = __("Failed to validate");
 
             return array(
                 'msg' => $message,

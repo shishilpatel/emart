@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Edit Special Offer |')
+@section('title',__('Edit Special Offer |'))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -24,17 +24,18 @@
 @endcomponent
 <div class="contentbar">
   <div class="row">
-    @if ($errors->any())
-    <div class="alert alert-danger" role="alert">
-      @foreach($errors->all() as $error)
-      <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach
-    </div>
-    @endif
+    
     ​
     ​
     <div class="col-lg-12">
+      @if ($errors->any())
+      <div class="alert alert-danger" role="alert">
+        @foreach($errors->all() as $error)
+        <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button></p>
+        @endforeach
+      </div>
+      @endif
       <div class="card m-b-30">
         <div class="card-header">
           <h5>{{ __('Edit Special Offer') }}</h5>
@@ -62,11 +63,11 @@
 
               <div class="{{ $special_offer->simple_pro_id == '' ? 'd-none' : 'd-block' }} simpleproduct form-group col-md-6">
                 <label class="control-label" for="first-name">
-                  Select Simple Product <span class="required">*</span>
+                  {{  __('Select Simple Product') }} <span class="required">*</span>
                 </label>
 
                 <select name="simple_pro_id" class="form-control select2 col-md-12">
-                  <option value="">Please Select Product</option>
+                  <option value="">{{ __('Please Select Product')  }}</option>
                   @foreach($simple_products as $key => $sp)
                   <option {{ $special_offer->simple_pro_id == $key ? 'selected="selected"' : '' }} value="{{$key}}">{{$sp}}
                   </option>
@@ -78,11 +79,11 @@
 
               <div class="{{ $special_offer->pro_id == 0 ? 'd-none' : 'd-block' }} variantproduct form-group col-md-6">
                 <label class="control-label" for="first-name">
-                  Select variant product <span class="required">*</span>
+                  {{  __('Select Variant Product') }} <span class="required">*</span>
                 </label>
 
                 <select name="pro_id" class="form-control select2">
-                  <option value="">Please Select Product</option>
+                  <option value="">{{ __('Please Select Product')  }}</option>
                   @foreach($products as $key => $pro)
                   <option value="{{$key}}" {{ $special_offer->pro_id == $key ? 'selected="selected"' : '' }}>
                     {{$pro}}</option>

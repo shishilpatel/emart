@@ -15,7 +15,7 @@ class OmiseController extends Controller
     {
 
         if (session()->get('currency')['id'] != 'THB' && session()->get('currency')['id'] != 'JPY') {
-            notify()->warning('Currency not supported for this payment method !');
+            notify()->warning(__('Currency not supported for this payment method !'));
             return redirect(route('order.review'));
         }
 
@@ -32,7 +32,7 @@ class OmiseController extends Controller
         $amount = sprintf("%.2f", Crypt::decrypt($request->amount));
 
         if (round($request->actualtotal, 2) != $total) {
-            notify()->error('Payment has been modifed !', 'Please try again !');
+            notify()->error(__('Payment has been modifed !'), __('Please try again !'));
             return redirect(route('order.review'));
 
         }

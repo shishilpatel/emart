@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','SEO Settings | ')
+@section('title',__('SEO Settings | '))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -12,15 +12,16 @@
 @endcomponent
 <div class="contentbar">
   <div class="row">
-    @if ($errors->any())
-    <div class="alert alert-danger" role="alert">
-      @foreach($errors->all() as $error)
-      <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach
-    </div>
-    @endif
+    
     <div class="col-lg-12">
+      @if ($errors->any())
+        <div class="alert alert-danger" role="alert">
+          @foreach($errors->all() as $error)
+          <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span></button></p>
+          @endforeach
+        </div>
+      @endif
       <div class="card m-b-30">
         <div class="card-header">
           <h5 class="box-title">{{ __('Seo Settings') }}</h5>
@@ -44,7 +45,7 @@
               <div class="col-md-6">
                 <div class="form-group">
                     <label class="text-dark">{{ __('Metadata Description') }} <span class="text-danger">*</span></label>
-                    <input placeholder="Enter meta data description" type="text" id="first-name" name="metadata_des" value="{{$seo->metadata_des ?? ''}}" class="form-control">
+                    <input placeholder="{{ __("Enter meta data description") }}" type="text" id="first-name" name="metadata_des" value="{{$seo->metadata_des ?? ''}}" class="form-control">
                 </div>
               </div>
 
@@ -52,7 +53,7 @@
               <div class="col-md-6">
                 <div class="form-group">
                     <label class="text-dark">{{ __('Metadata Keyword') }} <span class="text-danger">*</span></label>
-                    <input placeholder="Enter Metadata Keyword, use comma to seprate it" type="text" id="first-name" name="metadata_key" value="{{$seo->metadata_key ?? ''}}" class="form-control">
+                    <input placeholder="{{ __("Enter Metadata Keyword, use comma to seprate it") }}" type="text" id="first-name" name="metadata_key" value="{{$seo->metadata_key ?? ''}}" class="form-control">
                 </div>
               </div>
 
@@ -60,7 +61,7 @@
               <div class="col-md-6">
                   <div class="form-group">
                       <label class="text-dark">{{ __('Google Analytics :') }}</label>
-                      <input placeholder="Enter Google Analytics Key" type="text" id="first-name" name="google_analysis" value="{{$seo->google_analysis ?? ''}}" class="form-control">
+                      <input placeholder="{{ __("Enter Google Analytics Key") }}" type="text" id="first-name" name="google_analysis" value="{{$seo->google_analysis ?? ''}}" class="form-control">
                   </div>
               </div>
 
@@ -68,7 +69,7 @@
                 <div class="col-md-6">
                   <div class="form-group">
                       <label class="text-dark">{{ __('Facebook Pixel :') }}</label>
-                      <input placeholder="Please enter Facebook Pixel Code Key" type="text" id="first-name" name="FACEBOOK_PIXEL_ID" value="{{ env('FACEBOOK_PIXEL_ID') }}" class="form-control">
+                      <input placeholder="{{ __('Please enter Facebook Pixel Code Key') }}" type="text" id="first-name" name="FACEBOOK_PIXEL_ID" value="{{ env('FACEBOOK_PIXEL_ID') }}" class="form-control">
                   </div>
               </div>
 
@@ -78,9 +79,9 @@
                       <label class="text-dark">{{ __('Generate Sitemap :') }}</label><br>
                       <a href="{{ url('/sitemap') }}" class="btn btn-md btn-warning-rgba">{{ __('Generate') }}</a>
                       @if(@file_get_contents(public_path().'/sitemap.xml'))
-                      Download <a href="{{ url('/sitemap/download') }}">Sitemap.xml</a>
+                      {{__("Download")}} <a href="{{ url('/sitemap/download') }}">Sitemap.xml</a>
                       |
-                      View <a href="{{ url('/sitemap.xml') }}">Sitemap</a>
+                      {{__("View")}} <a href="{{ url('/sitemap.xml') }}">{{ __('Sitemap') }}</a>
                       @endif
                   </div>
               </div>
@@ -89,7 +90,7 @@
               <div class="col-md-12">
                   <div class="form-group">
                       <button type="reset" class="btn btn-danger-rgba mr-1"><i class="fa fa-ban"></i> {{ __("Reset")}}</button>
-                      <button @if(env('DEMO_LOCK')==0) type="submit" @else title="This action is disabled in demo !" disabled="disabled" @endif class="btn btn-primary-rgba"><i class="fa fa-check-circle"></i> Save Settings</button>
+                      <button @if(env('DEMO_LOCK')==0) type="submit" @else title="This action is disabled in demo !" disabled="disabled" @endif class="btn btn-primary-rgba"><i class="fa fa-check-circle"></i> {{ __("Save Settings") }}</button>
                   </div>
               </div>
 

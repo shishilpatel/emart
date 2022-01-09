@@ -130,8 +130,8 @@ if(isset($getInvoice->simple_product)){
 
 					@endphp
 					<div>{{ $ci }},{{ $s }},{{ $c }}, {{ $store->pin_code }}</div>
-					<div>Email: {{ $store->email }}</div>
-					<div>Phone: {{ $store->mobile }}</div>
+					<div>{{__("Email")}}: {{ $store->email }}</div>
+					<div>{{__("Phone")}}: {{ $store->mobile }}</div>
 					@if(isset($design) && $design->show_vat == 1)
 						<div>GSTIN: <b>{{ $store->vat_no }}</b> </div>
 					@endif
@@ -146,8 +146,8 @@ if(isset($getInvoice->simple_product)){
 						{{ $address->getCountry ? $address->getCountry->nicename.',' : '' }}
 						{{ $address->pin_code ? $address->pin_code : "" }}
 					</div>
-					<div>Email: {{$address->email}}</div>
-					<div>Phone: {{ $address->phone }}</div>
+					<div>{{__("Email")}}: {{$address->email}}</div>
+					<div>{{__("Phone")}}: {{ $address->phone }}</div>
 				</div>
 				<div class="col-sm-4 ">
 					<h5 class="mb-3">{{ __("Billing Address:") }}</h5>
@@ -168,8 +168,8 @@ if(isset($getInvoice->simple_product)){
 					@endphp
 
 					<div>{{ $bcity }}, {{ $bstate }}, {{ $bcountry }}, {{ $getInvoice->order->billing_address['pincode'] ?? '' }}</div>
-					<div>Email: {{ $getInvoice->order->billing_address['email'] }}</div>
-					<div>Phone: {{ $getInvoice->order->billing_address['mobile'] }}</div>
+					<div>{{__('Email')}}: {{ $getInvoice->order->billing_address['email'] }}</div>
+					<div>{{__('Phone')}}: {{ $getInvoice->order->billing_address['mobile'] }}</div>
 				</div>
 			</div>
 			<div class="table-responsive-sm">

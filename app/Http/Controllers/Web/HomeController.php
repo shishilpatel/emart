@@ -132,7 +132,7 @@ class HomeController extends Controller
             $content['pricein']  = session()->get('currency')['id'];
             $content['symbol']   = session()->get('currency')['value'];
             $content['position'] = session()->get('currency')['position'];
-            $content['cartURL']  = route('add.cart.vue.simple',['pro_id' => $content->id, 'price' => $content->price, 'offerprice' => $content->offer_price, 'qty' => $content->min_order_qty]);
+            $content['cartURL']  = route('add.cart.vue.simple',['pro_id' => $content->id, 'price' => $content->price, 'offerprice' => $content->offer_price ?? 0, 'qty' => $content->min_order_qty]);
             $content['pre_order']           = $content->pre_order;
             $content['preorder_type']       = $content->preorder_type;
             $content['partial_payment_per'] = $content->partial_payment_per;
@@ -280,7 +280,12 @@ class HomeController extends Controller
     
             $query->where('def','=','1');
     
-        })->with('subvariants.variantimages')->whereHas('subvariants.variantimages')->where('status','=','1')->where('featured', '=', '1')->orderBy('id', 'DESC')->take(20)->get();
+        })->with('subvariants.variantimages')->whereHas('subvariants.variantimages')
+        ->where('status','=','1')
+        ->where('featured', '=', '1')
+        ->orderBy('id', 'DESC')
+        ->take(20)
+        ->get();
         
 
 
@@ -310,7 +315,7 @@ class HomeController extends Controller
                 $content['product_type'] = 'variant';
                 $content['selling_start_at'] = $q->selling_start_at;
 
-                $content['mainprice'] = price_format($price->mainprice * $conversion_rate);
+                $content['mainprice']  = price_format($price->mainprice * $conversion_rate);
 
                 $content['offerprice'] = price_format($price->offerprice * $conversion_rate);
 
@@ -330,6 +335,7 @@ class HomeController extends Controller
                 $content['sale_tag'] = $q->getTranslations('sale_tag');
                 $content['sale_tag_color'] = $q->sale_tag_color;
                 $content['sale_tag_text_color'] = $q->sale_tag_text_color;
+
                 return $content;
 
             }
@@ -770,7 +776,7 @@ class HomeController extends Controller
             $content['pricein'] = session()->get('currency')['id'];
             $content['symbol'] = session()->get('currency')['value'];
             $content['position'] = session()->get('currency')['position'];
-            $content['cartURL'] = route('add.cart.vue.simple',['pro_id' => $content->id, 'price' => $content->price, 'offerprice' => $content->offer_price, 'qty' => $content->min_order_qty]);
+            $content['cartURL'] = route('add.cart.vue.simple',['pro_id' => $content->id, 'price' => $content->price, 'offerprice' => $content->offer_price ?? 0, 'qty' => $content->min_order_qty]);
             
             $content['pre_order']           = $content->pre_order;
             $content['preorder_type']       = $content->preorder_type;
@@ -973,59 +979,75 @@ class HomeController extends Controller
 
         $sellerSystem = $this->sellerSystem;
 
-        $variant_product_hotdeals = Product::with('hotdeal')->whereHas('hotdeal',function($query){
+        $variant_product_hotdeals = Product::with('hotdeal')
+                                    ->whereHas('hotdeal',function($query){
 
-            return $query->where('status','1')->whereDate('end','>=',now());
+                                        return $query->where('status','1')->whereDate('end','>=',now());
 
-        })->with('category')->whereHas('category',function($q) {
+                                    })
+                                    ->with('category')->whereHas('category',function($q) {
 
-            $q->where('status','=','1');
+                                        $q->where('status','=','1');
 
-        })->with('subcategory')->whereHas('subcategory',function($q){
+                                    })
+                                    ->with('subcategory')->whereHas('subcategory',function($q){
 
-            $q->where('status','1');
+                                        $q->where('status','1');
 
-        })->with('vender')->whereHas('vender',function($query) use ($sellerSystem) {
- 
-            if($sellerSystem->vendor_enable == 1){
-                $query->where('status','=','1')->where('is_verified','1');
-            }else{
-                $query->where('status','=','1')->where('role_id','=','a')->where('is_verified','1');
-            }
-    
-        })->with('store')->whereHas('store',function($query){
-    
-            return $query->where('status','=','1');
-    
-        })->with('subvariants')->whereHas('subvariants',function($query){
-    
-            $query->where('def','=','1');
-    
-        })->with('subvariants.variantimages')->whereHas('subvariants.variantimages')->where('status','=','1')->orderBy('id', 'DESC')->get();
+                                    })
+                                    ->with('vender')->whereHas('vender',function($query) use ($sellerSystem) {
+                            
+                                        if($sellerSystem->vendor_enable == 1){
+                                            $query->where('status','=','1')->where('is_verified','1');
+                                        }else{
+                                            $query->where('status','=','1')->where('role_id','=','a')->where('is_verified','1');
+                                        }
+                                
+                                    })
+                                    ->with('store')->whereHas('store',function($query){
+                                
+                                        return $query->where('status','=','1');
+                                
+                                    })
+                                    ->with('subvariants')->whereHas('subvariants',function($query){
+                                
+                                        $query->where('def','=','1');
+                                
+                                    })
+                                    ->with('subvariants.variantimages')
+                                    ->whereHas('subvariants.variantimages')
+                                    ->where('status','=','1')
+                                    ->orderBy('id', 'DESC')
+                                    ->get();
 
-        $simple_products_hotdeals = SimpleProduct::with('hotdeal')->whereHas('hotdeal',function($q){
-            return $q->where('pre_order','=','0')->where('status','1')->whereDate('end','>=',now());
-        })->with('category')->whereHas('category',function($q){
+        $simple_products_hotdeals = SimpleProduct::with('hotdeal')
+                                    ->whereHas('hotdeal',function($q){
+                                        return $q->where('pre_order','=','0')
+                                                ->where('status','1')
+                                                ->whereDate('end','>=',now());
+                                    })->with('category')->whereHas('category',function($q){
 
-            $q->where('status','=','1');
+                                        $q->where('status','=','1');
 
-        })->with('subcategory')->wherehas('subcategory',function($q){
+                                    })->with('subcategory')->wherehas('subcategory',function($q){
 
-            $q->where('status','1');
+                                        $q->where('status','1');
 
-        })->with('store')->whereHas('store',function($query){
-    
-            return $query->where('status','=','1');
-    
-        })->whereHas('store.user',function($query) use ($sellerSystem) {
-        
-            if($sellerSystem->vendor_enable == 1){
-                $query->where('status','=','1')->where('is_verified','1');
-            }else{
-                $query->where('status','=','1')->where('role_id','=','a')->where('is_verified','1');
-            }
+                                    })->with('store')->whereHas('store',function($query){
+                                
+                                        return $query->where('status','=','1');
+                                
+                                    })->whereHas('store.user',function($query) use ($sellerSystem) {
+                                    
+                                        if($sellerSystem->vendor_enable == 1){
+                                            $query->where('status','=','1')->where('is_verified','1');
+                                        }else{
+                                            $query->where('status','=','1')->where('role_id','=','a')->where('is_verified','1');
+                                        }
 
-        })->where('status','=','1')->get();
+                                    })
+                                    ->where('status','=','1')
+                                    ->get();
 
         
 
@@ -1150,8 +1172,6 @@ class HomeController extends Controller
         }
 
         
-
-
         return $hotdeals->toBase()->merge($simple_products_hotdeals)->filter();
     }
 

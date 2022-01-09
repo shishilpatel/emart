@@ -39,7 +39,7 @@ class CommissionSettingController extends Controller
         $data = CommissionSetting::create($input);
         $data->save();
         return redirect('admin/commission_setting')
-            ->with('updated', 'Commission Setting has been updated');
+            ->with('updated', __('Commission setting has been updated'));
     }
 
     public function show($id)
@@ -73,7 +73,7 @@ class CommissionSettingController extends Controller
         $commission_setting = CommissionSetting::findOrFail($id);
         $input = $request->all();
         $commission_setting->update($input);
-        return redirect('admin/commission_setting')->with('updated', 'Commission Setting has been updated');
+        return redirect('admin/commission_setting')->with('updated', __('Commission setting has been updated'));
 
     }
 
@@ -90,7 +90,7 @@ class CommissionSettingController extends Controller
         $value = $obj->delete();
         if ($value)
         {
-            session()->flash("deleted", "Commission Setting Has Been deleted");
+            session()->flash("deleted", __("Commission setting has been deleted"));
             return redirect("admin/commission_setting");
         }
     }

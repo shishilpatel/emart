@@ -29,12 +29,6 @@ class AddColumnsUpdate23 extends Migration
 
                 }
 
-                if (!Schema::hasColumn('users', 'subs_id')) {
-
-                    $table->integer('subs_id')->unsigned()->nullable();
-
-                }
-
             });
 
         }

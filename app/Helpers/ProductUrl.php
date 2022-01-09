@@ -33,9 +33,9 @@ class ProductUrl
             }
 
             try {
-                return url('details') . '/' . $pro->products->id . '?' . $name[0]['attr_name'] . '=' . $var_name[0] . '&' . $name[1]['attr_name'] . '=' . $var_name[1];
+                return url('details') . '/' . str_slug($pro->products->name,'-') . '/'.$pro->products->id . '?' . $name[0]['attr_name'] . '=' . $var_name[0] . '&' . $name[1]['attr_name'] . '=' . $var_name[1];
             } catch (\Exception $e) {
-                return url('details') . '/' . $pro->products->id . '?' . $name[0]['attr_name'] . '=' . $var_name[0];
+                return url('details') . '/' . str_slug($pro->products->name,'-') .'/' .$pro->products->id . '?' . $name[0]['attr_name'] . '=' . $var_name[0];
             }
 
         } else {

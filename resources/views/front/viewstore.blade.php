@@ -1,5 +1,5 @@
 @extends('front.layout.master')
-@section('title',$store->name.' | ')
+@section('title',filter_var($store->name).' | ')
 @section('body')
 
 <div class="body-content outer-top-vs" id="top-banner-and-menu">
@@ -10,11 +10,11 @@
             <div id="category" class="category-carousel">
                 <div class="item">
                     <div class="image"> <img
-                            src="{{ $store->cover_photo !='' && file_exists(public_path().'/images/store/cover_photo/'.$store->cover_photo) ? url('images/store/cover_photo/'.$store->cover_photo) : url('images/default_cover_store.jpg') }}"
+                            src="{{ $store->cover_photo != '' && file_exists(public_path().'/images/store/cover_photo/'.$store->cover_photo) ? url('images/store/cover_photo/'.$store->cover_photo) : url('images/default_cover_store.jpg') }}"
                             alt="" class="img-fluid"> </div>
                     <div class="container-fluid">
                         <div class="caption vertical-top text-left">
-                            <div class="big-text"> {{ $store->name }} @if($store->verified_store == '1') <small
+                            <div class="big-text"> {{ filter_var($store->name) }} @if($store->verified_store == '1') <small
                                     title="Verified"><i class="d-inline-flex fa fa-check-circle text-green"></i>
                                 </small> @endif </div>
                             @if($store->description !='')
@@ -30,7 +30,7 @@
 
 
 
-                                <p><i class="fa fa-envelope"></i> <a class="text-dark" href="mailto:{{ $store->email }}">{{ $store->email }}</a> </p>
+                                <p><i class="fa fa-envelope"></i> <a class="text-dark" href="mailto:{{ filter_var($store->email) }}">{{ filter_var($store->email) }}</a> </p>
 
 
                                 @if($google_reviews != NULL)
@@ -138,432 +138,301 @@
                         {{ $store->products()->count() }})</b>
                 </span>
 
-
-
-
-
-
             </div>
 
             <div id="myTabContent" class="tab-content category-list">
 
                 <div class="tab-pane fade show active" id="grid-container">
                     <div class="row">
-                        @if(count($products) > 0)
-                        @foreach($products as $key => $pro)
-
-                        @if($pro->subvariants->count() > 0)
-                        @foreach($pro->subvariants as $orivar)
-
-                        @if($orivar->def == '1')
-
-                        @php
-
-                        $var_name_count = count($orivar['main_attr_id']);
-
-                        $name = array();
-                        $var_name;
-                        $newarr = array();
-
-                        for($i = 0; $i<$var_name_count; $i++){ $var_id=$orivar['main_attr_id'][$i];
-                            $var_name[$i]=$orivar['main_attr_value'][$var_id];
-                            $name[$i]=App\ProductAttributes::where('id',$var_id)->first();
-
-                            }
-
-
-                            try{
-
-                            $url =
-                            url('details').'/'.$pro->id.'?'.$name[0]['attr_name'].'='.$var_name[0].'&'.$name[1]['attr_name'].'='.$var_name[1];
-
-                            }catch(\Exception $e){
-
-                            $url = url('details').'/'.$pro->id.'?'.$name[0]['attr_name'].'='.$var_name[0];
-
-                            }
-
-                            @endphp
+                        @foreach($products as $product)
+                        
                             <div class="col-sm-6 col-md-4 col-lg-3">
                                 <div class="item">
+                                    
                                     <div class="products">
+                                        
                                         <div class="product">
+
+                                            @if($product['sale_tag'] !== NULL && $product['sale_tag'] != '')
+                                                <div class="ribbon ribbon-top-right">
+                                                    <span style="background : {{ $product['sale_tag_color'] }} ; color : {{ $product['sale_tag_text_color'] }}">
+                                                        
+                                                        {{ $product['sale_tag'] }}
+                                
+                                                    </span>
+                                                </div>
+                                            @endif
+
                                             <div class="product-image">
-                                                <div class="image {{ $orivar->stock ==0 ? "pro-img-box" : ""}}">
+                                                <div class="image {{ $product['stock'] == 0 ? "pro-img-box" : ""}}">
 
-                                                    <a href="{{$url}}" title="{{$pro->name}}">
+                                                    <a href="{{ $product['producturl'] }}" title="{{ $product['productname'] }}">
 
-                                                        @if(count($pro->subvariants)>0)
+                                                        <img class="lazy ankit {{ $product['stock'] ==0 ? "filterdimage" : ""}}" data-src="{{ $product['thumbnail'] }}" alt="{{ $product['productname'] }}">
 
-                                                        @if(isset($orivar->variantimages['main_image']))
-                                                        <img class="lazy ankit {{ $orivar->stock ==0 ? "filterdimage" : ""}}"
-                                                            data-src="{{url('variantimages/thumbnails/'.$orivar->variantimages['main_image'])}}"
-                                                            alt="{{$pro->name}}">
-                                                        <img class="lazy {{ $orivar->stock ==0 ? "filterdimage" : ""}} hover-image"
-                                                            data-src="{{url('variantimages/hoverthumbnail/'.$orivar->variantimages['image2'])}}"
-                                                            alt="" />
-                                                        @endif
-
-                                                        @else
-                                                        <img class="lazy {{ $orivar->stock ==0 ? "filterdimage" : ""}}"
-                                                            title="{{ $pro->name }}"
-                                                            data-src="{{url('images/no-image.png')}}" alt="No Image" />
-
-                                                        @endif
-
-
+                                                        <img class="lazy {{ $product['stock'] == 0 ? "filterdimage" : ""}} hover-image" data-src="{{ $product['hover_thumbnail'] }}"/>
+                                                        
                                                     </a>
                                                 </div>
                                                 <!-- /.image -->
 
-                                                @if($orivar->stock == 0)
-                                                <h6 align="center" class="oottext">
+                                                @if($product['stock'] == 0)
+                                                    <h6 align="center" class="oottext">
                                                     <span>{{ __('staticwords.Outofstock') }}</span></h6>
                                                 @endif
 
-                                                @if($orivar->stock != 0 && $orivar->products->selling_start_at != null
-                                                &&
-                                                $orivar->products->selling_start_at >= date('Y-m-d'))
-                                                <h6 align="center" class="oottext2">
+                                                @if(isset($product['pre_order']) && $product['pre_order'] == 1 && $product['product_avbl_date'] >= date('Y-m-d'))
+                                                    <h6 align="center" class="preordertext">
+                                                        <span>{{ translate('Available for preorder') }}</span>
+                                                    </h6>
+                                                @endif
+
+                                                @if($product['product_type'] == 'v' && $product['stock'] != 0 && $product['selling_start_at'] != null
+                                                && $products['selling_start_at'] >= date('Y-m-d'))
+                                                    <h6 align="center" class="oottext2">
                                                     <span>{{ __('staticwords.ComingSoon') }}</span></h6>
                                                 @endif
                                                 <!-- /.image -->
 
-                                                @if($pro->featured=="1")
-                                                <div class="tag hot"><span>{{ __('staticwords.Hot') }}</span></div>
-                                                @elseif($pro->offer_price != "0")
-                                                <div class="tag sale"><span>{{ __('staticwords.Sale') }}</span></div>
-                                                @else
-                                                <div class="tag new"><span>{{ __('staticwords.New') }}</span></div>
-                                                @endif
+                                                
                                             </div>
 
                                             <div class="product-info text-left">
-                                                <h3 class="name"><a href="{{ $url }}">{{$pro->name}}</a></h3>
+                                                <h3 class="name"><a href="{{ $product['producturl'] }}">{{ filter_var($product['productname']) }}</a></h3>
 
 
-
-                                                @php
-                                                $reviews = ProductRating::getReview($pro);
-                                                @endphp
-
-                                                @if($reviews != 0)
+                                                @if($product['rating'] !== 0)
 
 
-                                                <div class="pull-left">
+                                                <div class="float-left">
                                                     <div class="star-ratings-sprite"><span
-                                                            style="width:<?php echo $reviews; ?>%"
-                                                            class="star-ratings-sprite-rating"></span></div>
-
-
-                                                    <br>
+                                                            style="width:<?php echo $product['rating']; ?>%"
+                                                            class="star-ratings-sprite-rating"></span>
+                                                    </div>
                                                 </div>
                                                 @else
-                                                <div class="no-rating">{{'No Rating'}}</div>
+                                                <div class="no-rating">{{ __('No Rating') }}</div>
                                                 @endif
-
-                                                <div class="description">
-
-                                                    {{substr(strip_tags($pro->des), 0, 40)}}{{strlen(strip_tags(
-                                                                $pro->des))>40 ? '...' : ""}}
-
-                                                </div>
 
                                                 @if($price_login == '0' || Auth::check())
 
-                                                @php
-
-                                                $result = ProductPrice::getprice($pro, $orivar)->getData();
-
-                                                @endphp
-
-                                                <div class="product-price">
-                                                    @if($result->offerprice == 0)
-                                                    <span class="price"><i
-                                                            class="{{session()->get('currency')['value']}}"></i>
-                                                        {{ sprintf("%.2f",$result->mainprice*$conversion_rate) }}</span>
-                                                    @else
-                                                    <span class="price"><i
-                                                            class="{{session()->get('currency')['value']}}"></i>{{ sprintf("%.2f",$result->offerprice*$conversion_rate) }}</span>
-
-                                                    <span class="price-before-discount"><i
-                                                            class="{{session()->get('currency')['value']}}"></i>{{  sprintf("%.2f",$result->mainprice*$conversion_rate)  }}</span>
-
-                                                    @endif
-
-                                                </div>
-
-                                                @endif
-                                                <!-- /.product-price -->
-
-                                            </div>
-
-                                            @if($orivar->products->selling_start_at != null &&
-                                            $orivar->products->selling_start_at >=
-                                            date('Y-m-d'))
-                                            @elseif($orivar->stock < 1) @else <div class="cart clearfix animate-effect">
-                                                <div class="action">
-                                                    <ul class="list-unstyled">
-                                                        @if($price_login != 1 || Auth::check())
-                                                        <li id="addCart" class="lnk wishlist">
-
-
-                                                            <form method="POST"
-                                                                action="{{route('add.cart',['id' => $pro->id ,'variantid' =>$orivar->id, 'varprice' => $result->mainprice, 'varofferprice' => $result->offerprice ,'qty' =>$orivar->min_order_qty])}}">
-                                                                {{ csrf_field() }}
-                                                                <button title="{{ __('Add to Cart') }}" type="submit"
-                                                                    class="addtocartcus btn">
-                                                                    <i class="fa fa-shopping-cart"></i>
-                                                                </button>
-                                                            </form>
-
-
-
-                                                        </li>
-
-                                                        @endif
-
-                                                        @auth
-                                                        @if(Auth::user()->wishlist->count()<1) <li class="lnk wishlist">
-
-                                                            <a mainid="{{ $orivar->id }}"
-                                                                title="{{ __('staticwords.AddToWishList') }}"
-                                                                class="cursor-pointer add-to-cart addtowish"
-                                                                data-add="{{url('AddToWishList/'.$orivar->id)}}"
-                                                                title="Add to wishlist"> <i
-                                                                    class="icon fa fa-heart"></i>
-                                                            </a>
-
-                                                            </li>
-                                                            @else
-
-                                                            @php
-                                                            $ifinwishlist =
-                                                            App\Wishlist::where('user_id',Auth::user()->id)->where('pro_id',$orivar->id)->first();
-                                                            @endphp
-
-                                                            @if(!empty($ifinwishlist))
-                                                            <li class="lnk wishlist active">
-                                                                <a mainid="{{ $orivar->id }}"
-                                                                    title="{{ __('RemoveFromWishlist') }}"
-                                                                    class="cursor-pointer color000 add-to-cart removeFrmWish active"
-                                                                    data-remove="{{url('removeWishList/'.$orivar->id)}}"
-                                                                    title="Wishlist"> <i class="icon fa fa-heart"></i>
-                                                                </a>
-                                                            </li>
-                                                            @else
-                                                            <li class="lnk wishlist"> <a
-                                                                    title="{{ __('staticwords.AddToWishList') }}"
-                                                                    mainid="{{ $orivar->id }}"
-                                                                    class="cursor-pointer text-white add-to-cart addtowish"
-                                                                    data-add="{{url('AddToWishList/'.$orivar->id)}}"
-                                                                    title="Wishlist"> <i
-                                                                        class="activeOne icon fa fa-heart"></i> </a>
-                                                            </li>
-                                                            @endif
-
-                                                            @endif
-                                                            @endauth
-
-                                                            <li class="lnk"> <a class="add-to-cart"
-                                                                    href="{{route('compare.product',$orivar->products->id)}}"
-                                                                    title="{{ __('staticwords.Compare') }}"> <i
-                                                                        class="fa fa-signal" aria-hidden="true"></i>
-                                                                </a> </li>
-                                                    </ul>
-                                                </div>
-                                        </div>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                    </div>
-                    @endif
-                    @endforeach
-                    @endif
-
-                    @endforeach
-                    @else
-                    <div class="col-md-12 text-center">
-                        <h4>No Products Found !</h4>
-                    </div>
-                    @endif
-                </div>
-            </div>
-
-            <div class="tab-pane fade" id="list-container">
-                <div class="category-product">
-                    <div class="category-product-inner">
-                        @if(count($products) > 0)
-
-                        @foreach($products as $key=> $pro)
-                        @if($pro->subvariants->count() > 0)
-                        @foreach($pro->subvariants as $orivar)
-                        @if($orivar->def == '1')
-                        @php
-                        $var_name_count = count($orivar['main_attr_id']);
-
-                        $name = array();
-                        $var_name;
-                        $newarr = array();
-                        for($i = 0; $i<$var_name_count; $i++){ $var_id=$orivar['main_attr_id'][$i];
-                            $var_name[$i]=$orivar['main_attr_value'][$var_id];
-                            $name[$i]=App\ProductAttributes::where('id',$var_id)->first();
-
-                            }
-
-
-                            try{
-                            $url =
-                            url('details').'/'.$pro->id.'?'.$name[0]['attr_name'].'='.$var_name[0].'&'.$name[1]['attr_name'].'='.$var_name[1];
-                            }catch(\Exception $e)
-                            {
-                            $url = url('details').'/'.$pro->id.'?'.$name[0]['attr_name'].'='.$var_name[0];
-                            }
-                            @endphp
-                            <div class="products">
-                                <div class="product-list product">
-                                    <div class="row product-list-row">
-                                        <div class="col col-sm-3 col-lg-3">
-                                            <div class="product-image">
-                                                <div class="image {{ $orivar->stock ==0 ? "pro-img-box" : ""}}">
-
-                                                    <a href="{{$url}}" title="{{$pro->name}}">
-
-                                                        @if(count($pro->subvariants)>0)
-
-                                                        @if(isset($orivar->variantimages['main_image']))
-                                                        <img style="width:250px;height:200px;object-fit:scale-down;"
-                                                            class="lazy img-fluid {{ $orivar->stock ==0 ? "filterdimage" : ""}}"
-                                                            data-src="{{url('variantimages/thumbnails/'.$orivar->variantimages['main_image'])}}"
-                                                            alt="{{$pro->name}}">
-
-                                                        @endif
-
+                                                    <div class="product-price">
+                                                        @if($product['offerprice'] == 0)
+                                                            <span class="price"><i
+                                                                    class="{{session()->get('currency')['value']}}"></i>
+                                                                {{ sprintf("%.2f",$product['mainprice']*$conversion_rate) }}
+                                                            </span>
                                                         @else
-                                                        <img class="lazy img-fluid {{ $orivar->stock ==0 ? "filterdimage" : ""}}"
-                                                            title="{{ $pro->name }}"
-                                                            data-src="{{url('images/no-image.png')}}" alt="No Image" />
+                                                            <span class="price"><i
+                                                                class="{{session()->get('currency')['value']}}"></i>{{ sprintf("%.2f",$product['offerprice']*$conversion_rate) }}
+                                                            </span>
+
+                                                            <span class="price-before-discount"><i
+                                                                class="{{session()->get('currency')['value']}}"></i>{{  sprintf("%.2f",$product['mainprice']*$conversion_rate)  }}
+                                                            </span>
 
                                                         @endif
 
-
-                                                    </a>
-
-
-                                                    <!-- /.image -->
-
-                                                    @if($pro->featured=="1")
-                                                    <div class="tag hot"><span>{{ __('staticwords.Hot') }}</span></div>
-                                                    @elseif($pro->offer_price != "0")
-                                                    <div class="tag sale"><span>{{ __('staticwords.Sale') }}</span>
                                                     </div>
-                                                    @else
-                                                    <div class="tag new"><span>{{ __('staticwords.New') }}</span></div>
-                                                    @endif
 
-                                                </div>
-
-                                                @if($orivar->stock == 0)
-                                                <h6 align="center" class="oottext">
-                                                    <span>{{ __('staticwords.Outofstock') }}</span></h6>
                                                 @endif
-
-                                                @if($orivar->stock != 0 && $orivar->products->selling_start_at != null
-                                                &&
-                                                $orivar->products->selling_start_at >= date('Y-m-d'))
-                                                <h6 align="center" class="oottext2">
-                                                    <span>{{ __('staticwords.ComingSoon') }}</span></h6>
-                                                @endif
-                                            </div>
-                                            <!-- /.product-image -->
-                                        </div>
-                                        <!-- /.col -->
-                                        <div class="col col-sm-9 col-lg-9">
-                                            <div class="product-info">
-                                                <h3 class="name"><a href="{{ $url }}">{{$pro->name}}</a></h3>
-                                                @php
-                                                $reviews = ProductRating::getReview($pro);
-                                                @endphp
-
-                                                @if($reviews != 0)
-
-
-                                                <div class="pull-left">
-                                                    <div class="star-ratings-sprite"><span
-                                                            style="width:<?php echo $reviews; ?>%"
-                                                            class="star-ratings-sprite-rating"></span></div>
-                                                </div>
-
-                                                <br>
-                                                @else
-                                                <div class="no-rating">{{'No Rating'}}</div>
-                                                @endif
-
-                                                <div class="product-price">
-                                                    @if($price_login == '0' || Auth::check())
-
-                                                    @php
-
-                                                    $result = ProductPrice::getprice($pro, $orivar)->getData();
-
-                                                    @endphp
-
-
-                                                    @if($result->offerprice == 0)
-                                                    <span class="price"><i
-                                                            class="{{session()->get('currency')['value']}}"></i>
-                                                        {{ sprintf("%.2f",$result->mainprice*$conversion_rate) }}</span>
-                                                    @else
-                                                    <span class="price"><i
-                                                            class="{{session()->get('currency')['value']}}"></i>{{ sprintf("%.2f",$result->offerprice*$conversion_rate) }}</span>
-
-                                                    <span class="price-before-discount"><i
-                                                            class="{{session()->get('currency')['value']}}"></i>{{  sprintf("%.2f",$result->mainprice*$conversion_rate)  }}</span>
-
-                                                    @endif
-
-                                                    @endif
-
-                                                </div>
                                                 <!-- /.product-price -->
-                                                <div class="description m-t-10">
-
-                                                    {{substr(strip_tags($pro->des), 0, 250)}}{{strlen(strip_tags(
-                                                                    $pro->des))>250 ? '...' : ""}}
-
-                                                </div>
-
-
-                                                <!-- /.cart -->
 
                                             </div>
-                                            <!-- /.product-info -->
 
+                                            @if(isset($product['selling_start_at']) && $product['stock'] != 0 && $product['selling_start_at'] != null && $product['selling_start_at'] >=
+                                                date('Y-m-d'))
+                                                @else 
+                                                <div class="cart clearfix animate-effect">
+                                                    <div class="action">
+                                                        <ul class="list-unstyled">
+
+                                                            @if($price_login != 1 || Auth::check())
+                                                              @if($product['stock'] !== 0)
+                                                                <li id="addCart" class="lnk wishlist">
+
+                                                                   @if($product['product_type'] == 'v'
+                                                                   )
+                                                                    <form method="POST" action="{{ route('add.cart',['id' => $product['productid'] ,'variantid' => $product['variantid'], 'varprice' => $product['mainprice'], 'varofferprice' => $product['offerprice'] ,'qty' => $product['min_order_qty']])}}">
+                                                                        @csrf
+                                                                        <button title="{{ __('Add to Cart') }}" type="submit"
+                                                                            class="addtocartcus btn">
+                                                                            <i class="fa fa-shopping-cart"></i>
+                                                                        </button>
+                                                                    </form>
+                                                                   @else
+
+
+
+                                                                   <form action="{{ $product['type'] == 'ex_product' ? $product['external_product_link'] : route('add.cart.simple',['pro_id' => $product['productid'], 'price' => $product['mainprice'], 'offerprice' => $d_price ?? $product['offerprice']]) }}" method="{{$product['type'] == 'ex_product' ? 'GET' : 'POST'}}">
+                                                                    @csrf
+                                                                    <button title="{{ __('Add to Cart') }}" type="submit"
+                                                                        class="addtocartcus btn">
+                                                                        <i class="fa fa-shopping-cart"></i>
+                                                                    </button>
+                                                                   </form>
+                                                                    
+                                                                   @endif
+
+
+                                                                </li>
+                                                                @endif
+
+                                                            @endif
+
+                                                            @if($product['product_type'] == 'v')
+                                                                <li class="lnk"> 
+                                                                    <a class="add-to-cart" href="{{route('compare.product',$product['variantid'])}}" title="{{ __('staticwords.Compare') }}"> 
+                                                                        <i class="fa fa-signal" aria-hidden="true"></i>
+                                                                    </a> 
+                                                                </li>
+                                                            @endif
+
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            @endif
                                         </div>
-                                        <!-- /.col -->
                                     </div>
                                 </div>
-                                <!-- /.product-list -->
-                            </div>
-                            <hr>
-                            @endif
-                            @endforeach
-                            @endif
-                            @endforeach
-                            @else
-
-                            <div class="row">
-                                <div class="col-md-12 text-center">
-                                    <h4>No Products Found !</h4>
-                                </div>
                             </div>
 
-                            @endif
+                        @endforeach 
+                    </div>
+                              
+                </div>
+
+                <div class="tab-pane fade" id="list-container">
+                    <div class="category-product">
+                        <div class="category-product-inner">
+                                @foreach($products as $product)
+                                    <div class="products">
+                                        <div class="product-list product">
+                                            <div class="row product-list-row">
+                                            
+                                                <div class="col col-sm-3 col-lg-3">
+
+                                                    
+        
+                                                    <div class="product-image">
+
+                                                        
+
+                                                        <div class="image {{ $product['stock'] == 0 ? "pro-img-box" : ""}}">
+
+                                                            @if($product['sale_tag'] !== NULL && $product['sale_tag'] != '')
+                                                            <div class="ribbon ribbon-top-right">
+                                                                <span style="background : {{ $product['sale_tag_color'] }} ; color : {{ $product['sale_tag_text_color'] }}">
+                                                                    
+                                                                    {{ $product['sale_tag'] }}
+                                            
+                                                                </span>
+                                                            </div>
+                                                        @endif
+            
+                                                            <a href="{{ $product['producturl'] }}" title="{{ $product['productname'] }}">
+        
+                                                                <img style="width: 250px;height: 200px;object-fit: scale-down;" class="lazy ankit {{ $product['stock'] ==0 ? "filterdimage" : ""}}" data-src="{{ $product['thumbnail'] }}" alt="{{ $product['productname'] }}">
+                                                            </a>
+                                                        </div>
+                                                        <!-- /.image -->
+        
+                                                        @if($product['stock'] == 0)
+                                                            <h6 align="center" class="oottext">
+                                                            <span>{{ __('staticwords.Outofstock') }}</span></h6>
+                                                        @endif
+        
+                                                        @if(isset($product['pre_order']) && $product['pre_order'] == 1 && $product['product_avbl_date'] >= date('Y-m-d'))
+                                                            <h6 align="center" class="preordertext">
+                                                                <span>{{ translate('Available for preorder') }}</span>
+                                                            </h6>
+                                                        @endif
+        
+                                                        @if($product['product_type'] == 'v' && $product['stock'] != 0 && $product['selling_start_at'] != null
+                                                        && $products['selling_start_at'] >= date('Y-m-d'))
+                                                            <h6 align="center" class="oottext2">
+                                                            <span>{{ __('staticwords.ComingSoon') }}</span></h6>
+                                                        @endif
+                                                        <!-- /.image -->
+        
+                                                        
+                                                    </div>
+                                                    <!-- /.product-image -->
+                                                </div>
+                                                <!-- /.col -->
+                                                <div class="col-sm-9 col-lg-9">
+                                                    <div class="product-info text-left">
+                                                        <h3 class="name">
+                                                            <a href="{{ $product['producturl'] }}">
+                                                                {{ filter_var($product['productname']) }}
+                                                            </a>
+                                                        </h3>
+        
+        
+                                                        @if($product['rating'] !== 0)
+        
+        
+                                                            <div class="float-left">
+                                                                <div class="star-ratings-sprite"><span
+                                                                        style="width:<?php echo $product['rating']; ?>%"
+                                                                        class="star-ratings-sprite-rating"></span>
+                                                                </div>
+                                                            </div>
+        
+                                                        @else
+                                                            <div class="no-rating">{{ __('No Rating') }}</div>
+                                                        @endif
+        
+                                                        @if($price_login == '0' || Auth::check())
+
+                                                            <div class="product-price">
+                                                                @if($product['offerprice'] == 0)
+                                                                    <span class="price"><i
+                                                                            class="{{session()->get('currency')['value']}}"></i>
+                                                                        {{ sprintf("%.2f",$product['mainprice']*$conversion_rate) }}
+                                                                    </span>
+                                                                @else
+                                                                    <span class="price"><i
+                                                                        class="{{session()->get('currency')['value']}}"></i>{{ sprintf("%.2f",$product['offerprice']*$conversion_rate) }}
+                                                                    </span>
+
+                                                                    <span class="price-before-discount"><i
+                                                                        class="{{session()->get('currency')['value']}}"></i>{{  sprintf("%.2f",$product['mainprice']*$conversion_rate)  }}
+                                                                    </span>
+                                                                @endif
+                                                            </div>
+
+                                                        @endif
+
+                                                        <div class="description m-t-10">
+                                                            {{$product['details']}}
+                                                        </div>
+
+
+            
+                                                        <!-- /.product-price -->
+        
+                                                    </div>
+                                                    <!-- /.product-info -->
+        
+                                                </div>
+                                                
+                                                <!-- /.col -->
+                                            </div>
+                                        </div>
+                                        <!-- /.product-list -->
+                                    </div>
+                                    <hr>
+                                @endforeach
+                                
                             <!-- /.products -->
+                        </div>
                     </div>
                 </div>
+
             </div>
+
+            
             <div class="mx-auto" style="width: 200px;">
                 {!! $products->appends(Request::except('page'))->links() !!}
             </div>

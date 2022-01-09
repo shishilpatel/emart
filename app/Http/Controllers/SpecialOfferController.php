@@ -18,7 +18,7 @@ class SpecialOfferController extends Controller
      */
     public function index()
     {
-        abort_if(!auth()->user()->can('specialoffer.view'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('specialoffer.view'),403,__('User does not have the right permissions.'));
 
         $products = SpecialOffer::with('pro','simple_product')->whereHas('pro')->orWhereHas('simple_product')->get();
         return view('admin.special.index',compact('products'));
@@ -31,7 +31,7 @@ class SpecialOfferController extends Controller
      */
     public function create()
     {
-        abort_if(!auth()->user()->can('specialoffer.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('specialoffer.create'),403,__('User does not have the right permissions.'));
         $products = Product::where('status','1')->pluck('name', 'id')->all();
         $simple_products = SimpleProduct::where('status','1')->pluck('product_name', 'id')->all();
         return view("admin.special.add",compact('products','simple_products'));
@@ -45,7 +45,7 @@ class SpecialOfferController extends Controller
      */
     public function store(Request $request)
     {
-        abort_if(!auth()->user()->can('specialoffer.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('specialoffer.create'),403,__('User does not have the right permissions.'));
 
         $input = $request->all();
 
@@ -64,7 +64,7 @@ class SpecialOfferController extends Controller
         $special_offer->create($input);
        
 
-        return back()->with("added","Special Offer Has Been Created !");
+        return back()->with("added",__("Special offer has been created !"));
 
     }
 
@@ -77,7 +77,7 @@ class SpecialOfferController extends Controller
 
      public function edit($id)
     {
-        abort_if(!auth()->user()->can('specialoffer.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('specialoffer.edit'),403,__('User does not have the right permissions.'));
 
         $products = Product::where('status','1')->pluck('name', 'id')->all();
         $simple_products = SimpleProduct::where('status','1')->pluck('product_name', 'id')->all();
@@ -94,7 +94,7 @@ class SpecialOfferController extends Controller
      */
     public function update(Request $request, $id)
     {
-        abort_if(!auth()->user()->can('specialoffer.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('specialoffer.edit'),403,__('User does not have the right permissions.'));
 
         $input = $request->all();
 
@@ -112,7 +112,7 @@ class SpecialOfferController extends Controller
 
         $special_offer->update($input);
 
-        return redirect('admin/special')->with('updated', 'Special Offer has been updated !');
+        return redirect('admin/special')->with('updated', __('Special offer has been updated !'));
     }
 
     /**
@@ -123,13 +123,13 @@ class SpecialOfferController extends Controller
      */
     public function destroy($id)
     {   
-        abort_if(!auth()->user()->can('specialoffer.delete'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('specialoffer.delete'),403,__('User does not have the right permissions.'));
 
          $daa = new SpecialOffer;
           $obj = $daa->findorFail($id);
           $value = $obj->delete();
          if($value){
-            session()->flash("deleted","Special Offer Has Been deleted");
+            session()->flash("deleted",__("Special Offer Has Been deleted"));
              return redirect("admin/special");
         }
     }

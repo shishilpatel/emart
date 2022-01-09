@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Manage All Options -')
+@section('title',__('Manage All Options -'))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -33,17 +33,17 @@
 					<table id="full_detail_table" class="w-100 table table-borderd table-responsive">
 						<thead>
 							<th>#</th>
-							<th>Options</th>
-							<th>Values</th>
-							<th>In Categories</th>
+							<th>{{ __("Options") }}</th>
+							<th>{{ __("Values") }}</th>
+							<th>{{ __("In Categories") }}</th>
 							
 						</thead>
-						<?php $i=0;?>
+						
 						<tbody>
-							@foreach($pattr as $pat)
-					        <?php $i++;?>
+							@foreach($pattr as $k => $pat)
+					        
 								<tr>
-									<td class="text-dark">{{ $i }}</td>
+									<td class="text-dark">{{ $k+1 }}</td>
 									<td>
 										<b>
 

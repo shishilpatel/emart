@@ -29,13 +29,6 @@ use App\User;
 use App\UserReview;
 use App\Widgetsetting;
 
-/*==========================================
-=            Author: Media City            =
-Author URI: https://mediacity.co.in
-=            Author: Media City            =
-=            Copyright (c) 2020            =
-==========================================*/
-
 class QuickUpdateController extends Controller
 {
     public function userUpdate($id)
@@ -43,10 +36,10 @@ class QuickUpdateController extends Controller
         $user = User::findorfail($id);
         if ($user->status == 1) {
             User::where('id', '=', $id)->update(['status' => 0]);
-            return back()->with('added', 'User Status changed to deactive !');
+            return back()->with('added', __('User Status changed to deactive !'));
         } else {
             User::where('id', '=', $id)->update(['status' => 1]);
-            return back()->with('added', 'User Status changed to Active !');
+            return back()->with('added', __('User Status changed to Active !'));
         }
 
     }
@@ -57,10 +50,10 @@ class QuickUpdateController extends Controller
 
         if ($store->status == 1) {
             Store::where('id', '=', $id)->update(['status' => "0"]);
-            return back()->with('added', 'Status changed to Deactive !');
+            return back()->with('added', __('Status changed to Deactive !'));
         } else {
             Store::where('id', '=', $id)->update(['status' => "1"]);
-            return back()->with('added', 'Status changed to Active !');
+            return back()->with('added', __('Status changed to active !'));
         }
     }
 
@@ -70,10 +63,10 @@ class QuickUpdateController extends Controller
 
         if ($unit->status == 1) {
             unit::where('id', '=', $id)->update(['status' => "0"]);
-            return back()->with('added', 'Status changed to Deactive !');
+            return back()->with('added', __('Status changed to Deactive !'));
         } else {
             unit::where('id', '=', $id)->update(['status' => "1"]);
-            return back()->with('added', 'Status changed to Active !');
+            return back()->with('added', __('Status changed to active !'));
         }
     }
 
@@ -83,10 +76,10 @@ class QuickUpdateController extends Controller
 
         if ($menu->status == 1) {
             Menu::where('id', '=', $id)->update(['status' => "0"]);
-            return back()->with('added', 'Status changed to Deactive !');
+            return back()->with('added', __('Status changed to Deactive !'));
         } else {
             Menu::where('id', '=', $id)->update(['status' => "1"]);
-            return back()->with('added', 'Status changed to Active !');
+            return back()->with('added', __('Status changed to active !'));
         }
     }
 
@@ -96,10 +89,10 @@ class QuickUpdateController extends Controller
 
         if ($product->status == 1) {
             Product::where('id', '=', $id)->update(['status' => "0"]);
-            return back()->with('added', 'Status changed to Deactive !');
+            return back()->with('added', __('Status changed to Deactive !'));
         } else {
             Product::where('id', '=', $id)->update(['status' => "1"]);
-            return back()->with('added', 'Status changed to Active !');
+            return back()->with('added', __('Status changed to active !'));
         }
     }
 
@@ -109,10 +102,10 @@ class QuickUpdateController extends Controller
 
         if ($cat->status == 1) {
             Category::where('id', '=', $id)->update(['status' => "0"]);
-            return back()->with('added', 'Status changed to Deactive !');
+            return back()->with('added', __('Status changed to Deactive !'));
         } else {
             Category::where('id', '=', $id)->update(['status' => "1"]);
-            return back()->with('added', 'Status changed to Active !');
+            return back()->with('added', __('Status changed to active !'));
         }
     }
 
@@ -122,10 +115,10 @@ class QuickUpdateController extends Controller
 
         if ($sub->status == 1) {
             Subcategory::where('id', '=', $id)->update(['status' => "0"]);
-            return back()->with('added', 'Status changed to Deactive !');
+            return back()->with('added', __('Status changed to Deactive !'));
         } else {
             Subcategory::where('id', '=', $id)->update(['status' => "1"]);
-            return back()->with('added', 'Status changed to Active !');
+            return back()->with('added', __('Status changed to active !'));
         }
     }
 
@@ -135,10 +128,10 @@ class QuickUpdateController extends Controller
 
         if ($child->status == 1) {
             Grandcategory::where('id', '=', $id)->update(['status' => "0"]);
-            return back()->with('added', 'Status changed to Deactive !');
+            return back()->with('added', __('Status changed to Deactive !'));
         } else {
             Grandcategory::where('id', '=', $id)->update(['status' => "1"]);
-            return back()->with('added', 'Status changed to Active !');
+            return back()->with('added', __('Status changed to active !'));
         }
     }
 
@@ -148,10 +141,10 @@ class QuickUpdateController extends Controller
 
         if ($brand->status == 1) {
             Brand::where('id', '=', $id)->update(['status' => "0"]);
-            return back()->with('added', 'Status changed to Deactive !');
+            return back()->with('added', __('Status changed to Deactive !'));
         } else {
             Brand::where('id', '=', $id)->update(['status' => "1"]);
-            return back()->with('added', 'Status changed to Active !');
+            return back()->with('added', __('Status changed to active !'));
         }
     }
 
@@ -162,10 +155,10 @@ class QuickUpdateController extends Controller
 
         if ($review->status == 1) {
             UserReview::where('id', '=', $id)->update(['status' => "0"]);
-            return back()->with('added', 'Status changed to Deactive !');
+            return back()->with('added', __('Status changed to Deactive !'));
         } else {
             UserReview::where('id', '=', $id)->update(['status' => "1"]);
-            return back()->with('added', 'Status changed to Active !');
+            return back()->with('added', __('Status changed to active !'));
         }
     }
 
@@ -176,10 +169,10 @@ class QuickUpdateController extends Controller
 
         if ($coupon->status == 1) {
             coupan::where('id', '=', $id)->update(['status' => "0"]);
-            return back()->with('added', 'Status changed to Deactive !');
+            return back()->with('added', __('Status changed to Deactive !'));
         } else {
             coupan::where('id', '=', $id)->update(['status' => "1"]);
-            return back()->with('added', 'Status changed to Active !');
+            return back()->with('added', __('Status changed to active !'));
         }
     }
 
@@ -190,10 +183,10 @@ class QuickUpdateController extends Controller
 
         if ($tax->status == 1) {
             Tax::where('id', '=', $id)->update(['status' => "0"]);
-            return back()->with('added', 'Status changed to Deactive !');
+            return back()->with('added', __('Status changed to Deactive !'));
         } else {
             Tax::where('id', '=', $id)->update(['status' => "1"]);
-            return back()->with('added', 'Status changed to Active !');
+            return back()->with('added', __('Status changed to active !'));
         }
     }
 
@@ -204,10 +197,10 @@ class QuickUpdateController extends Controller
 
         if ($taxclass->status == 1) {
             TaxClass::where('id', '=', $id)->update(['status' => "0"]);
-            return back()->with('added', 'Status changed to Deactive !');
+            return back()->with('added', __('Status changed to Deactive !'));
         } else {
             TaxClass::where('id', '=', $id)->update(['status' => "1"]);
-            return back()->with('added', 'Status changed to Active !');
+            return back()->with('added', __('Status changed to active !'));
         }
     }
 
@@ -218,10 +211,10 @@ class QuickUpdateController extends Controller
 
         if ($c->status == 1) {
             Commission::where('id', '=', $id)->update(['status' => "0"]);
-            return back()->with('added', 'Status changed to Deactive !');
+            return back()->with('added', __('Status changed to Deactive !'));
         } else {
             Commission::where('id', '=', $id)->update(['status' => "1"]);
-            return back()->with('added', 'Status changed to Active !');
+            return back()->with('added', __('Status changed to active !'));
         }
     }
 
@@ -232,10 +225,10 @@ class QuickUpdateController extends Controller
 
         if ($banks->status == 1) {
             admin_return_product::where('id', '=', $id)->update(['status' => "0"]);
-            return back()->with('added', 'Status changed to Deactive !');
+            return back()->with('added', __('Status changed to Deactive !'));
         } else {
             admin_return_product::where('id', '=', $id)->update(['status' => "1"]);
-            return back()->with('added', 'Status changed to Active !');
+            return back()->with('added', __('Status changed to active !'));
         }
     }
 
@@ -246,10 +239,10 @@ class QuickUpdateController extends Controller
 
         if ($s->status == 1) {
             Slider::where('id', '=', $id)->update(['status' => "0"]);
-            return back()->with('added', 'Status changed to Deactive !');
+            return back()->with('added', __('Status changed to Deactive !'));
         } else {
             Slider::where('id', '=', $id)->update(['status' => "1"]);
-            return back()->with('added', 'Status changed to Active !');
+            return back()->with('added', __('Status changed to active !'));
         }
     }
 
@@ -260,10 +253,10 @@ class QuickUpdateController extends Controller
 
         if ($f->status == 1) {
             Faq::where('id', '=', $id)->update(['status' => "0"]);
-            return back()->with('added', 'Status changed to Deactive !');
+            return back()->with('added', __('Status changed to Deactive !'));
         } else {
             Faq::where('id', '=', $id)->update(['status' => "1"]);
-            return back()->with('added', 'Status changed to Active !');
+            return back()->with('added', __('Status changed to active !'));
         }
     }
 
@@ -274,10 +267,10 @@ class QuickUpdateController extends Controller
 
         if ($blog->status == 1) {
             Blog::where('id', '=', $id)->update(['status' => "0"]);
-            return back()->with('added', 'Status changed to Deactive !');
+            return back()->with('added', __('Status changed to Deactive !'));
         } else {
             Blog::where('id', '=', $id)->update(['status' => "1"]);
-            return back()->with('added', 'Status changed to Active !');
+            return back()->with('added', __('Status changed to active !'));
         }
     }
 
@@ -288,10 +281,10 @@ class QuickUpdateController extends Controller
 
         if ($page->status == 1) {
             Page::where('id', '=', $id)->update(['status' => "0"]);
-            return back()->with('added', 'Status changed to Deactive !');
+            return back()->with('added', __('Status changed to Deactive !'));
         } else {
             Page::where('id', '=', $id)->update(['status' => "1"]);
-            return back()->with('added', 'Status changed to Active !');
+            return back()->with('added', __('Status changed to active !'));
         }
     }
 
@@ -302,10 +295,10 @@ class QuickUpdateController extends Controller
 
         if ($social->status == 1) {
             Social::where('id', '=', $id)->update(['status' => "0"]);
-            return back()->with('added', 'Status changed to Deactive !');
+            return back()->with('added', __('Status changed to Deactive !'));
         } else {
             Social::where('id', '=', $id)->update(['status' => "1"]);
-            return back()->with('added', 'Status changed to Active !');
+            return back()->with('added', __('Status changed to active !'));
         }
     }
 
@@ -316,10 +309,10 @@ class QuickUpdateController extends Controller
 
         if ($hd->status == 1) {
             Hotdeal::where('id', '=', $id)->update(['status' => "0"]);
-            return back()->with('added', 'Status changed to Deactive !');
+            return back()->with('added', __('Status changed to Deactive !'));
         } else {
             Hotdeal::where('id', '=', $id)->update(['status' => "1"]);
-            return back()->with('added', 'Status changed to Active !');
+            return back()->with('added', __('Status changed to active !'));
         }
     }
 
@@ -330,10 +323,10 @@ class QuickUpdateController extends Controller
 
         if ($adv->status == 1) {
             Adv::where('id', '=', $id)->update(['status' => 0]);
-            return back()->with('added', 'Status changed to Deactive !');
+            return back()->with('added', __('Status changed to Deactive !'));
         } else {
             Adv::where('id', '=', $id)->update(['status' => 1]);
-            return back()->with('added', 'Status changed to Active !');
+            return back()->with('added', __('Status changed to active !'));
         }
     }
 
@@ -344,10 +337,10 @@ class QuickUpdateController extends Controller
 
         if ($testi->status == 1) {
             Testimonial::where('id', '=', $id)->update(['status' => "0"]);
-            return back()->with('added', 'Status changed to Deactive !');
+            return back()->with('added', __('Status changed to Deactive !'));
         } else {
             Testimonial::where('id', '=', $id)->update(['status' => "1"]);
-            return back()->with('added', 'Status changed to Active !');
+            return back()->with('added', __('Status changed to active !'));
         }
     }
 
@@ -358,10 +351,10 @@ class QuickUpdateController extends Controller
 
         if ($wh->home == 1) {
             Widgetsetting::where('id', '=', $id)->update(['home' => "0"]);
-            return back()->with('added', 'Status changed to Deactive !');
+            return back()->with('added', __('Status changed to Deactive !'));
         } else {
             Widgetsetting::where('id', '=', $id)->update(['home' => "1"]);
-            return back()->with('added', 'Status changed to Active !');
+            return back()->with('added', __('Status changed to active !'));
         }
     }
 
@@ -372,10 +365,10 @@ class QuickUpdateController extends Controller
 
         if ($ws->shop == 1) {
             Widgetsetting::where('id', '=', $id)->update(['shop' => "0"]);
-            return back()->with('added', 'Status changed to Deactive !');
+            return back()->with('added', __('Status changed to Deactive !'));
         } else {
             Widgetsetting::where('id', '=', $id)->update(['shop' => "1"]);
-            return back()->with('added', 'Status changed to Active !');
+            return back()->with('added', __('Status changed to active !'));
         }
     }
 
@@ -386,10 +379,10 @@ class QuickUpdateController extends Controller
 
         if ($wp->page == 1) {
             Widgetsetting::where('id', '=', $id)->update(['page' => "0"]);
-            return back()->with('added', 'Status changed to Deactive !');
+            return back()->with('added', __('Status changed to Deactive !'));
         } else {
             Widgetsetting::where('id', '=', $id)->update(['page' => "1"]);
-            return back()->with('added', 'Status changed to Active !');
+            return back()->with('added', __('Status changed to active !'));
         }
     }
 
@@ -399,10 +392,10 @@ class QuickUpdateController extends Controller
 
         if ($cat->featured == 1) {
             Category::where('id', '=', $id)->update(['featured' => "0"]);
-            return back()->with('added', 'Featured set to No !');
+            return back()->with('added', __('Featured status set to NO !'));
         } else {
             Category::where('id', '=', $id)->update(['featured' => "1"]);
-            return back()->with('added', 'Featured set to Yes !');
+            return back()->with('added', __('Featured status set to YES !'));
         }
     }
 
@@ -412,10 +405,10 @@ class QuickUpdateController extends Controller
 
         if ($sub->featured == 1) {
             Subcategory::where('id', '=', $id)->update(['featured' => "0"]);
-            return back()->with('added', 'Featured set to No !');
+            return back()->with('added', __('Featured status set to NO !'));
         } else {
             Subcategory::where('id', '=', $id)->update(['featured' => "1"]);
-            return back()->with('added', 'Featured set to Yes !');
+            return back()->with('added', __('Featured status set to YES !'));
         }
     }
 
@@ -425,10 +418,10 @@ class QuickUpdateController extends Controller
 
         if ($child->featured == 1) {
             Grandcategory::where('id', '=', $id)->update(['featured' => "0"]);
-            return back()->with('added', 'Featured set to No !');
+            return back()->with('added', __('Featured status set to NO !'));
         } else {
             Grandcategory::where('id', '=', $id)->update(['featured' => "1"]);
-            return back()->with('added', 'Featured set to Yes !');
+            return back()->with('added', __('Featured status set to YES !'));
         }
     }
 
@@ -438,10 +431,10 @@ class QuickUpdateController extends Controller
 
         if ($product->featured == 1) {
             Product::where('id', '=', $id)->update(['featured' => "0"]);
-            return back()->with('added', 'Featured set to No !');
+            return back()->with('added', __('Featured status set to NO !'));
         } else {
             Product::where('id', '=', $id)->update(['featured' => "1"]);
-            return back()->with('added', 'Featured set to Yes !');
+            return back()->with('added', __('Featured status set to YES !'));
         }
     }
 
@@ -451,28 +444,28 @@ class QuickUpdateController extends Controller
 
         if ($spo->status == 1) {
             SpecialOffer::where('id', '=', $id)->update(['status' => '0']);
-            return back()->with('added', 'Status changed to Deactive !');
+            return back()->with('added', __('Status changed to Deactive !'));
         } else {
             SpecialOffer::where('id', '=', $id)->update(['status' => '1']);
-            return back()->with('added', 'Status changed to Active !');
+            return back()->with('added', __('Status changed to active !'));
         }
     }
 
     public function acpstore($id)
     {
-        abort_if(!auth()->user()->can('stores.accept.request'), 403, 'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('stores.accept.request'), 403, __('User does not have the right permissions.'));
 
         $store = Store::findorfail($id);
 
         if ($store->apply_vender == 1) {
             Store::where('id', '=', $id)->update(['status' => '0', 'apply_vender' => "0"]);
-            return back()->with('added', 'Store Request not accepted !');
+            return back()->with('added', __('Store Request not accepted !'));
         } else {
             Store::where('id', '=', $id)->update(['status' => '1', 'apply_vender' => "1"]);
             $store->user()->update([
                 'role_id' => 'v',
             ]);
-            return back()->with('added', 'Store Request accepted !');
+            return back()->with('added', __('Store Request accepted !'));
         }
     }
 
@@ -488,7 +481,7 @@ class QuickUpdateController extends Controller
 
         $ad->save();
 
-        return back()->with('updated', 'Status has been changed !');
+        return back()->with('updated', __('Status has been changed !'));
     }
 
 }

@@ -290,6 +290,24 @@
 
                 <!-- ======================= SHOPPING CART DROPDOWN : END================================ -->
             </div>
+
+           @if(count($mostsearchwords))
+           <div class="col-md-12">
+            <div class="text-center">
+              <h6 class="text-white">{{__("Most searched: ")}}
+              
+                @foreach ($mostsearchwords as $word)
+                   
+                      {{$word->keyword}} @if(!$loop->last) {{__(",")}} @endif
+                   
+                @endforeach
+              
+              </h6> 
+
+            </div>
+          </div>
+           @endif
+            
             <!-- /.top-cart-row -->
         </div>
         <!-- /.row -->
@@ -670,7 +688,7 @@
                                     <i class="fa fa-info-circle"></i>&nbsp;{{ __('staticwords.feedline') }}
                                 </div>
                                 <form class="needs-validation" action="{{ route('send.feedback') }}" method="POST" novalidate>
-                                    {{ csrf_field() }}
+                                    @csrf
                                     <div class="form-group">
                                     <label class="font-weight-bold" for="">{{ __('staticwords.Name') }}: <span
                                         class="required">*</span></label>
@@ -689,13 +707,15 @@
                                         placeholder="Tell us What You Like about us? or What should we do to more to improve our portal."
                                         cols="30" rows="10" class="form-control"></textarea>
                                     </div>
+
                                     <div class="rat">
-                                    <label class="font-weight-bold">&nbsp;{{ __('staticwords.RateUs') }}: <span
-                                        class="required">*</span></label>
-                                    <ul id="starRating" data-stars="5">
-                                    </ul>
-                                    <input type="hidden" id="" name="rate" value="1" class="getStar">
+                                      <label class="font-weight-bold">&nbsp;{{ __('staticwords.RateUs') }}: <span
+                                          class="required">*</span></label>
+                                      <ul id="starRating" data-stars="5">
+                                      </ul>
+                                      <input type="hidden" id="" name="rate" value="1" class="getStar">
                                     </div>
+
                                     <button type="submit" class="btn btn-primary">
                                     {{ __('staticwords.Send') }}
                                     </button>

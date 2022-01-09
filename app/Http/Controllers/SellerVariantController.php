@@ -1,23 +1,14 @@
 <?php
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Product;
-use App\ProductAttributes;
-use App\ProductValues;
-use Response;
 use App\AddProductVariant;
 use App\AddSubVariant;
 use App\CommonVariants;
-use Alert;
+use App\Product;
+use App\ProductAttributes;
+use App\ProductValues;
 use DB;
-
-/*==========================================
-=            Author: Media City            =
-    Author URI: https://mediacity.co.in
-=            Author: Media City            =
-=            Copyright (c) 2020            =
-==========================================*/
+use Illuminate\Http\Request;
 
 class SellerVariantController extends Controller
 {
@@ -36,21 +27,17 @@ class SellerVariantController extends Controller
 
         $findrows2 = AddProductVariant::where('pro_id', '=', $id)->get();
 
-        foreach ($findrows as $value)
-        {
-            if ($request->attr_name2 == $value->cm_attr_id)
-            {
+        foreach ($findrows as $value) {
+            if ($request->attr_name2 == $value->cm_attr_id) {
                 return back()
-                    ->with('warning', 'Variant Already Added For This Product !');
+                    ->with('warning', __('Variant already added for this product !'));
             }
         }
 
-        foreach ($findrows2 as $value)
-        {
-            if ($request->attr_name2 == $value->attr_name)
-            {
+        foreach ($findrows2 as $value) {
+            if ($request->attr_name2 == $value->attr_name) {
                 return back()
-                    ->with('warning', 'Variant Already Added In Product Variant !');
+                    ->with('warning', __('Variant already added for this product !'));
             }
         }
 
@@ -61,9 +48,9 @@ class SellerVariantController extends Controller
         $newcommonvar->pro_id = $id;
 
         $newcommonvar->save();
-        
+
         return redirect()
-            ->route('seller.add.var', $id)->with('added', "Variant Added Successfully !");
+            ->route('seller.add.var', $id)->with('added', __("Variant Added Successfully !"));
     }
 
     public function delCommon(Request $request, $id)
@@ -74,24 +61,21 @@ class SellerVariantController extends Controller
 
         return redirect()
             ->route('seller.add.var', $cmvar->pro_id)
-            ->with('deleted', "Variant Deleted Successfully !");
+            ->with('deleted', __("Variant Deleted Successfully !"));
     }
 
     public function updatecommon(Request $request, $id)
     {
         $cvar = CommonVariants::find($id);
 
-        if (isset($cvar))
-        {
+        if (isset($cvar)) {
             $cvar->cm_attr_val = $request->cm_attr_val;
             $cvar->save();
             return back()
-                ->with('updated', 'Common variant option updated !');
-        }
-        else
-        {
+                ->with('updated', __('Common variant option updated !'));
+        } else {
             return back()
-                ->with('warning', '404 Not found !');
+                ->with('warning', __('404 Not found !'));
         }
     }
 
@@ -102,66 +86,49 @@ class SellerVariantController extends Controller
         $findrows = AddProductVariant::where('pro_id', '=', $id)->get();
         $findrows2 = CommonVariants::where('pro_id', '=', $id)->get();
 
-        foreach ($findrows2 as $value)
-        {
-            if ($request->attr_name == $value->cm_attr_id)
-            {
+        foreach ($findrows2 as $value) {
+            if ($request->attr_name == $value->cm_attr_id) {
                 return back()
-                    ->with('warning', 'Variant Already Added In Common Variant !');
+                    ->with('warning', __('Variant Already Added In Common Variant !'));
             }
         }
 
-        foreach ($findrows as $value)
-        {
-            if ($request->attr_name == $value->attr_name)
-            {
+        foreach ($findrows as $value) {
+            if ($request->attr_name == $value->attr_name) {
                 return back()
-                    ->with('warning', 'Variant Already Added For This Product !');
+                    ->with('warning', __('Variant Already Added For This Product !'));
             }
         }
 
-        if ($findrows->count() >= 2)
-        {
+        if ($findrows->count() >= 2) {
             return back()
-                ->with('warning', 'You can add only two variant');
-        }
-        else
-        {
+                ->with('warning', __('You can add only two variant'));
+        } else {
 
             $newvar = new AddProductVariant;
 
             $findallsub = AddSubVariant::where('pro_id', $id)->get();
             $nArry = [];
 
-            foreach ($findallsub as $key => $value)
-            {
-                
-                array_push($nArry, $value['main_attr_id'][0], $request->attr_name);
-             
-                
+            foreach ($findallsub as $key => $value) {
 
-                
+                array_push($nArry, $value['main_attr_id'][0], $request->attr_name);
+
             }
-            foreach ($findallsub as $value)
-            {
-               
-                foreach ($nArry as $key => $n)
-                {
+            foreach ($findallsub as $value) {
+
+                foreach ($nArry as $key => $n) {
                     $request->attr_name;
 
-                    
                     $update = AddSubVariant::where('pro_id', '=', $id)->get();
 
-                    foreach ($update as $newup)
-                    {
+                    foreach ($update as $newup) {
 
                         $value = $newup->main_attr_id;
-                        if (count($value) <= 1)
-                        {
+                        if (count($value) <= 1) {
 
-                            foreach ($value as $cval)
-                            {
-                                
+                            foreach ($value as $cval) {
+
                                 $str = $cval . '"' . ',' . '"' . $request->attr_name;
                                 $str2 = array();
 
@@ -169,50 +136,44 @@ class SellerVariantController extends Controller
 
                                 $new = json_encode($str2);
                                 $str3 = stripslashes($new);
-                               
+
                                 DB::table('add_sub_variants')->where('id', $newup->id)
                                     ->update(array(
-                                    'main_attr_id' => $str3
-                                ));
-                                
+                                        'main_attr_id' => $str3,
+                                    ));
+
                             }
                         }
 
                     }
-                  
+
                 }
 
             }
 
             $nArry2 = [];
-            foreach ($findallsub as $key => $value)
-            {
-               
-                foreach ($value['main_attr_value'] as $a => $att_v)
-                {
+            foreach ($findallsub as $key => $value) {
+
+                foreach ($value['main_attr_value'] as $a => $att_v) {
 
                     array_push($nArry2, [$a => $att_v, $request->attr_name => "0"]);
                 }
 
             }
 
-            foreach ($findallsub as $value)
-            {
-                
-                foreach ($nArry2 as $key => $n)
-                {
+            foreach ($findallsub as $value) {
+
+                foreach ($nArry2 as $key => $n) {
                     $request->attr_name;
 
-                    
                     $update = AddSubVariant::where('pro_id', '=', $id)->get();
 
-                    
                     $new1 = json_encode($n);
                     DB::table('add_sub_variants')->where('id', $value->id)
                         ->update(array(
-                        'main_attr_value' => $new1
-                    ));
-                    
+                            'main_attr_value' => $new1,
+                        ));
+
                 }
 
             }
@@ -226,7 +187,7 @@ class SellerVariantController extends Controller
             $newvar->save();
 
             return back()
-                ->with('added', 'Variant Added Successfully !');
+                ->with('added', __('Variant Added Successfully !'));
         }
 
     }
@@ -234,7 +195,6 @@ class SellerVariantController extends Controller
     public function getProductValues(Request $request)
     {
 
-        
         $getval = $request->sendval;
 
         $response = ProductValues::select('id', 'values', 'unit_value')->where('atrr_id', '=', $getval)->get();
@@ -252,8 +212,7 @@ class SellerVariantController extends Controller
         $getallsub = AddSubVariant::where('pro_id', $findpro->pro_id)
             ->get();
 
-        foreach ($getallsub as $value)
-        {
+        foreach ($getallsub as $value) {
 
             $arr = $value['main_attr_value'];
 
@@ -271,32 +230,31 @@ class SellerVariantController extends Controller
 
             $n = json_encode($arr);
 
-            if(empty($n2)){
-                
-                $value->delete();  
+            if (empty($n2)) {
 
-            }else{
+                $value->delete();
 
-               DB::table('add_sub_variants')->where('id', $value->id)
+            } else {
+
+                DB::table('add_sub_variants')->where('id', $value->id)
                     ->update(array(
-                    'main_attr_value' => $n,
-                    'main_attr_id' => $n2
-                ));  
+                        'main_attr_value' => $n,
+                        'main_attr_id' => $n2,
+                    ));
 
             }
-          
-        
+
         }
 
         $findpro->delete();
 
         return back()
-            ->with('deleted', 'Product Variant Deleted !');
+            ->with('deleted', __('Product Variant Deleted !'));
     }
 
     public function update(Request $request, $id)
     {
-        $request->validate(['attr_value' => 'required'], ['attr_value.required' => 'Atleast one value is required !']);
+        $request->validate(['attr_value' => 'required'], ['attr_value.required' => __('Atleast one value is required !')]);
 
         $findpro = AddProductVariant::findorfail($id);
 
@@ -306,7 +264,6 @@ class SellerVariantController extends Controller
 
         return redirect()
             ->route('seller.add.var', $findpro->pro_id)
-            ->with('updated', 'Product Values Updated Successfully !');
+            ->with('updated', __('Product Values Updated Successfully !'));
     }
 }
-

@@ -281,6 +281,7 @@ return array (
   'SignInwithFacebook' => 'Zaloguj się przez Facebook',
   'SignInwithGitLab' => 'Zaloguj się za pomocą GitLab',
   'SignInwithGoogle' => 'Zaloguj się przez Google',
+  'SignInwithTwitter' => '',
   'SignUpwithFacebook' => 'Zarejestruj się za pomocą Facebooka',
   'SignUpwithGitLab' => 'Zarejestruj się w Gitlab',
   'SignUpwithGoogle' => 'Zarejestruj się w Google',

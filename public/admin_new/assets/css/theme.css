@@ -303,3 +303,37 @@ nav ul {
 ::-webkit-scrollbar-thumb:hover {
     background: #506fe4 !important;
 }
+
+.nav-tabs {
+    overflow-x: auto;
+    overflow-y: hidden;
+    display: -webkit-box;
+    display: -moz-box;
+}
+
+.nav-tabs>li {
+    float: none;
+}
+
+#chat-body {
+    scroll-behavior: smooth;
+}
+
+.blink{
+    background-color: rgba(249, 97, 109, 0.1);
+    animation: blinker 2s linear infinite;
+}
+
+.tdtxt {
+    font-size: 25px;
+    font-family: cursive;
+    color: black;
+}
+
+
+@keyframes blinker {
+    50% {
+        background-color: rgba(249, 97, 109, 0);
+    }
+}
+

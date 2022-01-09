@@ -33,7 +33,7 @@ class AddProductVariantController extends Controller
             if ($request->attr_name2 == $value->cm_attr_id)
             {
                 return back()
-                    ->with('warning', 'Variant Already Added For This Product !');
+                    ->with('warning', __('Variant Already Added For This Product !'));
             }
         }
 
@@ -42,7 +42,7 @@ class AddProductVariantController extends Controller
             if ($request->attr_name2 == $value->attr_name)
             {
                 return back()
-                    ->with('warning', 'Variant Already Added In Product Variant !');
+                    ->with('warning', __('Variant Already Added In Product Variant !'));
             }
         }
 
@@ -55,7 +55,7 @@ class AddProductVariantController extends Controller
         $newcommonvar->save();
 
         return redirect()
-            ->route('add.var', $id)->with('added', "Variant Added Successfully !");
+            ->route('add.var', $id)->with('added', __("Variant Added Successfully !"));
     }
 
     public function updatecommon(Request $request, $id)
@@ -67,12 +67,12 @@ class AddProductVariantController extends Controller
             $cvar->cm_attr_val = $request->cm_attr_val;
             $cvar->save();
             return back()
-                ->with('updated', 'Common variant option updated !');
+                ->with('updated', __('Common variant option updated !'));
         }
         else
         {
             return back()
-                ->with('warning', '404 Not found !');
+                ->with('warning', __('404 Not found !'));
         }
     }
 
@@ -84,7 +84,7 @@ class AddProductVariantController extends Controller
 
         return redirect()
             ->route('add.var', $cmvar->pro_id)
-            ->with('deleted', "Variant Deleted Successfully !");
+            ->with('deleted', __("Variant Deleted Successfully !"));
     }
 
     public function store(Request $request, $id)
@@ -99,7 +99,7 @@ class AddProductVariantController extends Controller
             if ($request->attr_name == $value->cm_attr_id)
             {
                 return back()
-                    ->with('warning', 'Variant Already Added In Common Variant !');
+                    ->with('warning', __('Variant Already Added In Common Variant !'));
             }
         }
 
@@ -108,14 +108,14 @@ class AddProductVariantController extends Controller
             if ($request->attr_name == $value->attr_name)
             {
                 return back()
-                    ->with('warning', 'Variant Already Added For This Product !');
+                    ->with('warning', __('Variant Already Added For This Product !'));
             }
         }
 
         if ($findrows->count() >= 2)
         {
             return back()
-                ->with('warning', 'You can add only two variant');
+                ->with('warning', __('You can add only two variant'));
         }
         else
         {
@@ -211,7 +211,7 @@ class AddProductVariantController extends Controller
             $newvar->save();
 
             return back()
-                ->with('added', 'Variant Added Successfully !');
+                ->with('added', __('Variant Added Successfully !'));
         }
 
     }
@@ -275,12 +275,12 @@ class AddProductVariantController extends Controller
 
         $findpro->delete();
 
-        return back()->with('deleted', 'Product Variant Deleted !');
+        return back()->with('deleted', __('Product Variant Deleted !'));
     }
 
     public function update(Request $request, $id)
     {
-        $request->validate(['attr_value' => 'required'], ['attr_value.required' => 'Atleast one value is required !']);
+        $request->validate(['attr_value' => 'required'], ['attr_value.required' => __('Atleast one value is required !')]);
 
         $findpro = AddProductVariant::findorfail($id);
 
@@ -290,7 +290,7 @@ class AddProductVariantController extends Controller
 
         return redirect()
             ->route('add.var', $findpro->pro_id)
-            ->with('updated', 'Product Values Updated Successfully !');
+            ->with('updated', __('Product values updated successfully !'));
     }
 }
 

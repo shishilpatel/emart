@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Edit zone | ')
+@section('title',__('Edit zone | '))
 @section('body')
 
 @component('admin.component.breadcumb',['secondactive' => 'active'])
@@ -37,10 +37,10 @@
                    <div class="row">
                      <div class="form-group col-md-6">
                        <label>
-                         Zone Name: <span class="required">*</span>
+                         {{__("Zone Name:")}} <span class="required">*</span>
                        </label>
                      
-                       <input required value="{{ $zone->title }}" placeholder="Ex. North Zone" type="text" class="form-control" name="title">
+                       <input required value="{{ $zone->title }}" placeholder="{{ __("Ex. North Zone") }}" type="text" class="form-control" name="title">
                      </div>
                       
 
@@ -49,11 +49,11 @@
   
                       <div class="form-group col-md-6">
                           <label>
-                            Country <span class="required">*</span>
+                            {{__("Country")}} <span class="required">*</span>
                           </label>
                         
                             <select name="country_id" class="form-control select2" id="country_id">
-                            <option value="0">Please Choose</option>
+                            <option value="0">{{ __("Please Choose") }}</option>
                               @foreach($country as $c)
                               <?php
                                 $iso3 = $c->country;
@@ -66,7 +66,6 @@
                               </option>
                              @endforeach
                             </select>
-                             <p class="mt-2">Please Choose Country</p>
                          
                         </div>
   
@@ -74,7 +73,7 @@
                         
                           <div class="form-group col-md-12">
                             <label>
-                              Select Zone: <span class="required">*</span>
+                              {{__("Select Zone:")}} <span class="required">*</span>
                             </label>
                             <select multiple="multiple" class="js-example-basic-single width100" name="name[]" id="upload_id">
                                  @foreach ($states as $item)
@@ -90,11 +89,11 @@
                                  @endforeach
                              </select>
                              <a   onclick="SelectAllCountry2()" id="btn_sel" class="hide btn btn-success mt-2 " isSelected="no"> 
-                              <span>Select All  </span><i class="feather icon-check-square"></i>
+                              <span> {{__("Select All")}}  </span><i class="feather icon-check-square"></i>
                              </a>
     
                              <a onclick="RemoveAllCountry2()" id="btn_rem"class="hide btn btn-danger mt-2" isSelected="yes"> 
-                              <span>Remove All  </span><i class="feather icon-trash-2"></i>
+                              <span> {{__("Remove All")}}  </span><i class="feather icon-trash-2"></i>
                              </a>
                           </div>
                           
@@ -104,17 +103,17 @@
   
                         <div class="form-group col-md-6">
                           <label>
-                            Code <span class="required">*</span>
+                            {{__("Code:")}} <span class="required">*</span>
                           </label>
                           <input type="text" id="first-name" name="code" value="{{$zone->code}}" class="form-control">
-                          <p class="txt-desc">Please Enter code</p>
+                          <p class="txt-desc">{{ __('Please Enter code') }}</p>
                         
                       </div>
                           
                          
                         <div class="form-group col-md-6">
                           <label>
-                            Status
+                            {{__("Status")}}
                           </label>
                             <br>
                           <label class="switch">
@@ -125,13 +124,13 @@
                          
                           <br>
                            <input type="hidden" name="status" value="{{$zone->status}}" id="status3">
-                           <p class="mt-2">Please Choose Status </p>
+                           <p class="mt-2"> {{__("Please Choose Status")}} </p>
                          
                         </div>
                 
                   <div class="from-group col-md-6">
                     <button type="reset" class="btn btn-danger mr-1"><i class="fa fa-ban"></i> {{ __("Reset")}}</button>
-                    <button   class="btn btn-primary" @if(env('DEMO_LOCK') == 0) type="submit" @else disabled="disabled" title="This action is disabled in demo !" @endif><i class="fa fa-check-circle"></i>
+                    <button   class="btn btn-primary" @if(env('DEMO_LOCK') == 0) type="submit" @else disabled="disabled" title="{{ __("This action is disabled in demo !") }}" @endif><i class="fa fa-check-circle"></i>
                     {{ __("Create")}}</button>
                   </div>
                   
@@ -145,7 +144,6 @@
 @section('custom-script')
   <script>var baseUrl = "<?= url('/') ?>";</script>
   <script src="{{ url('js/zone.js') }}"></script> 
-
 @endsection      
                   
                   

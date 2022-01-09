@@ -5,9 +5,30 @@
             class="owl-carousel home-owl-carousel custom-carousel owl-theme outer-top-xs">
 
             <div v-for="product in products" :key="Math.random().toString(36).substring(7)" class="item item-carousel">
+                <div v-if="starbadge == false && product.sale_tag != null && product.sale_tag != '' && product.sale_tag[lang] != null" class="ribbon ribbon-top-right">
+                   <span :style="{ 'background' : product.sale_tag_color, 'color' : product.sale_tag_text_color }">
+                       
+                       {{ product.sale_tag[lang]  ? product.sale_tag[lang] : product.sale_tag[fallbacklang] }}
+
+                   </span>
+                </div>
+
+               
 
                 <div class="products">
+
+                    <div v-if="starbadge == true && product.featured == 1" class="starBadge">
+                        <div class="ribbon2 down" style="color: #fd9c2e;">
+                            <div class="content2">
+                                <svg width="24px" height="24px" aria-hidden="true" focusable="false" data-prefix="far" data-icon="star" class="svg-inline--fa fa-star fa-w-18" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+                                <path fill="currentColor" d="M528.1 171.5L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6zM388.6 312.3l23.7 138.4L288 385.4l-124.3 65.3 23.7-138.4-100.6-98 139-20.2 62.2-126 62.2 126 139 20.2-100.6 98z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                   
                     <div class="product">
+                        
                         <div class="product-image">
                             <div :class="{'pro-img-box' : product.stock == 0 }" class="image">
 
@@ -46,9 +67,7 @@
                             </h6>
                             
                 
-                            <div v-if="product.sale_tag != null && product.sale_tag != '' && product.sale_tag[lang] != null" :style="{'background' : product.sale_tag_color}"  class="tag sale">
-                                <span :style="{ 'color' : product.sale_tag_text_color }">{{ product.sale_tag[lang]  ? product.sale_tag[lang] : product.sale_tag[fallbacklang] }}</span>
-                            </div>
+                           
 
                            
 
@@ -63,7 +82,7 @@
                             </h3>
 
 
-                            <div v-if="product.rating != 0" :class="{'pull-left' : rtl == false, 'pull-right' : rtl == true}">
+                            <div v-if="product.rating != 0" :class="{'float-left' : rtl == false, 'float-right' : rtl == true}">
                                 <div class="star-ratings-sprite"><span :style="{ 'width' : `${product.rating}%` }"
                                         class="star-ratings-sprite-rating"></span>
                                 </div>
@@ -190,7 +209,7 @@
     import EventBus from '../../EventBus';
     axios.defaults.baseURL = baseUrl;
     export default {
-        props: ['products', 'date', 'lang', 'fallbacklang', 'login', 'guest_price','simple_products'],
+        props: ['products', 'date', 'lang', 'fallbacklang', 'login', 'guest_price','simple_products','starbadge'],
         data(){
             return {
                 rtl : rtl,
@@ -406,7 +425,3 @@
 
     }
 </script>
-
-<style>
-
-</style>

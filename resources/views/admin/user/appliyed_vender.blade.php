@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Store Requests | ')
+@section('title',__('Store Requests | '))
 @section('body')
 
 @component('admin.component.breadcumb',['secondactive' => 'active'])
@@ -24,7 +24,7 @@
               <div class="card-header">
                 <div class="row">
                   <div class="col-md-9">
-                    <h5 class="card-title"> All Store Requests ({{ $list }})</h5>
+                    <h5 class="card-title"> {{__("All Store Requests")}} ({{ $list }})</h5>
                   </div>
                  
                 </div>
@@ -42,21 +42,21 @@
                         </th>
                 
                         <th>
-                          Store Details
+                          {{__('Store Details')}}
                         </th>
                 
                         <th>
-                          Uploaded Doucments
+                          {{__("Uploaded Doucments")}}
                           <br>
-                          <small>(For verification)</small>
+                          <small>({{ __("For verification") }})</small>
                         </th>
                 
                         <th>
-                          Requested at
+                          {{__("Requested at")}}
                         </th>
                 
                         <th>
-                          Action
+                          {{__("Action")}}
                         </th>
                       </thead>
                 

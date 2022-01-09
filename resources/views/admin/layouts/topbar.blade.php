@@ -89,7 +89,7 @@
                                      class="text-center img-fluid" alt="settings">
 
                                  <span class="live-icon">
-                                     {{__("9")}}
+                                     9
                                  </span>
                              </a>
 
@@ -170,7 +170,8 @@
                                                     <a href="{{ url('admin/stores/'.Auth::user()->store->id.'/edit') }}"
                                                         class="profile-icon"><img
                                                             src="{{ url('admin_new/assets/images/svg-icon/ecommerce.svg') }}"
-                                                            class="img-fluid" alt="user">{{ __("Your store") }}</a>
+                                                            class="img-fluid" alt="user">{{ __("Your store") }}
+                                                    </a>
                                                 </li>
                                              @endif
 
@@ -205,7 +206,7 @@
  <div id="infobar-settings-sidebar" class="infobar-settings-sidebar">
 
      <div class="infobar-settings-sidebar-head d-flex w-100 justify-content-between">
-         <h4>Settings</h4><a href="javascript:void(0)" id="infobar-settings-close" class="infobar-settings-close"><img
+         <h4>{{ __("Settings") }}</h4><a href="javascript:void(0)" id="infobar-settings-close" class="infobar-settings-close"><img
                  src="{{ url('admin_new/assets/images/svg-icon/close.svg') }}" class="img-fluid menu-hamburger-close"
                  alt="close"></a>
      </div>
@@ -224,9 +225,7 @@
                              type="checkbox" class="js-switch-setting-first" /></div>
 
                      <div class="col-md-12">
-                         <small class="text-muted"><i class="fa fa-question-circle"></i> If enabled than Multiseller
-                             system will be
-                             active on your portal.</small>
+                         <small class="text-muted"><i class="fa fa-question-circle"></i> {{ __('If enabled than Multiseller system will be active on your portal.') }}</small>
                      </div>
 
                  </div>
@@ -240,8 +239,7 @@
                              name="ENABLE_PRELOADER" type="checkbox" class="js-switch-setting-first" /></div>
 
                      <div class="col-md-12">
-                         <small class="text-muted"><i class="fa fa-question-circle"></i> Enable or disable preloader by
-                             toggling it.</small>
+                         <small class="text-muted"><i class="fa fa-question-circle"></i> {{ __('Enable or disable preloader by toggling it.') }}</small>
                      </div>
 
                  </div>
@@ -256,8 +254,7 @@
                              class="js-switch-setting-first" /></div>
 
                      <div class="col-md-12">
-                         <small class="text-muted"><i class="fa fa-question-circle"></i> Turn it <b>ON</b>. IF you face
-                             500 error.</small>
+                         <small class="text-muted"><i class="fa fa-question-circle"></i> {{__("Turn it")}} <b>{{ __('ON') }}</b>. {{__("IF you face 500 error")}}.</small>
                      </div>
 
                  </div>
@@ -272,8 +269,7 @@
                              {{ $genrals_settings->right_click=='1' ? "checked" : "" }} /></div>
 
                      <div class="col-md-12">
-                         <small class="text-muted"><i class="fa fa-question-circle"></i> If enabled than Right click
-                             will not work on whole project.</small>
+                         <small class="text-muted"><i class="fa fa-question-circle"></i> {{ __("If enabled than Right click will not work on whole project.") }}</small>
                      </div>
 
                  </div>
@@ -287,8 +283,7 @@
                              name="inspect" {{ $genrals_settings->inspect == '1' ? "checked" : "" }} /></div>
 
                      <div class="col-md-12">
-                         <small class="text-muted"><i class="fa fa-question-circle"></i> <b>CTRL+U OR CTRL+SHIFT+I</b>
-                             keys not work on whole project.</small>
+                         <small class="text-muted"><i class="fa fa-question-circle"></i> <b>CTRL+U {{__("OR")}} CTRL+SHIFT+I</b> {{__('keys not work on whole project.') }}</small>
                      </div>
 
                  </div>
@@ -302,8 +297,7 @@
                              name="login" {{ $genrals_settings->login=='1' ? "checked" : "" }} /></div>
 
                      <div class="col-md-12">
-                         <small class="text-muted"><i class="fa fa-question-circle"></i> If enabled only logged in users
-                             will able to see product prices.</small>
+                         <small class="text-muted"><i class="fa fa-question-circle"></i> {{ __('If enabled only logged in users will able to see product prices.') }}</small>
                      </div>
 
                  </div>
@@ -318,8 +312,7 @@
                              {{ $genrals_settings->email_verify_enable == 1 ? "checked" : "" }} /></div>
 
                      <div class="col-md-12">
-                         <small class="text-muted"><i class="fa fa-question-circle"></i> If enabled than email will be
-                             sent to user when register.</small>
+                         <small class="text-muted"><i class="fa fa-question-circle"></i> {{ __('If enabled than email will be sent to user when register.') }}</small>
                      </div>
 
                  </div>
@@ -333,8 +326,7 @@
                              name="COD_ENABLE" {{ env('COD_ENABLE') == 1 ? "checked" : "" }} /></div>
 
                      <div class="col-md-12">
-                         <small class="text-muted"><i class="fa fa-question-circle"></i> If enabled than cash on
-                             delivery will enable on payment page.</small>
+                         <small class="text-muted"><i class="fa fa-question-circle"></i> {{ __('If enabled than cash on delivery will enable on payment page.') }}</small>
                      </div>
 
                  </div>
@@ -348,8 +340,7 @@
                              name="HIDE_SIDEBAR" {{ env('HIDE_SIDEBAR') =='1' ? "checked" : "" }} /></div>
 
                      <div class="col-md-12">
-                         <small class="text-muted"><i class="fa fa-question-circle"></i> By toggling it make the full
-                             width front page it.</small>
+                         <small class="text-muted"><i class="fa fa-question-circle"></i> {{ __("By toggling it make the full width front page it.") }}</small>
                      </div>
 
                  </div>
@@ -370,17 +361,17 @@
  <div id="notification-sidebar" class="infobar-settings-sidebar">
      <div class="infobar-settings-sidebar-head d-flex w-100 justify-content-between">
          <h4>@if(auth()->user()->unreadnotifications->where('n_type','=','order_v')->count())
-             You have {{ auth()->user()->unreadnotifications->where('n_type','=','order_v')->count() }} New Orders
-             Notification!
+             {{__("You have")}} {{ auth()->user()->unreadnotifications->where('n_type','=','order_v')->count() }} {{__("New Orders")}} {{__("Notification!")}}
+            
              @else
-             <span class="text-center">No Notifications</span>
+             <span class="text-center">{{ __("No Notifications") }}</span>
              @endif</h4><a href="javascript:void(0)" id="notification-sidebar-close" class="infobar-settings-close"><img
                  src="{{ url('admin_new/assets/images/svg-icon/close.svg') }}" class="img-fluid menu-hamburger-close"
                  alt="close"></a>
      </div>
      <div class="infobar-settings-sidebar-body">
          @if(auth()->user()->unreadnotifications->where('n_type','=','order_v')->count())
-         <a class="mr-3 float-right" href="{{ route('mark_read_order') }}">Mark all as read</a>
+         <a class="mr-3 float-right" href="{{ route('mark_read_order') }}">{{ __('Mark all as read') }}</a>
          <div class="clearfix"></div>
          @endif
          <div class="p-3" style="maxheight: 500px;overflow: auto">

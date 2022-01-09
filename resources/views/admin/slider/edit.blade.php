@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Edit Slider |')
+@section('title',__('Edit Slider |'))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -15,7 +15,7 @@
 @slot('button')
 <div class="col-md-6">
   <div class="widgetbar">
-  <a href="{{url('admin/slider')}} " class="btn btn-primary-rgba"><i class="feather icon-arrow-left mr-2"></i>Back</a>
+  <a href="{{url('admin/slider')}} " class="btn btn-primary-rgba"><i class="feather icon-arrow-left mr-2"></i> {{ __("Back") }}</a>
   </div>
 </div>
 @endslot
@@ -23,15 +23,16 @@
 @endcomponent
 <div class="contentbar">
   <div class="row">
-    @if ($errors->any())
-    <div class="alert alert-danger" role="alert">
-      @foreach($errors->all() as $error)
-      <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach
-    </div>
-    @endif
+    
     <div class="col-lg-12">
+      @if ($errors->any())
+      <div class="alert alert-danger" role="alert">
+        @foreach($errors->all() as $error)
+        <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button></p>
+        @endforeach
+      </div>
+      @endif
       <div class="card m-b-30">
         <div class="card-header">
           <h5 class="box-title">{{ __('Create a new slider') }}</h5>
@@ -47,12 +48,10 @@
                   <label class="text-dark">{{ __('Choose Slider Image :') }}</label><br>
                    <!-- ================ -->
                    <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-                    </div>
+                   
                     <div class="custom-file">
                         <input type="file" class="custom-file-input" name="image" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01" required>
-                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                        <label class="custom-file-label" for="inputGroupFile01">{{ __("Choose file") }} </label>
                     </div>
                   </div>
                   <!-- ================ -->
@@ -61,18 +60,18 @@
                 <div class="form-group">
                   <label class="text-dark" for="link_by">{{ __('Link BY :') }}</label>
                   <select required="" class="form-control select2" name="link_by" id="link_by">
-                    <option {{ $slider->link_by == 'none' ? "selected" : "" }} value="none">None</option>
-                    <option {{ $slider->link_by == 'url' ? "selected" : "" }} value="url">URL</option>
-                    <option {{ $slider->link_by == 'cat' ? "selected" : "" }} value="cat">Category</option>
-                    <option {{ $slider->link_by == 'sub' ? "selected" : "" }} value="sub">Subcategory</option>
-                    <option {{ $slider->link_by == 'child' ? "selected" : "" }} value="child">Child Category</option>
-                    <option {{ $slider->link_by == 'pro' ? "selected" : "" }} value="pro">Product</option>
+                    <option {{ $slider->link_by == 'none' ? "selected" : "" }} value="none">{{ __('None')  }}</option>
+                    <option {{ $slider->link_by == 'url' ? "selected" : "" }} value="url">{{ __('URL')  }}</option>
+                    <option {{ $slider->link_by == 'cat' ? "selected" : "" }} value="cat">{{ __('Category')  }}</option>
+                    <option {{ $slider->link_by == 'sub' ? "selected" : "" }} value="sub">{{ __('Subcategory')  }}</option>
+                    <option {{ $slider->link_by == 'child' ? "selected" : "" }} value="child">{{ __('Childcategory')  }}</option>
+                    <option {{ $slider->link_by == 'pro' ? "selected" : "" }} value="pro">{{ __('Product')  }}</option>
                   </select>
                 </div>
                 <div class="form-group {{ $slider->category_id !='' ? "" : 'hide' }}" id="category_id">
                   <label class="text-dark">{{ __('Choose Category :') }}</label>
                   <select class="js-example-basic-single form-control" id="cat" name="category_id">
-                      <option value="">Please Choose</option>
+                      <option value="">{{ __('Please Choose')  }}</option>
                       @foreach(App\Category::all() as $category)
                           @if($category->status == '1')
                               <option {{ $slider['category_id'] == $category->id ? "selected" : "" }} value="{{ $category->id }}">{{ $category->title }}</option>
@@ -84,7 +83,7 @@
                  <div class="form-group {{ $slider->child !='' ? "" : 'hide' }}" id="subcat_id">
                   <label class="text-dark">{{ __('Choose Subcategory :') }}</label>
                   <select class="js-example-basic-single form-control" id="subcate" name="subcat" >
-                      <option value="">Please Choose</option>
+                      <option value="">{{ __('Please Choose')  }}</option>
                       @foreach(App\Subcategory::all() as $sub)
                           @if($sub->status == '1')
                               <option {{ $slider['child'] == $sub->id ? "selected" : "" }} value="{{ $sub->id }}">{{ $sub->title }}</option>
@@ -96,7 +95,7 @@
                 <div class="form-group {{ $slider->grand_id !='' ? "" : 'hide' }}" id="child">
                   <label class="text-dark">{{ __('Choose Chilldcategory :') }}</label>
                   <select class="js-example-basic-single form-control" id="subcat" name="child" >
-                      <option value="">Please Choose</option>
+                      <option value="">{{ __('Please Choose')  }}</option>
                       @foreach(App\Grandcategory::all() as $child)
                           @if($child->status == '1')
                               <option {{ $slider['grand_id'] == $child->id ? "selected" : "" }} value="{{ $child->id }}">{{ $child->title }}</option>
@@ -108,7 +107,7 @@
                 <div class="form-group {{ $slider->product_id !='' ? "" : 'hide' }}" id="pro">
                   <label class="text-dark">{{ __('Choose Product :') }}</label>
                   <select class="js-example-basic-single form-control" id="pro" name="pro" >
-                      <option value="">Please Choose</option>
+                      <option value="">{{ __('Please Choose')  }}</option>
                       @foreach(App\Product::all() as $pro)
                           @if($pro->status == '1' && count($pro->subvariants)>0)
                               <option {{ $slider['product_id'] == $pro->id ? "selected" : "" }} value="{{ $pro->id }}">{{ $pro->name }}</option>

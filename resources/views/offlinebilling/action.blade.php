@@ -29,14 +29,14 @@
                 <button class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-            <h5 class="modal-title" id="my-modal-title">Delete Order <b>#{{ $order_id }}</b></h5>
+            <h5 class="modal-title" id="my-modal-title">{{__("Delete Order")}} <b>#{{ $order_id }}</b></h5>
                 
             </div>
             <div class="modal-body">
                 <form action="{{ route('offline-orders.destroy',$id) }}" method="POST">
                     @csrf
                     @method('DELETE')
-                 <h5> <b>{{__('Are you sure you want to delete this order #'.$order_id )}}</b> </h5>
+                 <h5> <b>{{__('Are you sure you want to delete this order #:order',['order' => $order_id] )}}</b> </h5>
                  <hr>
                  <button type="button" data-dismiss="modal" class="btn btn-default btn-md">{{__('Cancel') }}</button>
                  <button type="submit" class="btn btn-danger btn-md">{{__('Yes') }}</button>

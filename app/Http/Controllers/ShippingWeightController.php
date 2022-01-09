@@ -6,12 +6,6 @@ use Illuminate\Http\Request;
 use App\ShippingWeight;
 use Auth;
 
-/*==========================================
-=            Author: Media City            =
-    Author URI: https://mediacity.co.in
-=            Author: Media City            =
-=            Copyright (c) 2020            =
-==========================================*/
 
 class ShippingWeightController extends Controller
 {
@@ -59,7 +53,7 @@ class ShippingWeightController extends Controller
         $swt->vender_id = $user_id;
     	$swt->save();
 
-    	return redirect()->route('get.wt')->with('updated','Shipping Weight Setting Updated !');
+    	return redirect()->route('get.wt')->with('updated',__('Shipping Weight Setting Updated !'));
     }
 
 }

@@ -7,12 +7,6 @@ use DataTables;
 use App\Brand;
 use Avatar;
 
-/*==========================================
-=            Author: Media City            =
-    Author URI: https://mediacity.co.in
-=            Author: Media City            =
-=            Copyright (c) 2020            =
-==========================================*/
 
 class SellerBrandController extends Controller
 {
@@ -35,9 +29,9 @@ class SellerBrandController extends Controller
               ->editColumn('status',function($row){
               		
               		if($row->status == 1){
-              			$html = '<span class="badge badge-success badge-rounded shadow-sm">Active</span>';
+              			$html = '<span class="badge badge-success badge-rounded shadow-sm">'.__("Active").'</span>';
               		}else{
-              			$html = '<span class="badge badge-danger badge-rounded  shadow-sm">Deactive</span>';
+              			$html = '<span class="badge badge-danger badge-rounded  shadow-sm">'.__('Deactive').'</span>';
               		}
 
               		return $html;
@@ -84,7 +78,7 @@ class SellerBrandController extends Controller
 
         
 
-        return back()->with('added','Brand Requested Successfully !');
+        return back()->with('added',__('Brand requested successfully !'));
 
 
 

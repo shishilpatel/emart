@@ -19,7 +19,7 @@ class InstamojoController extends Controller
 
 
         if ($phone < 10) {
-            notify()->error("Invalid Phone no. ");
+            notify()->error(__("Invalid Phone no ! "));
             return redirect($error);
         }
 
@@ -52,7 +52,7 @@ class InstamojoController extends Controller
 
         } catch (\Exception $e) {
 
-            notify()->error('Payment Failed !',$e->getMessage());
+            notify()->error(__(__('Payment Failed !')),$e->getMessage());
             $failedTranscations = new FailedTranscations;
             $failedTranscations->order_id = $order_id;
             $failedTranscations->txn_id = 'INSTAMOJO_FAILED_' . str_random(5);
@@ -76,13 +76,13 @@ class InstamojoController extends Controller
 
             if (!isset($response['payments'][0]['status'])) {
 
-                notify()->error('Payment Failed !');
+                notify()->error(__('Payment Failed !'));
                 return redirect(session()->get('error_url'));
                 
 
             } else if ($response['payments'][0]['status'] != 'Credit') {
 
-                notify()->error('Payment Failed !');
+                notify()->error(__('Payment Failed !'));
                 return redirect(session()->get('error_url'));
 
             } else {

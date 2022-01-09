@@ -19,7 +19,7 @@
 
 				<div class="form-group">
 					<label>
-						Enter the new domain where you want to move the license : <span class="text-danger">*</span>
+						{{__('Enter the new domain where you want to move the license :')}} <span class="text-danger">*</span>
 					</label>
 					<input required class="form-control @error('domain') is-invalid @enderror" type="text" name="domain" value="{{ old('domain') }}" placeholder="eg:example.com"/>
 
@@ -30,13 +30,13 @@
 				 	@endif
 
 					<small class="text-muted">
-						<i class="fa fa-question-circle"></i> IF in some cases on current domain if you face the error you can re-update the domain by entering here.
+						<i class="fa fa-question-circle"></i> {{__("IF in some cases on current domain if you face the error you can re-update the domain by entering here.")}}
 					</small>
 
 					<br>
 
 					<small class="text-muted">
-						<i class="fa fa-question-circle"></i> IF still facing the access denied error please con <a target="_blank" href="https://codecanyon.net/item/emart-laravel-multivendor-ecommerce-advanced-cms/25300293/support">{{ __('Support') }}</a> {{ __('for updation in domain.') }}.
+						<i class="fa fa-question-circle"></i> {{__("IF still facing the access denied error please contact")}} <a target="_blank" href="https://codecanyon.net/item/emart-laravel-multivendor-ecommerce-advanced-cms/25300293/support">{{ __('Support') }}</a> {{ __('for updation in domain.') }}.
 					</small>
 
 				</div>
@@ -44,7 +44,7 @@
 
 				<div class="form-group">
 					<button type="submit" class="btn btn-md btn-primary">
-					 	<i class="fa fa-globe"></i>	Change domain
+					 	<i class="fa fa-globe"></i>	{{__("Change domain")}}
 					</button>
 				</div>
 			</form>

@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Edit Social Icon')
+@section('title',__('Edit Social Icon'))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -22,20 +22,21 @@
 @endcomponent
 <div class="contentbar">
   <div class="row">
-    @if ($errors->any())
-    <div class="alert alert-danger" role="alert">
-      @foreach($errors->all() as $error)
-      <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach
-    </div>
-    @endif
+    
 ​
 ​
     <div class="col-lg-12">
+      @if ($errors->any())
+      <div class="alert alert-danger" role="alert">
+        @foreach($errors->all() as $error)
+        <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button></p>
+        @endforeach
+      </div>
+      @endif
       <div class="card m-b-30">
         <div class="card-header">
-          <h5>Edit Social Icon @if($row->icon == 'fb') Facebook @elseif($row->icon == 'tw') Twitter @else {{ ucfirst($row->icon) }} @endif </h5>
+          <h5>{{__("Edit Social Icon")}} @if($row->icon == 'fb') {{__("Facebook")}} @elseif($row->icon == 'tw') {{__("Twitter")}} @else {{ ucfirst($row->icon) }} @endif </h5>
         </div>
         <div class="card-body">
           
@@ -60,16 +61,16 @@
                           <div class="form-group">
                               <label class="text-dark">{{ __('Icon') }} <span class="text-danger">*</span></label>
                                 <select name="icon" class="select2 form-control">
-                                  <option value="youtube" {{ $row->icon == 'youtube' ? 'selected="selected"' : '' }}>Youtube</option>
-                                  <option value="linkedin" {{ $row->icon == 'linkedin' ? 'selected="selected"' : '' }}>LinkedIn</option>
-                                  <option value="pintrest" {{ $row->icon == 'pintrest' ? 'selected="selected"' : '' }}>Pinterest</option>
-                                  <option value="rss" {{ $row->icon == 'rss' ? 'selected="selected"' : '' }} >RSS Feed</option>
-                                  <option value="googleplus" {{ $row->icon == 'googleplus' ? 'selected="selected"' : '' }} >Google+</option>
-                                  <option value="tw" {{ $row->icon == 'tw' ? 'selected="selected"' : '' }}>Twitter</option>
-                                  <option value="fb" {{ $row->icon == 'fb' ? 'selected="selected"' : '' }} >Facebook</option>
-                                  <option value="instagram" {{ $row->icon == 'instagram' ? 'selected="selected"' : '' }}>Instagram</option>
+                                  <option value="youtube" {{ $row->icon == 'youtube' ? 'selected="selected"' : '' }}>{{ __("Youtube") }}</option>
+                                  <option value="linkedin" {{ $row->icon == 'linkedin' ? 'selected="selected"' : '' }}>{{ __("LinkedIn") }}</option>
+                                  <option value="pintrest" {{ $row->icon == 'pintrest' ? 'selected="selected"' : '' }}>{{ __("Pinterest") }}</option>
+                                  <option value="rss" {{ $row->icon == 'rss' ? 'selected="selected"' : '' }} >{{ __('RSS Feed') }}</option>
+                                  <option value="googleplus" {{ $row->icon == 'googleplus' ? 'selected="selected"' : '' }} >{{ __("Google+") }}</option>
+                                  <option value="tw" {{ $row->icon == 'tw' ? 'selected="selected"' : '' }}>{{ __("Twitter") }}</option>
+                                  <option value="fb" {{ $row->icon == 'fb' ? 'selected="selected"' : '' }} >{{ __('Facebook') }}</option>
+                                  <option value="instagram" {{ $row->icon == 'instagram' ? 'selected="selected"' : '' }}>{{ __("Instagram") }}</option>
                                 </select>
-                                <small class="txt-desc">Please choose icon</small>
+                                <small class="txt-desc">{{ __("Please choose icon") }}</small>
                           </div>
                       </div>
 
@@ -80,7 +81,7 @@
                             <input class="slider" type="checkbox" name="status" checked />
                             <span class="knob"></span>
                           </label><br>
-                          <small>(Please Choose Status) </small>
+                          <small>({{__("Please Choose Status")}}) </small>
                       </div>
                                     
                       <!-- create and close button -->

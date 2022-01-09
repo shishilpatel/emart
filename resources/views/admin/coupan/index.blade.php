@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','All Coupans')
+@section('title',__('All Coupans'))
 @section('body')
 @component('admin.component.breadcumb',['secondaryactive' => 'active'])
 @slot('heading')
@@ -27,18 +27,18 @@
         <div class="col-lg-12">
             <div class="card m-b-30">
                 <div class="card-header">
-                    <h5 class="box-title"> All Coupans</h5>
+                    <h5 class="box-title"> {{ __('All Coupans') }}</h5>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
                     <table id="full_detail_table" class="table table-bordered table-striped">
                       <thead>
-                        <th>ID</th>
-                        <th>CODE</th>
-                        <th>Amount</th>
-                        <th>Max Usage</th>
-                        <th>Detail</th>
-                        <th>Action</th>
+                        <th>{{ __('ID') }}</th>
+                        <th>{{ __('CODE') }}</th>
+                        <th>{{ __('Amount') }}</th>
+                        <th>{{ __('Max Usage') }}</th>
+                        <th>{{ __('Detail') }}</th>
+                        <th>{{ __('Action') }}</th>
                       </thead>
                       <tbody>
                         @foreach($coupans as $key=> $cpn)
@@ -49,16 +49,16 @@
                             {{ $cpn->amount }}@if($cpn->distype == 'per')% @endif </td>
                           <td>{{ $cpn->maxusage }}</td>
                           <td>
-                            <p>Linked to : <b>{{ ucfirst($cpn->link_by) }}</b></p>
-                            <p>Expiry Date: <b>{{ date('d-M-Y',strtotime($cpn->expirydate)) }}</b></p>
-                            <p>Discount Type: <b>{{ $cpn->distype == 'per' ? "Percentage" : "Fixed Amount" }}</b></p>
+                            <p>{{__("Linked to")}} : <b>{{ ucfirst($cpn->link_by) }}</b></p>
+                            <p>{{  __('Expiry Date') }}: <b>{{ date('d-M-Y',strtotime($cpn->expirydate)) }}</b></p>
+                            <p>{{__('Discount Type')}}: <b>{{ $cpn->distype == 'per' ? __("Percentage") : __("Fixed Amount") }}</b></p>
                           </td>
                           <td>
                             <div class="dropdown">
                                 <button class="btn btn-round btn-primary-rgba" type="button" id="CustomdropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="feather icon-more-vertical-"></i></button>
                                 <div class="dropdown-menu" aria-labelledby="CustomdropdownMenuButton1">
                                   @can('coupans.edit')
-                                    <a class="dropdown-item" href="{{ route('coupan.edit',$cpn->id) }}"><i class="feather icon-edit mr-2"></i>Edit</a>
+                                    <a class="dropdown-item" href="{{ route('coupan.edit',$cpn->id) }}"><i class="feather icon-edit mr-2"></i>{{ __("Edit") }}</a>
                                     @endcan
                 
                                     @can('coupans.delete')
@@ -73,7 +73,7 @@
                               <div class="modal-dialog modal-sm">
                                   <div class="modal-content">
                                       <div class="modal-header">
-                                          <h5 class="modal-title" id="exampleSmallModalLabel">Delete</h5>
+                                          <h5 class="modal-title" id="exampleSmallModalLabel">{{ __("DELETE") }}</h5>
                                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                           <span aria-hidden="true">&times;</span>
                                           </button>
@@ -86,8 +86,8 @@
                                           <form method="post" action="{{route('coupan.destroy',$cpn->id)}}" class="pull-right">
                                               {{csrf_field()}}
                                               {{method_field("DELETE")}}
-                                              <button type="reset" class="btn btn-secondary" data-dismiss="modal">No</button>
-                                              <button type="submit" class="btn btn-primary">Yes</button>
+                                              <button type="reset" class="btn btn-secondary" data-dismiss="modal">{{ __("No") }}</button>
+                                              <button type="submit" class="btn btn-primary">{{ __("YES") }}</button>
                                           </form>
                                       </div>
                                   </div>

@@ -3,11 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="Soyuz is a bootstrap minimal & clean admin template">
-    <meta name="keywords" content="admin, admin panel, admin template, admin dashboard, responsive, bootstrap 4, ui kits, ecommerce, web app, crm, cms, html, sass support, scss">
-    <meta name="author" content="Themesbox">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-    <title>Payout for Order Item #{{ $inv_cus->prefix.$payout->singleorder->inv_no.$inv_cus->postfix }} | eMart</title>
+    <title>{{__("Payout for Order Item")}} #{{ $inv_cus->prefix.$payout->singleorder->inv_no.$inv_cus->postfix }} | eMart</title>
 	<link href="{{ url('admin_new/assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" type="text/css" href="{{url('css/font-awesome.min.css')}}">
 
@@ -53,14 +50,16 @@
                                            
                                            
                                                 <div class="invoice-name">
-                                                    <h5 class="text-uppercase mb-3">Invoice</h5>
+                                                    <h5 class="text-uppercase mb-3">
+                                                        {{__("Invoice")}}
+                                                    </h5>
                                                     
-                                                    <p class="mb-1">Invoice No. : #{{ $inv_cus->prefix.$payout->singleorder->inv_no.$inv_cus->postfix }}</p>
-                                                    <p class="mb-0">Payout ID :  {{ $payout->payoutid}}</p>
-                                                    <p class="mb-0">Transcation ID : {{ $txnid }}</p>
+                                                    <p class="mb-1">{{__("Invoice No. :")}} #{{ $inv_cus->prefix.$payout->singleorder->inv_no.$inv_cus->postfix }}</p>
+                                                    <p class="mb-0">{{__("Payout ID :")}}  {{ $payout->payoutid}}</p>
+                                                    <p class="mb-0">{{__("Transcation ID :")}} {{ $txnid }}</p>
                                                     @if($payout->paidvia == 'Paypal')
-                                                    <p class="mb-1">Paypal Batch ID : {{ $payout->txn_id }}</p>
-                                                    <p class="mb-1">Payment Status : {{ $status}}</p>
+                                                    <p class="mb-1">{{__("Paypal Batch ID :")}} {{ $payout->txn_id }}</p>
+                                                    <p class="mb-1">{{__("Payment Status :")}} {{ $status}}</p>
                                                                               @endif
                                                    
 
@@ -73,7 +72,9 @@
                                         <div class="row">
                                             <div class="col-sm-6 col-md-4 col-lg-4">
                                                 <div class="invoice-address">
-                                                    <h6 class="mb-3">From</h6>
+                                                    <h6 class="mb-3">
+                                                        {{__("From")}}
+                                                    </h6>
                                                     <h6 class="text-muted">{{ $genrals_settings->project_name }}</h6>
                                                     <ul class="list-unstyled">
                                                         <li>{{ $genrals_settings->address }}</li>
@@ -85,7 +86,9 @@
                                             </div>
                                             <div class="col-sm-6 col-md-4 col-lg-4">
                                                 <div class="invoice-address">
-                                                    <h6 class="mb-3">To</h6>
+                                                    <h6 class="mb-3">
+                                                        {{__("To")}}
+                                                    </h6>
                                                     <h6 class="text-muted">{{ $payout->vender->name }}</h6>
                                                     <ul class="list-unstyled">
                                                         <li> {{ $payout->vender->store->address }}
@@ -99,7 +102,9 @@
                                                 <div class="invoice-address">
                                                     <div class="card">
                                                         <div class="card-body bg-info-rgba text-center">
-                                                            <h6>Payment Method</h6>
+                                                            <h6>
+                                                                {{__("Payment Method")}}
+                                                            </h6>
                                                             <p></p>
                                                             <p>@if($payout->paidvia == 'Paypal')
                                                                 <img src="{{ url('images/paypal.png') }}" alt="Paypal">
@@ -119,10 +124,18 @@
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
-                                                        <th>Image</th>
-                                                        <th>Product</th>
-                                                        <th>HSN</th>
-                                                        <th>Qty</th>
+                                                        <th>
+                                                            {{__('Image')}}
+                                                        </th>
+                                                        <th>
+                                                            {{__("Product")}}
+                                                        </th>
+                                                        <th>
+                                                            {{__("HSN")}}
+                                                        </th>
+                                                        <th>
+                                                            {{__("Qty")}}
+                                                        </th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -159,7 +172,7 @@
                                             <div class="col-md-12 order-2 order-lg-1 col-lg-5 col-xl-6">
                                                 <div class="order-note">
 													
-                                                     <h4 class="text-success mb-0 mt-3">Payment Method: {{ $payout->paidvia == 'Bank' ? "Bank Transfer [$payout->txn_type]" : $payout->paidvia }}</h4>
+                                                     <h4 class="text-success mb-0 mt-3">{{__("Payment Method:")}} {{ $payout->paidvia == 'Bank' ? "Bank Transfer [$payout->txn_type]" : $payout->paidvia }}</h4>
                                                 </div>
                                             </div>
                                             <div class="col-md-12 order-1 order-lg-2 col-lg-7 col-xl-6">
@@ -167,18 +180,24 @@
                                                     <table class="table table-borderless text-right">
                                                         <tbody>
                                                             <tr>
-                                                                <td>Sub Total :</td>
+                                                                <td>
+                                                                    {{__("Subtotal:")}}
+                                                                </td>
                                                                 <td><i class="{{ $defCurrency->currency_symbol }}"></i> @if($payout->paidvia == 'Bank') {{  sprintf("%.2f", $payout->orderamount+$payout->txn_fee) }} @else {{  sprintf("%.2f", $payout->orderamount) }} @endif</td>
                                                             </tr>
                                                             @if($payout->txn_fee !='')
                                                             @if($payout->paidvia =='Paypal')
                                                             <tr>
 
-                                                                <td>Transcation Charge:</td>
+                                                                <td>
+                                                                    {{__("Transcation Charge:")}}
+                                                                </td>
                                                                 <td><i class="{{ $defCurrency->currency_symbol }}"></i> {{ $payout->txn_fee }} <i title="Already paid by admin not included in this total" class="fa fa-info-circle d-print-none"></i></td>
                                                             </tr>
                                                             <tr>
-                                                                <td>Transcation Charge:</td>
+                                                                <td>
+                                                                    {{__("Transcation Charge:")}}
+                                                                </td>
                                                                 <td><i class="{{ $defCurrency->currency_symbol }}"></i> {{ $payout->txn_fee }} <i title="Already paid by admin not included in this total" class="fa fa-info-circle d-print-none"></i></td>
                                                             </tr>
                                                             @endif
@@ -201,11 +220,15 @@
                                     <div class="invoice-footer">
                                         <div class="row align-items-center">
                                             <div class="col-md-6">
-                                                <p class="mb-0">Thank you for your Business.</p>
+                                                <p class="mb-0">
+                                                    {{__("Thank you for your Business.")}}
+                                                </p>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="invoice-footer-btn">
-                                                    <a href="javascript:window.print()" class="d-print-none btn btn-primary-rgba py-1 font-16"><i class="feather icon-printer mr-2"></i>Print</a>
+                                                    <a href="javascript:window.print()" class="d-print-none btn btn-primary-rgba py-1 font-16"><i class="feather icon-printer mr-2"></i>
+                                                        {{__("Print")}}
+                                                    </a>
                                                   
                                                 </div>
                                             </div>

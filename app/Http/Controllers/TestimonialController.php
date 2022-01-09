@@ -15,7 +15,7 @@ class TestimonialController extends Controller
      */
     public function index()
     {
-        abort_if(!auth()->user()->can('testimonials.view'), 403, 'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('testimonials.view'), 403, __('User does not have the right permissions.'));
         $clients = Testimonial::all();
         return view('admin.testimonial.index', compact('clients'));
     }
@@ -27,7 +27,7 @@ class TestimonialController extends Controller
      */
     public function create()
     {
-        abort_if(!auth()->user()->can('testimonials.create'), 403, 'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('testimonials.create'), 403, __('User does not have the right permissions.'));
         return view('admin.testimonial.add');
     }
 
@@ -39,7 +39,7 @@ class TestimonialController extends Controller
      */
     public function store(Request $request)
     {
-        abort_if(!auth()->user()->can('testimonials.create'), 403, 'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('testimonials.create'), 403, __('User does not have the right permissions.'));
         $this->validate($request, [
 
             'name' => 'required',
@@ -50,7 +50,7 @@ class TestimonialController extends Controller
 
         ], [
 
-            "name.required" => "Please Enter Name...",
+            "name.required" => __("Please enter name"),
 
         ]);
 
@@ -70,7 +70,7 @@ class TestimonialController extends Controller
         $input['des'] = clean($request->des);
 
         $data = Testimonial::create($input);
-        return back()->with("added", "Testimonial Has Been Added");
+        return back()->with("added", __("Testimonial has been added"));
     }
 
     /**
@@ -92,7 +92,7 @@ class TestimonialController extends Controller
      */
     public function edit($id)
     {
-        abort_if(!auth()->user()->can('testimonials.edit'), 403, 'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('testimonials.edit'), 403, __('User does not have the right permissions.'));
         $client = Testimonial::find($id);
         return view("admin.testimonial.edit", compact("client"));
     }
@@ -106,7 +106,7 @@ class TestimonialController extends Controller
      */
     public function update(Request $request, $id)
     {
-        abort_if(!auth()->user()->can('testimonials.edit'), 403, 'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('testimonials.edit'), 403, __('User does not have the right permissions.'));
 
         $testimonial = Testimonial::findOrFail($id);
 
@@ -139,7 +139,7 @@ class TestimonialController extends Controller
 
         $testimonial->update($input);
 
-        return redirect('admin/testimonial')->with('updated', 'Testimonial has been updated');
+        return redirect('admin/testimonial')->with('updated', __('Testimonial has been updated'));
     }
 
     /**
@@ -150,7 +150,7 @@ class TestimonialController extends Controller
      */
     public function destroy($id)
     {
-        abort_if(!auth()->user()->can('testimonials.delete'), 403, 'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('testimonials.delete'), 403, __('User does not have the right permissions.'));
 
         $testimonial = Testimonial::find($id);
         if ($testimonial->image != null) {
@@ -164,7 +164,7 @@ class TestimonialController extends Controller
         }
         $value = $testimonial->delete();
         if ($value) {
-            session()->flash("deleted", "testimonial Has Been Deleted");
+            session()->flash("deleted", __("Testimonial has been deleted"));
             return redirect("admin/testimonial");
         }
     }

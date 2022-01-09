@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','All Orders |')
+@section('title',__('All Orders |'))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -12,7 +12,7 @@
 ​@slot('button')
 <div class="col-md-6">
   <div class="widgetbar">
-  <a type="button" class="btn btn-danger-rgba btn-md z-depth-0" data-toggle="modal" data-target="#bulk_delete"><i class="fa fa-trash"></i> Delete Selected</a>
+  <a type="button" class="btn btn-danger-rgba btn-md z-depth-0" data-toggle="modal" data-target="#bulk_delete"><i class="fa fa-trash"></i> {{__('Delete Selected')}}</a>
   </div>
 </div>
 @endslot
@@ -27,7 +27,7 @@
         <div class="alert alert-danger" role="alert">
           @foreach($errors->all() as $error)
           <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true" style="color:red;">&times;</span></button></p>
+              <span aria-hidden="true">&times;</span></button></p>
           @endforeach
         </div>
       @endif
@@ -81,15 +81,15 @@
               <div class="delete-icon"></div>
             </div>
             <div class="modal-body text-center">
-              <h4 class="modal-heading">Are You Sure ?</h4>
-              <p>Do you really want to delete these orders? This process cannot be undone.</p>
+              <h4 class="modal-heading">{{ __("Are You Sure ?") }}</h4>
+              <p>{{ __("Do you really want to delete these orders? This process cannot be undone.") }}</p>
             </div>
             <div class="modal-footer">
              <form id="bulk_delete_form" method="post" action="{{ route('order.bulk.delete') }}">
               @csrf
               {{ method_field('DELETE') }}
-                <button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">No</button>
-                <button type="submit" class="btn btn-danger">Yes</button>
+                <button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">{{ __("NO") }}</button>
+                <button type="submit" class="btn btn-danger">{{ __("YES") }}</button>
               </form>
             </div>
           </div>

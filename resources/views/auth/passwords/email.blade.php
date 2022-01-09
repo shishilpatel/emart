@@ -1,5 +1,5 @@
 @extends("front.layout.master")
-@section('title','Forget Password ?')
+@section('title',__("Forget Password ?"))
 @section('body')
 @php
     require_once(base_path().'/app/Http/Controllers/price.php');
@@ -18,7 +18,7 @@
 
                     @if(Module::has('MimSms') && Module::find('MimSms')->isEnabled() && env('MIM_SMS_OTP_ENABLE') == 1 && env('DEFAULT_SMS_CHANNEL') == 'mim')
                         @include('mimsms::auth.forgetpassword')
-                    @elseif(Module::has('Exabytes') && Module::find('Exabytes')->isEnabled() && env('EXABYTES_OTP_ENABLE') == 1 && env('DEFAULT_SMS_CHANNEL') == 'exabytes')
+                    @elseif(Module::has('Exabytes') && Module::find('Exabytes')->isEnabled() && env('DEFAULT_SMS_CHANNEL') == 'exabytes')
                         @include('exabytes::auth.forgetpassword')
                     @else
                       <form method="POST" action="{{ route('password.email') }}">

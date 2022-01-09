@@ -50,11 +50,7 @@ class BankDetailController extends Controller
         
         if (empty($cat))
         {
-            $data = $this->validate($request, ["bankname" => "required", 'branchname' => 'required|not_in:0', 'ifsc' => 'required|not_in:0', "account" => "required", "acountname" => "required", ], [
-
-            "bankname.required" => "Bank Name Fild is required", "branchname.required" => "Branch Name Fild is required", "ifsc.required" => "Ifsc Fild is required",
-
-            ]);
+            $data = $this->validate($request, ["bankname" => "required", 'branchname' => 'required|not_in:0', 'ifsc' => 'required|not_in:0', "account" => "required", "acountname" => "required", ]);
 
             $input = $request->all();
 
@@ -64,27 +60,15 @@ class BankDetailController extends Controller
             
 
             $data->save();
-            notify()->success('Bank details has been updated !');
+            notify()->success(__('Bank details has been updated !'));
             return back();
         }
         else
         {
             $cat->update($input);
-            notify()->success('Bank details has been updated !');
+            notify()->success(__('Bank details has been updated !'));
             return back();
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\BankDetail  $bankDetail
-     * @return \Illuminate\Http\Response
-     */
-    public function show(BankDetail $bankDetail)
-    {
-        //
-        
     }
 
     /**
@@ -110,16 +94,12 @@ class BankDetailController extends Controller
     {
         
 
-        $data = $this->validate($request, ["bankname" => "required", 'branchname' => 'required|not_in:0', 'ifsc' => 'required|not_in:0', "account" => "required", "acountname" => "required", ], [
-
-        "bankname.required" => "Bank Name Fild is required", "branchname.required" => "Branch Name Fild is required", "ifsc.required" => "Ifsc Fild is required",
-
-        ]);
+        $data = $this->validate($request, ["bankname" => "required", 'branchname' => 'required|not_in:0', 'ifsc' => 'required|not_in:0', "account" => "required", "acountname" => "required"]);
 
         $slider = BankDetail::find($id);
         $input = $request->all();
         $slider->update($input);
-        return redirect('admin/bank_details')->with('updated', 'Bank Details has been updated');
+        return redirect('admin/bank_details')->with('updated', __('Bank details has been updated'));
     }
 
     /**
@@ -134,7 +114,7 @@ class BankDetailController extends Controller
         $value = $cat->delete();
         if ($value)
         {
-            session()->flash("deleted", "Bank Details Has Been Deleted");
+            session()->flash("deleted", __("Bank details has been deleted"));
             return redirect("admin/bank_details");
         }
     }

@@ -1,5 +1,5 @@
 @extends('admin.layouts.sellermastersoyuz')
-@section('title',"Show Return Order Detail #$inv_cus->order_prefix$orderid |")
+@section('title',__('Show Return Order Detail # :order',['order' => $inv_cus->order_prefix$orderid]))
 @section('title','Returned Orders |')
 
 @section('body')
@@ -19,10 +19,10 @@
             <div class="card">
                 <div class="card-header">
 
-					<a title="Print Slip" onclick="window.print()" class="d-print-none float-right btn btn-md btn-primary-rgba">
+					<a title="{{ __('Print Slip') }}" onclick="window.print()" class="d-print-none float-right btn btn-md btn-primary-rgba">
                         <i class="fa fa-print"></i>
                     </a>
-                    <a title="Back" href="{{ url('seller/return/orders') }}" class="d-print-none mr-2 float-right btn btn-md btn-primary-rgba">
+                    <a title="{{ __('Back') }}" href="{{ url('seller/return/orders') }}" class="d-print-none mr-2 float-right btn btn-md btn-primary-rgba">
                         <i class="fa fa-arrow-left"></i>
                     </a>
                     
@@ -44,29 +44,29 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-4">
-                            <h5 class="margin-15">Order <b>#{{ $inv_cus->order_prefix.$orderid }}</b>
+                            <h5 class="margin-15">{{__('Order')}} <b>#{{ $inv_cus->order_prefix.$orderid }}</b>
                             </h5>
                         </div>
                         <div class="col-md-4">
-                            <h5 class="margin-15">TXN ID: <b>{{ $order->txn_id }}</b>
+                            <h5 class="margin-15">{{__('TXN ID')}}: <b>{{ $order->txn_id }}</b>
                             </h5>
                         </div>
                         <div class="col-md-4">
-                            <h5 class="margin-15">Refunded On: <b>{{ date('d-m-Y @ h:i A',strtotime($order->updated_at)) }}</b></h5>
+                            <h5 class="margin-15">{{ __('Refunded On') }}: <b>{{ date('d-m-Y @ h:i A',strtotime($order->updated_at)) }}</b></h5>
                         </div>
             
                         <div class="col-md-4">
-                            <h4 class="margin-15">Customer Name:
+                            <h4 class="margin-15">{{__("Customer Name")}}:
                                 <b>{{ ucfirst($order->user->name) }}</b></h4>
                         </div>
             
                         <div class="col-md-4">
-                            <h4 class="margin-15">Refund Method : <b>{{ ucfirst($order->pay_mode) }}</b></h4>
+                            <h4 class="margin-15">{{__('Refund Method')}} : <b>{{ ucfirst($order->pay_mode) }}</b></h4>
                         </div>
             
                         @if($order->pay_mode == 'bank')
                         <div class="col-md-4">
-                            <h4 class="margin-15">Refunded To {{ ucfirst($order->user->name) }}'s Bank A/C
+                            <h4 class="margin-15">{{__('Refunded To')}} {{ ucfirst($order->user->name) }}'s {{__("Bank A/C")}}
                                 <b>XXXX{{ substr($order->bank->acno, -4) }}</b></h4>
                         </div>
                         @endif
@@ -76,19 +76,19 @@
                     <table class="font-size-14 width100 table table-striped">
                         <thead>
                             <th>
-                                Item
+                                {{__("Item")}}
                             </th>
             
                             <th>
-                                Qty
+                                {{__('Qty.')}}
                             </th>
             
                             <th>
-                                Refunded Amount
+                                {{__('Refunded Amount')}}
                             </th>
             
                             <th>
-                                Additional Info.
+                                {{__('Additional Info.')}}
                             </th>
                         </thead>
             
@@ -128,11 +128,11 @@
                                                 
                                                     @if(isset($order->getorder->simple_product))
                                                     <small>
-                                                        <b>Sold By:</b> {{$order->getorder->simple_product->store->name}}
+                                                        <b>{{ __('Sold By') }}:</b> {{$order->getorder->simple_product->store->name}}
                                                     </small>
                                                 @endif
                                                 @if(isset($order->getorder->variant))
-                                                    <small><b>Sold By:</b> {{$order->getorder->variant->products->store->name}}</small>
+                                                    <small><b>{{ __('Sold By') }}:</b> {{$order->getorder->variant->products->store->name}}</small>
                                                 @endif
                                                 
                                             </p>
@@ -152,24 +152,23 @@
                                 <td>
             
                                     @if($order->txn_fee !='')
-                                    <p><b>Transcation FEE:</b> &nbsp;<i
-                                            class="{{ $order->mainOrder->paid_in }}"></i>{{ $order->txn_fee }} (During Bank
-                                        Transfer)</p>
+                                    <p><b>{{__("Transcation FEE")}}:</b> &nbsp;<i
+                                            class="{{ $order->mainOrder->paid_in }}"></i>{{ $order->txn_fee }} ({{__("During Bank Transfer")}})</p>
                                     @endif
             
                                     @if($order->getorder->variant)
                                         @if($order->variant->products->returnPolicy->amount !=0 || $order->variant->products->returnPolicy->amount
                                         !='')
-                                        <p>As per Product {{$order->variant->products->returnPolicy->name}} Policy
-                                            <b>{{$order->variant->products->returnPolicy->amount}}%</b> is deducted from Order Amount.</p>
+                                        <p>{{__('As per Product')}} {{$order->variant->products->returnPolicy->name}} {{__('Policy')}}
+                                            <b>{{$order->variant->products->returnPolicy->amount}}%</b> {{ __('is deducted from Order Amount.') }}</p>
                                         @endif
                                     @endif
             
                                     @if(isset($order->getorder->simple_product))
                                         @if($order->getorder->simple_product->returnPolicy->amount !=0 || $order->getorder->simple_product->returnPolicy->amount
                                         !='')
-                                        <p>As per Product {{$order->getorder->simple_product->returnPolicy->name}} Policy
-                                            <b>{{$order->getorder->simple_product->returnPolicy->amount}}%</b> is deducted from Order Amount.</p>
+                                        <p>{{__('As per Product')}} {{$order->getorder->simple_product->returnPolicy->name}}  {{__('Policy')}}
+                                            <b>{{$order->getorder->simple_product->returnPolicy->amount}}%</b> {{ __('is deducted from Order Amount.') }}</p>
                                         @endif
                                     @endif
             

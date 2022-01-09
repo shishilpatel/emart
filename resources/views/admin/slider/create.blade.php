@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Create Slider')
+@section('title',__('Create Slider'))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -15,7 +15,7 @@
 @slot('button')
 <div class="col-md-6">
   <div class="widgetbar">
-  <a href="{{url('admin/slider')}} " class=" btn btn-primary-rgba"><i class="feather icon-arrow-left mr-2"></i>Back</a>
+  <a href="{{url('admin/slider')}} " class=" btn btn-primary-rgba"><i class="feather icon-arrow-left mr-2"></i> {{ __("Back") }}</a>
   </div>
 </div>
 @endslot
@@ -46,12 +46,10 @@
                   <label class="text-dark">{{ __('Choose Slider Image :') }}</label><br>
                   <!-- ================ -->
                   <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-                    </div>
+                    
                     <div class="custom-file">
                         <input type="file" class="custom-file-input" name="image" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01" required>
-                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                        <label class="custom-file-label" for="inputGroupFile01">{{ __("Choose file") }} </label>
                     </div>
                   </div>
                   <!-- ================ -->
@@ -60,18 +58,18 @@
                 <div class="form-group">
                   <label class="text-dark" for="link_by">{{ __('Link BY :') }}</label>
                   <select required="" class="form-control select2" name="link_by" id="link_by">
-                    <option value="none">None</option>
-                    <option value="url">URL</option>
-                    <option value="cat">Category</option>
-                    <option value="sub">Subcategory</option>
-                    <option value="child">Child Category</option>
-                    <option value="pro">Product</option>
+                    <option value="none">{{ __('None')  }}</option>
+                    <option value="url">{{ __('URL')  }}</option>
+                    <option value="cat">{{ __('Category')  }}</option>
+                    <option value="sub">{{ __('Subcategory')  }}</option>
+                    <option value="child"> {{ __('Childcategory')  }}</option>
+                    <option value="pro">{{ __('Product')  }}</option>
                   </select>
                 </div>
                 <div class="hide form-group" id="category_id">
                   <label class="text-dark">{{ __('Choose Category :') }}</label>
                   <select class="form-control select2 " id="cat" name="category_id">
-                      <option value="">Please Choose</option>
+                      <option value="">{{ __('Please Choose')  }}</option>
                       @foreach(App\Category::all() as $category)
                           @if($category->status == '1')
                               <option value="{{ $category->id }}">{{ $category->title }}</option>
@@ -83,7 +81,7 @@
                  <div class="hide form-group" id="subcat_id">
                   <label class="text-dark">{{ __('Choose Subcategory :') }}</label>
                   <select class="form-control select2" id="subcat" name="subcat" >
-                      <option value="">Please Choose</option>
+                      <option value="">{{ __('Please Choose')  }}</option>
                       @foreach(App\Subcategory::all() as $sub)
                           @if($sub->status == '1')
                               <option value="{{ $sub->id }}">{{ $sub->title }}</option>
@@ -95,7 +93,7 @@
                 <div class="hide form-group" id="child">
                   <label class="text-dark">{{ __('Choose Chilldcategory :') }}</label>
                   <select class="form-control select2" id="sub" name="child" >
-                      <option value="">Please Choose</option>
+                      <option value="">{{ __('Please Choose')  }}</option>
                       @foreach(App\Grandcategory::all() as $child)
                           @if($child->status == '1')
                               <option value="{{ $child->id }}">{{ $child->title }}</option>
@@ -107,7 +105,7 @@
                 <div class="hide form-group" id="pro">
                   <label class="text-dark">{{ __('Choose Product :') }}</label>
                   <select class="form-control select2" id="pro" name="pro" >
-                      <option value="">Please Choose</option>
+                      <option value="">{{ __('Please Choose')  }}</option>
                       @foreach(App\Product::all() as $pro)
                           @if($pro->status == '1' && count($pro->subvariants)>0)
                               <option value="{{ $pro->id }}">{{ $pro->name }}</option>
@@ -129,7 +127,7 @@
                     </div>
                     <div class="col-md-4">
                        <label class="text-dark" for="">{{ __('Text Color :') }}</label>
-                       <div class="input-group initial-color" title="Using input value">
+                       <div class="input-group initial-color">
                         <input type="text" class="form-control input-lg" value="#000000" name="headingtextcolor"  placeholder="#000000"/>
                         <span class="input-group-append">
                         <span class="input-group-text colorpicker-input-addon"><i></i></span>
@@ -149,7 +147,7 @@
 
                     <div class="col-md-4">
                       <label class="text-dark" for="">{{ __('Text Color :') }}</label>
-                      <div class="input-group initial-color" title="Using input value">
+                      <div class="input-group initial-color">
                         <input type="text" class="form-control input-lg" value="#000000" name="subheadingcolor"  placeholder="#000000"/>
                         <span class="input-group-append">
                         <span class="input-group-text colorpicker-input-addon"><i></i></span>

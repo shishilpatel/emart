@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Edit Testimonial | ')
+@section('title',__('Edit Testimonial | '))
 @section('body')
 
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
@@ -7,7 +7,7 @@
    {{ __('Edit Testimonial ') }}
 @endslot
 @slot('menu1')
-   {{ __(' Testimonial ') }}
+   {{ __('Testimonial ') }}
 @endslot
 @slot('menu2')
    {{ __('Edit Testimonial ') }}
@@ -54,47 +54,40 @@
                     </label>
                   
                       <select name="rating" class="form-control select2">
-                        <option value="0">Please Choose</option>
+                        <option value="0">{{ __('Please Choose')  }}</option>
                         <option value="1" {{$client->rating=='1' ?'selected':''}}>1</option>
                         <option value="2" {{$client->rating=='2' ?'selected':''}}>2</option>
                         <option value="3" {{$client->rating=='3' ?'selected':''}}>3</option>
                         <option value="4" {{$client->rating=='4' ?'selected':''}}>4</option>
                         <option value="5" {{$client->rating=='5' ?'selected':''}}>5</option>
                       </select>
-                      <small class="txt-desc">(Please Choose Rating)</small>
+                      <small class="txt-desc">({{ __('Please Choose Rating')  }})</small>
                     
                   </div>
                 
                   <div class="form-group col-md-6">
                     <label>
-                      Designation: <span class="required">*</span>
+                      {{__("Designation:")}} <span class="required">*</span>
                     </label>
-                    <input placeholder="Enter Designation" type="text" id="first-name" name="post" value="{{$client->post}}"
+                    <input placeholder="{{ __("Enter Designation") }}" type="text" id="first-name" name="post" value="{{$client->post}}"
                       class="form-control">
                   </div>
     
                   
-    
-    
-                
-    
-                
-                
-                
                   
                 <div class="form-group col-md-12">
-                  <label> Description: <span
+                  <label>{{__("Description:")}} <span
                       class="required"></span>
                   </label>
                   <textarea cols="2" id="editor1" name="des" rows="5">
                             {{$client->des}}
                            </textarea>
-                  <small class="txt-desc">(Please Enter Description)</small>
+                  <small class="txt-desc">({{__('Please Enter Description')}})</small>
                 </div>
                 
                 <div class="form-group col-md-6">
                   <label>
-                    Status:
+                    {{ __('Status:') }}
                   </label>
                   <br>
                 
@@ -104,27 +97,25 @@
                   </label>
                       <br>
                     <input type="hidden" name="status" value="{{ $client->status }}" id="status3">
-                    <small class="txt-desc">(Please Choose Status) </small>
+                    <small class="txt-desc">({{__("Please Choose Status")}}) </small>
                   
                 </div>
            
 
                 <div class="form-group col-md-6">
-                  <label> Image: <span
+                  <label>{{__("Image:")}} <span
                       class="required">*</span>
                   </label>
 
 
                   <div class="input-group mb-2">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-                    </div>
+                   
                     <div class="custom-file">
                       <input type="file" name="image" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
-                      <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                      <label class="custom-file-label" for="inputGroupFile01">{{ __("Choose file") }} </label>
                     </div>
                   </div>
-                  <small class="txt-desc">(Please Choose Client Image)</small>
+                  <small class="txt-desc">({{__("Please Choose Client Image")}})</small>
                      <br>
                   <img src=" {{url('images/testimonial/'.$client->image)}}" class="testimonal_image">
                   
@@ -136,7 +127,7 @@
                 <div class="form-group col-md-12">
                   <button type="reset" class="btn btn-danger mr-1"><i class="fa fa-ban"></i> {{ __("Reset")}}</button>
                   <button type="submit" @if(env('DEMO_LOCK')==0) type="submit" @else disabled
-                  title="Sorry this operation is disabled in demo" @endif class="btn btn-primary"><i class="fa fa-check-circle"></i>
+                  title="{{ __("This this operation is disabled in demo !") }}" @endif class="btn btn-primary"><i class="fa fa-check-circle"></i>
                     {{ __("Update")}}</button>
     
                     

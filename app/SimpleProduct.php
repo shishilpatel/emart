@@ -62,7 +62,13 @@ class SimpleProduct extends Model implements Viewable
         'pre_order',
         'preorder_type',
         'partial_payment_per',
-        'product_avbl_date'
+        'product_avbl_date',
+        'size_chart',
+        'other_cats'
+    ];
+
+    protected $casts = [
+        'other_cats' => 'array'
     ];
 
     public function productGallery()
@@ -138,6 +144,14 @@ class SimpleProduct extends Model implements Viewable
 
     public function flashdeal(){
         return $this->hasMany('App\FlashSaleItem','simple_product_id');
+    }
+
+    public function sizechart(){
+        return $this->belongsTo('App\SizeChart','size_chart','id');
+    }
+
+    public function slug(){
+        return route('show.product',['id' => $this->id, 'slug' => $this->slug]);
     }
 
 }

@@ -450,6 +450,7 @@ $('#tax_manual').on('change', function () {
 
   if ($('#tax_manual').is(':checked')) {
     $('#manual_tax').show();
+    $("#manual_tax_name").show();
     $('#tax_class').hide();
     $('#tax_class_box').removeAttr('required');
     $('#tax_r').attr('required', '');
@@ -457,6 +458,7 @@ $('#tax_manual').on('change', function () {
 
   } else {
     $('#tax_class').show();
+    $("#manual_tax_name").hide();
     $('#manual_tax').hide();
     $('#tax_class_box').attr('required', '');
     $('#tax_r').removeAttr('required');
@@ -468,22 +470,38 @@ $('#choose_policy').on('change', function () {
 
   var get = $(this).val();
 
-  if (get == 0) {
+  if (get == 1) {
 
-    $('#return_policy').removeAttr('required');
-    $('#policy').hide('slow');
+    $('select[name="return_policy"]').attr('required','required');
+    $('#policy').addClass('d-block').removeClass('d-none');
 
-  } else if (get == 1) {
-    $('#policy').show('slow');
-    $('#return_policy').attr('required', 'required');
-  } else {
-    $('#return_policy').removeAttr('required');
-    $('#policy').hide('slow');
+  }else {
+    $('select[name="return_policy"]').removeAttr('required','required');
+    $('#policy').addClass('d-none').removeClass('d-block');
 
   }
 
 });
+
 $(function () {
+
+  (function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('form');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
 
   $("#expirydate").datepicker({
     dateFormat: 'yy-m-d'

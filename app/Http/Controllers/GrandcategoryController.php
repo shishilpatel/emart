@@ -19,7 +19,7 @@ class GrandcategoryController extends Controller
      */
     public function index()
     {
-        abort_if(!auth()->user()->can('childcategory.view'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('childcategory.view'),403,__('User does not have the right permissions.'));
 
         $cats = Grandcategory::orderBy('position','ASC')->get();
         return view('admin.grandcategory.index', compact('cats'));
@@ -32,14 +32,14 @@ class GrandcategoryController extends Controller
      */
     public function create()
     {
-        abort_if(!auth()->user()->can('childcategory.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('childcategory.create'),403,__('User does not have the right permissions.'));
         $parent = Category::all();
         return view('admin.grandcategory.add', compact('parent'));
     }
 
     public function import(Request $request){
 
-        abort_if(!auth()->user()->can('category.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('category.create'),403,__('User does not have the right permissions.'));
 
         $validator = Validator::make(
             [
@@ -54,7 +54,7 @@ class GrandcategoryController extends Controller
         );
 
         if ($validator->fails()) {
-            notify()->error('Invalid file !');
+            notify()->error(__('Invalid file !'));
             return back();
         }
 
@@ -85,9 +85,15 @@ class GrandcategoryController extends Controller
 
             });
 
-            Storage::delete('/excel/'.$filename);
+            try{
 
-            notify()->success('Childcategories imported successfully !');
+                unlink(storage_path().'/excel/'.$filename);
+
+            }catch(\Exception $e){
+
+            }
+
+            notify()->success(__('Childcategories imported successfully !'));
 
             return back();
 
@@ -107,7 +113,7 @@ class GrandcategoryController extends Controller
     public function store(Request $request)
     {
         
-        abort_if(!auth()->user()->can('childcategory.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('childcategory.create'),403,__('User does not have the right permissions.'));
 
         $request->validate([
 
@@ -116,7 +122,7 @@ class GrandcategoryController extends Controller
 
         ], [
 
-            "title.required" => "Please enter Childcategory name"
+            "title.required" => __("Please enter Childcategory name")
 
         ]);
 
@@ -142,7 +148,7 @@ class GrandcategoryController extends Controller
         $input['status']  = isset($request->status) ? "1" : "0";
         $data->create($input);
         return redirect()->route('grandcategory.index')
-            ->with("added", "Child Category Has Been Added");
+            ->with("added", __("Childcategory has been added"));
     }
 
     /**
@@ -154,7 +160,7 @@ class GrandcategoryController extends Controller
     public function reposition(Request $request)
     {   
 
-        abort_if(!auth()->user()->can('childcategory.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('childcategory.edit'),403,__('User does not have the right permissions.'));
 
         if($request->ajax()){
 
@@ -182,7 +188,7 @@ class GrandcategoryController extends Controller
      */
     public function edit($id)
     {   
-        abort_if(!auth()->user()->can('childcategory.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('childcategory.edit'),403,__('User does not have the right permissions.'));
 
         $parent = Category::all();
         $subcat = Subcategory::all();
@@ -200,7 +206,7 @@ class GrandcategoryController extends Controller
     public function update(Request $request, $id)
     {   
 
-        abort_if(!auth()->user()->can('childcategory.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('childcategory.edit'),403,__('User does not have the right permissions.'));
 
         $cat = Grandcategory::findOrFail($id);
 
@@ -232,7 +238,7 @@ class GrandcategoryController extends Controller
 
         $cat->update($input);
 
-        return redirect('admin/grandcategory')->with('updated', 'Child Category has been updated');
+        return redirect('admin/grandcategory')->with('updated', __('Childcategory has been updated'));
     }
 
     /**
@@ -244,7 +250,7 @@ class GrandcategoryController extends Controller
     public function destroy($id)
     {   
 
-        abort_if(!auth()->user()->can('childcategory.delete'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('childcategory.delete'),403,__('User does not have the right permissions.'));
 
         $getdata = Grandcategory::find($id);
 
@@ -255,14 +261,14 @@ class GrandcategoryController extends Controller
         if (count($getdata->products) > 0)
         {
             return back()
-                ->with('warning', 'Childcategory cant be deleted as its linked to products !');
+                ->with('warning', __('Childcategory cant be deleted as its linked to products !'));
         }
 
         $value = $getdata->delete();
         
         if ($value)
         {
-            session()->flash("deleted", "Child Category Has Been Deleted");
+            session()->flash("deleted", __("Childcategory has been deleted"));
             return redirect("admin/grandcategory");
         }
     }

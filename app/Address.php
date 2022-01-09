@@ -26,6 +26,6 @@ class Address extends Model
 	}
 	
 	public function getCountry(){
-    	return $this->belongsTo('App\Allcountry','country_id','id');
+    	return $this->belongsTo(Allcountry::class,'country_id','id');
     }
 }

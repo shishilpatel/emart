@@ -38,7 +38,7 @@ class CashbackController extends Controller
         }
 
 
-        notify()->success('Cashback settings updated !','Success');
+        notify()->success(__('Cashback settings updated !'),__('Success'));
         return back();
 
     }

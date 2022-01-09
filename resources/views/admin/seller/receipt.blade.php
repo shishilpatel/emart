@@ -4,7 +4,9 @@
 
 		<tr>
 			<td>
-				<b>Payout Batch ID</b>
+				<b>
+					{{__("Payout Batch ID")}}
+				</b>
 			</td>
 			<td>
 				{{ $response->batch_header->payout_batch_id }}
@@ -13,7 +15,9 @@
 
 		<tr>
 			<td>
-				<b>Amount</b>
+				<b>
+					{{__("Amount")}}
+				</b>
 			</td>
 
 			<td>
@@ -23,7 +27,9 @@
 
 		<tr>
 			<td>
-				<b>Payout Status</b>
+				<b>
+					{{__("Payout Status")}}
+				</b>
 			</td>
 			<td>
 				{{ $response->batch_header->batch_status }}
@@ -32,7 +38,9 @@
 
 		<tr>
 			<td>
-				<b>Payout Created ON</b>
+				<b>
+					{{__("Payout Created ON")}}
+				</b>
 			</td>
 			<td>
 				{{ date('d-m-Y | h:i A',strtotime($response->batch_header->time_created)) }}
@@ -41,7 +49,9 @@
 
 		<tr>
 			<td>
-				<b>Payout Proccessed ON</b>
+				<b>
+					{{__("Payout Proccessed ON")}}
+				</b>
 			</td>
 			<td>
 				{{ date('d-m-Y | h:i A',strtotime($response->items[0]->time_processed)) }}
@@ -49,22 +59,22 @@
 		</tr>
 
 		<tr>
-			<td><b>Payout Completed On</b></td>
+			<td><b>{{ __("Payout Completed On") }}</b></td>
 			<td>{{ date('d-m-Y | h:i A',strtotime($response->batch_header->time_completed)) }}</td>
 		</tr>
 
 		<tr>
-			<td><b>Transcation ID</b></td>
+			<td><b>{{ __("Transcation ID") }}</b></td>
 			<td>{{ $response->items[0]->transaction_id }}</td>
 		</tr>
 
 		<tr>
-			<td><b>Transcation Status</b></td>
+			<td><b>{{ __("Transcation Status") }}</b></td>
 			<td>{{ $response->items[0]->transaction_status }}</td>
 		</tr>
 
 		<tr>
-			<td ><b>Message</b></td>
+			<td ><b>{{ __('Message') }}</b></td>
 			<td class="width60">
 				<p><b>{{ $response->items[0]->errors->name }}</b></p>
 				<p>{{ $response->items[0]->errors->message }}</p>

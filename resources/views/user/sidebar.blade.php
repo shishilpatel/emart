@@ -1,16 +1,16 @@
 <div class="bg-white">
     <div class="user_header">
-        <h5 class="user_m">• {{ __('staticwords.Hi!') }} {{$user->name}}</h5>
+        <h5 class="user_m">• {{ __('staticwords.Hi!') }} {{auth()->user()->name}}</h5>
     </div>
     <div align="center">
-        @if($user->image !="")
-        <img src="{{url('images/user/'.$user->image)}}" class="mt-4 rounded-circle img-thumbnail" />
+        @if(auth()->user()->image !="" && file_exists(public_path().'/images/user/'.auth()->user()->image))
+        <img src="{{url('images/user/'.auth()->user()->image)}}" class="mt-4 rounded-circle img-thumbnail" />
         @else
         <img src="{{ Avatar::create(Auth::user()->name)->toBase64() }}" class="user-photo" />
         @endif
         <div class="mt-2">
-            <h5>{{ $user->email }}</h5>
-            <p>{{ __('staticwords.MemberSince') }}: {{ date('M jS Y',strtotime($user->created_at)) }}</p>
+            <h5>{{ auth()->user()->email }}</h5>
+            <p>{{ __('staticwords.MemberSince') }}: {{ date('M jS Y',strtotime(auth()->user()->created_at)) }}</p>
         </div>
     </div>
     <br>
@@ -38,6 +38,9 @@
 
         <a class="nav-link padding15 {{ Nav::isRoute('user.view.order') }} {{ Nav::isRoute('user.order') }}" href="{{ url('/order') }}"> <i
                 class="fa fa-dot-circle-o" aria-hidden="true"></i> {{ __('staticwords.MyOrders') }}</a>
+
+        <a class="nav-link padding15 {{ Nav::isRoute('user.chat.view') }} {{ Nav::isRoute('user.chat.screen') }}" href="{{ route('user.chat.screen') }}"> <i class="fa fa-comments-o"></i>
+            {{ __('My Chats') }}</a>
         @if($wallet_system == 1)
         <a class="nav-link padding15 {{ Nav::isRoute('user.wallet.show') }}" href="{{ route('user.wallet.show') }}"><i
                 class="fa fa-credit-card" aria-hidden="true"></i>

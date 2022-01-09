@@ -48,7 +48,7 @@ class TwoFactorController extends Controller
             'google2fa_secret' => $google2fa->generateSecretKey(),
         ]);
 
-        notify()->success('Secret Key is generated, Please verify Code to Enable 2FA','Success !');
+        notify()->success(__('Secret key is generated, Please verify code to enable 2FA'),'Success !');
             
         return back();
     }
@@ -68,12 +68,12 @@ class TwoFactorController extends Controller
 
             Cookie::queue('two_fa',1);
             
-            notify()->success('2FA is enabled on your account !','Success !');
+            notify()->success(__('2FA is enabled on your account !'),'Success !');
             
             return back();
 
         }else{
-            notify()->error('Secret Key is invalid, Please verify Code again to Enable 2FA','Error !');
+            notify()->error(__('Secret Key is invalid, Please verify Code again to Enable 2FA'),'Error !');
             
             return back();
         }
@@ -93,12 +93,12 @@ class TwoFactorController extends Controller
                 'google2fa_secret' => NULL
             ]);
 
-            notify()->success('2FA is disabled in your account !','Success !');
+            notify()->success(__('2FA is disabled in your account !'),'Success !');
             
             return back();
 
         }else{
-            return back()->withErrors(['password' => 'Invalid password !']);
+            return back()->withErrors(['password' => __('Invalid password !')]);
         }
 
     }
@@ -116,7 +116,7 @@ class TwoFactorController extends Controller
             return redirect()->intended('/');
 
         }else{
-            return back()->withErrors(['password' => 'Invalid pin !']);
+            return back()->withErrors(['password' => __('Invalid pin !')]);
         }
 
     }

@@ -89,7 +89,7 @@ class LoginController extends Controller
 
             Auth::login($find_user);
 
-            notify()->success('Welcome back !',$find_user->name);
+            notify()->success(__('Welcome back !'),$find_user->name);
             return redirect('/');
 
         }else{  
@@ -114,7 +114,7 @@ class LoginController extends Controller
             }
             
             $this->guard()->login($user);
-            notify()->success('Registration Successfull !');
+            notify()->success(__('Registration successfull !'));
             return redirect('/');
        
         }
@@ -131,7 +131,7 @@ class LoginController extends Controller
 
         Cookie::queue(Cookie::forget('two_fa'));
 
-        notify()->success('Logged out !');
+        notify()->success(__('Logged out !'));
         return redirect('/');
     }
 

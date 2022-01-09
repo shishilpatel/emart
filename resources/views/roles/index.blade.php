@@ -1,7 +1,5 @@
-
-
-@extends('admin.layouts.master')
-@section('title','Roles | ')
+@extends('admin.layouts.master-soyuz')
+@section('title', __('Roles'))
 @section('body')
 
 @component('seller.components.breadcumb',['secondactive' => 'active'])
@@ -18,7 +16,7 @@
 <div class="col-md-6">
     <div class="widgetbar">
      @can('roles.create')
-      <a href="{{ route('roles.create') }}" class="btn btn-primary-rgba"><i class="feather icon-plus mr-2"></i>  Create a new role</a>
+      <a href="{{ route('roles.create') }}" class="btn btn-primary-rgba"><i class="feather icon-plus mr-2"></i>  {{ __('Create a new role') }}</a>
       @endcan
       
     </div>
@@ -39,9 +37,6 @@
                     <h5 class="card-title"> {{__("Roles")}}</h5>
                   
                   
-              
-                 
-                  
               </div>
               
               <div class="card-body">
@@ -54,10 +49,10 @@
                                 #
                             </th>
                             <th>
-                                Role Name
+                                {{__("Role Name")}}
                             </th>
                             <th>
-                                Action
+                                {{__('Action')}}
                             </th>
                         </thead>
                     
@@ -119,6 +114,4 @@
     });
     </script>
 @endsection    
-                    
-    
-                
+            

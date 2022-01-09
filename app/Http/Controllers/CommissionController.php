@@ -2,15 +2,8 @@
 namespace App\Http\Controllers;
 
 use App\Commission;
-use App\category;
 use Illuminate\Http\Request;
 
-/*==========================================
-=            Author: Media City            =
-    Author URI: https://mediacity.co.in
-=            Author: Media City            =
-=            Copyright (c) 2020            =
-==========================================*/
 
 class CommissionController extends Controller
 {
@@ -22,7 +15,7 @@ class CommissionController extends Controller
     public function index()
     {
 
-        $commissions = Commission::all();
+        $commissions = Commission::whereHas('category')->with('category')->get();
         return view("admin.commission.index", compact("commissions"));
     }
 
@@ -48,7 +41,7 @@ class CommissionController extends Controller
 
         $data = $this->validate($request, ['rate' => 'required|integer|not_in:0', 'category_id' => 'required|not_in:0',
 
-        ], ["rate.required" => "Rate Fild Accept Only Number",
+        ], ["rate.required" => "Rate field accept only number",
 
         ]);
 
@@ -56,7 +49,7 @@ class CommissionController extends Controller
         $data = Commission::create($input);
         $data->save();
         return redirect('admin/commission')
-            ->with('updated', 'Commission has been updated');
+            ->with('updated', __('Commission has been updated'));
     }
 
     public function show($id)

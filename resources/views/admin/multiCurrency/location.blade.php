@@ -1,7 +1,7 @@
 
             <span class="control-label col-md-12" for="first-name">
               <label class="text-dark">
-                Auto Detect:
+                {{__("Auto Detect:")}}
               </label>
             </span>
 
@@ -15,19 +15,19 @@
               </label>
               
               <label for="auto-detect"></label> 
-              <div class="geoLocation-add" ><span class="you-are-login">Currently you are login from </span><img class="country-loding" src="{{ url('images/circle.gif') }}"><span class="location-name"></span> <i class="fa fa-map-marker map-icon" aria-hidden="true"></i></div>
+              <div class="geoLocation-add" ><span class="you-are-login">{{__("Currently you are login from")}} </span><img class="country-loding" src="{{ url('images/circle.gif') }}"><span class="location-name"></span> <i class="fa fa-map-marker map-icon" aria-hidden="true"></i></div>
 
             </div>
 
           
           <div class="col-md-3 col-sm-3 col-xs-6 select-geo">         
-            <label class="text-dark"> Geo Location: </label> 
+            <label class="text-dark"> {{__("Geo Location:")}} </label> 
           </div>
 
       <div class="col-md-6 col-sm-6 col-xs-6 select-geo">  
         <select name="geoLocation" class="form-control select2" id="GeoLocationId">
             
-             <option value="0">Not Available</option>
+             <option value="0">{{ __("Not Available") }}</option>
                       @foreach($all_country as $c)
                          
                         
@@ -45,7 +45,7 @@
           <div id="baseCurrencyBox">
             <span class="control-label col-md-3 col-sm-12 col-xs-12 currency-by-country margin-top-10">
               <label class="text-dark">
-                Currency by Country:
+                {{__("Currency by Country:")}}
               </label>
             </span>
              <div class="col-md-9 col-sm-9 col-xs-12 currency-by-country">
@@ -53,7 +53,7 @@
                  <input type="checkbox" name="by-country" onchange="currencybycountry('by-country')" id="by-country" {{$auto_geo->currency_by_country=="1"?'checked':''}}>
                  <span class="knob"></span>
                 </label>
-                <i class="currency-info">Only working with AUTO DETECT feature. Currency will be selected base on country.</i>
+                <i class="currency-info">{{ __("Only working with AUTO DETECT feature. Currency will be selected base on country.") }}</i>
               </div>
           </div>
 
@@ -62,7 +62,7 @@
            <div class="display-none" id="baseCurrencyBox">
             <span class="control-label col-md-3 col-sm-12 col-xs-12 currency-by-country margin-top-10">
               <label class="text-dark">
-                Currency by Country:
+                {{__("Currency by Country:")}}
               </label>
             </span>
              <div class="col-md-9 col-sm-9 col-xs-12 currency-by-country">
@@ -70,7 +70,7 @@
                  <input type="checkbox" name="by-country" onchange="currencybycountry('by-country')" id="by-country" {{$auto_geo->currency_by_country=="1"?'checked':''}}>
                  <span class="knob"></span>
                 </label>
-                <i class="currency-info">Only working with AUTO DETECT feature. Currency will be selected base on country.</i>
+                <i class="currency-info">{{ __("Only working with AUTO DETECT feature. Currency will be selected base on country.") }}</i>
               </div>
           </div>
 
@@ -86,9 +86,9 @@
              
               <thead>
                 <tr>
-                  <th scope="col">Currency</th>
-                  <th scope="col">Countries</th>
-                  <th scope="col">Action</th>
+                  <th scope="col">{{ __("Currency") }}</th>
+                  <th scope="col">{{ __("Countries") }}</th>
+                  <th scope="col">{{ __("Action") }}</th>
                  
                 </tr>
               </thead>
@@ -133,11 +133,11 @@
                             <div class="dropdown-menu" aria-labelledby="CustomdropdownMenuButton1">
 
                               <a onclick="SelectAllCountry2('country_id{{$currency->id}}','btnid{{$currency->id}}')" id="btnid{{$currency->id}}"class="btn btn-light dropdown-item" isSelected="no"> 
-                                <span>Select All  </span><i class="fa fa-check-square-o"></i>
+                                <span>{{__('Select All')}}  </span><i class="fa fa-check-square-o"></i>
                               </a>
 
                               <a onclick="RemoveAllCountry2('country_id{{$currency->id}}','btnid{{$currency->id}}')" id="btnid{{$currency->id}}"class="btn btn-light dropdown-item" isSelected="yes"> 
-                              <span>Remove All  </span><i class="fa fa-window-close"></i>
+                              <span>{{__("Remove All")}}  </span><i class="fa fa-window-close"></i>
                               </a>
                                
                             </div>
@@ -154,7 +154,7 @@
                   <td colspan="2">
                   <div class="pull-left">
                   <button type="reset" class="btn btn-danger-rgba mr-1"><i class="fa fa-ban mr-2"></i>{{ __("Reset")}}</button>
-                    <button class="btn btn-primary-rgba"><i class="fa fa-check-circle mr-2"></i>Save</button>
+                    <button class="btn btn-primary-rgba"><i class="fa fa-check-circle mr-2"></i>{{ __("Save") }}</button>
                   </div>
                 </td>
                 </tr>

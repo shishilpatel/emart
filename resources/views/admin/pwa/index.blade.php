@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Progressive Web App Setting | ')
+@section('title',__('Progressive Web App Setting | '))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -13,15 +13,16 @@
 ​
 <div class="contentbar">
   <div class="row">
-    @if ($errors->any())
-    <div class="alert alert-danger" role="alert">
-      @foreach($errors->all() as $error)
-      <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach
-    </div>
-    @endif
+    
     <div class="col-lg-12">
+		@if ($errors->any())
+			<div class="alert alert-danger" role="alert">
+			@foreach($errors->all() as $error)
+			<p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span></button></p>
+			@endforeach
+			</div>
+		@endif
       <div class="card m-b-30">
         <div class="card-header">
           <h5 class="box-title">{{ __('Progressive Web App Setting') }}</h5>
@@ -40,10 +41,10 @@
 			<div class="tab-pane fade show active" id="home-line" role="tabpanel" aria-labelledby="home-tab-line">
 				<div class="row mr-0 ml-0">
 					<div class="col-md-12  p-3 mb-2 bg-success text-white">
-						<i class="fa fa-info-circle"></i> Progessive Web App Requirements
+						<i class="fa fa-info-circle"></i> {{__("Progessive Web App Requirements")}}
 						<ul>
-							<li><b>HTTPS</b> must required in your domain (for enable contact your host provider for SSL configuration).</li>
-							<li><b>Icons and splash screens </b> required and to be updated in Icon Settings.</li>
+							<li><b>HTTPS</b> {{__("must required in your domain (for enable contact your host provider for SSL configuration)")}}.</li>
+							<li><b>{{__("Icons and splash screens")}} </b> {{ __("required and to be updated in Icon Settings.") }}</li>
 						
 							</li>
 						</ul>
@@ -56,7 +57,7 @@
 							@csrf
                                <div class="row">
 							<div class="form-group col-md-6">
-								<label class="text-dark">Enable PWA: </label>
+								<label class="text-dark"> {{__("Enable PWA:")}} </label>
 								<br>
 								<label class="switch">
 									<input id="pwa_enable" type="checkbox" name="PWA_ENABLE"
@@ -66,15 +67,15 @@
 							</div>
 							
 							<div class="form-group col-md-12">
-								<label class="text-dark">App Name: </label>
+								<label class="text-dark"> {{__('App Name:')}} </label>
 								<input disabled class="form-control" type="text" name="app_name" value="{{ config("app.name")}}"/>
 							</div>
 
 							
 							<div class="col-md-6">
 									<div class="form-group">
-										<label class="text-dark">Theme Color for header: </label>
-										<div class="input-group initial-color" title="Using input value">
+										<label class="text-dark"> {{__("Theme Color for header:")}} </label>
+										<div class="input-group initial-color">
 											<input type="text" class="form-control input-lg" value="{{env('PWA_THEME_COLOR') ?? '' }}" name="PWA_THEME_COLOR"  placeholder="#000000"/>
 											<span class="input-group-append">
 											<span class="input-group-text colorpicker-input-addon"><i></i></span>
@@ -85,8 +86,10 @@
 							</div>
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="text-dark" for="">Background Color:</label>
-										<div class="input-group initial-color" title="Using input value">
+										<label class="text-dark" for="">
+											{{__("Background Color:")}}
+										</label>
+										<div class="input-group initial-color">
 											<input type="text" class="form-control input-lg" value="{{ env('PWA_BG_COLOR') ?? '' }}" name="PWA_BG_COLOR"  placeholder="#000000"/>
 											<span class="input-group-append">
 											<span class="input-group-text colorpicker-input-addon"><i></i></span>
@@ -101,7 +104,9 @@
 							
 								<div class="col-md-5">
 									<div class="form-group">
-										<label class="text-dark" for="">Shortcut icon for cart:</label>
+										<label class="text-dark" for="">
+											{{__("Shortcut icon for cart:")}}
+										</label>
 										<!--  -->
 										<div class="input-group mb-3">
 											<div class="input-group-prepend">
@@ -109,7 +114,7 @@
 											</div>
 											<div class="custom-file">
 												<input type="file" class="custom-file-input" name="shorticon_1" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01" required>
-												<label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+												<label class="custom-file-label" for="inputGroupFile01">{{ __("Choose file") }} </label>
 											</div>
 										</div>
 									</div>
@@ -124,15 +129,15 @@
 
 								<div class="col-md-5">
 									<div class="form-group">
-										<label class="text-dark" for="">Shortcut icon for wishlist:</label>
+										<label class="text-dark" for="">
+											{{__("Shortcut icon for wishlist:")}}
+										</label>
 										
 										<div class="input-group mb-3">
-											<div class="input-group-prepend">
-												<span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-											</div>
+											
 											<div class="custom-file">
 												<input type="file" class="custom-file-input" name="shorticon_2" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01" required>
-												<label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+												<label class="custom-file-label" for="inputGroupFile01">{{ __("Choose file") }} </label>
 											</div>
 										</div>
 										
@@ -146,15 +151,12 @@
 
 								<div class="col-md-5">
 									<div class="form-group">
-										<label class="text-dark" for="">Shortcut icon for login:</label>
+										<label class="text-dark" for="">{{ __("Shortcut icon for login:") }}</label>
 										<!--  -->
 										<div class="input-group mb-3">
-											<div class="input-group-prepend">
-												<span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-											</div>
 											<div class="custom-file">
 												<input type="file" class="custom-file-input" name="shorticon_3" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01" required>
-												<label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+												<label class="custom-file-label" for="inputGroupFile01">{{ __("Choose file") }} </label>
 											</div>
 										</div>
 										<!--  -->
@@ -182,7 +184,9 @@
 
 			<div class="tab-pane fade" id="profile-line" role="tabpanel" aria-labelledby="profile-tab-line">
 				<!-- === PWA Icons & Splash screens form start ======== -->
-				<h4>PWA Icons & Splash screens :</h4>
+				<h4>
+					{{__("PWA Icons & Splash screens :")}}
+				</h4>
 
 				<hr>
 
@@ -192,15 +196,12 @@
 						
 						<div class="col-md-8">
 							<div class="form-group">
-								<label class="text-dark" for="">PWA Icon (512x512): <span class="text-danger">*</span> </label><br>
+								<label class="text-dark" for=""> {{__('PWA Icon')}} (512x512): <span class="text-danger">*</span> </label><br>
 								
 								<div class="input-group mb-3">
-										<div class="input-group-prepend">
-											<span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-										</div>
 										<div class="custom-file">
 											<input type="file" class="custom-file-input" name="icon_512" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01" required>
-											<label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+											<label class="custom-file-label" for="inputGroupFile01">{{ __("Choose file") }} </label>
 										</div>
 										
 								</div>
@@ -213,15 +214,12 @@
 
 						<div class="col-md-8">
 							<div class="form-group">
-								<label class="text-dark" for="">PWA Splash Screen (2048x2732): <span class="text-danger">*</span> </label>
+								<label class="text-dark" for=""> {{__("PWA Splash Screen")}} (2048x2732): <span class="text-danger">*</span> </label>
 								<!--  -->
 								<div class="input-group mb-3">
-									<div class="input-group-prepend">
-										<span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-									</div>
 									<div class="custom-file">
 										<input type="file" class="custom-file-input" name="splash_2048" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01" required>
-										<label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+										<label class="custom-file-label" for="inputGroupFile01">{{ __("Choose file") }} </label>
 									</div>
 								</div>
 								<!--  -->

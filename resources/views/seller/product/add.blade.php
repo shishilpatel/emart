@@ -1,4 +1,4 @@
-@extends("admin.layouts.sellermaster")
+@extends("admin.layouts.sellermastersoyuz")
 
 @section("body")
 
@@ -7,9 +7,9 @@
           <!-- general form elements -->
           <div class="box box-primary">
             <div class="box-header with-border">
-              <h3 class="box-title">Product</h3>
+              <h3 class="box-title">{{ __('Product') }}</h3>
                     <div class="panel-heading">
-                          <a href=" {{url('vender/add_product/')}} " class="btn btn-success pull-right owtbtn">< Back</a> 
+                          <a href=" {{url('vender/add_product/')}} " class="btn btn-success pull-right owtbtn">< {{ __('Back') }}</a> 
                         </div>   
                     
                     <form id="demo-form2" method="post" enctype="multipart/form-data" action="{{url('vender/add_product')}}" data-parsley-validate class="form-horizontal form-label-left">
@@ -17,63 +17,69 @@
                         <input type="hidden" name="vender_id" value="{{$vender_id}}">
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
-                          Product name <span class="required">*</span>
+                          {{__('Product name')}} <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <input type="text" id="first-name" name="name" value=" {{old('name')}}" class="form-control col-md-7 col-xs-12">
-                          <p class="txt-desc">Please Enter product </p>
+                          <p class="txt-desc">{{__('Please Enter product')}} </p>
                         </div>
                       </div>
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
-                          Category
+                         {{__("Category")}}
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <select name="category_id" class="form-control col-md-7 col-xs-12" id="category_id">
-                          <option value="0">Please Select</option>
+                          <option value="0">{{ __('Please select') }}</option>
                           @foreach($categorys as $category)
                           <option value="{{$category->id}}">{{$category->title}} </option>
                           @endforeach
                         </select>
-                          <p class="txt-desc">Please Choose Category </p>
+                          <p class="txt-desc">
+                          {{ __('Please choose category') }}
+                          </p>
                         </div>
                       </div>
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
-                          Sub Category
+                          {{__('Subcategory')}}
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <select name="child" class="form-control col-md-7 col-xs-12" id="upload_id">
                           </select>
-                          <p class="txt-desc">Please Choose Sub Category </p>
+                          <p class="txt-desc">
+                            {{__('Please choose Subcategory')}}
+                          </p>
                         </div>
                       </div>
                        <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
-                         Select Brand
+                         {{__('Select Brand')}}
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <select name="brand_id"  class="form-control col-md-7 col-xs-12">
-                          <option value="0">Please Select</option>
+                          <option value="0">{{ __('Please Select') }}</option>
                           @foreach($brands as $brand)
                           <option value="{{$brand->id}}">{{$brand->name}} </option>
                           @endforeach
                         </select>
-                          <p class="txt-desc">Please Choose Brand Name </p>
+                          <p class="txt-desc">
+                            {{__('Please choose brand name')}}
+                          </p>
                         </div>
                       </div>    
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
-                         Select Store *
+                         {{__("Select Store")}} <span class="text-danger">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <select name="store_id"  class="form-control col-md-7 col-xs-12">
-                            <option value="0">Please Select Store Name</option>
+                            <option value="0">{{ __('Please select store name') }}</option>
                           @foreach($stores as $store)
                           <option value="{{$store->id}}">{{$store->name}} </option>
                           @endforeach
                         </select>
-                          <p class="txt-desc">Please Choose Store Name </p>
+                          <p class="txt-desc">{{ __('Please choose store name') }}/p>
                         </div>
                       </div>                       
                        <div class="form-group">
@@ -83,25 +89,30 @@
                          <textarea cols="2" id="editor1"  value="{{old('des')}}" name="des" rows="5" >
                            {{old('des')}} 
                          </textarea>
-                         <p class="txt-desc">Please Enter Description</p>
+                         <p class="txt-desc">
+                          {{__('Please enter description')}}
+                         </p>
                         </div>
                       </div>
                        <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
-                          Tags 
+                          {{__('Tags')}} 
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <input type="text" id="first-name" name="tags"  data-role="tagsinput" value="{{old('tags')}}" class="form-control col-md-7 col-xs-12">
-                          <p class="txt-desc">Please Enter Tags </p>
+                          <p class="txt-desc">
+                          {{__('Please enter tags') }}</p>
                         </div>
                       </div>
                        <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
-                          Model Number
+                          {{__('Model Number')}}
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <input type="text" id="first-name" name="model" class="form-control col-md-7 col-xs-12" value="{{old('model')}}" >
-                          <p class="txt-desc">Please Enter Model Number </p>
+                          <p class="txt-desc">
+                            {{__('Please enter model number')}}
+                          </p>
                         </div>
                       </div>
                        <div class="form-group">
@@ -110,26 +121,31 @@
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <input type="text" id="first-name" name="sku" value="{{old('sku')}}" class="form-control col-md-7 col-xs-12">
-                          <p class="txt-desc">Please Enter SKU </p>
+                          <p class="txt-desc">
+                            {{__('Please enter SKU')}}
+                          </p>
                         </div>
                       </div>
                        <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
-                          Price *
+                          {{ __('Price') }} <span class="text-danger">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <input type="text" id="first-name" name="price" value="{{old('price')}}" class="form-control col-md-7 col-xs-12">
-                          <p class="txt-desc">Please Enter Price </p>
+                          <p class="txt-desc">
+                          {{ __("Please enter price") }}</p>
                         </div>
                       </div>
                       
                        <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
-                          Stock 
+                          {{__('Stock')}} 
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <input type="number" id="first-name" name="qty" value="1" class="form-control col-md-7 col-xs-12">
-                          <p class="txt-desc">Please Enter Quantity  </p>
+                          <p class="txt-desc">
+                            {{__("Please enter quantity")}}
+                          </p>
                         </div>
                       </div>
                       <div class="form-group">

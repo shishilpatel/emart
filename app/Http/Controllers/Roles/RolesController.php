@@ -16,7 +16,7 @@ class RolesController extends Controller
     public function index(Request $request)
     {   
 
-        abort_if(!auth()->user()->can('roles.view'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('roles.view'),403,__('User does not have the right permissions.'));
 
         $roles = DB::table('roles')->select('roles.id', 'roles.name');
 
@@ -45,7 +45,7 @@ class RolesController extends Controller
     public function create()
     {
         
-        abort_if(!auth()->user()->can('roles.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('roles.create'),403,__('User does not have the right permissions.'));
         
 
         $role_permission = Permission::select('name','id')->groupBy('name')->get();
@@ -75,15 +75,15 @@ class RolesController extends Controller
     public function store(Request $request)
     {
         
-        abort_if(!auth()->user()->can('roles.create'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('roles.create'),403,__('User does not have the right permissions.'));
         
 
         $request->validate([
             'name' => 'required|unique:roles,name'
         ],
         [
-            'name.required' => 'Role name is required !',
-            'name.unique'   => 'Role name already taken !'
+            'name.required' => __('Role name is required !'),
+            'name.unique'   => __('Role name already taken !')
         ]
         );
 
@@ -94,7 +94,8 @@ class RolesController extends Controller
                 $role->givePermissionTo($value);
             }
         }
-        notify()->success('Role has been created !');
+        
+        notify()->success(__('Role has been created !'));
         return redirect(route('roles.index'));
     }
 
@@ -118,10 +119,10 @@ class RolesController extends Controller
     public function edit($id)
     {   
         
-        abort_if(!auth()->user()->can('roles.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('roles.edit'),403,__('User does not have the right permissions.'));
 
         if(in_array($id,['1','2','3','4','5'])){
-            notify()->error('System role cannot be edit !');
+            notify()->error(__('System role cannot be edit !'));
             return redirect(route('roles.index'));
         }
         
@@ -155,7 +156,7 @@ class RolesController extends Controller
     public function update(Request $request, $id)
     {   
         
-        abort_if(!auth()->user()->can('roles.edit'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('roles.edit'),403,__('User does not have the right permissions.'));
         
         if(in_array($id,['1','2','3','4','5'])){
             notify()->error('System role cannot be edit !');
@@ -168,8 +169,8 @@ class RolesController extends Controller
             'name' => 'required|unique:roles,name,'.$id
         ],
         [
-            'name.required' => 'Role name is required !',
-            'name.unique'   => 'Role name already taken !'
+            'name.required' => __('Role name is required !'),
+            'name.unique'   => __('Role name already taken !')
         ]
         );
 
@@ -179,7 +180,7 @@ class RolesController extends Controller
 
         $role->syncPermissions($request->permissions);
 
-        notify()->success('Role has been updated !');
+        notify()->success(__('Role has been updated !'));
 
         return back();
     }
@@ -193,7 +194,7 @@ class RolesController extends Controller
     public function destroy($id)
     {
         
-        abort_if(!auth()->user()->can('roles.delete'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('roles.delete'),403,__('User does not have the right permissions.'));
         
 
         $role = Role::find($id);
@@ -203,10 +204,10 @@ class RolesController extends Controller
         if(isset($role)){
             $role->permissions()->detach();
             $role->delete();
-            notify()->success('Role has been deleted !','DELETED');
+            notify()->success(__('Role has been deleted !'),__('DELETED'));
             return back();
         }else{
-            notify()->error('404 | Role not found !');
+            notify()->error(__('404 | Role not found !'));
             return back();
         }
     }

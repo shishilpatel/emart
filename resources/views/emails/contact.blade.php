@@ -3,8 +3,8 @@
 <br>
 {{ $content->message }}.
 <hr>
-<code>You can replay to me on {{ $content->email }}</code>
+<code>{{ __('You can replay to me on') }} {{ $content->email }}</code>
 <br>
-Thanks,<br>
+{{ __('Thanks,') }}<br>
 {{ $content->name }}
 @endcomponent

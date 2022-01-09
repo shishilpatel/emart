@@ -53,7 +53,7 @@ class TaxClassController extends Controller
          $input = $request->all(); 
         $data = TaxClass::create($input);
         $data->save();
-        return redirect('admin/tax_class')->with('category_message', 'Tax Class has been updated'); 
+        return redirect('admin/tax_class')->with('added', __('Tax Class has been updated')); 
     }
 
     
@@ -102,7 +102,7 @@ class TaxClassController extends Controller
             $tax->save();
 
 
-          return redirect('admin/tax_class')->with('category_message', 'Tax Class has been updated');
+          return redirect('admin/tax_class')->with('added', __('Tax Class has been updated'));
 
 
     }
@@ -119,7 +119,7 @@ class TaxClassController extends Controller
          $obj = $daa->findorFail($id);
          $value = $obj->delete();
          if($value){
-            session()->flash("category_message","Tax Class Has Been deleted");
+            session()->flash("category_message",__("Tax Class Has Been deleted"));
              return redirect("admin/tax_class");
          }
     }

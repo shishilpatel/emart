@@ -29,7 +29,8 @@ class ProductController extends Controller
 
         $validator = Validator::make($request->all(), [
             'secret' => 'required|string',
-            'currency' => 'required|string|max:3|min:3'
+            'currency' => 'required|string|max:3|min:3',
+            'type' => 'required|in:v,m'
         ]);
 
         if ($validator->fails()) {
@@ -432,66 +433,120 @@ class ProductController extends Controller
             }
         }
 
-        $data = Wishlist::where('user_id', '=', Auth::user()->id)->where('collection_id','=',NULL)->get();
+        $data_vp = Wishlist::where('user_id', '=', Auth::user()->id)
+                            ->where('collection_id','=',NULL)
+                            ->whereHas('variant')
+                            ->whereHas('variant.variantimages')
+                            ->whereHas('variant.products',function($q){
+                                return $q->where('status','=','1');
+                            })
+                            ->with(['variant','variant.variantimages'])
+                            ->get();
+        
+        $data_sp = Wishlist::where('user_id', '=', Auth::user()->id)
+                   ->where('collection_id','=',NULL)
+                   ->whereHas('simple_product',function($q){
 
-        $totalitems = count($data);
+                        return $q->where('status','=','1');
 
-        $wishlistItem = array();
+                   })->get();
 
-        foreach ($data as $item) {
+
+        $totalitems = count($data_sp) + count($data_vp);
+
+        $rates = new CurrencyController;
+    
+        $rate = $rates->fetchRates(request()->currency)->getData();
+
+        $wishlistItem = $data_vp->map(function($item) use($rate) {
 
                 $getvariant = new CartController;
 
                 $mainprice = $this->getprice($item->variant->products, $item->variant);
-
+    
                 $price = $mainprice->getData();
-
+    
                 $rating = $this->getproductrating($item->variant->products);
-
-                $rates = new CurrencyController;
-
-                $rate = $rates->fetchRates($request->currency)->getData();
+    
+                
                 // Pushing value in main result
-
+    
                 if ($this->getprice($item->variant->products, $item->variant)->getData()->offerprice != '0') {
-
+    
                     $mp = sprintf("%.2f", $this->getprice($item->variant->products, $item->variant)->getData()->mainprice);
                     $op = sprintf("%.2f", $this->getprice($item->variant->products, $item->variant)->getData()->offerprice);
-
+    
                     $getdisprice = $mp - $op;
-
+    
                     $discount = $getdisprice / $mp;
-
+    
                     $offamount = $discount * 100;
+
                 } else {
+
                     $offamount = 0;
+
                 }
+                  
+                $content['productid']      = $item->variant->products->id;
+                $content['variantid']      = $item->variant->id;
+                $content['type']           = 'v';
+                $content['productname']    = $item->variant->products->getTranslations('name');
+                $content['variant']        = $getvariant->variantDetail($item->variant);
+                $content['thumpath']       = url('variantimages/thumbnails/');
+                $content['thumbnail']      = $item->variant->variantimages->main_image;
+                $content['price']          = (double) sprintf('%.2f', $price->mainprice * $rate->exchange_rate);
+                $content['offerprice']     = (double) sprintf("%.2f", $price->offerprice * $rate->exchange_rate);
+                $content['stock']          = $item->variant->stock != 0 ? "In Stock" : "Out of Stock";
+                $content['rating']         = (double) $rating;
+                $item['pricein']           = $rate->code;
+                $content['symbol']         = $rate->symbol;
+                $content['off_in_percent'] = (int) round($offamount);
+                $content['tax_info']       = $item->variant->products->tax_r == '' ? __("Exclusive of tax") : __("Inclusive of all taxes");
+                
+                return $content;
+            
+        });
 
-                $wishlistItem[] = array(
-                    'productid' => $item->variant->products->id,
-                    'variantid' => $item->variant->id,
-                    'productname' => $item->variant->products->getTranslations('name'),
-                    'variant' => $getvariant->variantDetail($item->variant),
-                    'thumpath' => url('variantimages/thumbnails/'),
-                    'thumbnail' => $item->variant->variantimages->main_image,
-                    'price' => (double) sprintf('%.2f', $price->mainprice * $rate->exchange_rate),
-                    'offerprice' => (double) sprintf("%.2f", $price->offerprice * $rate->exchange_rate),
-                    'stock' => $item->variant->stock != 0 ? "In Stock" : "Out of Stock",
-                    'rating' => (double) $rating,
-                    'symbol' => $rate->symbol,
-                    'off_in_percent' => (int) round($offamount),
-                    'tax_info' => $item->variant->products->tax_r == '' ? __("Exclusive of tax") : __("Inclusive of all taxes"),
-                );
+        $data_sp = $data_sp->map(function ($sp) use($rate){
 
+            if ($sp->simple_product->offer_price != 0) {
+
+                $mp = $sp->simple_product->price;
+                $op = $sp->simple_product->offer_price;
+
+                $getdisprice = $mp - $op;
+
+                $discount = $getdisprice / $mp;
+
+                $offamount = $discount * 100;
+
+            } else {
+                $offamount = 0;
             }
 
+            $item['productname']    = $sp->simple_product->getTranslations('product_name');
+            $item['productid']      = $sp->simple_product->id;
+            $item['variantid']      = 0;
+            $item['type']           = 's';
+            $item['mainprice']      = (double) sprintf("%.2f", $sp->simple_product->price * $rate->exchange_rate);
+            $item['offerprice']     = (double) sprintf("%.2f", $sp->simple_product->offer_price * $rate->exchange_rate);
+            $item['pricein']        = $rate->code;
+            $item['symbol']         = $rate->symbol;
+            $item['rating']         = (double) simple_product_rating($sp->simple_product->id);
+            $item['thumbnail']      = $sp->simple_product->thumbnail;
+            $item['thumb_path']     = url('images/simple_products/');
+            $item['off_in_percent'] = round($offamount);
+            $item['rating']         = (double) simple_product_rating($sp->simple_product->id);
+            $item['stock']          = $sp->simple_product->stock != 0 ? "In Stock" : "Out of Stock";
 
-            //Sort in desc order
-            rsort($wishlistItem);
+            return $item;
 
-        $thumbpath = url('variantimages/thumbnails/');
+        });
 
-        return response()->json(['status' => 'success','totalitem' => $totalitems, 'items' => $wishlistItem, 'thumbpath' => $thumbpath]);
+        $wishlistItem = $wishlistItem->toBase()->merge($data_sp);
+
+        return response()->json(['status' => 'success','totalitem' => $totalitems, 'items' => $wishlistItem]);
     }
 
     public function additeminWishlist(Request $request,$variantid)

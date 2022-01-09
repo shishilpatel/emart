@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Create a city')
+@section('title',__('Create a city'))
 @section('body')
 
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
@@ -19,8 +19,7 @@
 <div class="col-md-6">
   <div class="widgetbar">
 
-  <a href="{{url('admin/city')}}" class="btn btn-primary-rgba mr-2"><i
-      class="feather icon-arrow-left mr-2"></i>Back</a>
+  <a href="{{url('admin/city')}}" class="btn btn-primary-rgba mr-2"><i class="feather icon-arrow-left mr-2"></i> {{ __("Back") }}</a>
 </div>
 </div>
 @endslot
@@ -28,15 +27,18 @@
 
 <div class="contentbar">
   <div class="row">
-    @if ($errors->any())
-    <div class="alert alert-danger" role="alert">
-      @foreach($errors->all() as $error)
-      <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach
-    </div>
-    @endif
+    
     <div class="col-lg-12">
+
+      @if ($errors->any())
+        <div class="alert alert-danger" role="alert">
+          @foreach($errors->all() as $error)
+          <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span></button></p>
+          @endforeach
+        </div>
+      @endif
+
       <div class="card m-b-30">
         <div class="card-header">
           <h5 class="box-title">{{ __('Add') }} {{ __('City') }}</h5>
@@ -54,7 +56,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Add State</h4>
+        <h4 class="modal-title">{{ __('Add State') }}</h4>
       </div>
       <div class="modal-body">
 
@@ -65,19 +67,19 @@
         {{csrf_field()}}
         <div class="form-group">
           <label class="control-label col-md-12" for="first-name">
-            State <span class="required">*</span>
+            {{__("State")}} <span class="required">*</span>
           </label>
 
           <div class="col-md-12">
             <input type="text" id="first-name" name="state" class="form-control col-md-12">
-            <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>(Please Enter State..)</small>
+            <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>({{__("Please Enter State..")}})</small>
           </div>
 
         </div>
 
         <div class="form-group">
           <label class="control-label col-md-12" for="first-name">
-            Country
+            {{__("Country")}}
           </label>
           <div class="col-md-12">
             <select name="country_id" class="form-control col-md-12">
@@ -85,20 +87,19 @@
               <option value="{{$country->id}}">{{$country->country}}</option>
               @endforeach
             </select>
-            <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>(Please Choose
-              Country..)</small>
+            <small class="text-info"> <i class="text-dark feather icon-help`-circle"></i>({{__("Please choose country")}})</small>
           </div>
         </div>
         <div class="form-group">
           <button type="reset" class="btn btn-danger"><i class="fa fa-ban"></i>
-            Reset</button>
+            {{ __("Reset") }}</button>
           <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i>
-            Create</button>
+            {{ __("Create") }}</button>
         </div>
 
         <div class="clear-both"></div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">{{ __('Close') }}</button>
         </div>
     </div>
 

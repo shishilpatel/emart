@@ -31,7 +31,7 @@ class CartController extends Controller
         $qty = 0;
         if (!empty($user)) {
 
-            $cart_table = auth()->user()->cart()->where('pro_id',$id)->first(); 
+            $cart_table = auth()->user()->cart()->where('pro_id', $id)->first();
             if (empty($cart_table)) {
 
                 Cart::create(array(
@@ -50,9 +50,9 @@ class CartController extends Controller
                         'qty' => $qty + 1,
                         'user_id' => $user->id,
 
-                ));
+                    ));
 
-                notify()->error('failure','This Product is Already Available');
+                notify()->error(__('Failure'), __('This Product is Already Available'));
                 return back();
             }
 
@@ -71,7 +71,7 @@ class CartController extends Controller
                     $pro_id = Product::where('id', $id)->first();
                     if ($pro_id->qty <= $p['quantity']) {
 
-                        return back()->with("failure", "Stock Is Not Available");
+                        return back()->with("failure", __("Stock is not available"));
                     }
                     if ($p['id'] == $post) {
                         $qty = $p['quantity'];
@@ -124,13 +124,13 @@ class CartController extends Controller
 
         if (Auth::check()) {
 
-            $cart_table = Cart::where('user_id',auth()->id())->with(['simple_product','product','product.reviews','variant','product.shippingmethod'])
-            ->orWhereHas('simple_product',function($query){
-                return $query->where('status','1');
-            })
-            ->whereHas('product',function($query){
-                return $query->where('status','1');
-            })->whereHas('variant')->get();
+            $cart_table = Cart::where('user_id', auth()->id())->with(['simple_product', 'product', 'product.reviews', 'variant', 'product.shippingmethod'])
+                ->orWhereHas('simple_product', function ($query) {
+                    return $query->where('status', '1');
+                })
+                ->whereHas('product', function ($query) {
+                    return $query->where('status', '1');
+                })->whereHas('variant')->get();
 
             foreach ($cart_table as $key => $value) {
 
@@ -140,29 +140,29 @@ class CartController extends Controller
                     $total = $total + $value->price_total + $value->shipping + $value->tax_amount;
                 }
 
-                if(isset($value->variant) && $value->variant->stock == 0){
+                if (isset($value->variant) && $value->variant->stock == 0) {
                     array_push($oot, 0);
                 }
 
-                if(isset($value->simple_product) && $value->simple_product->stock == 0 && $value->simple_product->pre_order == 0){
+                if (isset($value->simple_product) && $value->simple_product->stock == 0 && $value->simple_product->pre_order == 0) {
                     array_push($oot, 0);
-                }  
+                }
 
             }
-
 
         } else {
 
             $cart_table = session()->get('cart');
-           
-             $value = Session('cart');
+
+            $value = Session('cart');
             if (isset($value)) {
 
                 foreach ($value as $row) {
+                    
                     $id = $row['pro_id'];
                     $qty = $row['qty'];
                     $product = Product::find($id);
-                    $stock = AddSubVariant::withTrashed()->find($c['variantid']);
+                    $stock = AddSubVariant::withTrashed()->find($row['variantid']);
 
                     if ($product && $stock) {
 
@@ -175,7 +175,7 @@ class CartController extends Controller
                             $product->mrp = $qty * $product->price;
                         }
 
-                        if($stock->stock == 0){
+                        if ($stock->stock == 0) {
                             array_push($oot, 0);
                         }
 
@@ -185,16 +185,12 @@ class CartController extends Controller
 
                 }
 
-               
-                
                 Session::put('total', $total);
 
             }
         }
 
-        
-       
-        return view("front.shopping-cart-2", compact('cart_table','conversion_rate','oot'));
+        return view("front.shopping-cart-2", compact('cart_table', 'conversion_rate', 'oot'));
 
     }
 
@@ -234,10 +230,10 @@ class CartController extends Controller
 
                         Cart::where('variant_id', $variantid)->where('user_id', $user->id)
                             ->update([
-                                'qty' => $tqty, 
-                                'price_total' => $price_total, 
+                                'qty' => $tqty,
+                                'price_total' => $price_total,
                                 'semi_total' => $semi_total,
-                                'shipping' => (float) ShippingPrice::calculateShipping($cart_table)
+                                'shipping' => (float) ShippingPrice::calculateShipping($cart_table),
                             ]);
 
                         if (isset(Session::get('coupanapplied')['appliedOn']) && Session::get('coupanapplied')['appliedOn'] == 'product') {
@@ -246,7 +242,7 @@ class CartController extends Controller
                             $discount = 0;
                             $total = 0;
                             $newCart = Cart::where('variant_id', $variantid)->where('user_id', $user->id)
-                                        ->first();
+                                ->first();
 
                             if (isset($coupon)) {
 
@@ -384,12 +380,12 @@ class CartController extends Controller
 
                         }
 
-                        alert()->success('<p class="font-weight-normal">Product Quantity updated in cart !</p>')->html()->autoclose(8000);
+                        alert()->success('<p class="font-weight-normal">'.__('Product Quantity updated in cart !').'</p>')->html()->autoclose(8000);
                         return redirect('cart');
 
                     } else {
 
-                        alert()->warning('<p class="font-weight-normal">Product already in cart with max quantity limit !</p>')->html()->autoclose(8000);
+                        alert()->warning('<p class="font-weight-normal">'.__('Product already in cart with max quantity limit !').'</p>')->html()->autoclose(8000);
                         return redirect('cart');
 
                     }
@@ -467,7 +463,7 @@ class CartController extends Controller
                     }
 
                     // Putting a session//
-                    Session::put('coupanapplied', ['code' => $coupon->code, 'cpnid' => $coupon->id, 'discount' => $totaldiscount, 'msg' => "$coupon->code Applied Successfully !", 'appliedOn' => 'cart']);
+                    Session::put('coupanapplied', ['code' => $coupon->code, 'cpnid' => $coupon->id, 'discount' => $totaldiscount, 'msg' => __(":code Applied Successfully !",['code' => $coupon->code]), 'appliedOn' => 'cart']);
 
                 } elseif (Session::has('coupanapplied') && Session::get('coupanapplied')['appliedOn'] == 'category') {
 
@@ -510,7 +506,7 @@ class CartController extends Controller
                         $lastcartrow->save();
 
                         // Putting a session//
-                        Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $totaldiscount, 'msg' => "$cpn->code Applied Successfully !", 'appliedOn' => 'category']);
+                        Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $totaldiscount, 'msg' => __(":code Applied Successfully !",['code' => $cpn->code]), 'appliedOn' => 'category']);
 
                     }
 
@@ -518,7 +514,9 @@ class CartController extends Controller
 
             }
 
-            alert()->success('<p class="font-weight-normal">Product added in cart !</p>')->html()->autoclose(8000);
+            alert()->success('<p class="font-weight-normal">'.__("Product added in cart !").'</p>')
+                    ->html()
+                    ->autoclose(8000);
 
             return redirect('cart');
         } else {
@@ -599,7 +597,7 @@ class CartController extends Controller
                             }
 
                             // Putting a session//
-                            Session::put('coupanapplied', ['code' => $coupon->code, 'cpnid' => $coupon->id, 'discount' => $totaldiscount, 'msg' => "$coupon->code Applied Successfully !", 'appliedOn' => 'product']);
+                            Session::put('coupanapplied', ['code' => $coupon->code, 'cpnid' => $coupon->id, 'discount' => $totaldiscount, 'msg' =>  __(":code Applied Successfully !",['code' => $coupon->code]), 'appliedOn' => 'product']);
 
                         } elseif (Session::has('coupanapplied') && Session::get('coupanapplied')['appliedOn'] == 'category') {
 
@@ -632,7 +630,7 @@ class CartController extends Controller
                             $carts[$key]['distype'] = 'category';
                             Session::put('cart', $carts);
                             // Putting a session//
-                            Session::put('coupanapplied', ['code' => $coupon->code, 'cpnid' => $coupon->id, 'discount' => $totaldiscount, 'msg' => "$coupon->code Applied Successfully !", 'appliedOn' => 'category']);
+                            Session::put('coupanapplied', ['code' => $coupon->code, 'cpnid' => $coupon->id, 'discount' => $totaldiscount, 'msg' => __(":code Applied Successfully !",['code' => $coupon->code]), 'appliedOn' => 'category']);
 
                         } elseif (Session::has('coupanapplied') && Session::get('coupanapplied')['appliedOn'] == 'cart') {
 
@@ -680,15 +678,15 @@ class CartController extends Controller
                             }
 
                             // Putting a session//
-                            Session::put('coupanapplied', ['code' => $coupon->code, 'cpnid' => $coupon->id, 'discount' => $totaldiscount, 'msg' => "$coupon->code Applied Successfully !", 'appliedOn' => 'cart']);
+                            Session::put('coupanapplied', ['code' => $coupon->code, 'cpnid' => $coupon->id, 'discount' => $totaldiscount, 'msg' => __(":code Applied Successfully !",['code' => $coupon->code]), 'appliedOn' => 'cart']);
 
                         }
 
                         Session::put('cart', $carts);
-                        alert()->success('<p class="font-weight-normal">Product Quantity updated in cart !</p>')->html()->autoclose(8000);
+                        alert()->success('<p class="font-weight-normal">'.__("Product Quantity updated in cart !").'</p>')->html()->autoclose(8000);
                         return redirect('cart');
                     } else {
-                        alert()->warning('<p class="font-weight-normal">Product already in cart with max quantity limit !</p>')->html()->autoclose(8000);
+                        alert()->warning('<p class="font-weight-normal">'.__('Product already in cart with max quantity limit !').'</p>')->html()->autoclose(8000);
 
                         return redirect('cart');
                     }
@@ -697,8 +695,8 @@ class CartController extends Controller
                     Session::push('cart', ['distype' => null, 'discount' => 0, 'pro_id' => $id, 'variantid' => $variantid, 'varprice' => $varprice, 'varofferprice' => $varofferprice, 'qty' => $qty]);
 
                     $cart = Session::get('cart');
-                    
-                    if(Session::has('coupanapplied')){
+
+                    if (Session::has('coupanapplied')) {
                         $cpn = Coupan::where('code', '=', Session::get('coupanapplied')['code'])->first();
                     }
 
@@ -738,7 +736,7 @@ class CartController extends Controller
                         }
 
                         //Putting a session//
-                        Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $totaldiscount, 'msg' => "$cpn->code Applied Successfully !", 'appliedOn' => 'cart']);
+                        Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $totaldiscount, 'msg' => __(":code Applied Successfully !",['code' => $cpn->code]), 'appliedOn' => 'cart']);
 
                     } elseif (Session::has('coupanapplied') && Session::get('coupanapplied')['appliedOn'] == 'category') {
                         $cart = Session::get('cart');
@@ -800,16 +798,20 @@ class CartController extends Controller
                         }
 
                         //Putting a session//
-                        Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $totaldiscount, 'msg' => "$cpn->code Applied Successfully !", 'appliedOn' => 'category']);
+                        Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $totaldiscount, 'msg' => __(":code Applied Successfully !",['code' => $cpn->code]), 'appliedOn' => 'category']);
                     }
 
-                    alert()->success('<p class="font-weight-normal">Product added in cart !</p>')->html()->autoclose(8000);
+                    alert()
+                    ->success('<p class="font-weight-normal">'.__('Product added in cart !').'</p>')
+                    ->html()
+                    ->autoclose(8000);
+
                     return redirect('cart');
                 }
 
             } else {
                 Session::push('cart', ['distype' => null, 'discount' => '0', 'pro_id' => $id, 'variantid' => $variantid, 'varprice' => $varprice, 'varofferprice' => $varofferprice, 'qty' => $qty]);
-                alert()->success('<p class="font-weight-normal">Product added in cart !</p>')->html()->autoclose(8000);
+                alert()->success('<p class="font-weight-normal">'.__('Product added in cart !').'</p>')->html()->autoclose(8000);
                 return redirect('cart');
             }
 
@@ -836,11 +838,11 @@ class CartController extends Controller
             Session::put('cart', $cart);
 
             if (count(Session::get('cart')) > 0) {
-                notify()->success('Item is removed from your cart !');
+                notify()->success(__('Item is removed from your cart !'));
                 return back();
             } else {
                 notify()
-                    ->success('Your cart is now empty !');
+                    ->success(__('Your cart is now empty !'));
                 return redirect('/');
             }
 
@@ -870,7 +872,7 @@ class CartController extends Controller
                 }
                 Session::forget('coupanapplied');
                 Session::put('cart', $cart);
-                notify()->success('Item is removed from your cart !');
+                notify()->success(__('Item is removed from your cart !'));
                 return back();
             }
 
@@ -972,7 +974,7 @@ class CartController extends Controller
                     if ($total < $cpn->minamount) {
                         Session::forget('coupanapplied');
                         return back()
-                            ->with('fail', 'Coupan removed !');
+                            ->with('fail', __('Coupan removed !'));
                         exit();
                     }
                 }
@@ -983,7 +985,7 @@ class CartController extends Controller
 
                 } else {
                     //Putting a session//
-                    Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $totaldiscount, 'msg' => "$cpn->code Applied Successfully !", 'appliedOn' => 'category']);
+                    Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $totaldiscount, 'msg' => __(":code Applied Successfully !",['code' => $cpn->code]), 'appliedOn' => 'category']);
                 }
 
                 return back();
@@ -1038,15 +1040,15 @@ class CartController extends Controller
                     if ($total < $cpn->minamount) {
                         Session::forget('coupanapplied');
                         return back()
-                            ->with('fail', 'Coupon Removed !');
+                            ->with('fail', __(__('Coupon Removed !')));
                         exit();
                     }
                 }
 
                 //Putting a session//
-                Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $totaldiscount, 'msg' => "$cpn->code Applied Successfully !", 'appliedOn' => 'cart']);
+                Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $totaldiscount, 'msg' => __(":code Applied Successfully !",['code' => $cpn->code]), 'appliedOn' => 'cart']);
                 notify()
-                    ->success('Item is removed from your cart !');
+                ->success(__('Item is removed from your cart !'));
                 return redirect()
                     ->back();
             }
@@ -1054,8 +1056,7 @@ class CartController extends Controller
         } else {
             Session::forget('coupanapplied');
             Session::forget('cart');
-            notify()
-                ->success('Your cart is now empty !');
+            notify()->success(__('Your cart is now empty !'));
             return redirect('/');
         }
 
@@ -1085,7 +1086,7 @@ class CartController extends Controller
                 } else {
                     $url = url()->previous();
                     DB::table('carts')->where('user_id', $user_id)->where('variant_id', $id)->delete();
-                    notify()->success('Item removed from your cart !');
+                    notify()->success(__('Item removed from your cart !'));
 
                     if (strstr($url, 'order-review')) {
                         Session::put('from-order-review-page', 'yes');
@@ -1100,7 +1101,7 @@ class CartController extends Controller
                         Session::forget('from-order-review-page');
                         Session::forget('from-order-step-3');
                         Session::forget('page-reloaded');
-                        notify()->success('Your cart is empty !');
+                        notify()->success(__('Your cart is empty !'));
                         return redirect('/');
                     }
 
@@ -1122,7 +1123,7 @@ class CartController extends Controller
         DB::table('carts')
             ->where('user_id', $user_id)->where('variant_id', $id)->delete();
         notify()
-            ->success('Item removed from your cart !');
+            ->success(__('Item removed from your cart !'));
 
         return redirect('/checkout');
     }
@@ -1156,16 +1157,16 @@ class CartController extends Controller
                 if ($total < $cpn->minamount) {
                     Session::forget('coupanapplied');
                     return back()
-                        ->with('fail', 'Coupon Removed !');
+                        ->with('fail', __('Coupon Removed !'));
                     exit();
                 } else {
-                    Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $totaldiscount, 'msg' => "$cpn->code Applied Successfully !", 'appliedOn' => 'category']);
+                    Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $totaldiscount, 'msg' => __(':code Applied Successfully !',['code' => $cpn->code]), 'appliedOn' => 'category']);
                 }
             } else {
-                Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $totaldiscount, 'msg' => "$cpn->code Applied Successfully !", 'appliedOn' => 'category']);
+                Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $totaldiscount, 'msg' => __(':code Applied Successfully !',['code' => $cpn->code]), 'appliedOn' => 'category']);
             }
 
-            Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $totaldiscount, 'msg' => "$cpn->code Applied Successfully !", 'appliedOn' => 'category']);
+            Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $totaldiscount, 'msg' => __(':code Applied Successfully !',['code' => $cpn->code]), 'appliedOn' => 'category']);
 
             if (count($catcart) < 1) {
                 Session::forget('coupanapplied');
@@ -1202,7 +1203,7 @@ class CartController extends Controller
                 if ($total < $cpn->minamount) {
                     Session::forget('coupanapplied');
                     return back()
-                        ->with('fail', 'Coupon Removed !');
+                        ->with('fail', __('Coupon Removed !'));
                     exit();
                 }
             }
@@ -1210,7 +1211,7 @@ class CartController extends Controller
         }
 
         notify()
-            ->success('Item removed from your cart !');
+            ->success(__('Item removed from your cart !'));
         return redirect('/checkout');
 
     }
@@ -1298,15 +1299,15 @@ class CartController extends Controller
                 if ($total < $cpn->minamount) {
                     Session::forget('coupanapplied');
                     return back()
-                        ->with('fail', 'Coupan Removed !');
+                        ->with('fail', __('Coupan Removed !'));
                     exit();
                 } else {
                     // Putting a session//
-                    Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $totaldiscount, 'msg' => "$cpn->code Applied Successfully !", 'appliedOn' => 'cart']);
+                    Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $totaldiscount, 'msg' => __(':code Applied Successfully !',['code' => $cpn->code]), 'appliedOn' => 'cart']);
                 }
             } else {
                 // Putting a session//
-                Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $totaldiscount, 'msg' => "$cpn->code Applied Successfully !", 'appliedOn' => 'cart']);
+                Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $totaldiscount, 'msg' => __(':code Applied Successfully !',['code' => $cpn->code]), 'appliedOn' => 'cart']);
             }
 
         } else {
@@ -1314,7 +1315,7 @@ class CartController extends Controller
         }
 
         notify()
-            ->success('Item removed from your cart !');
+            ->success(__('Item removed from your cart !'));
         return redirect('/checkout');
     }
 
@@ -1393,10 +1394,10 @@ class CartController extends Controller
         if (!empty($user_id)) {
 
             $ca = Cart::where('id', $id)->first();
-            
-            if($ca->variant && $ca->product){
+
+            if ($ca->variant && $ca->product) {
                 $product = Product::where('id', $ca->pro_id)
-                ->first();
+                    ->first();
                 $pro_id = $product->id;
 
                 $offertotal = $days * $ca->ori_offer_price;
@@ -1420,7 +1421,7 @@ class CartController extends Controller
                 ));
             }
 
-            if($ca->simple_product){
+            if ($ca->simple_product) {
 
                 $pro_id = $ca->simple_product->id;
 
@@ -1441,7 +1442,7 @@ class CartController extends Controller
                     ->where('user_id', auth()->id())->update(array(
                     'qty' => $days,
                     'tax_amount' => $ca->tax_amount * $days,
-                    'variant_id' => NULL,
+                    'variant_id' => null,
                     'price_total' => $pricetotal1,
                     'semi_total' => $offertotal,
                 ));
@@ -1564,25 +1565,24 @@ class CartController extends Controller
 
                         } else {
 
-                            if(get_default_shipping()->whole_order == 1){
+                            if (get_default_shipping()->whole_order == 1) {
                                 $shipping = $free_shipping->price;
-                            }else{
-                                $shipping += + $free_shipping->price;
+                            } else {
+                                $shipping += +$free_shipping->price;
                             }
-                            
 
                         }
                     }
 
                 }
 
-                if($cart->simple_product){
-                    if(get_default_shipping()->whole_order == 1){
+                if ($cart->simple_product) {
+                    if (get_default_shipping()->whole_order == 1) {
                         $shipping = shippingprice($cart);
-                    }else{
+                    } else {
                         $shipping = $shipping + shippingprice($cart);
                     }
-                    
+
                 }
 
             }
@@ -1598,7 +1598,7 @@ class CartController extends Controller
                     $variant = AddSubVariant::where('id', '=', $carts['variantid'])->first();
                     if ($cart->free_shipping == 0) {
                         $free_shipping = Shipping::where('id', $cart->shipping_id)
-                                        ->first();
+                            ->first();
 
                         if ($free_shipping->name == "Shipping Price") {
 
@@ -1640,9 +1640,9 @@ class CartController extends Controller
 
                         } else {
 
-                            if(get_default_shipping()->whole_order == 1){
+                            if (get_default_shipping()->whole_order == 1) {
                                 $shipping = $free_shipping->price;
-                            }else{
+                            } else {
                                 $shipping = $shipping + $free_shipping->price;
                             }
 
@@ -1673,12 +1673,12 @@ class CartController extends Controller
 
             $ca = Cart::where('id', $id)->first();
 
-            if(isset($ca->variant) && $ca->variant->products->free_shipping == 0){
+            if (isset($ca->variant) && $ca->variant->products->free_shipping == 0) {
                 Cart::where('user_id', auth()->id())
                     ->where('variant_id', $ca->variant_id)
                     ->update(['shipping' => $shipping]);
             }
-                    
+
         }
 
         Session::put('shippingrate', $shipping);
@@ -1695,7 +1695,7 @@ class CartController extends Controller
         } elseif (Auth::check() && Cart::isCoupanApplied() == '1') {
             //proccess coupan calculation for logged in user.
 
-             $cpn = Cart::getCoupanDetail();
+            $cpn = Cart::getCoupanDetail();
 
             if ($cpn->link_by == 'product') {
 
@@ -1880,7 +1880,7 @@ class CartController extends Controller
                 $gtotal = $gtotal - $per;
 
                 // Putting a session//
-                Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $per, 'msg' => "$cpn->code Applied Successfully !", 'appliedOn' => 'product']);
+                Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $per, 'msg' => __(':code Applied Successfully !',['code' => $cpn->code]), 'appliedOn' => 'product']);
 
             } elseif (Session::get('coupanapplied')['appliedOn'] == 'category') {
 
@@ -1946,7 +1946,7 @@ class CartController extends Controller
 
                 $gtotal = $gtotal - $per;
                 //Putting a session//
-                Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $per, 'msg' => "$cpn->code Applied Successfully !", 'appliedOn' => 'category']);
+                Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'discount' => $per, 'msg' => __(':code Applied Successfully !',['code' => $cpn->code]), 'appliedOn' => 'category']);
 
             } elseif (Session::get('coupanapplied')['appliedOn'] == 'cart') {
 
@@ -1991,14 +1991,14 @@ class CartController extends Controller
 
                 $gtotal = $gtotal - $per;
                 //Putting again in session//
-                Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'msg' => "$cpn->code Applied Successfully !", 'discount' => $per, 'appliedOn' => 'cart']);
+                Session::put('coupanapplied', ['code' => $cpn->code, 'cpnid' => $cpn->id, 'msg' => __(':code Applied Successfully !',['code' => $cpn->code]), 'discount' => $per, 'appliedOn' => 'cart']);
 
             }
 
         }
 
         return response()->json(array(
-            'per' => $per ?? NULL,
+            'per' => $per ?? null,
             'id' => $id,
             'noffertotal' => $noffertotal,
             'singletotal' => $singletotal,
@@ -2007,22 +2007,12 @@ class CartController extends Controller
             'pro_id' => $pro_id,
             'total' => $total,
             'gtotal' => $gtotal,
-            'shipping' => (float) sprintf("%.2f",$shipping),
+            'shipping' => (float) sprintf("%.2f", $shipping),
             'variant_id' => $variant_id,
         ));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Cart  $cart
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Cart $cart)
-    {
-        //
 
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -2043,7 +2033,7 @@ class CartController extends Controller
         Session::forget('coupanapplied');
 
         notify()
-            ->success('Your cart is now empty');
+            ->success(__('Your cart is now empty'));
         return redirect('/');
 
     }
@@ -2053,7 +2043,7 @@ class CartController extends Controller
         if ($token) {
             Session::forget('cart');
             Session::forget('coupanapplied');
-            notify()->success('Your cart is now empty !');
+            notify()->success(__('Your cart is now empty !'));
             return redirect('/');
         } else {
             notify()
@@ -2063,35 +2053,34 @@ class CartController extends Controller
 
     }
 
-    public function simpeproductincart(Request $request,$pro_id,$price,$offerprice){
+    public function simpeproductincart(Request $request, $pro_id, $price, $offerprice)
+    {
 
-       
-
-        if(!auth()->check()){
-            notify()->error('Login required !');
+        if (!auth()->check()) {
+            notify()->error(__('Login required !'));
             return redirect('login');
         }
 
         $product = SimpleProduct::find($pro_id);
 
-        $cart = Cart::where('simple_pro_id',$pro_id)->where('user_id',auth()->id())->first();
+        $cart = Cart::where('simple_pro_id', $pro_id)->where('user_id', auth()->id())->first();
 
-        if(!$cart){
+        if (!$cart) {
             $cart = new Cart;
             $qty = $request->qty;
-        }else{
+        } else {
             $qty = $cart->qty + $request->qty;
 
-            if($qty > $product->max_order_qty){
+            if ($qty > $product->max_order_qty) {
 
-                notify()->error('Product max qty limit reached !');
+                notify()->error(__('Product max qty limit reached !'));
                 return back();
 
             }
 
-            if($qty > $product->stock){
+            if ($qty > $product->stock) {
 
-                notify()->error('Product stock limit reached !');
+                notify()->error(__('Product stock limit reached !'));
                 return back();
 
             }
@@ -2100,23 +2089,23 @@ class CartController extends Controller
 
         DB::beginTransaction();
 
-            $cart->simple_pro_id = $pro_id;
-            $cart->ori_price = $price;
-            $cart->price_total = $qty * $price;
-            $cart->ori_offer_price = $offerprice;
-            $cart->semi_total = $qty * $offerprice;
-            $cart->qty = $qty;
-            $cart->user_id = auth()->id();
+        $cart->simple_pro_id = $pro_id;
+        $cart->ori_price = $price;
+        $cart->price_total = $qty * $price;
+        $cart->ori_offer_price = $offerprice;
+        $cart->semi_total = $qty * $offerprice;
+        $cart->qty = $qty;
+        $cart->user_id = auth()->id();
 
-            $t_price = $offerprice != 0 ? $offerprice : $price;
+        $t_price = $offerprice != 0 ? $offerprice : $price;
 
-            $taxable_amount = $t_price * $product->tax / 100;
+        $taxable_amount = $t_price * $product->tax / 100;
 
-            $cart->tax_amount = $taxable_amount * $qty;
+        $cart->tax_amount = $taxable_amount * $qty;
 
-            $cart->vender_id = $product->store->user->id;
+        $cart->vender_id = $product->store->user->id;
 
-            $cart->save();
+        $cart->save();
 
         DB::commit();
 
@@ -2124,49 +2113,49 @@ class CartController extends Controller
 
         $cart->save();
 
-        notify()->success('added in cart',$product->product_name);
+        notify()->success(__('added in cart'), $product->product_name);
 
         return back();
 
     }
 
-    public function vuesimpeproductincart(Request $request,$pro_id,$price,$offerprice){
+    public function vuesimpeproductincart(Request $request, $pro_id, $price, $offerprice)
+    {
 
-        if(!auth()->check()){
+        if (!auth()->check()) {
             return response()->json([
-                'msg' => 'Login to add this item in cart',
-                'status' => 'fail'
+                'msg'    => __('Login to add this item in cart'),
+                'status' => 'fail',
             ]);
         }
 
         $product = SimpleProduct::find($pro_id);
 
-        $cart = Cart::where('simple_pro_id',$pro_id)->where('user_id',auth()->id())->first();
+        $cart = Cart::where('simple_pro_id', $pro_id)->where('user_id', auth()->id())->first();
 
-        if(!$cart){
+        if (!$cart) {
 
             $cart = new Cart;
             $qty = $request->qty;
 
-        }else{
+        } else {
 
             $qty = $cart->qty + $request->qty;
 
-            if($qty > $product->max_order_qty){
-
+            if ($qty > $product->max_order_qty) {
 
                 return response()->json([
-                    'msg' => 'Product max qty limit reached !',
-                    'status' => 'fail'
+                    'msg' => __('Product max qty limit reached !'),
+                    'status' => 'fail',
                 ]);
 
             }
 
-            if($qty > $product->stock){
+            if ($qty > $product->stock) {
 
                 return response()->json([
-                    'msg' => 'Product stock limit reached !',
-                    'status' => 'fail'
+                    'msg'    => __('Product stock limit reached !'),
+                    'status' => 'fail',
                 ]);
 
             }
@@ -2198,13 +2187,14 @@ class CartController extends Controller
         DB::commit();
 
         return response()->json([
-            'msg'    => __('Product added in cart'),
-            'status' => 'success'
+            'msg' => __('Product added in cart'),
+            'status' => 'success',
         ]);
 
     }
 
-    public function removesimpleproduct($id){
+    public function removesimpleproduct($id)
+    {
 
         $row = Cart::findorfail($id);
 

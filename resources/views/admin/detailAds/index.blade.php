@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Block Detail Page Advertising')
+@section('title',__('Block Detail Page Advertising'))
 @section('body')
 @component('admin.component.breadcumb',['secondaryactive' => 'active'])
 @slot('heading')
@@ -16,8 +16,7 @@
     <div class="widgetbar">
       @can('blockadvertisments.create')
         <a  href=" {{url('admin/detailadvertise/create')}} " class="btn btn-primary-rgba mr-2">
-            <i class="feather icon-plus mr-2"></i> {{__("Add New Block Detail
-            Advertise")}}
+            <i class="feather icon-plus mr-2"></i> {{__("Add New Block Detail Advertise")}}
         </a>
     </div>  
     @endcan                      
@@ -30,19 +29,19 @@
         <div class="col-lg-12">
             <div class="card m-b-30">
                 <div class="card-header">
-                    <h5 class="box-title">List Block Detail Page Ads</h5>
+                    <h5 class="box-title">{{ __('List Block Detail Page Ads') }}</h5>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
                     <table id="full_detail_table" class="width100 table table-bordered table-striped">
                       <thead>
                         <tr>
-                          <th>ID</th>
-                          <th>Preview</th>
-                          <th>Ad Position</th>
-                          <th>Details</th>
-                          <th>Status</th>
-                          <th>Action</th>
+                          <th>{{ __('ID') }}</th>
+                          <th>{{ __('Preview') }}</th>
+                          <th>{{ __('Ad Position') }}</th>
+                          <th>{{ __('Details') }}</th>
+                          <th>{{ __('Status') }}</th>
+                          <th>{{ __('Action') }}</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -55,18 +54,20 @@
                             @if($detail->linkby != 'adsense')
                             <img src="{{ url('images/detailads/'.$detail->adimage) }}" alt="" class="pro-img">
                             @else
-                            <b>Google adsense preview not available !</b>
+                            <b>
+                              {{__('Google adsense preview not available !')}}
+                            </b>
                             @endif
                           </td>
                           <td>
                 
                             @if($detail->position == 'category')
-                            <p><b>On Category Page</b></p>
+                            <p><b>{{ __('On Category Page') }}</b></p>
                             @else
-                            <p><b>On Product Detail Page</b></p>
+                            <p><b>{{ __('On Product Detail Page') }}</b></p>
                             @endif
                 
-                            <p><b>Display On:</b>
+                            <p><b>{{__('Display On')}}:</b>
                 
                               @php
                 
@@ -96,16 +97,16 @@
                               @elseif($detail->linkby == 'category')
                               {{ $detail->category['title'] ?? '-' }}
                               @elseif($detail->linkby == 'url')
-                              Custom URL
+                              {{__("Custom URL")}}
                               @elseif($detail->linkby == 'adsense')
-                              Google Adsense Script
+                              {{__("Google Adsense Script")}}
                               @endif</p>
                             @if($detail->top_heading !='')
-                            <p><b>Heading Text:</b> {{ $detail->top_heading }}</p>
+                            <p><b>{{__("Heading Text")}}:</b> {{ $detail->top_heading }}</p>
                             @endif
                 
                             @if($detail->btn_text != '')
-                            <p><b>Button text:</b> {{ $detail->btn_text }}</p>
+                            <p><b>{{__("Button text")}}:</b> {{ $detail->btn_text }}</p>
                             @endif
                             @endif
                           </td>
@@ -114,9 +115,9 @@
                             <form action="{{ route('detail_button.quick.update',$detail->id) }}" method="POST">
                               {{csrf_field()}}
                               <button @if(env('DEMO_LOCK')==0) type="submit" @else disabled="disabled"
-                                title="This operation is disabled in demo !" @endif
+                                title="{{ __("This operation is disabled in Demo !") }}" @endif
                                 class="btn btn-rounded {{ $detail->status==1 ? "btn-success-rgba" : "btn-danger-rgba" }}">
-                                {{ $detail->status ==1 ? 'Active' : 'Deactive' }}
+                                {{ $detail->status ==1 ? __('Active') : __('Deactive') }}
                               </button>
                             </form>
                             @endcan
@@ -127,7 +128,7 @@
                               <button class="btn btn-round btn-primary-rgba" type="button" id="CustomdropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="feather icon-more-vertical-"></i></button>
                               <div class="dropdown-menu" aria-labelledby="CustomdropdownMenuButton1">
                                 @can('blockadvertisments.edit')
-                                  <a class="dropdown-item" href="{{route('detailadvertise.edit',$detail->id)}}"><i class="feather icon-edit mr-2"></i>Edit</a>
+                                  <a class="dropdown-item" href="{{route('detailadvertise.edit',$detail->id)}}"><i class="feather icon-edit mr-2"></i>{{ __("Edit") }}</a>
                                   @endcan
               
                                   @can('blockadvertisments.delete')
@@ -142,7 +143,7 @@
                             <div class="modal-dialog modal-sm">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleSmallModalLabel">Delete</h5>
+                                        <h5 class="modal-title" id="exampleSmallModalLabel">{{ __("DELETE") }}</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                         </button>
@@ -155,8 +156,8 @@
                                         <form method="post" action="{{route('detailadvertise.destroy',$detail->id)}}" class="pull-right">
                                             {{csrf_field()}}
                                             {{method_field("DELETE")}}
-                                            <button type="reset" class="btn btn-secondary" data-dismiss="modal">No</button>
-                                            <button type="submit" class="btn btn-primary">Yes</button>
+                                            <button type="reset" class="btn btn-secondary" data-dismiss="modal">{{ __("No") }}</button>
+                                            <button type="submit" class="btn btn-primary">{{ __("YES") }}</button>
                                         </form>
                                     </div>
                                 </div>

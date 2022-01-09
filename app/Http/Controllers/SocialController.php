@@ -50,19 +50,8 @@ class SocialController extends Controller
 
         $data->save();
 
-        notify()->success('Social icon added successfully !');
+        notify()->success(__('Social icon added successfully !'));
         return redirect('admin/social');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Social  $social
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Social $social)
-    {
-        //
     }
 
     /**
@@ -89,7 +78,7 @@ class SocialController extends Controller
         $menu = Social::find($id);
 
         if(!$menu){
-            notify()->error('Icon not found !','404');
+            notify()->error(__('Icon not found !'),'404');
             return redirect('admin/social');
         }
 
@@ -97,7 +86,7 @@ class SocialController extends Controller
 
         $menu->update($input);
 
-        notify()->success('Social icon updated successfully !');
+        notify()->success(__('Social icon updated successfully !'));
         return redirect('admin/social');
 
     }
@@ -113,13 +102,13 @@ class SocialController extends Controller
         $menu = Social::find($id);
 
         if(!$menu){
-            notify()->error('Icon not found !','404');
+            notify()->error(__('Icon not found !'),'404');
             return redirect('admin/social');
         }
 
         $menu->delete();
 
-        notify()->success('Social icon deleted successfully !');
+        notify()->success(__('Social icon deleted successfully !'));
         return redirect('admin/social');
     }
 }

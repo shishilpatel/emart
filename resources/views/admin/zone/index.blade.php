@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','All Zones | ')
+@section('title',__('All Zones | '))
 @section('body')
 
 @component('admin.component.breadcumb',['secondactive' => 'active'])
@@ -15,7 +15,7 @@
 <div class="col-md-6">
     <div class="widgetbar">
       @can('users.create')
-      <a href=" {{url('admin/zone/create')}}" class="btn btn-primary-rgba"><i class="feather icon-plus mr-2"></i> Add New Zone</a>
+      <a href=" {{url('admin/zone/create')}}" class="btn btn-primary-rgba"><i class="feather icon-plus mr-2"></i>{{ __('Add a new zone') }}</a>
       @endcan
       
     </div>
@@ -44,13 +44,27 @@
                     <table  id="datatable-buttons" class="table table-striped table-bordered">
                       <thead>
                         <tr>
-                          <th>Id</th>
-                          <th>Name</th>
-                          <th>Country</th>
-                          <th>Zone Name</th>
-                          <th>Code</th>
-                          <th>Status</th>
-                          <th>Action</th>
+                          <th>
+                            {{__("ID")}}
+                          </th>
+                          <th>
+                            {{__("Name")}}
+                          </th>
+                          <th>
+                            {{__("Country")}}
+                          </th>
+                          <th>
+                            {{__("Zone Name")}}
+                          </th>
+                          <th>
+                            {{__("Code")}}
+                          </th>
+                          <th>
+                            {{__("Status")}}
+                          </th>
+                          <th>
+                            {{__("Action")}}
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
@@ -94,8 +108,8 @@
                                     {{csrf_field()}}
                                     {{method_field("DELETE")}}
                                     <button class="dropdown-item" @if(env('DEMO_LOCK')==0) type="submit" @else disabled=""
-                                      title="This action is disabled in demo !" @endif class="abc">
-                                      <i class="fa fa-trash mr-2"></i>Delete
+                                      title="{{ __("This action is disabled in demo !") }}" @endif class="abc">
+                                      <i class="fa fa-trash mr-2"></i> {{__("Delete")}}
                                   </button>
                                   </form>
                                 </div>

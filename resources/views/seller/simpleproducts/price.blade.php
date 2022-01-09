@@ -11,7 +11,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="my-modal-title">
-          <b>{{__("Pricing Summary for ").$row->product_name }}</b>
+          <b>{{__("Pricing Summary for :product",['product' => $row->product_name]) }}</b>
         </h5>
         <button class="float-right close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>

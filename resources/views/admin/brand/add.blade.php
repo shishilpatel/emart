@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Create a Brand | ')
+@section('title',__('Create a Brand | '))
 @section('body')
 
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
@@ -20,8 +20,7 @@
 <div class="col-md-6">
   <div class="widgetbar">
 
-  <a href="{{ url('admin/brand') }}" class="btn btn-primary-rgba mr-2"><i
-      class="feather icon-arrow-left mr-2"></i>Back</a>
+  <a href="{{ url('admin/brand') }}" class="btn btn-primary-rgba mr-2"><i class="feather icon-arrow-left mr-2"></i> {{ __("Back") }}</a>
 </div>
 </div>
 @endslot
@@ -36,7 +35,7 @@
         <div class="alert alert-danger" role="alert">
           @foreach($errors->all() as $error)
           <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true" style="color:red;">&times;</span></button></p>
+              <span aria-hidden="true">&times;</span></button></p>
           @endforeach
         </div>
       @endif
@@ -51,17 +50,17 @@
         {{csrf_field()}}
         <div class="form-group">
           <label class="control-label" for="first-name">
-            Brand Name: <span class="required">*</span>
+            {{__('Brand Name')}}: <span class="required">*</span>
           </label>
 
-            <input placeholder="Please enter brand name" type="text" id="first-name" name="name"
+            <input placeholder="{{ __('Please enter brand name') }}" type="text" id="first-name" name="name"
               class="form-control col-md-12" value="{{ old('name') }}">
 
          
         </div>
         <div class="form-group">
           <label class="control-label" for="first-name">
-            Brand Logo: <span class="required">*</span>
+            {{__('Brand Logo')}}: <span class="required">*</span>
           </label>
 
           <div class="input-group">
@@ -70,11 +69,11 @@
                 class="form-control">
             <div class="input-group-append">
                 <span data-input="image"
-                    class="bg-primary text-light midia-toggle input-group-text">Browse</span>
+                    class="bg-primary text-light midia-toggle input-group-text">{{ __('Browse') }}</span>
             </div>
           </div>
           
-          <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>(Please Choose Brand Image)</small>
+          <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>({{ __('Please Choose Brand Image') }})</small>
 
         </div>
         
@@ -96,7 +95,7 @@
 
         <div class="form-group">
           <label>
-            Status:
+            {{__('Status')}}:
           </label><br>
           <label class="switch">
             <input class="slider tgl tgl-skewed" type="checkbox" id="toggle-event33"   checked="checked">
@@ -104,11 +103,11 @@
           </label>
           <br>
            <input type="hidden" name="status" value="1" id="status3">
-           <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>(Choose status for your brand)</small>
+           <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>({{__("Choose status for your brand")}})</small>
           </div>
           <div class="form-group">
             <label>
-              Show Image Footer:
+             {{__('Show image in footer')}}:
             </label><br>
             <label class="switch">
               <input class="slider tgl tgl-skewed" type="checkbox" id="toggle-event33"   checked="checked">
@@ -116,13 +115,13 @@
             </label>
             <br>
              <input type="hidden" name="show_image" value="1" id="status3">
-             <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>(If You Choose Active Then Image Show In Footer Brand Logo)</small>
+             <small class="text-info"> <i class="text-dark feather icon-help-circle"></i>({{__("If You Choose Active Then Image Show In Footer Brand Logo")}})</small>
             </div>
           <div class="form-group">
           <button type="reset" class="btn btn-danger"><i class="fa fa-ban"></i>
-            Reset</button>
+            {{ __("Reset") }}</button>
           <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i>
-            Create</button>
+            {{ __("Create") }}</button>
         </div>
 
         <div class="clear-both"></div>

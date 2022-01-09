@@ -9,7 +9,6 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="{{ url('css/bootstrap.min.css') }}" crossorigin="anonymous">
   <link rel="stylesheet" href="{{url('css/font-awesome.min.css')}}">
-  <link rel="stylesheet" href="{{ url('css/vendor/shards.min.css') }}">
   <link rel="stylesheet" href="{{ url('css/install.css') }}">
   <link rel="stylesheet" href="{{ url('vendor/mckenziearts/laravel-notify/css/notify.css') }}">
   <title>{{ __('Installing App - Server Requirement') }}</title>
@@ -573,13 +572,13 @@
                     <tr>
                       <td>{{ __('max_execution_time') }} </td>
                       <td>
-                        {{ ini_get('max_execution_time') / 100 }} {{__("sec.")}}
+                        {{ ini_get('max_execution_time') }} {{__("sec.")}}
                       </td>
                       <td>
                         {{__("300 sec.")}}
                       </td>
                       <td>
-                        @if ((ini_get('max_execution_time') / 100) > 300 || ini_get('max_execution_time') == '-1')
+                        @if ((ini_get('max_execution_time')) >= 300|| ini_get('max_execution_time') == '-1')
                           @php
                            
                             array_push($servercheck, 1);
@@ -872,7 +871,6 @@
   <script src="{{ url('front/vendor/js/ej.web.all.min.js') }}"></script>
   <script src="{{ url('front/vendor/js/popper.min.js') }}"></script>
   <script src="{{ url('js/bootstrap.bundle.min.js') }}"></script>
-  <script src="{{ url('front/vendor/js/shards.min.js') }}"></script>
   <script>
     var baseUrl = @json(url('/'));
   </script>

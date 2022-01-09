@@ -1,18 +1,15 @@
 @extends('admin.layouts.sellermastersoyuz')
-@section('title','All Categories | ')
+@section('title',__('All Categories'))
 @section('body')
 
 @component('seller.components.breadcumb',['secondactive' => 'active'])
-@slot('heading')
-   {{ __('All Categories') }}
-@endslot
-@slot('menu1')
-   {{ __('All Categories') }}
-@endslot
 
-
-
-
+	@slot('heading')
+		{{ __('All Categories') }}
+	@endslot
+	@slot('menu1')
+		{{ __('All Categories') }}
+	@endslot
 
 @endcomponent
 
@@ -92,47 +89,3 @@
 		});
 	</script>
 @endsection
-                  
-          
-                  
-    
-    
-          
-                  
-    
-    
-                  
-                  
-                
-    
-                
-                                      
-
-
-          
-
-            
-          
-              
-
-
-
-
-            
-
-            
-            
-            
-  
-                 
-  
-               
-  
-          
-    
-             
-            
-
-          
-
-

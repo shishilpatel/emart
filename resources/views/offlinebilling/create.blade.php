@@ -1,5 +1,5 @@
-@extends('admin.layouts.master')
-@section('title','Create a new order |')
+@extends('admin.layouts.master-soyuz')
+@section('title',__('Create Order'))
 @section('body')
 @component('admin.component.breadcumb',['secondaryactive' => 'active'])
 
@@ -31,7 +31,7 @@
             @if ($errors->any())
                 <div class="alert alert-danger" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true" style="color:red;">&times;</span></button>
+                        <span aria-hidden="true">&times;</span></button>
                 @foreach($errors->all() as $error)
                     <p>{{ $error}}</p>
                 @endforeach
@@ -54,10 +54,10 @@
                               
                               <div class="form-group">
                                   <label>
-                                    Invoice Date: 
+                                    {{__("Invoice Date: ")}}
                                   </label>
                                   <div class='input-group date'>
-                                    <input id='default-date' placeholder="Enter invoice date" value="{{ old('invoice_date') }}" name="invoice_date" type='text' class="form-control" />
+                                    <input id='default-date' placeholder="{{ __("Enter invoice date") }}" value="{{ old('invoice_date') }}" name="invoice_date" type='text' class="form-control" />
                                     <span class="input-group-text">
                                       <span class="feather icon-calendar"></span>
                                     </span>
@@ -72,7 +72,7 @@
             
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="my-input">Customer Name: <span class="text-danger">*</span></label>
+                                    <label for="my-input">{{__("Customer Name:")}} <span class="text-danger">*</span></label>
                                     <div class="input-group">
             
                                         <span class="input-group-text" id="basic-addon1">
@@ -86,7 +86,7 @@
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="my-input">Customer email: <span class="text-danger">*</span></label>
+                                    <label for="my-input">{{__("Customer email:")}} <span class="text-danger">*</span></label>
                                     <div class="input-group">
             
                                         <span class="input-group-text" id="basic-addon1">
@@ -101,7 +101,7 @@
             
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="my-input">Customer Contact No: <span class="text-danger">*</span></label>
+                                    <label for="my-input">{{__("Customer Contact No:")}} <span class="text-danger">*</span></label>
                                     <div class="input-group">
             
                                         <span class="input-group-text" id="basic-addon1">
@@ -119,8 +119,8 @@
             
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="my-input">Customer Shipping Address: <span class="text-danger">*</span></label>
-                                    <textarea placeholder="B-123, Los Street, Washington DC, USA" required
+                                    <label for="my-input">{{__("Customer Shipping Address:")}} <span class="text-danger">*</span></label>
+                                    <textarea placeholder="{{ __("B-123, Los Street, Washington DC, USA") }}" required
                                         class="form-control customer_shipping_address" name="customer_shipping_address" id=""
                                         cols="30" rows="5">{{ old('customer_shipping_address') }}</textarea>
                                         <label class="text-muted"><input checked {{ old('mark_as_default') ? 'checked' : '' }} type="checkbox" id="same_as_shipping" name="mark_as_default">
@@ -130,8 +130,8 @@
             
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="my-input">Customer Billing Address: <span class="text-danger">*</span></label>
-                                    <textarea placeholder="B-123, Los Street, Washington DC, USA" required
+                                    <label for="my-input">{{__("Customer Billing Address:")}} <span class="text-danger">*</span></label>
+                                    <textarea placeholder="{{ __("B-123, Los Street, Washington DC, USA") }}" required
                                         class="form-control customer_billing_address" name="customer_billing_address" id=""
                                         cols="30" rows="5">{{ old('customer_billing_address') }}</textarea>
                                     <label class="text-muted"><input checked {{ old('same_as_shipping') ? 'checked' : '' }} type="checkbox" id="same_as_shipping" name="same_as_shipping">
@@ -142,11 +142,11 @@
                             <div class="col-md-3">
             
                                 <label class="control-label" for="">
-                                    Country: 
+                                    {{__("Country: ")}}
                                 </label>
                  
                                 <select onchange="getstate();" data-placeholder="{{ __("Please select country") }}" required name="country_id" class="form-control select2 country_id" id="country_id">
-                                     <option value="">Please Choose</option>
+                                     <option value="">{{ __('Please Choose') }}</option>
                                        @foreach($country as $c)
                                        <?php
                                          $iso3 = $c->country;
@@ -166,11 +166,11 @@
                             <div class="col-md-3">
                           
                                 <label class="control-label" for="">
-                                    State: 
+                                    {{__("State: ")}}
                                 </label>
                   
                                 <select onchange="getcity();" data-placeholder="{{ __("Please select state") }}" required name="state_id" class="form-control select2 state_id" id="upload_id" >
-                                  <option value="">Please Choose</option>
+                                  <option value="">{{ __('Please Choose') }}</option>
                                 </select>
                   
                             </div>
@@ -182,14 +182,14 @@
                                 </label>
                   
                             <select data-placeholder="{{ __("Please select city") }}" required name="city_id" id="city_id" class="form-control select2 city_id">
-                                    <option value="">Please Choose</option>
+                                    <option value="">{{ __('Please Choose') }}</option>
                             </select>
                   
                             </div>
             
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="my-input">Pincode: <span class="text-danger">*</span></label>
+                                    <label for="my-input">{{__("Pincode:")}} <span class="text-danger">*</span></label>
                                     <div class="input-group">
             
                                         <span class="input-group-text" id="basic-addon1">
@@ -220,15 +220,14 @@
                                         {{ __('Payment Method:') }} <span class="text-danger">*</span>
                                     </label>
                                     <input value="{{ old('payment_method') ?? 'Online' }}" required name="payment_method" type="text" class="form-control"
-                                        placeholder="eg:Cash on delivery">
+                                        placeholder="{{ __("eg:Cash on delivery") }}">
                                 </div>
                             </div>
             
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="">
-                                    {{ __('Order ID:') }} <small class="text-muted">{{ __('(You can leave it blank for auto
-                                        generation.)') }}</small>
+                                    {{ __('Order ID:') }} <small class="text-muted">{{ __('(You can leave it blank for auto generation.)') }}</small>
                                     </label>
                                     <input value="{{ old('order_id') }}" name="order_id" type="text" class="form-control" placeholder="eg:NND7456789">
                                     
@@ -280,13 +279,27 @@
                                 {{ __('Order Status:') }} <span class="text-danger">*</span>
                             </label>
                             <select name="order_status" id="" class="form-control select2">
-                                <option value="pending">Pending</option>
-                                <option value="processed">Processed</option>
-                                <option value="packed">Packed</option>
-                                <option value="shipped">Shipped</option>
-                                <option value="in_transit">In Transit</option>
-                                <option value="out_for_delivery">Out for Delivery</option>
-                                <option selected value="delivered">Delivered</option>
+                                <option value="pending">
+                                    {{__("Pending")}}
+                                </option>
+                                <option value="processed">
+                                    {{__("Processed")}}
+                                </option>
+                                <option value="packed">
+                                    {{__("Packed")}}
+                                </option>
+                                <option value="shipped">
+                                    {{__("Shipped")}}
+                                </option>
+                                <option value="in_transit">
+                                    {{__("In Transit")}}
+                                </option>
+                                <option value="out_for_delivery">
+                                    {{__('Out for Delivery')}}
+                                </option>
+                                <option selected value="delivered">
+                                    {{__("Delivered")}}
+                                </option>
                             </select>
                         </div>
                     </div>
@@ -308,8 +321,8 @@
                         </h3>
             
                         <div class="float-right">
-                            <label class="badge badge-success"> USE <b><u>Ctrl+D</u></b> to quickly add a new row.</label> |
-                            <label class="badge badge-danger"> USE <b><u>Ctrl+E</u></b> to quickly remove a row.</label>
+                            <label class="badge badge-success"> {{__("USE")}} <b><u>Ctrl+D</u></b> {{__('to quickly add a new row.')}}</label> |
+                            <label class="badge badge-danger"> {{__("USE")}} <b><u>Ctrl+E</u></b> {{ __("to quickly remove a row.") }}</label>
                         </div>
                     </div>
             
@@ -319,19 +332,19 @@
             
                                 <tr>
                                     <th>
-                                        Name of product
+                                        {{__("Name of product")}}
                                     </th>
                                     <th>
-                                        Price:
+                                        {{__("Price:")}}
                                     </th>
                                     <th>
-                                        Origin.
+                                        {{__("Origin.")}}
                                     </th>
                                     <th>
-                                        Qty.
+                                        {{__("Qty.")}}
                                     </th>
                                     <th>
-                                        Total
+                                        {{__("Total")}}
                                     </th>
                                     <th>
             
@@ -384,13 +397,13 @@
                                         </td>
                 
                                         <td>
-                                            <button title="Add new" type="button" class="addNew btn btn-primary-rgba rounded btn-sm">
+                                            <button title="{{ __("Add new") }}" type="button" class="addNew btn btn-primary-rgba rounded btn-sm">
                                                 <i class="fa fa-plus"></i>
                                             </button>
                                         </td>
                 
                                         <td>
-                                            <button title="Remove" type="button" class="removeBtn btn btn-danger-rgba rounded btn-sm">
+                                            <button title="{{ __("Remove") }}" type="button" class="removeBtn btn btn-danger-rgba rounded btn-sm">
                                                 <i class="fa fa-times"></i>
                                             </button>
                                         </td>
@@ -443,13 +456,13 @@
                                             </td>
                     
                                             <td>
-                                                <button title="Add new" type="button" class="addNew btn btn-primary-rgba rounded btn-sm">
+                                                <button title="{{ __("Add new") }}" type="button" class="addNew btn btn-primary-rgba rounded btn-sm">
                                                     <i class="fa fa-plus"></i>
                                                 </button>
                                             </td>
                     
                                             <td>
-                                                <button title="Remove" type="button" class="removeBtn btn btn-danger-rgba rounded btn-sm">
+                                                <button title="{{ __("Remove") }}" type="button" class="removeBtn btn btn-danger-rgba rounded btn-sm">
                                                     <i class="fa fa-times"></i>
                                                 </button>
                                             </td>

@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','All Hotdeals | ')
+@section('title',__('All Hotdeals | '))
 @section('body')
 @component('admin.component.breadcumb',['secondaryactive' => 'active'])
 @slot('heading')
@@ -27,7 +27,7 @@
         <div class="col-lg-12">
             <div class="card m-b-30">
                 <div class="card-header">
-                    <h5 class="box-title"> All Hotdeals</h5>
+                    <h5 class="box-title"> {{ __('All Hotdeals') }}</h5>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
@@ -35,16 +35,16 @@
                       <thead>
                         <tr class="table-heading-row">
               
-                          <th>ID</th>
-                          <th>Product Name</th>
-                          <th>Status</th>
-                          <th>Action</th>
+                          <th>{{ __('ID') }}</th>
+                          <th>{{ __('Product Name') }}</th>
+                          <th>{{ __('Status') }}</th>
+                          <th>{{ __("Action") }}</th>
                         </tr>
                       </thead>
                       <tbody>
                        
               
-                        @foreach($products as $key=> $product)
+                        @foreach($products as $key => $product)
                         
                         <tr>
                           <td>{{ $key+1 }}</td>
@@ -54,11 +54,11 @@
               
                             @can('hotdeals.edit')
                             <form action="{{ route('hot.quick.update',$product->id) }}" method="POST">
-                              {{csrf_field()}}
+                              @csrf
                               <button @if(env('DEMO_LOCK')==0) type="submit" @else disabled
-                                title="This operation is disabled in demo !" @endif
+                                title="{{ __("This operation is disabled in Demo !") }}" @endif
                                 class="btn btn-rounded {{ $product->status==1 ? "btn-success-rgba" : "btn-danger-rgba" }}">
-                                {{ $product->status ==1 ? 'Active' : 'Deactive' }}
+                                {{ $product->status ==1 ? __('Active') : __('Deactive') }}
                               </button>
                             </form>
                           @endcan
@@ -70,7 +70,7 @@
                               <button class="btn btn-round btn-primary-rgba" type="button" id="CustomdropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="feather icon-more-vertical-"></i></button>
                               <div class="dropdown-menu" aria-labelledby="CustomdropdownMenuButton1">
                                 @can('hotdeals.edit')
-                                  <a class="dropdown-item" href="{{url('admin/hotdeal/'.$product->id.'/edit')}}"><i class="feather icon-edit mr-2"></i>Edit</a>
+                                  <a class="dropdown-item" href="{{url('admin/hotdeal/'.$product->id.'/edit')}}"><i class="feather icon-edit mr-2"></i>{{ __("Edit") }}</a>
                                   @endcan
                                   @can('hotdeals.delete')
                                   <a class="dropdown-item btn btn-link" data-toggle="modal" data-target="#delete{{ $product->id }}" >
@@ -83,7 +83,7 @@
                             <div class="modal-dialog modal-sm">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleSmallModalLabel">Delete</h5>
+                                        <h5 class="modal-title" id="exampleSmallModalLabel">{{ __("DELETE") }}</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                         </button>
@@ -94,10 +94,10 @@
                                     </div>
                                     <div class="modal-footer">
                                         <form method="post" action="{{url('admin/hotdeal/'.$product->id)}}" class="pull-right">
-                                            {{csrf_field()}}
+                                            @csrf
                                             {{method_field("DELETE")}}
-                                            <button type="reset" class="btn btn-secondary-rgba" data-dismiss="modal">No</button>
-                                            <button type="submit" class="btn btn-primary-rgba">Yes</button>
+                                            <button type="reset" class="btn btn-secondary-rgba" data-dismiss="modal">{{ __("No") }}</button>
+                                            <button type="submit" class="btn btn-primary-rgba">{{ __("YES") }}</button>
                                         </form>
                                     </div>
                                 </div>

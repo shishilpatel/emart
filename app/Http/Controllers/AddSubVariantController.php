@@ -12,8 +12,8 @@ use File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use View;
 use Image;
+use View;
 
 class AddSubVariantController extends Controller
 {
@@ -25,10 +25,11 @@ class AddSubVariantController extends Controller
 
     public function post(Request $request, $id)
     {
-        $request->validate(['main_attr_id' => 'required', 
-            'main_attr_value' => 'required', 'image1' => 'required|mimes:png,jpg,jpeg,gif|max:1024'], 
+        $request->validate([
+            'main_attr_id' => 'required',
+            'main_attr_value' => 'required', 'image1' => 'required|mimes:png,jpg,jpeg,gif|max:1024'],
             ['main_attr_id.required' => 'Please select an option', 'main_attr_value.required' => 'Please select a value', 'image1.required' => 'Atleast one image is required']);
-     
+
         $input = $request->all();
 
         $array2 = AddSubVariant::where('pro_id', $id)->get();
@@ -42,12 +43,12 @@ class AddSubVariantController extends Controller
             $conversion_rate = array_diff($array1, $test);
 
             if ($conversion_rate == null) {
-                return back()->with('warning', 'Variant already exist ! Kindly Update that');
+                return back()->with('warning', __('Variant already exist ! Kindly Update that'));
             } else {
                 foreach ($conversion_rate as $e => $new) {
 
                     if ($new == 0) {
-                        return back()->with('warning', 'Variant exist Kindly Update it !');
+                        return back()->with('warning', __('Variant exist Kindly Update it !'));
                     } else {
 
                     }
@@ -75,7 +76,7 @@ class AddSubVariantController extends Controller
         } else {
             if ($all_def->count() < 1) {
                 return back()
-                    ->with('warning', 'Atleast one variant should be set to default !');
+                    ->with('warning', __('Atleast one variant should be set to default !'));
             }
 
             $input['def'] = 0;
@@ -97,8 +98,6 @@ class AddSubVariantController extends Controller
 
         if ($file = $request->file('image1')) {
 
-            
-
             $name = 'variant_' . time() . str_random(10) . '.' . $file->getClientOriginalExtension();
             $img = Image::make($file);
 
@@ -111,7 +110,7 @@ class AddSubVariantController extends Controller
                 $constraint->aspectRatio();
             });
 
-            $img->save($thumbpath .'/'. $thumb, 95);
+            $img->save($thumbpath . '/' . $thumb, 95);
 
             $varimage->main_image = $name;
 
@@ -135,7 +134,7 @@ class AddSubVariantController extends Controller
                 $constraint->aspectRatio();
             });
 
-            $img->save($hoverthumbpath .'/'. $hoverthumb, 95);
+            $img->save($hoverthumbpath . '/' . $hoverthumb, 95);
 
         }
 
@@ -200,7 +199,7 @@ class AddSubVariantController extends Controller
         $varimage->save();
 
         return redirect()
-            ->route('add.var', $id)->with('added', 'Variant Linked Successfully !');
+            ->route('add.var', $id)->with('added', __('Variant Linked Successfully !'));
 
     }
 
@@ -259,26 +258,26 @@ class AddSubVariantController extends Controller
             $vars->delete();
         } else {
             return back()
-                ->with('warning', "Default variant cannot be deleted !");
+                ->with('warning', __("Default variant cannot be deleted !"));
         }
 
         return back()
-            ->with('deleted', 'Variant has been Deleted !');
+            ->with('deleted', __('Variant has been deleted !'));
     }
 
     public function update(Request $request, $id)
     {
 
-        $request->validate(['min_order_qty' => 'numeric|min:1'], ['min_order_qty.min' => 'Minimum order quantity must be atleast 1']);
-        
-        if(!$request->main_attr_value){
-            return back()->withErrors(['You did not selected product attribute'])->withInput();
+        $request->validate(['min_order_qty' => 'numeric|min:1'], ['min_order_qty.min' => __('Minimum order quantity must be atleast 1')]);
+
+        if (!$request->main_attr_value) {
+            return back()->withErrors([__('You did not selected product attribute')])->withInput();
         }
 
         $vars = AddSubVariant::find($id);
 
-        if(!$vars){
-            notify()->error('Product variant not found !');
+        if (!$vars) {
+            notify()->error(__('Product variant not found !'));
             return back();
         }
 
@@ -288,7 +287,7 @@ class AddSubVariantController extends Controller
 
         if ($all_def2->count() < 1) {
 
-            return back()->with('warning', 'Atleast one value should be set to default !');
+            return back()->with('warning', __('Atleast one value should be set to default !'));
 
         }
 
@@ -309,11 +308,11 @@ class AddSubVariantController extends Controller
 
                 $msg2 = __("Buy Now Before stock goes again !");
 
-                $getusers->each(function ($user) use($vars,$proname,$msg2) {
-                    try{
+                $getusers->each(function ($user) use ($vars, $proname, $msg2) {
+                    try {
                         Mail::to($user->email)->send(new ProductStockNotifications($vars, $msg2, $proname));
                         \DB::table('product_stock_subscription')->where('email', '=', $user->email)->delete();
-                    }catch(\Exception $e){
+                    } catch (\Exception $e) {
                         Log::error('Failed to sent product stock mail');
                     }
                 });
@@ -378,7 +377,7 @@ class AddSubVariantController extends Controller
 
             if ($varimage->image2 == $varimage->main_image) {
 
-                if ($varimage->main_image !='' && file_exists($thumbpath . '/' . $varimage->main_image)) {
+                if ($varimage->main_image != '' && file_exists($thumbpath . '/' . $varimage->main_image)) {
                     unlink($thumbpath . '/' . $varimage->main_image);
                 }
 
@@ -398,7 +397,7 @@ class AddSubVariantController extends Controller
 
             /** Storing Second thumbnail for Hover ONLY FOR IMAGE 2 */
 
-            if (file_exists('../public/variantimages/hoverthumbnail/' . $varimage->image2)) {
+            if (file_exists(public_path().'/variantimages/hoverthumbnail/' . $varimage->image2)) {
                 unlink(public_path() . '/variantimages/hoverthumbnail/' . $varimage->image2);
             }
 
@@ -566,7 +565,7 @@ class AddSubVariantController extends Controller
         $newstock = ($current_stock) + ($addstock);
 
         if ($newstock < 0) {
-            return back()->with('deleted', 'Stock cannot be less than 0 !');
+            return back()->with('deleted', __('Stock cannot be less than 0 !'));
         }
 
         if (isset($request->def)) {
@@ -586,7 +585,7 @@ class AddSubVariantController extends Controller
 
             if ($all_def2->count() < 1) {
                 return back()
-                    ->with('warning', 'Atleast one value should be set to default !');
+                    ->with('warning', __('Atleast one value should be set to default !'));
             }
         }
 
@@ -614,10 +613,10 @@ class AddSubVariantController extends Controller
                     $vars->update($input);
 
                     return redirect()->route('add.var', $vars->pro_id)
-                        ->with('updated', 'Variant has been Updated !');
+                        ->with('updated', __('Variant has been Updated !'));
                 } else {
                     return back()
-                        ->with('warning', 'Linked Variant already exist !');
+                        ->with('warning', __('Linked Variant already exist !'));
                 }
 
             } else {
@@ -638,10 +637,10 @@ class AddSubVariantController extends Controller
                             $vars->update($input);
 
                             return redirect()->route('add.var', $vars->pro_id)
-                                ->with('updated', 'Linked Variant Updated !');
+                                ->with('updated', __('Linked Variant Updated !'));
                         } else {
                             return back()
-                                ->with('warning', 'Linked Variant exist !');
+                                ->with('warning', __('Linked Variant exist !'));
                         }
 
                     } else {
@@ -665,7 +664,7 @@ class AddSubVariantController extends Controller
         $vars->update($input);
 
         return redirect()->route('add.var', $vars->pro_id)
-            ->with('updated', 'Variant Updated !');
+            ->with('updated', __('Variant Updated !'));
 
     }
 
@@ -852,7 +851,7 @@ class AddSubVariantController extends Controller
             return response()
                 ->json(array(
                     'count' => $c,
-                    "msg" => "Atleast one value should set to be default",
+                    "msg" => __("Atleast one value should set to be default"),
                 ));
         }
 
@@ -869,7 +868,7 @@ class AddSubVariantController extends Controller
 
         return response()
             ->json(array(
-                'msg' => 'Default Variant is changed !',
+                'msg' => __('Default Variant is changed !'),
                 'count' => $c,
                 'id' => $id,
             ));

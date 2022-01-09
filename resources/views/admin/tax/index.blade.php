@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Tax rates | ')
+@section('title',__('Tax rates | '))
 @section('body')
 
 @component('admin.component.breadcumb',['secondactive' => 'active'])
@@ -45,12 +45,24 @@
                   <div class="table-responsive">
                     <table  id="datatable-buttons" class="table table-striped table-bordered">
                       <thead>
-                          <th>ID</th>
-                          <th>Tax Name</th>
-                          <th>Zone</th>
-                          <th>Rate</th>
-                          <th>Type</th>
-                          <th>Action</th>
+                          <th>
+                            {{__("ID")}}
+                          </th>
+                          <th>
+                            {{__("Tax Name")}}
+                          </th>
+                          <th>
+                            {{__("Zone")}}
+                          </th>
+                          <th>
+                            {{__("Rate")}}
+                          </th>
+                          <th>
+                            {{__("Type")}}
+                          </th>
+                          <th>
+                            {{__("Action")}}
+                          </th>
                       </thead>
                       <tbody>
                         @foreach($taxs as $key => $tax)
@@ -69,9 +81,9 @@
                           <td>{{$tax->rate}}</td>
                           <td>
                             @if($tax->type == 'p')
-                            {{'Percentage'}}
+                            {{__('Percentage')}}
                             @else($tax->type == 'f')
-                            {{'Fix Amount'}}
+                            {{__('Fix Amount')}}
                             @endif
                           </td>
                           <td>
@@ -85,7 +97,7 @@
                             
                                 
                                   <a class="dropdown-item" @if(env('DEMO_LOCK') == 0) data-toggle="modal" data-target="#tax_{{$tax->id}}" @else disabled=""
-                                    title="This action is disabled in demo !" @endif><i class="feather icon-delete mr-2"></i>{{ __("Delete")}}</a>
+                                    title="{{ __("This action is disabled in demo !") }}" @endif><i class="feather icon-delete mr-2"></i>{{ __("Delete")}}</a>
                                   
                                 </div>
                             </div>
@@ -122,15 +134,15 @@
         <div class="delete-icon"></div>
       </div>
       <div class="modal-body text-center">
-        <h4 class="modal-heading">Are You Sure ?</h4>
-        <p>Do you really want to delete this Tax? This process cannot be undone.</p>
+        <h4 class="modal-heading">{{ __("Are You Sure ?") }}</h4>
+        <p>{{ __("Do you really want to delete this Tax? This process cannot be undone.") }}</p>
       </div>
       <div class="modal-footer">
         <form method="post" action="{{url('admin/tax/'.$tax->id)}}" class="pull-right">
           {{csrf_field()}}
           {{method_field("DELETE")}}
-          <button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">No</button>
-          <button type="submit" class="btn btn-danger">Yes</button>
+          <button type="reset" class="btn btn-gray translate-y-3" data-dismiss="modal">{{ __("NO") }}</button>
+          <button type="submit" class="btn btn-danger">{{ __("YES") }}</button>
         </form>
       </div>
     </div>

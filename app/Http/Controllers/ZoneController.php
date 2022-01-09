@@ -56,8 +56,8 @@ class ZoneController extends Controller
             
         ],[
 
-            "name.required"=>"Zone Fild is Required",
-            "country_id"=>"Please Choose Country"
+            "name.required" => __("Zone field is required"),
+            "country_id"    => __("Please choose country")
             
           ]);
 
@@ -67,7 +67,7 @@ class ZoneController extends Controller
         
         $data->save();
         
-        return back()->with("category_message","Zone Has Been Added");
+        return back()->with("added",__("Zone has been added"));
     }
 
     /**
@@ -116,7 +116,7 @@ class ZoneController extends Controller
 
          $zone->save();
 
-          return redirect('admin/zone')->with('category_message', 'Zone has been updated');
+          return redirect('admin/zone')->with('added', __('Zone has been updated'));
     }
 
     /**
@@ -131,7 +131,7 @@ class ZoneController extends Controller
          $obj = $daa->findorFail($id);
          $value = $obj->delete();
          if($value){
-            session()->flash("category_message","Zone Has Been deleted");
+            session()->flash("deleted",__("Zone Has Been deleted"));
              return redirect("admin/zone");
          }
     }

@@ -13,7 +13,7 @@
                            @if($isad->linkby == 'category')
                             {{ App\Helpers\CategoryUrl::getURL($isad->cat_id) }}
                            @elseif($isad->linkby == 'detail' && $isad->pro_id != '' && $isad->product->subvariants)
-                            {{ App\Helpers\CategoryUrl::getURL($isad->product->subvariants[0]['id']) }}
+                            {{ App\Helpers\ProductUrl::getURL($isad->product->subvariants[0]['id']) }}
                            @elseif($isad->linkby == 'url')
                             {{ $isad->url }}
                            @endif" style="color:{{ $isad->btn_txt_color }};background: {{ $isad->btn_bg_color }}" class="btn buy-button">{{ $isad->btn_text }}</a></center>
@@ -23,7 +23,7 @@
                             @if($isad->linkby == 'category')
                               {{ App\Helpers\CategoryUrl::getURL($isad->cat_id) }}
                             @elseif($isad->linkby == 'detail' && $isad->pro_id != '' && $isad->product->subvariants)
-                              {{ App\Helpers\CategoryUrl::getURL($isad->product->subvariants[0]['id']) }}
+                              {{ App\Helpers\ProductUrl::getURL($isad->product->subvariants[0]['id']) }}
                             @elseif($isad->linkby == 'url')
                               {{ $isad->url }}
                             @endif
@@ -37,7 +37,7 @@
                           @if($isad->linkby == 'category')
                             {{ App\Helpers\CategoryUrl::getURL($isad->cat_id) }}
                           @elseif($isad->linkby == 'detail' && $isad->pro_id != '' && $isad->product->subvariants)
-                            {{ App\Helpers\CategoryUrl::getURL($isad->product->subvariants[0]['id']) }}
+                            {{ App\Helpers\ProductUrl::getURL($isad->product->subvariants[0]['id']) }}
                           @elseif($isad->linkby == 'url')
                             {{ $isad->url }}
                           @endif

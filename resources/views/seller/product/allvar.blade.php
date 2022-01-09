@@ -1,10 +1,10 @@
 @extends('admin.layouts.sellermastersoyuz')
-@section('title',"View $pro->name's All Variants - ")
+@section('title',__('View :pro \'s all variants',['pro' => $pro->name]))
 @section('body')
 
 @component('seller.components.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
-{{$pro->name}}'s Variant
+{{ __('View :pro \'s all variants',['pro' => $pro->name]) }}
 @endslot
 @slot('menu1')
    {{ __('Variant Product') }}
@@ -32,12 +32,13 @@
       <div class="col-lg-12">
           <div class="card m-b-30">
               <div class="card-header">
-                  <h5 class="card-title">{{$pro->name}}'s Variant
+                  <h5 class="card-title">
+					  {{__('View :pro \'s all variants',['pro' => $pro->name])}}
 
 					@php
 						$getstorename = App\Store::where('id',$pro->store_id)->first()->name;
 					@endphp
-					<small>Sold by : {{ $getstorename }}</small>
+					<small>{{__('Sold by :')}} {{ $getstorename }}</small>
 					<br>
 					<br>
 					@php
@@ -49,7 +50,7 @@
 					 
 					@endphp
 	             </h5>
-				 <h6>In: <span class="font-weight">{{ $getcatname }}</b> <i class="feather icon-chevrons-right" aria-hidden="true"></i>
+				 <h6>{{__('In:')}} <span class="font-weight">{{ $getcatname }}</b> <i class="feather icon-chevrons-right" aria-hidden="true"></i>
 					<span class="font-weight">{{ $getsubcatname }}</span> <i class="feather icon-chevrons-right" aria-hidden="true"></i>
 				   @if(isset($pro->grand_id) && $pro->grand_id != 0) {{ $getchildaname->title }} @endif
 	            </h6>
@@ -60,10 +61,18 @@
 				  <thead>
 					<tr>
 						<th>#</th>
-						<th>Variant Detail</th>
-						<th>Pricing Details</th>
-						<th>Added / Updated On</th>
-						<th>Action</th>
+						<th>
+							{{__('Variant Detail')}}
+						</th>
+						<th>
+							{{__("Pricing Details")}}
+						</th>
+						<th>
+							{{__('Added / Updated On')}}
+						</th>
+						<th>
+							{{__('Action')}}
+						</th>
 					</tr>
 				  </thead>
 				  <tbody>

@@ -10,7 +10,7 @@ class LanguageController extends Controller
 {
     public function index()
     {   
-        abort_if(!auth()->user()->can('site-settings.language'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('site-settings.language'),403,__('User does not have the right permissions.'));
         $allLang = Language::where('status', '=', 1)->get();
         return view('admin.language.index', compact('allLang'));
     }
@@ -19,7 +19,7 @@ class LanguageController extends Controller
     public function store(Request $request)
     {
 
-        abort_if(!auth()->user()->can('site-settings.language'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('site-settings.language'),403,__('User does not have the right permissions.'));
 
         if (isset($request->name))
         {
@@ -103,17 +103,17 @@ class LanguageController extends Controller
         }
         else
         {
-            notify()->error('Oops ! Something went wrong !');
+            notify()->error(__('Oops ! Something went wrong !'));
             return back();
         }
-        notify()->success('Language has been added !');
+        notify()->success(__('Language has been added !'));
         return back();
 
     }
 
     public function update(Request $request, $id)
     {
-        abort_if(!auth()->user()->can('site-settings.language'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('site-settings.language'),403,__('User does not have the right permissions.'));
 
         $findlang = Language::find($id);
         $input = $request->all();
@@ -159,12 +159,12 @@ class LanguageController extends Controller
                 $findlang->update($input);
             }
 
-            notify()->success('Language Details Updated !');
+            notify()->success(__('Language dtails updated !'));
             return back();
         }
         else
         {
-            notify()->error('404 | Language Not found !');
+            notify()->error(__('Language not found !'));
             return back();
         }
 
@@ -173,7 +173,7 @@ class LanguageController extends Controller
     public function delete($id)
     {
 
-        abort_if(!auth()->user()->can('site-settings.language'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('site-settings.language'),403,__('User does not have the right permissions.'));
         $lang = Language::find($id);
 
         if (isset($lang))
@@ -181,20 +181,20 @@ class LanguageController extends Controller
 
             if ($lang->def == 1)
             {
-                notify()->warning('Default language cannot be deleted !');
+                notify()->warning(__('Default language cannot be deleted !'));
                 return back();
             }
             else
             {
                 $lang->delete();
-                notify()->info('Language Deleted !');
+                notify()->info(__('Language Deleted !'));
                 return back();
             }
 
         }
         else
         {
-            notify()->error('404 Language Not found !');
+            notify()->error(__('Language Not found !'));
             return back();
         }
     }
@@ -202,7 +202,7 @@ class LanguageController extends Controller
     public function sync_vue_translation(){
         
         Artisan::call('VueTranslation:generate');
-        notify()->success('Translation synchronize successfully !','Synced');
+        notify()->success(__('Translation synchronize successfully !'),__('Synced'));
         return back();
 
     }

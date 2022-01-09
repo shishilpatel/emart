@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Most viewed products')
+@section('title',__('Most Viewed Products'))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -19,7 +19,9 @@
         <div class="col-md-12">
             <div class="card m-b-30">
                 <div class="card-header">
-                    <h5 class="card-title">Most viewed products</h5>
+                    <h5 class="card-title">
+                        {{__('Most Viewed Products')}}
+                    </h5>
                 </div>
                 <div class="card-body">
                     <ul class="nav nav-tabs custom-tab-line mb-3" id="defaultTabLine" role="tablist">
@@ -36,8 +38,8 @@
                             <table style="width: 100%;" id="most_viewed_vp" class="table table-striped table-bordered">
                                 <thead>
                                     <th>#</th>
-                                    <th>Product name</th>
-                                    <th>Total views</th>
+                                    <th>{{ __("Product name") }}</th>
+                                    <th>{{ __("Total views") }}</th>
                                 </thead>
                             </table>
                         </div>
@@ -45,8 +47,8 @@
                             <table style="width: 100%;" id="most_viewed_sp" class="table table-striped table-bordered">
                                 <thead>
                                     <th>#</th>
-                                    <th>Product name</th>
-                                    <th>Total views</th>
+                                    <th>{{ __("Product name") }}</th>
+                                    <th>{{ __("Total views") }}</th>
                                 </thead>
                             </table>
                         </div>

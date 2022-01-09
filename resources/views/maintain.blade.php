@@ -12,7 +12,7 @@
     <!-- Theme Header Color -->
     <meta name="theme-color" content="#157ED2">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-    <title>Maintenance mode - {{ config('app.name') }}</title>
+    <title>{{__("Maintenance mode -")}} {{ config('app.name') }}</title>
     <!-- Favicon -->
     <link rel="icon" href="{{url('images/genral/'.$fevicon)}}" type="image/png" sizes="16x16">
     <!-- Fontawesome icons -->

@@ -1,5 +1,55 @@
 @extends('front.layout.master')
-@section('title','Filter Products | ')
+
+@php
+
+  /** Seo of category pages */
+
+    if(request()->keyword){
+        $title      = __('Showing all results for :keyword',['keyword' => request()->keyword]);
+        $seodes     = $title;
+    }
+    else if(request()->chid)
+    {
+        $findchid = App\Grandcategory::find(request()->chid);
+        $title    = __(':title - All products | ',['title' => $findchid->title]);
+        $seodes   = strip_tags($findchid->description);
+        $seoimage = url('images/grandcategory/'.$findchid->image);
+    }
+    else if(request()->sid)
+    {
+        $findsubcat = App\Subcategory::find(request()->sid);
+        $title      = __(':title - All products | ',['title' => $findsubcat->title]);
+        $seodes     = strip_tags($findsubcat->description);
+        $seoimage   = url('images/subcategory/'.$findsubcat->image);
+
+    }else{
+
+        $findcat    = App\Category::find(request()->category);
+        $title      = __(':title - All products | ',['title' => $findcat->title]);
+        $seodes     = strip_tags($findcat->description);
+        $seoimage   = url('images/category/'.$findcat->image);
+
+    }
+
+  /* End */
+
+@endphp
+@section('meta_tags')
+  <main id="seo_section">
+    <link rel="canonical" href="{{ url()->full() }}" />
+    <meta name="robots" content="all">
+    <meta property="og:title" content="{{ $title }}" />
+    <meta name="keywords" content="{{ $title }}">
+    <meta property="og:description" content="{{ $seodes }}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ url()->full() }}" />
+    <meta property="og:image" content="{{ isset($seoimage) ? $seoimage : '' }}" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:description" content="{{ $seodes }}" />
+    <meta name="twitter:site" content="{{ url()->full() }}" />
+  </main>
+@endsection
+@section('title',$title)
 @section('body')
 <br>
 @php
@@ -530,7 +580,7 @@ else
                                @if($isad->linkby == 'category')
                                  {{ App\Helpers\CategoryUrl::getURL($isad->cat_id) }}
                                @elseif($isad->linkby == 'detail' && $isad->pro_id != '' && $isad->product && $isad->product->subvariants)
-                                {{ App\Helpers\CategoryUrl::getURL($isad->product->subvariants[0]['id']) }}
+                                {{ App\Helpers\ProductUrl::getURL($isad->product->subvariants[0]['id']) }}
                                @elseif($isad->linkby == 'url')
                                 {{ $isad->url }}
                                @endif" style="color:{{ $isad->btn_txt_color }};background: {{ $isad->btn_bg_color }}" class="btn buy-button">{{ $isad->btn_text }}</a></center>
@@ -540,7 +590,7 @@ else
                               @if($isad->linkby == 'category')
                                 {{ App\Helpers\CategoryUrl::getURL($isad->cat_id) }}
                               @elseif($isad->linkby == 'detail' && $isad->pro_id != '' && $isad->product->subvariants)
-                                {{ App\Helpers\CategoryUrl::getURL($isad->product->subvariants[0]['id']) }}
+                                {{ App\Helpers\ProductUrl::getURL($isad->product->subvariants[0]['id']) }}
                               @elseif($isad->linkby == 'url')
                                 {{ $isad->url }}
                               @endif
@@ -554,7 +604,7 @@ else
                               @if($isad->linkby == 'category')
                                 {{ App\Helpers\CategoryUrl::getURL($isad->cat_id) }}
                               @elseif($isad->linkby == 'detail' && $isad->pro_id != '' && $isad->product && $isad->product->subvariants)
-                                {{ App\Helpers\CategoryUrl::getURL($isad->product->subvariants[0]['id']) }}
+                                {{ App\Helpers\ProductUrl::getURL($isad->product->subvariants[0]['id']) }}
                               @elseif($isad->linkby == 'url')
                                 {{ $isad->url }}
                               @endif
@@ -817,7 +867,7 @@ else
 
                     <div class="row">
                         <div class="col-10">
-                            <a role="button" class="nav-link text-truncate" onclick="categoryfilter('{{$item->id}}','','','{{ $startp }}','{{ $endp }}')">
+                            <a role="button" class="nav-link text-truncate" onclick="categoryfilter('{{$item->id}}','','','{{ $startp ?? 0 }}','{{ $endp ?? 0 }}')">
                             <i class="fa {{ $item['icon'] }}"></i> 
                             <span class="d-inline">{{ $item['title'] }}</span>
                             </a>
@@ -1204,7 +1254,7 @@ else
 
                                 <div class="row">
                                   <div class="col-10">
-                                      <a role="button" class="nav-link text-truncate" onclick="categoryfilter('{{$item->id}}','{{ $s->id }}','','{{ $startp }}','{{ $endp }}')">
+                                      <a role="button" class="nav-link text-truncate" onclick="categoryfilter('{{$item->id}}','{{ $s->id }}','','{{ $startp ?? 0}}','{{ $endp ?? 0 }}')">
                                       <i class="fa {{ $s['icon'] }}"></i> 
                                       <span class="d-inline">{{ $s['title'] }}</span>
                                       </a>
@@ -1592,7 +1642,7 @@ else
                                             
 
                                               <li class="nav-item">
-                                                      <a role="button" class="nav-link" onclick="categoryfilter('{{$item->id}}','{{ $s->id }}','{{ $child->id }}','{{ $startp }}','{{ $endp }}')"> <i class="fa fa-star-o"></i>
+                                                      <a role="button" class="nav-link" onclick="categoryfilter('{{$item->id}}','{{ $s->id }}','{{ $child->id }}','{{ $startp ?? 0 }}','{{ $endp ?? 0 }}')"> <i class="fa fa-star-o"></i>
                                                       {{ $child['title'] }} </a>
                                               </li>
                                             

@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','All Pages | ')
+@section('title',__('All Pages | '))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -33,7 +33,7 @@
             <table  id="datatable-buttons" class="table table-striped table-bordered">
              <thead>
                <tr>
-                 <th>{{ __('Id') }}</th>
+                 <th>{{ __('ID') }}</th>
                  <th>{{ __('Page Name') }}</th>
                  <th>{{ __('Description') }}</th>
                  <th>{{ __('Slug') }}</th>
@@ -43,11 +43,10 @@
                </thead>
 
                <tbody>
-                 <?php $i=1;?>
-                   @foreach($pages as $page)
-                   <?php $i++;?>
+                   @foreach($pages as $key => $page)
+                  
                        <tr>
-                       <td><?php echo $i; ?></td>
+                       <td>{{ $key + 1 }}</td>
                        <td>{{$page->name}}</td>
                        <td>{{substr(strip_tags($page->des), 0, 70)}}{{strlen(strip_tags($page->des))>70 ? '...' : ""}}</td>
                        <td>{{$page->slug}}</td>
@@ -69,7 +68,7 @@
                                <button class="btn btn-round btn-primary-rgba" type="button" id="CustomdropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="feather icon-more-vertical-"></i></button>
                                <div class="dropdown-menu" aria-labelledby="CustomdropdownMenuButton1">
                                    @can('pages.edit')
-                                   <a class="dropdown-item" href="{{url('admin/page/'.$page->id.'/edit')}} "><i class="feather icon-edit mr-2"></i>Edit</a>
+                                   <a class="dropdown-item" href="{{url('admin/page/'.$page->id.'/edit')}} "><i class="feather icon-edit mr-2"></i>{{ __("Edit") }}</a>
                                    @endcan
                                    @can('pages.delete')
                                    <a class="dropdown-item btn btn-link" data-toggle="modal" data-target="#delete{{ $page->id }}" >
@@ -83,7 +82,7 @@
                                <div class="modal-dialog modal-sm">
                                    <div class="modal-content">
                                        <div class="modal-header">
-                                           <h5 class="modal-title" id="exampleSmallModalLabel">Delete</h5>
+                                           <h5 class="modal-title" id="exampleSmallModalLabel">{{ __("DELETE") }}</h5>
                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                            <span aria-hidden="true">&times;</span>
                                            </button>
@@ -96,8 +95,8 @@
                                            <form method="post" action="{{url('admin/page/'.$page->id)}}" class="pull-right">
                                                {{csrf_field()}}
                                                {{method_field("DELETE")}}
-                                               <button type="reset" class="btn btn-secondary" data-dismiss="modal">No</button>
-                                               <button type="submit" class="btn btn-primary">Yes</button>
+                                               <button type="reset" class="btn btn-secondary" data-dismiss="modal">{{ __("No") }}</button>
+                                               <button type="submit" class="btn btn-primary">{{ __("YES") }}</button>
                                            </form>
                                        </div>
                                    </div>

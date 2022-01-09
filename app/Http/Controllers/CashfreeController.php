@@ -23,7 +23,7 @@ class CashfreeController extends Controller
     {
        
         if (session()->get('currency')['id'] != 'INR') {
-            notify()->error('Cashfree Only Support INR Payment !');
+            notify()->error(__('Cashfree Only Support INR Payment !'));
             return redirect(route('order.review'));
         }
 

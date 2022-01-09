@@ -17,7 +17,7 @@ class Configcontroller extends Controller
     public function getset()
     {   
 
-        abort_if(!auth()->user()->can('site-settings.mail-settings'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('site-settings.mail-settings'),403,__('User does not have the right permissions.'));
 
         $env_files = ['MAIL_FROM_NAME' => env('MAIL_FROM_NAME') , 'MAIL_FROM_ADDRESS' => env('MAIL_FROM_ADDRESS') , 'MAIL_DRIVER' => env('MAIL_DRIVER') , 'MAIL_HOST' => env('MAIL_HOST') , 'MAIL_PORT' => env('MAIL_PORT') , 'MAIL_USERNAME' => env('MAIL_USERNAME') , 'MAIL_PASSWORD' => env('MAIL_PASSWORD') , 'MAIL_ENCRYPTION' => env('MAIL_ENCRYPTION') ,
 
@@ -31,7 +31,7 @@ class Configcontroller extends Controller
     public function changeMailEnvKeys(Request $request)
     {
         
-        abort_if(!auth()->user()->can('site-settings.mail-settings'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('site-settings.mail-settings'),403,__('User does not have the right permissions.'));
 
         $env_keys_save =  DotenvEditor::setKeys([
 
@@ -48,7 +48,7 @@ class Configcontroller extends Controller
 
         $env_keys_save->save();
 
-        notify()->success('Mail settings saved !');
+        notify()->success(__('Mail settings saved !'));
 
         return back();
         
@@ -57,7 +57,7 @@ class Configcontroller extends Controller
 
     public function socialget()
     {
-        abort_if(!auth()->user()->can('site-settings.social-login-settings'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('site-settings.social-login-settings'),403,__('User does not have the right permissions.'));
 
         $setting = $this->config;
         return view('admin.mailsetting.social', compact('setting'));
@@ -65,7 +65,7 @@ class Configcontroller extends Controller
 
     public function socialLoginUpdate(Request $request,$service){
         
-        abort_if(!auth()->user()->can('site-settings.social-login-settings'),403,'User does not have the right permissions.');
+        abort_if(!auth()->user()->can('site-settings.social-login-settings'),403,__('User does not have the right permissions.'));
 
         if($service == 'facebook'){
             return $this->facebookSettings($request);
@@ -129,7 +129,7 @@ class Configcontroller extends Controller
 
         $this->config->save();
 
-        notify()->success('Google Login Settings Updated !');
+        notify()->success(__('Google login settings updated !'));
 
         return back();
     }
@@ -149,7 +149,7 @@ class Configcontroller extends Controller
 
         $this->config->save();
 
-        notify()->success('Twitter Login Settings Updated !');
+        notify()->success(__('Twitter login settings updated !'));
 
         return back();
     }
@@ -169,7 +169,7 @@ class Configcontroller extends Controller
 
         $this->config->save();
 
-        notify()->success('Amazon Login Settings Updated !');
+        notify()->success(__('Amazon login settings updated !'));
 
         return back();
     }
@@ -192,7 +192,7 @@ class Configcontroller extends Controller
 
         $this->config->save();
 
-        notify()->success('Linkedin Login Settings Updated !');
+        notify()->success(__('Linkedin login settings updated !'));
 
         return back();
     }
@@ -209,7 +209,7 @@ class Configcontroller extends Controller
 
         $env_keys_save->save();
 
-        notify()->success('Gitlab Settings has been saved');
+        notify()->success(__('Gitlab settings has been saved'));
 
         return back();
        

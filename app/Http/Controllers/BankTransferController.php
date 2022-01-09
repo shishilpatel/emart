@@ -32,7 +32,7 @@ class BankTransferController extends Controller
 
         if (round($request->actualtotal, 2) != round($total, 2)) {
 
-            notify()->error('Payment has been modifed !', 'Please try again !');
+            notify()->error(__('Payment has been modifed !'), __('Please try again !'));
             return redirect(route('order.review'));
 
         }
@@ -45,7 +45,7 @@ class BankTransferController extends Controller
 
         $checkout = new PlaceOrderController;
 
-        return $checkout->placeorder($txn_id,'BankTransfer',session()->get('order_id'),$payment_status,NULL,$request->purchase_proof);
+        return $checkout->placeorder($txn_id,'BankTransfer',session()->get('order_id') ?? uniqid(),$payment_status,NULL,$request->purchase_proof);
 
     }
 }

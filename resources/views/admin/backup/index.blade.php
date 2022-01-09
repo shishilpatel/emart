@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','All Backup Manager')
+@section('title',__('All Backup Manager'))
 @section('body')
 @component('admin.component.breadcumb',['secondaryactive' => 'active'])
 @slot('heading')
@@ -20,7 +20,7 @@
             <div class="alert alert-danger" role="alert">
                 @foreach($errors->all() as $error)
                 <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true" style="color:red;">&times;</span></button></p>
+                        <span aria-hidden="true">&times;</span></button></p>
                 @endforeach
             </div>
             @endif
@@ -33,28 +33,27 @@
                         @csrf
 
                         <div class="col-md-12">
-                            <label for="">MySQL Dump Path:</label>
+                            <label for="">{{ __('MySQL Dump Path') }}:</label>
                             <div class="input-group">
                                 <input name="SQL_DUMP_PATH" required type="text" class="form-control"
-                                    placeholder="MY SQL DUMP PATH" value="{{ env('SQL_DUMP_PATH') }}"
+                                    placeholder="{{ __("MY SQL DUMP PATH") }}" value="{{ env('SQL_DUMP_PATH') }}"
                                     aria-describedby="basic-addon2">
                                 <span class="input-group-addon" id="basic-addon2">
-                                    <button type="submit" class="btn btn-lg btn-primary-rgba">Save!</button>
+                                    <button type="submit" class="btn btn-lg btn-primary-rgba">{{ __("Save") }}!</button>
                                 </span>
 
                             </div>
                             
                             <div class="mt-3 alert alert-info">
-                                <small class="text-info"><i class="fa fa-info-circle"></i> Important Note:
+                                <small class="text-info"><i class="fa fa-info-circle"></i> {{__("Important Note")}}:
 
                                     <br>
     
-                                    • Usually in all hosting dump path for MYSQL is <b>/usr/bin/</b>
+                                    • {{__("Usually in all hosting dump path for MYSQL is")}} <b>/usr/bin/</b>
                                     <br>
-                                    • If that path not work than contact your hosting provider with subject <b>"What is my
-                                        MYSQL DUMP Binary path ?"</b>
+                                    • {{__("If that path not work than contact your hosting provider with subject")}} <b>"{{ __("What is my MYSQL DUMP Binary path ?") }}"</b>
                                     <br>
-                                    • Enter the path without <b>mysqldump</b> in path"</b>
+                                    • {{__('Enter the path without')}} <b>mysqldump</b> {{ __("in path") }}"</b>
     
     
     
@@ -68,7 +67,7 @@
                     <div class="card-body ml-1 mr-1">
                         <div class="row">
                             <div class="col-md-8 p-2 mb-2 bg-success text-white rounded">
-                                <i class="fa fa-info-circle"></i> Note:
+                                <i class="fa fa-info-circle"></i> {{__("Note") }}:
                                 <ul>
                                     <li>
                                         {{ __('It will generate only database backup of your site.') }}
@@ -79,11 +78,7 @@
                                     </li>
 
                                     <li>
-                                        Make sure <b>mysql dump is enabled on your server</b> for database backup and
-                                        before run
-                                        this or
-                                        run only database backup command make sure you save the mysql dump path in
-                                        <b>config/database.php</b>.
+                                        {{__("Make sure")}} <b>{{__("mysql dump is enabled on your server</b> for database backup and before run this or run only database backup command make sure you save the")}} {{ __('MySQL Dump Path') }} {{__("in")}} <b>{{ __('config/database.php') }}</b>.
                                     </li>
                                 </ul>
                             </div>
@@ -106,7 +101,7 @@
                                 <div class="card border">
                                     
                                     <div class="card-body">
-                                        <p class="text-muted"> <b>Download the latest backup</b> </p>
+                                        <p class="text-muted"> <b>{{ __("Download the latest backup") }}</b> </p>
     
                                             @php
                                                 $dir17 = storage_path() . '/app/'.config('app.name');
@@ -119,8 +114,7 @@
                                                     @if(pathinfo($file, PATHINFO_EXTENSION) == 'zip')
                                                         @if($loop->first)
                                                             <li>
-                                                                <a href="{{ URL::temporarySignedRoute('admin.backup.download', now()->addMinutes(1), ['filename' => basename($file)]) }}"><b>{{ basename($file)  }}
-                                                                        (Latest)</b>
+                                                                <a href="{{ URL::temporarySignedRoute('admin.backup.download', now()->addMinutes(1), ['filename' => basename($file)]) }}"><b>{{ basename($file)  }}({{__("Latest")}})</b>
                                                                 </a>
                                                             </li>
                                                         @else

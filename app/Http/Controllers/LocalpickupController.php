@@ -486,7 +486,7 @@ class LocalpickupController extends Controller
 
         /*End*/
 
-        return back()->with('updated', 'Local Pickup Delivery Date Updated for Following Order');
+        return back()->with('updated', __('Local pickup delivery date updated for this order !'));
 
     }
 

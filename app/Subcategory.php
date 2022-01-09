@@ -1,16 +1,13 @@
 <?php
 
 namespace App;
-use App\Category;
 use App\Http\Controllers\Api\CurrencyController;
 use Illuminate\Database\Eloquent\Model;
-use Kyslik\ColumnSortable\Sortable;
 use Spatie\Translatable\HasTranslations;
 
 class Subcategory extends Model
 {
 
-    use Sortable;
     use HasTranslations;
 
     public $translatable = ['title','description'];

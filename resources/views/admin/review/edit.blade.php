@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Remark Review | ')
+@section('title',__('Remark Review | '))
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
 @slot('heading')
@@ -23,17 +23,18 @@
 @endcomponent
 <div class="contentbar">
   <div class="row">
-    @if ($errors->any())
-    <div class="alert alert-danger" role="alert">
-      @foreach($errors->all() as $error)
-      <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach
-    </div>
-    @endif
+    
 ​
 ​
     <div class="col-lg-12">
+      @if ($errors->any())
+        <div class="alert alert-danger" role="alert">
+          @foreach($errors->all() as $error)
+          <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span></button></p>
+          @endforeach
+        </div>
+      @endif
       <div class="card m-b-30">
         <div class="card-header">
           <h5>{{ __('Edit Review') }}</h5>
@@ -53,7 +54,7 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label class="text-dark">{{ __('Remark') }} <span class="text-danger">*</span></label>
-                        <textarea placeholder="Please enter remark" type="text" id="first-name" name="remark"cols="30" rows="5" class="form-control">{{$review->remark}}</textarea>
+                        <textarea placeholder="{{ __("Please enter remark") }}" type="text" id="first-name" name="remark"cols="30" rows="5" class="form-control">{{$review->remark}}</textarea>
                        
                     </div>
                 </div>
@@ -87,4 +88,4 @@
     </div>
   </div>
 </div>
-  @endsection
+@endsection

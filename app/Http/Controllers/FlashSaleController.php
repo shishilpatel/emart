@@ -98,7 +98,7 @@ class FlashSaleController extends Controller
 
         DB::commit();
 
-       return redirect()->route('flash-sales.index')->with('added', 'Flashdeal has been created !');
+       return redirect()->route('flash-sales.index')->with('added', __('Flashdeal has been created !'));
 
     }
 
@@ -173,7 +173,7 @@ class FlashSaleController extends Controller
         }
         $newdeal->saleitems()->delete();
         $newdeal->delete();
-        return back()->with('deleted', 'Flashdeal has been updated !');
+        return back()->with('deleted', __('Flashdeal has been updated !'));
 
     }
 

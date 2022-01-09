@@ -9,12 +9,6 @@ use Illuminate\Http\Request;
 use DB;
 use DataTables;
 
-/*==========================================
-=            Author: Media City            =
-    Author URI: https://mediacity.co.in
-=            Author: Media City            =
-=            Copyright (c) 2020            =
-==========================================*/
 
 class StateController extends Controller
 {
@@ -68,27 +62,17 @@ class StateController extends Controller
             'name' => 'required|unique:allstates,name',
             'country_id' => 'required'
         ],[
-            'name.required' => 'State name is required',
-            'name.unique' => 'State already exist !',
-            'country_id.required' => 'Please select country'
+            'name.required' => __('State name is required'),
+            'name.unique' => __('State already exist !'),
+            'country_id.required' => __('Please select country')
         ]);
 
         $newState = new Allstate;
         $input =  $request->all();
         $newState->create($input);
-        return back()->with('added','State added !');
+        return back()->with('added',__('State added !'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\State  $state
-     * @return \Illuminate\Http\Response
-     */
-    public function show(State $state)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -118,7 +102,7 @@ class StateController extends Controller
             
         ],[
 
-            "state.required"=>"State Name is Required",
+            "state.required"=> __("State name is required"),
             
           ]);
 
@@ -130,7 +114,7 @@ class StateController extends Controller
 
                 $value=$obj->save();
                 if($value){
-                    session()->flash("updated","State Has Been Update");
+                    session()->flash("updated",__("State has been updated"));
                     return redirect("admin/state/".$id."/edit");
                 }
     }
@@ -146,7 +130,7 @@ class StateController extends Controller
           $state = State::find($id);
         $value = $state->delete();
         if($value){
-            session()->flash("deleted","State Has Been Deleted");
+            session()->flash("deleted",__("State has been deleted"));
             return redirect("admin/state");
          }
     }

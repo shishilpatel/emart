@@ -26,11 +26,11 @@ class ThemeController extends Controller
             $theme->key = $request->key;
             $theme->theme_name = $request->key == 'default' ? NULL : $request->theme_pattern_options;
             $theme->save();
-            notify()->success("Theme changed successfully !");
+            notify()->success(__("Theme changed successfully !"));
             return back();
 
         }else{
-            notify()->error("404 | Theme not found !");
+            notify()->error(__("Theme not found !"));
             return back();
         }
     }   

@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title','Edit page - '.$page->name.' |')
+@section('title',__('Edit page :page | ',['page' => $page->name]))
 @section('body')
 ​
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
@@ -27,17 +27,17 @@
 @endcomponent
 <div class="contentbar">
   <div class="row">
-    @if ($errors->any())
-    <div class="alert alert-danger" role="alert">
-      @foreach($errors->all() as $error)
-      <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true" style="color:red;">&times;</span></button></p>
-      @endforeach
-    </div>
-    @endif
-​
-​
+    
     <div class="col-lg-12">
+      @if ($errors->any())
+        <div class="alert alert-danger" role="alert">
+          @foreach($errors->all() as $error)
+          <p>{{ $error}}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span></button></p>
+          @endforeach
+        </div>
+      @endif
+
       <div class="card m-b-30">
         <div class="card-header">
           <h5>{{ __('Edit Pages') }}</h5>
@@ -77,7 +77,7 @@
                       <label class="text-dark">{{ __('Description') }} <span class="text-danger">*</span></label>
                       <textarea id="editor1" name="des" class="@error('des')  is-invalid @enderror" placeholder="Please enter description">{!! $page->des !!}</textarea>
                       <small>
-                        {{__("(Please enter description)")}}
+                        {{__("Please enter description")}}
                       </small>
                       @error('des')
                           <span class="invalid-feedback" role="alert">
