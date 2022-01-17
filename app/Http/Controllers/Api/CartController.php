@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\AddSubVariant;
 use App\Cart;
 use App\Coupan;
+use App\Genral;
 use App\Http\Controllers\Controller;
 use App\ProductAttributes;
 use App\ProductValues;
 use App\Shipping;
 use App\ShippingWeight;
+use App\SimpleProduct;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +25,8 @@ class CartController extends Controller
 
         $validator = Validator::make($request->all(), [
             'currency' => 'required|string|min:3|max:3',
-            'variantid' => 'required|numeric',
+            'variantid' => 'sometimes|numeric',
+            'simple_pro_id' => 'sometimes|numeric',
             'quantity' => 'required|numeric|min:1',
         ]);
 
@@ -39,13 +42,23 @@ class CartController extends Controller
                 return response()->json(['msg' => $errors->first('variantid'), 'status' => 'fail']);
             }
 
+            if ($errors->first('simple_pro_id')) {
+                return response()->json(['msg' => $errors->first('simple_pro_id'), 'status' => 'fail']);
+            }
+
             if ($errors->first('quantity')) {
                 return response()->json(['msg' => $errors->first('quantity'), 'status' => 'fail']);
             }
 
         }
 
-        $item = Cart::where('variant_id', '=', $request->variantid)->where('user_id', '=', Auth::user()->id)->first();
+        if ($request->simple_pro_id) {
+            return $this->addItemInSimpleProduct();
+        }
+
+        $item = Cart::where('variant_id', '=', $request->variantid)
+            ->where('user_id', '=', Auth::user()->id)
+            ->first();
 
         $rates = new CurrencyController;
 
@@ -53,23 +66,23 @@ class CartController extends Controller
 
         $variant = AddSubVariant::find($request->variantid);
 
-        if (!$variant) {
+        if ($request->variantid && !$variant) {
             return response()->json(['msg' => 'Variant not found !', 'status' => 'fail']);
         }
 
-        if ($variant->stock < 1) {
+        if ($request->variantid && $variant->stock < 1) {
             return response()->json(['msg' => 'Sorry ! Item is out of stock currently !', 'status' => 'fail']);
         }
 
-        if ($request->quantity < $variant->min_order_qty) {
+        if ($request->variantid && $request->quantity < $variant->min_order_qty) {
             return response()->json(['msg' => 'For this product you need to add atleast ' . $variant->min_order_qty . ' quantity', 'status' => 'fail']);
         }
 
-        if ($request->quantity > $variant->max_order_qty) {
+        if ($request->variantid && $request->quantity > $variant->max_order_qty) {
             return response()->json(['msg' => 'For this product you can add maximum ' . $variant->max_order_qty . ' quantity', 'status' => 'fail']);
         }
 
-        if ($request->quantity > $variant->stock) {
+        if ($request->variantid && $request->quantity > $variant->stock) {
             return response()->json(['msg' => 'Product stock limit reached !', 'status' => 'fail']);
         }
 
@@ -113,6 +126,98 @@ class CartController extends Controller
             $cart->save();
 
             return response()->json(['msg' => 'Item added to cart successfully !', 'status' => 'success']);
+
+        }
+
+    }
+
+    public function addItemInSimpleProduct()
+    {
+
+        $item = Cart::where('simple_pro_id', '=', request()->simple_pro_id)
+            ->where('user_id', '=', Auth::user()->id)
+            ->first();
+
+        $rates = new CurrencyController;
+
+        $rate = $rates->fetchRates(request()->currency)->getData();
+
+        $product = SimpleProduct::find(request()->simple_pro_id);
+
+        if (!$product) {
+            return response()->json(['msg' => 'Product not found !', 'status' => 'fail']);
+        }
+
+        if ($product->status != 1) {
+            return response()->json(['msg' => 'Product not active !', 'status' => 'fail']);
+        }
+
+        if ($product->stock < 1) {
+            return response()->json(['msg' => 'Sorry ! Item is out of stock currently !', 'status' => 'fail']);
+        }
+
+        if (request()->quantity < $product->min_order_qty) {
+            return response()->json(['msg' => 'For this product you need to add atleast ' . $product->min_order_qty . ' quantity', 'status' => 'fail']);
+        }
+
+        if (request()->quantity > $product->max_order_qty) {
+            return response()->json(['msg' => 'For this product you can add maximum ' . $product->max_order_qty . ' quantity', 'status' => 'fail']);
+        }
+
+        if (request()->quantity > $product->stock) {
+            return response()->json(['msg' => 'Product stock limit reached !', 'status' => 'fail']);
+        }
+
+        if (isset($item)) {
+
+            $newqty = (int) $item->qty + request()->quantity;
+            $item->qty = $newqty;
+            $item->price_total = (float) $item->ori_price * $newqty;
+            $item->semi_total = (float) $item->ori_offer_price * $newqty;
+
+            $item->shipping = shippingprice($item);
+
+            $item->updated_at = now();
+
+            $item->save();
+
+            return response()->json(['msg' => 'Product quantity updated !', 'status' => 'success']);
+
+        } else {
+
+            $cart = new Cart;
+            $cart->qty = request()->quantity;
+            $cart->user_id = Auth::user()->id;
+            $cart->pro_id = null;
+            $cart->variant_id = null;
+
+            $cart->simple_pro_id = $product->id;
+
+            $cart->ori_price = (float) $product->price;
+            $cart->ori_offer_price = (float) $product->offer_price;
+
+            $cart->price_total = (float) $product->price * request()->quantity;
+            $cart->semi_total = (float) $product->offer_price * request()->quantity;
+
+            $cart->vender_id = $product->store->user->id;
+
+            $cart->created_at = now();
+            $cart->updated_at = now();
+
+            $cart->save();
+
+            /** Update the shipping once item added in cart */
+
+            $cart->update([
+                'shipping' => shippingprice($cart),
+            ]);
+
+            return response()->json([
+
+                'msg' => 'Item added to cart successfully !',
+                'status' => 'success',
+
+            ]);
 
         }
 
@@ -208,12 +313,26 @@ class CartController extends Controller
 
         $rate = $rates->fetchRates($request->currency)->getData();
 
+        $cart_free_shipping = Genral::first()->cart_amount;
+
         if (count($this->cartproducts($request->currency))) {
+
+            if ($cart_free_shipping != 0 || $cart_free_shipping != '') {
+
+                if ($this->cartTotal()->getData()->subtotal * $rate->exchange_rate >= $cart_free_shipping * $rate->exchange_rate) {
+
+                    $shipping = 0;
+
+                } else {
+                    $shipping = (double) sprintf("%.2f", $this->cartTotal()->getData()->shipping * $rate->exchange_rate);
+                }
+
+            }
 
             $cart = array(
                 'products' => $this->cartproducts($request->currency),
                 'subtotal' => (double) sprintf("%.2f", $this->cartTotal()->getData()->subtotal * $rate->exchange_rate),
-                'shipping' => (double) sprintf("%.2f", $this->cartTotal()->getData()->shipping * $rate->exchange_rate),
+                'shipping' => $shipping,
                 'coupan_discount' => (float) sprintf("%.2f", $this->getTotalDiscount() * $rate->exchange_rate),
                 'grand_total' => (double) sprintf("%.2f", $this->cartTotal()->getData()->grandTotal * $rate->exchange_rate),
                 'currency' => $rate->code,
@@ -243,50 +362,99 @@ class CartController extends Controller
 
         foreach (Auth::user()->cart as $cart) {
 
-            $productData = new ProductController;
+            if (isset($cart->variant) && isset($cart->variant->products) && $cart->variant->products->status == 1) {
 
-            $rating = $productData->getproductrating($cart->product);
+                $productData = new ProductController;
 
-            $reviews = $productData->getProductReviews($cart->product);
+                $rating = $productData->getproductrating($cart->product);
 
-            if ($productData->getprice($cart->product, $cart->variant)->getData()->offerprice != 0) {
+                $reviews = $productData->getProductReviews($cart->product);
 
-                $mp = sprintf("%.2f", $productData->getprice($cart->product, $cart->variant)->getData()->mainprice * $rate->exchange_rate);
-                $op = sprintf("%.2f", $productData->getprice($cart->product, $cart->variant)->getData()->offerprice * $rate->exchange_rate);
+                if ($productData->getprice($cart->product, $cart->variant)->getData()->offerprice != 0) {
 
-                $getdisprice = $mp - $op;
+                    $mp = sprintf("%.2f", $productData->getprice($cart->product, $cart->variant)->getData()->mainprice * $rate->exchange_rate);
+                    $op = sprintf("%.2f", $productData->getprice($cart->product, $cart->variant)->getData()->offerprice * $rate->exchange_rate);
 
-                $discount = $getdisprice / $mp;
+                    $getdisprice = $mp - $op;
 
-                $offamount = $discount * 100;
+                    $discount = $getdisprice / $mp;
 
-            } else {
+                    $offamount = $discount * 100;
 
-                $offamount = 0;
+                } else {
+
+                    $offamount = 0;
+
+                }
+
+                $products[] = array(
+                    'cartid' => $cart->id,
+                    'productid' => $cart->product->id,
+                    'variantid' => $cart->variant_id,
+                    'type' => 'v',
+                    'off_in_percent' => (int) round($offamount),
+                    'productname' => $cart->product->name,
+                    'orignalprice' => (float) sprintf("%.2f", $cart->price_total * $rate->exchange_rate) / $cart->qty,
+                    'orignalofferprice' => (float) sprintf("%.2f", $cart->semi_total * $rate->exchange_rate) / $cart->qty,
+                    'mainprice' => (float) sprintf("%.2f", $cart->price_total * $rate->exchange_rate),
+                    'offerprice' => (float) sprintf("%.2f", $cart->semi_total * $rate->exchange_rate),
+                    'qty' => $cart->qty,
+                    'rating' => $rating,
+                    'review' => count($reviews),
+                    'thumbnail_path' => url('variantimages/thumbnails'),
+                    'thumbnail' => $cart->variant->variantimages->main_image,
+                    'tax_info' => $cart->product->tax_r == '' ? __("Exclusive of tax") : __("Inclusive of all taxes"),
+                    'soldby' => $cart->product->store->name,
+                    'variant' => $this->variantDetail($cart->variant),
+                    'minorderqty' => (int) $cart->variant->min_order_qty,
+                    'maxorderqty' => (int) $cart->variant->max_order_qty,
+                );
 
             }
 
-            $products[] = array(
-                'cartid' => $cart->id,
-                'productid' => $cart->product->id,
-                'variantid' => $cart->variant_id,
-                'off_in_percent' => (int) round($offamount),
-                'productname' => $cart->product->name,
-                'orignalprice' => (float) sprintf("%.2f", $cart->price_total * $rate->exchange_rate) / $cart->qty,
-                'orignalofferprice' => (float) sprintf("%.2f", $cart->semi_total * $rate->exchange_rate) / $cart->qty,
-                'mainprice' => (float) sprintf("%.2f", $cart->price_total * $rate->exchange_rate),
-                'offerprice' => (float) sprintf("%.2f", $cart->semi_total * $rate->exchange_rate),
-                'qty' => $cart->qty,
-                'rating' => $rating,
-                'review' => count($reviews),
-                'thumbnail_path' => url('variantimages/thumbnails'),
-                'thumbnail' => $cart->variant->variantimages->main_image,
-                'tax_info' => $cart->product->tax_r == '' ? __("Exclusive of tax") : __("Inclusive of all taxes"),
-                'soldby' => $cart->product->store->name,
-                'variant' => $this->variantDetail($cart->variant),
-                'minorderqty' => (int) $cart->variant->min_order_qty,
-                'maxorderqty' => (int) $cart->variant->max_order_qty,
-            );
+            if (isset($cart->simple_product) && $cart->simple_product->status == 1) {
+
+                if ($cart->simple_product->offer_price != 0) {
+
+                    $mp = $cart->simple_product->price;
+                    $op = $cart->simple_product->offer_price;
+
+                    $getdisprice = $mp - $op;
+
+                    $discount = $getdisprice / $mp;
+
+                    $offamount = $discount * 100;
+
+                } else {
+
+                    $offamount = 0;
+
+                }
+
+                $products[] = array(
+                    'cartid' => $cart->id,
+                    'productid' => $cart->simple_product->id,
+                    'variantid' => 0,
+                    'type' => 's',
+                    'off_in_percent' => (int) round($offamount),
+                    'productname' => $cart->simple_product->product_name,
+                    'orignalprice' => (float) sprintf("%.2f", $cart->price_total * $rate->exchange_rate) / $cart->qty,
+                    'orignalofferprice' => (float) sprintf("%.2f", $cart->semi_total * $rate->exchange_rate) / $cart->qty,
+                    'mainprice' => (float) sprintf("%.2f", $cart->price_total * $rate->exchange_rate),
+                    'offerprice' => (float) sprintf("%.2f", $cart->semi_total * $rate->exchange_rate),
+                    'qty' => $cart->qty,
+                    'rating' => simple_product_rating($cart->simple_product->id),
+                    'review' => $cart->simple_product->reviews()->where('review', '!=', '')->count(),
+                    'thumbnail_path' => url('/images/simple_products/'),
+                    'thumbnail' => $cart->simple_product->thumbnail,
+                    'tax_info' => __("Inclusive of all taxes"),
+                    'soldby' => $cart->simple_product->store->name,
+                    'variant' => null,
+                    'minorderqty' => (int) $cart->simple_product->min_order_qty,
+                    'maxorderqty' => (int) $cart->simple_product->max_order_qty,
+                );
+
+            }
 
         }
 
@@ -298,7 +466,12 @@ class CartController extends Controller
     {
 
         $totalshipping = $this->calculateShipping();
+
         $subtotal = 0;
+
+        $rates = new CurrencyController;
+
+        $rate = $rates->fetchRates(request()->currency)->getData();
 
         foreach (Auth::user()->cart as $cart) {
 
@@ -309,6 +482,18 @@ class CartController extends Controller
             } else {
 
                 $subtotal = $subtotal + $cart->price_total;
+
+            }
+
+        }
+
+        $genrals_settings = Genral::first();
+
+        if ($genrals_settings->cart_amount != 0 || $genrals_settings->cart_amount != '') {
+
+            if ($subtotal * $rate->exchange_rate >= $genrals_settings->cart_amount * $rate->exchange_rate) {
+
+                $totalshipping = 0;
 
             }
 
@@ -332,7 +517,13 @@ class CartController extends Controller
         $shipping = 0;
 
         foreach (Auth::user()->cart as $cart) {
-            $shipping = ShippingPrice::calculateShipping($cart);
+            if ($cart->variant && $cart->variant->products && $cart->variant->products->status == 1) {
+                $shipping += ShippingPrice::calculateShipping($cart);
+            }
+
+            if ($cart->simple_product && $cart->simple_product->status == 1) {
+                $shipping += shippingprice($cart);
+            }
         }
 
         return $shipping;
@@ -361,39 +552,8 @@ class CartController extends Controller
                 'attrribute' => $loopgetattrname['attr_name'],
             );
 
-            if ($i < $varcount) {
-                if (strcasecmp($getvarvalue->unit_value, $getvarvalue->values) != 0 && $getvarvalue->unit_value != null) {
-                    if ($getvarvalue->proattr->attr_name == "Color" || $getvarvalue->proattr->attr_name == "Colour" || $getvarvalue->proattr->attr_name == "color" || $getvarvalue->proattr->attr_name == "colour") {
-
-                        $othervariantName = $getvarvalue->values;
-
-                    } else {
-                        $othervariantName = $getvarvalue->values . $getvarvalue->unit_value;
-                    }
-                } else {
-                    $othervariantName = $getvarvalue->values;
-                }
-
-            } else {
-
-                if (strcasecmp($getvarvalue->unit_value, $getvarvalue->values) != 0 && $getvarvalue->unit_value != null) {
-
-                    if ($getvarvalue->proattr->attr_name == "Color" || $getvarvalue->proattr->attr_name == "Colour" || $getvarvalue->proattr->attr_name == "color" || $getvarvalue->proattr->attr_name == "colour") {
-
-                        $othervariantName = $getvarvalue->values;
-
-                    } else {
-                        $othervariantName = $getvarvalue->values . $getvarvalue->unit_value;
-                    }
-
-                } else {
-                    $othervariantName = $getvarvalue->values;
-                }
-
-            }
-
             $variants[] = array(
-                'var_name' => $othervariantName,
+                'var_name' => variantname($variant),
                 'attr_name' => $loopgetattrname['attr_name'],
                 'type' => $loopgetattrname['attr_name'] == 'color' || $loopgetattrname['attr_name'] == 'Color' || $loopgetattrname['attr_name'] == 'colour' || $loopgetattrname['attr_name'] == 'Colour' ? 'c' : 's',
             );
@@ -436,62 +596,112 @@ class CartController extends Controller
             return response()->json(['msg' => 'Cart item not found !', 'status' => 'fail']);
         }
 
-        $variant = AddSubVariant::find($cartrow->variant_id);
+        if (isset($cartrow->variant) && isset($cartrow->variant->products) && $cartrow->variant->products->status == 1) {
 
-        if (!$variant) {
-            return response()->json(['msg' => 'Variant not found !', 'status' => 'fail']);
-        }
+            $variant = AddSubVariant::find($cartrow->variant_id);
 
-        if ($variant->stock < 1) {
-            return response()->json(['msg' => 'Sorry ! Item is out of stock currently !', 'status' => 'fail']);
-        }
-
-        if ($request->qty > $variant->stock) {
-            return response()->json(['msg' => 'Product stock limit reached !', 'status' => 'fail']);
-        }
-
-        if ($request->quantity < $variant->min_order_qty) {
-            return response()->json(['msg' => 'For this product you need to add atleast ' . $variant->min_order_qty . ' quantity', 'status' => 'fail']);
-        }
-
-        if ($variant->max_order_qty != '') {
-            if ($request->quantity > $variant->max_order_qty) {
-                return response()->json(['msg' => 'For this product you can add maximum ' . $variant->max_order_qty . ' quantity', 'status' => 'fail']);
+            if (!$variant) {
+                return response()->json(['msg' => 'Variant not found !', 'status' => 'fail']);
             }
+
+            if ($variant->stock < 1) {
+                return response()->json(['msg' => 'Sorry ! Item is out of stock currently !', 'status' => 'fail']);
+            }
+
+            if ($cartrow->qty > $variant->max_order_qty) {
+                return response()->json(['msg' => 'Product max qty limit reached !', 'status' => 'fail']);
+            }
+
+            if ($request->qty > $variant->stock) {
+                return response()->json(['msg' => 'Product stock limit reached !', 'status' => 'fail']);
+            }
+
+            if ($request->quantity < $variant->min_order_qty) {
+                return response()->json(['msg' => 'For this product you need to add atleast ' . $variant->min_order_qty . ' quantity', 'status' => 'fail']);
+            }
+
+            if ($variant->max_order_qty != '') {
+                if ($request->quantity > $variant->max_order_qty) {
+                    return response()->json(['msg' => 'For this product you can add maximum ' . $variant->max_order_qty . ' quantity', 'status' => 'fail']);
+                }
+            }
+
+            $price = new ProductController;
+
+            $price = $price->getprice($variant->products, $variant)->getData();
+
+            $cartrow->qty = $request->quantity;
+
+            $cartrow->price_total = (float) $price->mainprice * $request->quantity;
+            $cartrow->semi_total = (float) $price->offerprice * $request->quantity;
+
+            $cartrow->shipping = $this->getShipping($request->quantity, $variant);
+
+            $cartrow->updated_at = now();
+
+            $cartrow->save();
         }
 
-        $price = new ProductController;
+        if (isset($cartrow->simple_product) && $cartrow->simple_product->status == 1) {
 
-        $price = $price->getprice($variant->products, $variant)->getData();
+            if ($cartrow->simple_product->stock < 1) {
 
-        $cartrow->qty = $request->quantity;
+                return response()->json([
+                    'msg' => 'Sorry ! Item is out of stock currently !',
+                    'status' => 'fail',
+                ]);
 
-        $cartrow->price_total = (float) $price->mainprice * $request->quantity;
-        $cartrow->semi_total = (float) $price->offerprice * $request->quantity;
+            }
 
-        $cartrow->shipping = $this->getShipping($request->quantity, $variant);
+            if ($cartrow->qty > $cartrow->simple_product->max_order_qty) {
+                return response()->json(['msg' => 'Product max qty limit reached !', 'status' => 'fail']);
+            }
 
-        $cartrow->updated_at = now();
+            if ($request->qty > $cartrow->simple_product->stock) {
 
-        $cartrow->save();
+                return response()->json([
+                    'msg' => 'Product stock limit reached !',
+                    'status' => 'fail',
+                ]);
 
-        $rates = new CurrencyController;
+            }
 
-        $rate = $rates->fetchRates($request->currency)->getData();
+            if ($request->quantity < $cartrow->simple_product->min_order_qty) {
 
-        $cart = array(
-            'products' => $this->cartproducts($request->currency),
-            'subtotal' => (float) sprintf("%.2f", $this->cartTotal()->getData()->subtotal * $rate->exchange_rate),
-            'shipping' => (float) sprintf("%.2f", $this->cartTotal()->getData()->shipping * $rate->exchange_rate),
-            'coupan_discount' => (float) $this->getTotalDiscount(),
-            'grand_total' => (float) sprintf("%.2f", $this->cartTotal()->getData()->grandTotal * $rate->exchange_rate),
-            'currency' => $rate->code,
-            'symbol' => $rate->symbol,
-            'appliedCoupan' => $this->appliedCoupan($rate) != null ? $this->appliedCoupan($rate)->getData() : null,
-            'offers' => $this->getOffers($rate),
-        );
+                return response()->json([
+                    'msg' => 'For this product you need to add atleast ' . $cartrow->simple_product->min_order_qty . ' quantity',
+                    'status' => 'fail',
+                ]);
 
-        return response()->json($cart, 200);
+            }
+
+            if ($cartrow->simple_product->max_order_qty != '') {
+
+                if ($request->quantity > $cartrow->simple_product->max_order_qty) {
+
+                    return response()->json([
+                        'msg' => 'For this product you can add maximum ' . $cartrow->simple_product->max_order_qty . ' quantity',
+                        'status' => 'fail',
+                    ]);
+
+                }
+
+            }
+
+            $cartrow->qty = $request->quantity;
+
+            $cartrow->price_total = (float) $cartrow->ori_price * $cartrow->qty;
+            $cartrow->semi_total = (float) $cartrow->ori_offer_price * $cartrow->qty;
+
+            $cartrow->shipping = shippingprice($cartrow);
+
+            $cartrow->updated_at = now();
+
+            $cartrow->save();
+
+        }
+
+        return response()->json($this->yourCart(request())->getData(), 200);
     }
 
     public function cartItemRemove(Request $request)
@@ -559,35 +769,85 @@ class CartController extends Controller
 
         $content = array();
 
-        foreach (Auth::user()->cart as $cart) {
+        foreach (auth()->user()->cart as $cart) {
 
-            $coupans = Coupan::where('link_by', 'cart')->whereDate('expirydate', '>', Carbon::now())->get();
+            if (isset($cart->variant) && isset($cart->variant->products) && $cart->variant->products->status == 1) {
 
-            $productcoupans = Coupan::where('pro_id', $cart->product->id)->whereDate('expirydate', '>', Carbon::now())->get();
+                $coupans = Coupan::where('link_by', 'cart')
+                    ->whereDate('expirydate', '>=', Carbon::now())
+                    ->get();
 
-            $productcategorycoupans = Coupan::where('cat_id', $cart->product->category_id)->get();
+                if ($cart->variant && $cart->variant->products && $cart->variant->products->status == 1) {
 
-            $content = array();
+                    $productcoupans = Coupan::where('pro_id', $cart->product->id)
+                        ->whereDate('expirydate', '>=', Carbon::now())
+                        ->get();
 
-            foreach ($coupans as $c) {
+                }
 
-                if ($c->maxusage != 0) {
+                $productcategorycoupans = Coupan::where('cat_id', $cart->product->category_id)
+                    ->get();
 
-                    if ($c->pro_id != null) {
+                $content = array();
 
-                        $linkedto = array(
-                            'id' => $c->product->id,
-                            'name' => $c->product->getTranslations('name'),
-                            'appliedon' => $c->link_by,
+                foreach ($coupans as $c) {
+
+                    if ($c->maxusage != 0) {
+
+                        if ($c->pro_id != null) {
+
+                            $linkedto = array(
+                                'id' => $c->product->id,
+                                'name' => $c->product->getTranslations('name'),
+                                'appliedon' => $c->link_by,
+                            );
+
+                        } elseif ($c->cat_id != null) {
+
+                            $linkedto = array(
+
+                                'id' => $c->cate->id,
+                                'name' => $c->cate->getTranslations('title'),
+                                'appliedon' => $c->link_by,
+                            );
+
+                        } else {
+                            $linkedto = null;
+                        }
+
+                        $content[] = array(
+                            'coupanid' => $c->id,
+                            'code' => $c->code,
+                            'discount' => $c->distype == 'fix' ? (float) sprintf("%.2f", $c->amount * $rate->exchange_rate) : (int) $c->amount,
+                            'discount_type' => $c->distype,
+                            'minamount' => (float) sprintf("%.2f", $c->minamount * $rate->exchange_rate),
+                            'is_login' => $c->is_login,
+                            'description' => $c->description,
+                            'linked_to' => $linkedto,
+                            'offertext' => $this->findOfferText($c, $rate)->getData()->offerText != '' ? $this->findOfferText($c, $rate)->getData()->offerText : null,
+                            'validationtext' => $this->findOfferText($c, $rate)->getData()->validationText != null ? $this->findOfferText($c, $rate)->getData()->validationText : null,
                         );
 
-                    } elseif ($c->cat_id != null) {
+                    }
+                }
+
+                foreach ($productcoupans as $c1) {
+
+                    if ($c1->pro_id != null) {
+
+                        $linkedto = array(
+                            'id' => $c1->product->id,
+                            'name' => $c1->product->getTranslations('name'),
+                            'appliedon' => $c1->link_by,
+                        );
+
+                    } elseif ($c1->cat_id != null) {
 
                         $linkedto = array(
 
-                            'id' => $c->cate->id,
-                            'name' => $c->cate->getTranslations('title'),
-                            'appliedon' => $c->link_by,
+                            'id' => $c1->cate->id,
+                            'name' => $c1->cate->getTranslations('title'),
+                            'appliedon' => $c1->link_by,
                         );
 
                     } else {
@@ -595,94 +855,146 @@ class CartController extends Controller
                     }
 
                     $content[] = array(
-                        'coupanid' => $c->id,
-                        'code' => $c->code,
-                        'discount' => $c->distype == 'fix' ? (float) sprintf("%.2f", $c->amount * $rate->exchange_rate) : (int) $c->amount,
-                        'discount_type' => $c->distype,
-                        'minamount' => (float) sprintf("%.2f", $c->minamount * $rate->exchange_rate),
-                        'is_login' => $c->is_login,
-                        'description' => $c->description,
+                        'coupanid' => $c1->id,
+                        'code' => $c1->code,
+                        'discount' => $c1->distype == 'fix' ? (float) sprintf("%.2f", $c1->amount * $rate->exchange_rate) : (int) $c1->amount,
+                        'discount_type' => $c1->distype,
+                        'minamount' => (float) sprintf("%.2f", $c1->minamount * $rate->exchange_rate),
+                        'is_login' => $c1->is_login,
+                        'description' => $c1->description,
                         'linked_to' => $linkedto,
-                        'offertext' => $this->findOfferText($c, $rate)->getData()->offerText != '' ? $this->findOfferText($c, $rate)->getData()->offerText : null,
-                        'validationtext' => $this->findOfferText($c, $rate)->getData()->validationText != null ? $this->findOfferText($c, $rate)->getData()->validationText : null,
+                        'offertext' => $this->findOfferText($c1, $rate)->getData()->offerText != '' ? $this->findOfferText($c1, $rate)->getData()->offerText : null,
+                        'validationtext' => $this->findOfferText($c1, $rate)->getData()->validationText != null ? $this->findOfferText($c1, $rate)->getData()->validationText : null,
+                    );
+
+                }
+
+                foreach ($productcategorycoupans as $c2) {
+
+                    if ($c2->pro_id != null) {
+
+                        $linkedto = array(
+                            'id' => $c2->product->id,
+                            'name' => $c2->product->getTranslations('name'),
+                            'appliedon' => $c2->link_by,
+                        );
+
+                    } elseif ($c2->cat_id != null) {
+
+                        $linkedto = array(
+
+                            'id' => $c2->cate->id,
+                            'name' => $c2->cate->getTranslations('title'),
+                            'appliedon' => $c2->link_by,
+                        );
+
+                    } else {
+                        $linkedto = null;
+                    }
+
+                    $content[] = array(
+                        'coupanid' => $c2->id,
+                        'code' => $c2->code,
+                        'discount' => $c2->distype == 'fix' ? (float) sprintf("%.2f", $c2->amount * $rate->exchange_rate) : (int) $c2->amount,
+                        'discount_type' => $c2->distype,
+                        'minamount' => (float) sprintf("%.2f", $c2->minamount * $rate->exchange_rate),
+                        'is_login' => $c2->is_login,
+                        'description' => $c2->description,
+                        'linked_to' => $linkedto,
+                        'offertext' => $this->findOfferText($c2, $rate)->getData()->offerText != '' ? $this->findOfferText($c2, $rate)->getData()->offerText : null,
+                        'validationtext' => $this->findOfferText($c2, $rate)->getData()->validationText != null ? $this->findOfferText($c2, $rate)->getData()->validationText : null,
                     );
 
                 }
             }
 
-            foreach ($productcoupans as $c1) {
+            if (isset($cart->simple_product) && $cart->simple_product->status == 1) {
 
-                if ($c1->pro_id != null) {
+                $simple_products_coupans = Coupan::where('simple_pro_id', $cart->simple_product->id)
+                    ->whereDate('expirydate', '>=', Carbon::now())
+                    ->get();
 
-                    $linkedto = array(
-                        'id' => $c1->product->id,
-                        'name' => $c1->product->getTranslations('name'),
-                        'appliedon' => $c1->link_by,
-                    );
+                if (isset($simple_products_coupans)) {
 
-                } elseif ($c1->cat_id != null) {
+                    foreach ($simple_products_coupans as $sc1) {
 
-                    $linkedto = array(
+                        if ($sc1->simple_product != null) {
 
-                        'id' => $c1->cate->id,
-                        'name' => $c1->cate->getTranslations('title'),
-                        'appliedon' => $c1->link_by,
-                    );
+                            $linkedto = array(
+                                'id' => $sc1->simple_product->id,
+                                'name' => $sc1->simple_product->getTranslations('product_name'),
+                                'appliedon' => $sc1->link_by,
+                            );
 
-                } else {
-                    $linkedto = null;
+                        } elseif ($sc1->cat_id != null) {
+
+                            $linkedto = array(
+
+                                'id' => $sc1->cate->id,
+                                'name' => $sc1->cate->getTranslations('title'),
+                                'appliedon' => $sc1->link_by,
+                            );
+
+                        } else {
+                            $linkedto = null;
+                        }
+
+                        $content[] = array(
+                            'coupanid' => $sc1->id,
+                            'code' => $sc1->code,
+                            'discount' => $sc1->distype == 'fix' ? (float) sprintf("%.2f", $sc1->amount * $rate->exchange_rate) : (int) $sc1->amount,
+                            'discount_type' => $sc1->distype,
+                            'minamount' => (float) sprintf("%.2f", $sc1->minamount * $rate->exchange_rate),
+                            'is_login' => $sc1->is_login,
+                            'description' => $sc1->description,
+                            'linked_to' => $linkedto,
+                            'offertext' => $this->findOfferText($sc1, $rate)->getData()->offerText != '' ? $this->findOfferText($sc1, $rate)->getData()->offerText : null,
+                            'validationtext' => $this->findOfferText($sc1, $rate)->getData()->validationText != null ? $this->findOfferText($sc1, $rate)->getData()->validationText : null,
+                        );
+
+                    }
                 }
 
-                $content[] = array(
-                    'coupanid' => $c1->id,
-                    'code' => $c1->code,
-                    'discount' => $c1->distype == 'fix' ? (float) sprintf("%.2f", $c1->amount * $rate->exchange_rate) : (int) $c1->amount,
-                    'discount_type' => $c1->distype,
-                    'minamount' => (float) sprintf("%.2f", $c1->minamount * $rate->exchange_rate),
-                    'is_login' => $c1->is_login,
-                    'description' => $c1->description,
-                    'linked_to' => $linkedto,
-                    'offertext' => $this->findOfferText($c1, $rate)->getData()->offerText != '' ? $this->findOfferText($c1, $rate)->getData()->offerText : null,
-                    'validationtext' => $this->findOfferText($c1, $rate)->getData()->validationText != null ? $this->findOfferText($c1, $rate)->getData()->validationText : null,
-                );
+                $simpleproductcategorycoupans = Coupan::where('cat_id', $cart->simple_product->category_id)
+                    ->get();
 
-            }
+                foreach ($simpleproductcategorycoupans as $sc2) {
 
-            foreach ($productcategorycoupans as $c2) {
+                    if ($sc2->simple_pro_id != null) {
 
-                if ($c2->pro_id != null) {
+                        $linkedto = array(
+                            'id' => $sc2->simple_product->id,
+                            'name' => $sc2->simple_product->getTranslations('product_name'),
+                            'appliedon' => $sc2->link_by,
+                        );
 
-                    $linkedto = array(
-                        'id' => $c2->product->id,
-                        'name' => $c2->product->getTranslations('name'),
-                        'appliedon' => $c2->link_by,
+                    } elseif ($sc2->cat_id != null) {
+
+                        $linkedto = array(
+
+                            'id' => $sc2->cate->id,
+                            'name' => $sc2->cate->getTranslations('title'),
+                            'appliedon' => $sc2->link_by,
+                        );
+
+                    } else {
+                        $linkedto = null;
+                    }
+
+                    $content[] = array(
+                        'coupanid' => $sc2->id,
+                        'code' => $sc2->code,
+                        'discount' => $sc2->distype == 'fix' ? (float) sprintf("%.2f", $sc2->amount * $rate->exchange_rate) : (int) $sc2->amount,
+                        'discount_type' => $sc2->distype,
+                        'minamount' => (float) sprintf("%.2f", $sc2->minamount * $rate->exchange_rate),
+                        'is_login' => $sc2->is_login,
+                        'description' => $sc2->description,
+                        'linked_to' => $linkedto,
+                        'offertext' => $this->findOfferText($sc2, $rate)->getData()->offerText != '' ? $this->findOfferText($sc2, $rate)->getData()->offerText : null,
+                        'validationtext' => $this->findOfferText($sc2, $rate)->getData()->validationText != null ? $this->findOfferText($sc2, $rate)->getData()->validationText : null,
                     );
 
-                } elseif ($c2->cat_id != null) {
-
-                    $linkedto = array(
-
-                        'id' => $c2->cate->id,
-                        'name' => $c2->cate->getTranslations('title'),
-                        'appliedon' => $c2->link_by,
-                    );
-
-                } else {
-                    $linkedto = null;
                 }
-
-                $content[] = array(
-                    'coupanid' => $c2->id,
-                    'code' => $c2->code,
-                    'discount' => $c2->distype == 'fix' ? (float) sprintf("%.2f", $c2->amount * $rate->exchange_rate) : (int) $c2->amount,
-                    'discount_type' => $c2->distype,
-                    'minamount' => (float) sprintf("%.2f", $c2->minamount * $rate->exchange_rate),
-                    'is_login' => $c2->is_login,
-                    'description' => $c2->description,
-                    'linked_to' => $linkedto,
-                    'offertext' => $this->findOfferText($c2, $rate)->getData()->offerText != '' ? $this->findOfferText($c2, $rate)->getData()->offerText : null,
-                    'validationtext' => $this->findOfferText($c2, $rate)->getData()->validationText != null ? $this->findOfferText($c2, $rate)->getData()->validationText : null,
-                );
 
             }
 
@@ -797,7 +1109,7 @@ class CartController extends Controller
 
         $validator = Validator::make($request->all(), [
             'currency' => 'required|string|min:3|max:3',
-            'cart' => 'required'
+            'cart' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -819,28 +1131,25 @@ class CartController extends Controller
 
         if ($request->cart) {
 
-            if (count($request->cart)) {
+            $cart = array(
 
-                $cart = array(
-                    'products' => $this->guestcartproducts($request),
-                    'subtotal' => (double) sprintf("%.2f", $this->guestcartTotal()->getData()->subtotal * $rate->exchange_rate),
-                    'shipping' => (double) sprintf("%.2f", $this->guestcartTotal()->getData()->shipping * $rate->exchange_rate),
-                    'grand_total' => (double) sprintf("%.2f", $this->guestcartTotal()->getData()->grandTotal * $rate->exchange_rate),
-                    'currency' => $rate->code,
-                    'symbol' => $rate->symbol,
-                );
+                'products'      => $this->guestcartproducts($request),
+                'subtotal'      => (double) sprintf("%.2f", $this->guestcartTotal()->getData()->subtotal * $rate->exchange_rate),
+                'shipping'      => (double) sprintf("%.2f", $this->guestcartTotal()->getData()->shipping * $rate->exchange_rate),
+                'grand_total'   => (double) sprintf("%.2f", $this->guestcartTotal()->getData()->grandTotal * $rate->exchange_rate),
+                'currency'      => $rate->code,
+                'symbol'        => $rate->symbol
 
-                return response()->json($cart);
+            );
 
-            } else {
-
-                return response()->json(['msg' => 'Your cart is empty !', 'status' => 'success']);
-
-            }
+            return response()->json($cart);
 
         } else {
 
-            return response()->json(['msg' => 'Your cart is empty !', 'status' => 'success']);
+            return response()->json([
+                'msg'       => 'Your cart is empty !', 
+                'status'    => 'success'
+            ]);
 
         }
     }
@@ -854,25 +1163,76 @@ class CartController extends Controller
 
         $products = array();
 
-        foreach (request()->cart as $cart) {
+        
 
-            $variantid = $cart['variantid'];
+        foreach (request()->cart as $cart) {
+            
+
             $qty = $cart['quantity'];
 
-            $productData = new ProductController;
+            if (isset($cart['variantid'])) {
 
-            $variant = AddSubVariant::find($variantid);
+                $variantid = $cart['variantid'];
+                
 
-            if (isset($variant)) {
+                $productData = new ProductController;
 
-                $rating = $productData->getproductrating($variant->products);
+                $variant = AddSubVariant::find($variantid);
 
-                $reviews = $productData->getProductReviews($variant->products);
+                if (isset($variant)) {
 
-                if ($productData->getprice($variant->products, $variant)->getData()->offerprice != 0) {
+                    $rating = $productData->getproductrating($variant->products);
 
-                    $mp = sprintf("%.2f", $productData->getprice($variant->products, $variant)->getData()->mainprice * $rate->exchange_rate);
-                    $op = sprintf("%.2f", $productData->getprice($variant->products, $variant)->getData()->offerprice * $rate->exchange_rate);
+                    $reviews = $productData->getProductReviews($variant->products);
+
+                    if ($productData->getprice($variant->products, $variant)->getData()->offerprice != 0) {
+
+                        $mp = sprintf("%.2f", $productData->getprice($variant->products, $variant)->getData()->mainprice * $rate->exchange_rate);
+                        $op = sprintf("%.2f", $productData->getprice($variant->products, $variant)->getData()->offerprice * $rate->exchange_rate);
+
+                        $getdisprice = $mp - $op;
+
+                        $discount = $getdisprice / $mp;
+
+                        $offamount = $discount * 100;
+
+                    } else {
+
+                        $offamount = 0;
+
+                    }
+
+                    $products[] = array(
+                        'productid' => $variant->products->id,
+                        'variantid' => $variantid,
+                        'off_in_percent' => (int) round($offamount),
+                        'productname' => $variant->products->name,
+                        'orignalprice' => (float) sprintf("%.2f", $productData->getprice($variant->products, $variant)->getData()->mainprice * $rate->exchange_rate) / $qty,
+                        'orignalofferprice' => (float) sprintf("%.2f", $productData->getprice($variant->products, $variant)->getData()->offerprice * $rate->exchange_rate) / $qty,
+                        'mainprice' => (float) sprintf("%.2f", $productData->getprice($variant->products, $variant)->getData()->mainprice * $rate->exchange_rate) * $qty,
+                        'offerprice' => (float) sprintf("%.2f", $productData->getprice($variant->products, $variant)->getData()->offerprice * $rate->exchange_rate) * $qty,
+                        'qty' => $qty,
+                        'rating' => $rating,
+                        'review' => count($reviews),
+                        'thumbnail_path' => url('variantimages/thumbnails'),
+                        'thumbnail' => $variant->variantimages->main_image,
+                        'tax_info' => $variant->products->tax_r == '' ? __("Exclusive of tax") : __("Inclusive of all taxes"),
+                        'soldby' => $variant->products->store->name,
+                        'variant' => $this->variantDetail($variant),
+                        'minorderqty' => (int) $variant->min_order_qty,
+                        'maxorderqty' => (int) $variant->max_order_qty,
+                    );
+                }
+            }
+
+            if(isset($cart['simple_pro_id'])){
+
+                $sp = SimpleProduct::find($cart['simple_pro_id']);
+
+                if ($sp->offer_price != 0) {
+
+                    $mp = $sp->price;
+                    $op = $sp->offer_price;
 
                     $getdisprice = $mp - $op;
 
@@ -887,25 +1247,28 @@ class CartController extends Controller
                 }
 
                 $products[] = array(
-                    'productid' => $variant->products->id,
-                    'variantid' => $variantid,
-                    'off_in_percent' => (int) round($offamount),
-                    'productname' => $variant->products->name,
-                    'orignalprice' => (float) sprintf("%.2f", $productData->getprice($variant->products, $variant)->getData()->mainprice * $rate->exchange_rate) / $qty,
-                    'orignalofferprice' => (float) sprintf("%.2f", $productData->getprice($variant->products, $variant)->getData()->offerprice * $rate->exchange_rate) / $qty,
-                    'mainprice' => (float) sprintf("%.2f", $productData->getprice($variant->products, $variant)->getData()->mainprice * $rate->exchange_rate) * $qty,
-                    'offerprice' => (float) sprintf("%.2f", $productData->getprice($variant->products, $variant)->getData()->offerprice * $rate->exchange_rate) * $qty,
-                    'qty' => $qty,
-                    'rating' => $rating,
-                    'review' => count($reviews),
-                    'thumbnail_path' => url('variantimages/thumbnails'),
-                    'thumbnail' => $variant->variantimages->main_image,
-                    'tax_info' => $variant->products->tax_r == '' ? __("Exclusive of tax") : __("Inclusive of all taxes"),
-                    'soldby' => $variant->products->store->name,
-                    'variant' => $this->variantDetail($variant),
-                    'minorderqty' => (int) $variant->min_order_qty,
-                    'maxorderqty' => (int) $variant->max_order_qty,
+                    'productid'         => $sp->id,
+                    'variantid'         => 0,
+                    'type'              => 's',
+                    'off_in_percent'    => (int) round($offamount),
+                    'productname'       => $sp->product_name,
+                    'orignalprice'      => (float) sprintf("%.2f", $sp->price * $rate->exchange_rate),
+                    'orignalofferprice' => (float) sprintf("%.2f", $sp->offer_price * $rate->exchange_rate),
+                    'mainprice'         => (float) sprintf("%.2f", ($sp->price * $rate->exchange_rate) * $qty),
+                    'offerprice'        => (float) sprintf("%.2f", ($sp->offer_price  * $rate->exchange_rate) * $qty),
+                    'qty'               => $qty,
+                    'rating'            => simple_product_rating($sp->id),
+                    'review'            => $sp->reviews()->where('review', '!=', '')->count(),
+                    'thumbnail_path'    => url('/images/simple_products/'),
+                    'thumbnail'         => $sp->thumbnail,
+                    'tax_info'          => __("Inclusive of all taxes"),
+                    'soldby'            => $sp->store->name,
+                    'variant'           => null,
+                    'minorderqty'       => (int) $sp->min_order_qty,
+                    'maxorderqty'       => (int) $sp->max_order_qty,
                 );
+
+
             }
 
         }
@@ -919,6 +1282,7 @@ class CartController extends Controller
 
         $validator = Validator::make($request->all(), [
             'currency' => 'required|string|min:3|max:3',
+            'cart'   => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -928,56 +1292,144 @@ class CartController extends Controller
             if ($errors->first('currency')) {
                 return response()->json(['msg' => $errors->first('currency'), 'status' => 'fail']);
             }
+
+            if ($errors->first('cart')) {
+                return response()->json(['msg' => $errors->first('cart'), 'status' => 'fail']);
+            }
         }
 
         if ($request->cart) {
 
             foreach ($request->cart as $cart) {
 
-                $variantid = $cart['variantid'];
-                $qty = $cart['quantity'];
+                if (isset($cart['variantid'])) {
+                    $variantid = $cart['variantid'];
+                    $qty = $cart['quantity'];
 
-                $item = Cart::where('variant_id', '=', $variantid)->where('user_id', '=', Auth::user()->id)->first();
+                    $item = Cart::where('variant_id', '=', $variantid)->where('user_id', '=', Auth::user()->id)->first();
 
-                $variant = AddSubVariant::find($variantid);
+                    $variant = AddSubVariant::find($variantid);
 
-                $price = new ProductController;
+                    $price = new ProductController;
 
-                $price = $price->getprice($variant->products, $variant)->getData();
+                    $price = $price->getprice($variant->products, $variant)->getData();
 
-                if (isset($item)) {
+                    if (isset($item)) {
 
-                    $newqty = (int) $item->qty + $qty;
-                    $item->qty = $newqty;
-                    $item->price_total = (float) $price->mainprice * $newqty;
-                    $item->semi_total = (float) $price->offerprice * $newqty;
+                        $newqty = (int) $item->qty + $qty;
+                        $item->qty = $newqty;
+                        $item->price_total = (float) $price->mainprice * $newqty;
+                        $item->semi_total = (float) $price->offerprice * $newqty;
 
-                    $item->shipping = $this->getShipping($newqty, $variant);
+                        $item->shipping = $this->getShipping($newqty, $variant);
 
-                    $item->updated_at = now();
+                        $item->updated_at = now();
 
-                    $item->save();
+                        $item->save();
 
-                } else {
+                        return response()->json([
 
-                    $cart = new Cart;
-                    $cart->qty = $qty;
-                    $cart->user_id = Auth::user()->id;
-                    $cart->pro_id = $variant->products->id;
-                    $cart->variant_id = $variantid;
+                            'msg' => 'Items quantity updated in cart successfully !', 
+                            'status' => 'success'
 
-                    $cart->ori_price = (float) $price->mainprice;
-                    $cart->ori_offer_price = (float) $price->offerprice;
+                        ]);
 
-                    $cart->price_total = (float) $price->mainprice * $qty;
-                    $cart->semi_total = (float) $price->offerprice * $qty;
+                    } else {
 
-                    $cart->vender_id = $variant->products->vender->id;
-                    $cart->shipping = $this->getShipping($qty, $variant);
-                    $cart->created_at = now();
-                    $cart->updated_at = now();
+                        $cart = new Cart;
+                        $cart->qty = $qty;
+                        $cart->user_id = Auth::user()->id;
+                        $cart->pro_id = $variant->products->id;
+                        $cart->variant_id = $variantid;
 
-                    $cart->save();
+                        $cart->ori_price = (float) $price->mainprice;
+                        $cart->ori_offer_price = (float) $price->offerprice;
+
+                        $cart->price_total = (float) $price->mainprice * $qty;
+                        $cart->semi_total = (float) $price->offerprice * $qty;
+
+                        $cart->vender_id = $variant->products->vender->id;
+                        $cart->shipping = $this->getShipping($qty, $variant);
+                        $cart->created_at = now();
+                        $cart->updated_at = now();
+
+                        $cart->save();
+
+                    }
+                }
+
+                if (isset($cart['simple_pro_id'])) {
+                    
+                    $pro_id = $cart['simple_pro_id'];
+                    
+                    $qty  = $cart['quantity'];
+
+                    $item = Cart::where('simple_pro_id', '=', $pro_id)
+                                ->where('user_id', '=', Auth::user()->id)
+                                ->first();
+
+                    $product = SimpleProduct::find($pro_id);
+
+                    if(!isset($product)){
+
+                        return response()->json([
+
+                            'msg'       => 'Product not found!', 
+                            'status'    => 'success'
+
+                        ]);
+
+                    }
+
+                    if (isset($item)) {
+
+                        $newqty                 = (int) $item->qty + $qty;
+                        $item->qty              = $newqty;
+                        $item->price_total      = (float) $product->price * $newqty;
+                        $item->semi_total       = (float) $product->offer_price * $newqty;
+
+                        $item->updated_at = now();
+
+                        $item->save();
+
+                        $item->update([
+                            'shipping' => shippingprice($item)
+                        ]);
+
+                        return response()->json([
+
+                            'msg' => 'Items quantity updated in cart successfully !', 
+                            'status' => 'success'
+
+                        ]);
+
+                    } else {
+
+                        $cart = new Cart;
+                        $cart->qty              = $qty;
+                        $cart->user_id          = Auth::user()->id;
+                        $cart->pro_id           = NULL;
+                        $cart->variant_id       = NULL;
+
+                        $cart->simple_pro_id    = $product->id;
+
+                        $cart->ori_price        = (float) $product->price;
+                        $cart->ori_offer_price  = (float) $product->offer_price;
+
+                        $cart->price_total      = (float) $product->price * $qty;
+                        $cart->semi_total       = (float) $product->offer_price * $qty;
+
+                        $cart->vender_id        = $product->store->id;
+                        $cart->created_at       = now();
+                        $cart->updated_at       = now();
+
+                        $cart->save();
+
+                        $cart->update([
+                            'shipping' => shippingprice($cart)
+                        ]);
+
+                    }
 
                 }
 
@@ -996,32 +1448,37 @@ class CartController extends Controller
     public function guestcartTotal()
     {
 
-        $totalshipping =+ $this->guestCartCalculateShipping();
+       
+        $totalshipping = +$this->guestCartCalculateShipping();
+
         $subtotal = 0;
 
         $subtotal = 0;
 
         foreach (request()->cart as $cart) {
 
-            $variantid = $cart['variantid'];
-            $qty = $cart['quantity'];
+            if (isset($cart['variantid'])) {
 
-            $productData = new ProductController;
+                $variantid = $cart['variantid'];
+                $qty = $cart['quantity'];
 
-            $variant = AddSubVariant::find($variantid);
+                $productData = new ProductController;
 
-            if (isset($variant)) {
+                $variant = AddSubVariant::find($variantid);
 
-                if ($variant->products->offer_price != 0) {
+                if (isset($variant)) {
 
-                    $subtotal = $subtotal + (float) sprintf("%.2f", $productData->getprice($variant->products, $variant)->getData()->offerprice * $qty);
+                    if ($variant->products->offer_price != 0) {
 
-                } else {
+                        $subtotal = $subtotal + (float) sprintf("%.2f", $productData->getprice($variant->products, $variant)->getData()->offerprice * $qty);
 
-                    $subtotal = $subtotal + (float) sprintf("%.2f", $productData->getprice($variant->products, $variant)->getData()->mainprice * $qty);
+                    } else {
+
+                        $subtotal = $subtotal + (float) sprintf("%.2f", $productData->getprice($variant->products, $variant)->getData()->mainprice * $qty);
+
+                    }
 
                 }
-
             }
 
         }
@@ -1030,9 +1487,9 @@ class CartController extends Controller
 
         return response()->json([
 
-            'subtotal' => sprintf("%.2f", $subtotal),
-            'grandTotal' => sprintf("%.2f", $grandtotal),
-            'shipping' => $totalshipping,
+            'subtotal'      => sprintf("%.2f", $subtotal),
+            'grandTotal'    => sprintf("%.2f", $grandtotal),
+            'shipping'      => $totalshipping,
 
         ]);
 
@@ -1040,20 +1497,19 @@ class CartController extends Controller
 
     public function guestCartCalculateShipping()
     {
+        $shipping = 0;
 
         foreach (request()->cart as $cart) {
 
-            $variantid = $cart['variantid'];
-            $qty = $cart['quantity'];
+            if (isset($cart['variantid'])) {
 
-            $variant = AddSubVariant::find($variantid);
+                $variantid  = $cart['variantid'];
+                $qty        = $cart['quantity'];
 
-            $shipping = 0;
+                $variant = AddSubVariant::find($variantid);
 
-            if (isset($variant)) {
+                if (isset($variant) && isset($variant->products)) {
 
-              
-                if (isset($variant->products)) {
                     if ($variant->products->free_shipping == '0') {
 
                         $free_shipping = Shipping::where('default_status', '=', '1')->first();
@@ -1064,54 +1520,147 @@ class CartController extends Controller
 
                                 $weight = ShippingWeight::first();
                                 $pro_weight = $variant->weight;
+
                                 if ($weight->weight_to_0 >= $pro_weight) {
+
                                     if ($weight->per_oq_0 == 'po') {
-                                        $shipping = $shipping + $weight->weight_price_0;
+
+                                        $shipping += $weight->weight_price_0;
+
                                     } else {
-                                        $shipping = $shipping + $weight->weight_price_0 * $qty;
+
+                                        $shipping += $weight->weight_price_0 * $qty;
+
                                     }
+
                                 } elseif ($weight->weight_to_1 >= $pro_weight) {
+
                                     if ($weight->per_oq_1 == 'po') {
-                                        $shipping = $shipping + $weight->weight_price_1;
+
+                                        $shipping += $weight->weight_price_1;
+
                                     } else {
-                                        $shipping = $shipping + $weight->weight_price_1 * $qty;
+
+                                        $shipping += $weight->weight_price_1 * $qty;
+
                                     }
+
                                 } elseif ($weight->weight_to_2 >= $pro_weight) {
+
                                     if ($weight->per_oq_2 == 'po') {
-                                        $shipping = $shipping + $weight->weight_price_2;
+
+                                        $shipping += $weight->weight_price_2;
+
                                     } else {
-                                        $shipping = $shipping + $weight->weight_price_2 * $qty;
+
+                                        $shipping += $weight->weight_price_2 * $qty;
+
                                     }
+
                                 } elseif ($weight->weight_to_3 >= $pro_weight) {
+
                                     if ($weight->per_oq_3 == 'po') {
-                                        $shipping = $shipping + $weight->weight_price_3;
+
+                                        $shipping += $weight->weight_price_3;
+
                                     } else {
-                                        $shipping = $shipping + $weight->weight_price_3 * $qty;
+
+                                        $shipping += $weight->weight_price_3 * $qty;
+
                                     }
+
                                 } else {
+
                                     if ($weight->per_oq_4 == 'po') {
-                                        $shipping = $shipping + $weight->weight_price_4;
+
+                                        $shipping += $weight->weight_price_4;
+
                                     } else {
-                                        $shipping = $shipping + $weight->weight_price_4 * $qty;
+
+                                        $shipping += $weight->weight_price_4 * $qty;
+
                                     }
 
                                 }
 
                             } else {
 
-                                $shipping = $shipping + $free_shipping->price;
+                                $shipping += $free_shipping->price;
 
                             }
                         }
                     }
-                }
- 
 
+                }
             }
 
-            return $shipping;
+            if (isset($cart['simple_pro_id'])) {
+
+                $sp = SimpleProduct::find($cart['simple_pro_id']);
+
+                if (isset($sp)) {
+
+                    if ($sp->free_shipping == '0') {
+        
+                        $free_shipping = Shipping::where('default_status', '=', '1')->first();
+        
+                        if (isset($free_shipping)) {
+        
+                            if ($free_shipping->name == "Shipping Price") {
+        
+                                $weight = ShippingWeight::first();
+
+                                $pro_weight = $sp->weight;
+
+                                if ($weight->weight_to_0 >= $pro_weight) {
+                                    if ($weight->per_oq_0 == 'po') {
+                                        $shipping += $weight->weight_price_0;
+                                    } else {
+                                        $shipping += $weight->weight_price_0 * $cart['quantity'];
+                                    }
+                                    
+                                } elseif ($weight->weight_to_1 >= $pro_weight) {
+                                    if ($weight->per_oq_1 == 'po') {
+                                        $shipping += $weight->weight_price_1;
+                                    } else {
+                                        $shipping += $weight->weight_price_1 * $cart['quantity'];
+                                    }
+                                } elseif ($weight->weight_to_2 >= $pro_weight) {
+                                    if ($weight->per_oq_2 == 'po') {
+                                        $shipping += $weight->weight_price_2;
+                                    } else {
+                                        $shipping += $weight->weight_price_2 * $cart['quantity'];
+                                    }
+                                } elseif ($weight->weight_to_3 >= $pro_weight) {
+                                    if ($weight->per_oq_3 == 'po') {
+                                        $shipping += $weight->weight_price_3;
+                                    } else {
+                                        $shipping += $weight->weight_price_3 * $cart['quantity'];
+                                    }
+                                } else {
+                                    if ($weight->per_oq_4 == 'po') {
+                                        $shipping += $weight->weight_price_4;
+                                    } else {
+                                        $shipping += $weight->weight_price_4 * $cart['quantity'];
+                                    }
+        
+                                }
+        
+                            } else {
+        
+                                $shipping += $free_shipping->price;
+        
+                            }
+                        }
+                    }
+
+                }
+                
+            }
 
         }
+
+        return $shipping;
     }
 
 }

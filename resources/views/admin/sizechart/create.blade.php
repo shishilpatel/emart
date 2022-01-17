@@ -60,7 +60,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <label>{{ __('{{ __('Status:') }}') }} </label>
+                    <label>{{ __('Status:') }} </label>
                     <br>
                     <label class="switch">
                         <input type="checkbox" name="status" {{ old('status') ? "checked" : "" }}>

@@ -142,7 +142,7 @@
                 @if($o->courier_channel != '' && $o->tracking_link != '' && $o->exp_delivery_date != '')
                   
                   <p class="mt-2 text-green font-weight-bold">
-                    {{__('Expected delivery by :date',['date' => date("d-M-Y",strtotime($o->exp_delivery_date))]) )}}.
+                    {{ __('Expected delivery by :date',['date' => date("d-M-Y",strtotime($o->exp_delivery_date))]) }}.
                   </p>
 
                 @endif
@@ -421,7 +421,7 @@
               <b>{{ __('Total') }} :</b>
               <i class="{{ $order->paid_in }}"></i>
 
-              {{ price_format($order->order_total - $order->gift_charge , 2, '.', '')}}
+              {{ price_format($order->order_total - $order->gift_charge)}}
               |
               <b>{{ __('Gift Pkg. Charges') }}:</b>
               <i class="{{ $order->paid_in }}"></i>{{ $order->gift_charge }} |
@@ -430,7 +430,7 @@
               <b>{{ __('Order Total') }}:</b>
 
               <i class="{{ $order->paid_in }}"></i>
-              {{ price_format($order->order_total+$order->handlingcharge, 2, '.', '')}}
+              {{ price_format($order->order_total+$order->handlingcharge) }}
 
             </span>
 

@@ -27,13 +27,13 @@
    shareURL();
 
  $("#nmovimentos").change(function(){
-   var newValue = $(this).val();
-   var stock = +"<?php echo $pro->qty; ?>"
 
-   if (newValue >= stock)
+    var newValue = $(this).val();
+    var stock = +"{{ $pro->qty }}"
+
+    if (newValue >= stock)
        alert("Out Of Stock..");
-
- });
+    });
 
 
 
@@ -152,6 +152,9 @@ var setdefvariant = null;
 
        success:function(response)
        {
+
+        
+
         if (response == "") {
 
             /** if variant not found run a script to set default variant */
@@ -281,6 +284,7 @@ var setdefvariant = null;
        
       var stock = +(data['stock']);
 
+
        @php
          $commision_setting = App\CommissionSetting::first();
 
@@ -365,14 +369,11 @@ var setdefvariant = null;
 
          var actualper = Math.round(dpercent);
 
-
-        
-
          if(saleprice != 0){
-          $('.off_amount').html(actualper+'% off');
-         }
 
-         
+          $('.off_amount').html(actualper+'% off');
+
+         }
 
          $('.dtl-price-main').append("<i class='{{session()->get('currency')['value']}}'></i>"+" "+totalsaleprice.toLocaleString(price_format == true ? 'pt-BR' : 'en-US', {minimumFractionDigits: 2}));
          $('.dtl-price-strike-main').append("<i class='{{session()->get('currency')['value']}}'></i>"+" "+totalprice.toLocaleString(price_format == true ? 'pt-BR' : 'en-US', {minimumFractionDigits: 2}));
@@ -380,10 +381,13 @@ var setdefvariant = null;
          variantprice = [];
          variantofferprice.push(totalsaleprice);
          variantprice.push(totalprice);
+         
        }
 
        }else{
+
          $('.dtl-price-main').text('Login to view price');
+
        }
      @php
    }else{
@@ -399,11 +403,13 @@ var setdefvariant = null;
        var totalprice = (venderprice + variantprice) * commission;
        var totalsaleprice = (saleprice + variantprice) * commission;
        var buyerprice = (venderprice + variantprice)+(totalprice/100);
-      if(saleprice !=0){
+
+       if(saleprice !=0){
          var buyersaleprice = (saleprice + variantprice)+(totalsaleprice/100);
        }else{
          var buyersaleprice = 0;
        }
+
        var guestpricenable = '{{ $price_login }}';
        var conversion_rate = +'{{round($conversion_rate, 4)}}';
                          buyersaleprice = +buyersaleprice;
@@ -731,35 +737,40 @@ var setdefvariant = null;
          variantofferprice.push(0);
        }
 
-
+      
 
        if(selling_date <= current_date){
+         
          if(stock > 0 && stock <= 5)
-                 {
+          {
 
+          console.log(stock)
+              $('.stockval').text("Hurry Up ! Only "+data['stock']+" left");
 
-                   $('.stockval').text("Hurry Up ! Only "+data['stock']+" left");
+              $('.quantity-container').html('<div><div class="qty-count"><form action="" method="post">{{ csrf_field() }}<div><div class="cart-quantity"><div class="quant-input"></div></div><div class="add-btn"><button type="submit" class="btn btn-primary">{{ __('staticwords.AddtoCart') }}</button></div></div></form></div>');
+              $('#cartForm').append('<form action="" method="post">{{ csrf_field() }} <button type="submit" class="btn btn-cart"><i class="fa fa-shopping-cart" aria-hidden="true"></i> ADD TO CART <span class="sr-only">(current)</span></button></form>');
+          }
+          else if(stock == 0){
 
-                   $('.quantity-container').html('<div><div class="qty-count"><form action="" method="post">{{ csrf_field() }}<div><div class="cart-quantity"><div class="quant-input"></div></div><div class="add-btn"><button type="submit" class="btn btn-primary">{{ __('staticwords.AddtoCart') }}</button></div></div></form></div>');
-                   $('#cartForm').append('<form action="" method="post">{{ csrf_field() }} <button type="submit" class="btn btn-cart"><i class="fa fa-shopping-cart" aria-hidden="true"></i> ADD TO CART <span class="sr-only">(current)</span></button></form>');
-                 }
-                 else if(stock == 0){
+              $('.notifymeblock').html('<button type="button" data-target="#notifyMe" data-toggle="modal" class="m-1 p-2 btn btn-md btn-block btn-primary">NOTIFY ME</button>');
+              $('.notifyForm').attr('action','{{ url("/subscribe/for/product/stock") }}/'+data['id']);
 
-                   $('.notifymeblock').html('<button type="button" data-target="#notifyMe" data-toggle="modal" class="m-1 p-2 btn btn-md btn-block btn-primary">NOTIFY ME</button>');
-                   $('.notifyForm').attr('action','{{ url("/subscribe/for/product/stock") }}/'+data['id']);
+              $('.stockval').text("Out of Stock");
+              $('.quantity-container').remove();
+              $('.quantity-container form').remove();
+              $('#cartForm').append('<button class="btn btn btn-cart-oos"><i class="fa fa-shopping-cart" aria-hidden="true"></i> OUT OF STOCK <span class="sr-only">(current)</span></button>');
 
-                   $('.stockval').text("Out of Stock");
-                   $('.quantity-container').remove();
-                   $('.quantity-container form').remove();
-                   $('#cartForm').append('<button class="btn btn btn-cart-oos"><i class="fa fa-shopping-cart" aria-hidden="true"></i> OUT OF STOCK <span class="sr-only">(current)</span></button>');
+          }else{
+            
+            if(guestpricenable == '0' || login_check){
 
-                 }else{
-                   @if($price_login != 1)
-                   $('.stockval').text("In Stock");
-                    $('.quantity-container').html('<div><div class="qty-count"><form action="" method="post">{{ csrf_field() }}<div><div class="cart-quantity"><div class="quant-input"></div></div><div class="add-btn"><button type="submit" class="btn btn-primary">{{ __('staticwords.AddtoCart') }}</button></div></div></form></div>');
-                    $('#cartForm').append('<form action="" method="post">{{ csrf_field() }} <button type="submit" class="btn btn-cart"><i class="fa fa-shopping-cart" aria-hidden="true"></i> {{ __('staticwords.AddtoCart') }} <span class="sr-only">(current)</span></button></form>');
-                   @endif
-                 }
+              $('.stockval').text("In Stock");
+              $('.quantity-container').html('<div><div class="qty-count"><form action="" method="post">{{ csrf_field() }}<div><div class="cart-quantity"><div class="quant-input"></div></div><div class="add-btn"><button type="submit" class="btn btn-primary">{{ __('staticwords.AddtoCart') }}</button></div></div></form></div>');
+              
+              $('#cartForm').append('<form action="" method="post">{{ csrf_field() }} <button type="submit" class="btn btn-cart"><i class="fa fa-shopping-cart" aria-hidden="true"></i> {{ __('staticwords.AddtoCart') }} <span class="sr-only">(current)</span></button></form>');
+
+            }
+          }
        }else{
           $('.stockval').text("Coming Soon !");
           $('.quantity-block').hide();
@@ -1817,7 +1828,7 @@ function driftzoom(){
      containInline: true,
      hoverBoundingBox: true,
      zoomFactor: 3,
-     handleTouch: true,
+     handleTouch: false,
      showWhitespaceAtEdges: false
    });
 

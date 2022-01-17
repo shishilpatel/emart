@@ -293,11 +293,7 @@ class InstallerController extends Controller
 
         } catch (\Exception $e) {
 
-            try{
-                Artisan::call('db:wipe');
-            }catch(\Exception $e){
-                
-            }
+            Artisan::call('db:wipe');
 
             notify()->error($e->getMessage(),$e->getCode());
             return redirect()->route('get.step2');

@@ -34,7 +34,7 @@
       </a>
     </div>
     <!-- Collect the nav links, forms, and other content for toggling -->
-   
+    
     <div id="navbarSupportedContent">
       @if($product->pre_order == 1 && $product->product_avbl_date > date('Y-m-d h:i:s'))
 
@@ -46,8 +46,9 @@
         @endif
 
       @endif
+
       
-      <form action="{{ $product->type == 'ex_product' ? $product->external_product_link : route('add.cart.simple',['pro_id' => $product->id, 'price' => $product->price, 'offerprice' => $d_price ?? $product->offer_price]) }}" method="{{$product->type == 'ex_product' ? 'GET' : 'POST'}}">
+      <form action="{{ $product->type == 'ex_product' ? $product->external_product_link : route('add.cart.simple',['pro_id' => $product->id, 'price' => $product->price, 'offerprice' => (isset($d_price)) ? $d_price : (($product->offer_price != 0 || $product->offer_price != '') ? $product->offer_price : 0)]) }}" method="{{$product->type == 'ex_product' ? 'GET' : 'POST'}}">
 
         @csrf
 
@@ -560,7 +561,7 @@
 
                       <div class="margin-left25">
                         <div class="reviews">
-                          <a href="{{ route('allreviews',$product->id) }}"
+                          <a href="{{ route('allreviews',['id' => $product->id, 'type' => 's']) }}"
                             class="lnk">&nbsp;&nbsp;{{  $count =  count($product->reviews->where('status','1')) }}
                             {{ __('ratings and') }}
                             {{ $reviewcount }} {{ __('reviews') }}</a>
@@ -637,7 +638,7 @@
 
                                 @else
 
-                                  <form action="{{ route('add.cart.simple',['pro_id' => $product->id, 'price' => $product->price, 'offerprice' => $product->offer_price]) }}" method="POST">
+                                  <form action="{{ route('add.cart.simple',['pro_id' => $product->id, 'price' => $product->price, 'offerprice' => (isset($d_price)) ? $d_price : (($product->offer_price != 0 || $product->offer_price != '') ? $product->offer_price : 0)]) }}" method="POST">
                                     @csrf
                                     <div>
                                       <div class="cart-quantity">

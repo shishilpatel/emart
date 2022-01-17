@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-	<title>{{ __('Print Order - ',['printorder' => $inv_cus->order_prefix.$order->order_id ]) }}</title>
+	<title>{{ __('Print Order - :printorder',['printorder' => $inv_cus->order_prefix.$order->order_id ]) }}</title>
 	<link href="{{ url('admin_new/assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" type="text/css" href="{{url('css/font-awesome.min.css')}}">
 

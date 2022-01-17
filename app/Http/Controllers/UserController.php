@@ -15,6 +15,7 @@ use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Image;
+use Nwidart\Modules\Facades\Module;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables as FacadesDataTables;
 
@@ -161,8 +162,14 @@ class UserController extends Controller
         $country = Allcountry::join('countries', 'countries.country', '=', 'allcountry.iso3')->select('allcountry.*')->get();
         $states = Allstate::where('country_id', $user->country_id)->get();
         $citys = Allcity::where('state_id', $user->state_id)->get();
-        $plans = SellerPlans::where('status', '1')->get();
+        
         $roles = Role::get();
+
+        $plans = NULL;
+
+        if(in_array('Seller', auth()->user()->getRoleNames()->toArray()) && Module::has('SellerSubscription') && Module::find('sellersubscription')->isEnabled()){
+            $plans = SellerPlans::where('status', '1')->get();
+        }
 
         return view("admin.user.edit", compact("country", "user", "states", "citys", "plans", "roles"));
 
@@ -191,10 +198,12 @@ class UserController extends Controller
         $input = $request->all();
 
         if (isset($request->is_pass_change)) {
+
             $this->validate($request, [
                 'password' => 'required|between:6,255|confirmed',
                 'password_confirmation' => 'required',
             ]);
+            
             $newpass = Hash::make($request->password);
             $input['password'] = $newpass;
 
@@ -225,7 +234,7 @@ class UserController extends Controller
             $user->wallet()->update(['status' => '0']);
         }
 
-        if (env('ENABLE_SELLER_SUBS_SYSTEM') == 1) {
+        if (Module::has('SellerSubscription') && Module::find('sellersubscription')->isEnabled()) {
 
             $defaultCurrency = CurrencyNew::with(['currencyextract'])->whereHas('currencyextract', function ($query) {
 
@@ -268,8 +277,6 @@ class UserController extends Controller
 
             }
 
-        } else {
-            $input['subs_id'] = null;
         }
 
         if ($request->role == 'Seller') {

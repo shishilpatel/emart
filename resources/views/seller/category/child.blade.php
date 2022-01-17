@@ -91,7 +91,7 @@
 		          ],
 		          dom : 'lBfrtip',
 		          buttons : [
-		            'csv','excel','pdf','print','colvis'
+		            'csv','excel','pdf','print'
 		          ],
 		          order : [[0,'DESC']]
 		      });

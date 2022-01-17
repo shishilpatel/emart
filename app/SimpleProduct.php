@@ -154,4 +154,8 @@ class SimpleProduct extends Model implements Viewable
         return route('show.product',['id' => $this->id, 'slug' => $this->slug]);
     }
 
+    public function addedInWish(){
+        return $this->hasMany(Wishlist::class,'simple_pro_id');
+    }
+
 }

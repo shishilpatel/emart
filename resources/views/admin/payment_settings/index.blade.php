@@ -220,6 +220,10 @@
                                     @include('senangpay::admin.list')
                                 @endif
 
+                                @if(Module::has('Onepay') && Module::find('onepay')->isEnabled())
+                                    @include('onepay::admin.list')
+                                @endif
+
 
                                 <a class="nav-link" id="v-pills-bank-tab" data-toggle="pill" href="#v-pills-bank"
                                     role="tab" aria-controls="v-pills-bank" aria-selected="false"> <i
@@ -1929,6 +1933,11 @@
                                 @if(Module::has('Senangpay') && Module::find('Senangpay')->isEnabled())
                                     @include('senangpay::admin.tab')
                                 @endif
+
+                                @if(Module::has('Onepay') && Module::find('onepay')->isEnabled())
+                                    @include('onepay::admin.tab')
+                                @endif
+
                                     <!-- module end -->
 
                                     <!-- bank tab start -->

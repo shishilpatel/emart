@@ -339,26 +339,29 @@ function categoryfilter(cid, sid, chid, first, last) {
 function seoupdate(data){
     // --------- Start ----
 
+
     /** OG Title */
 
-    $('meta[property="og:title"]').attr('content', data.seosection.title);
-    $('meta[property="og:url"]').attr('content',  data.seosection.seourl);
-    $('meta[property="og:description"]').attr('content', data.seosection.seodes);
-    $('meta[property="og:image"]').attr('content', data.seosection.seoimage);
+    if(data != '' && data != undefined){
+      $('meta[property="og:title"]').attr('content', data.seosection.title);
+      $('meta[property="og:url"]').attr('content',  data.seosection.seourl);
+      $('meta[property="og:description"]').attr('content', data.seosection.seodes);
+      $('meta[property="og:image"]').attr('content', data.seosection.seoimage);
 
-    /** Twitted cards */
+      /** Twitted cards */
 
-    $('meta[name="twitter:card"]').attr('content', data.seosection.title);
-    document.title = data.seosection.title;
-    $('meta[name="twitter:description"]').attr('content', data.seosection.seodes);
-    document.title = data.seosection.title;
-    $('meta[name="twitter:site"]').attr('content', data.seosection.seourl);
-    document.title = data.seosection.title;
+      $('meta[name="twitter:card"]').attr('content', data.seosection.title);
+      document.title = data.seosection.title;
+      $('meta[name="twitter:description"]').attr('content', data.seosection.seodes);
+      document.title = data.seosection.title;
+      $('meta[name="twitter:site"]').attr('content', data.seosection.seourl);
+      document.title = data.seosection.title;
 
-    /** General seo tags **/
+      /** General seo tags **/
 
-    $('meta[name=keywords]').attr('content', data.seosection.title);
-    document.title = data.seosection.title;
+      $('meta[name=keywords]').attr('content', data.seosection.title);
+      document.title = data.seosection.title;
+    }
 
   // --------- END ----
 }

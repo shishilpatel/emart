@@ -26,7 +26,7 @@ class Coupan extends Model
 
     public function simple_product()
     {
-        return $this->belongsTo("App\SimpeProduct", "simple_pro_id",'id');
+        return $this->belongsTo(SimpleProduct::class, "simple_pro_id",'id');
     }
 
 }

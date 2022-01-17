@@ -137,7 +137,10 @@
   <script>
       $(".midia-toggle").midia({
           base_url: '{{url('')}}',
-          directory_name: 'brand'
+          directory_name: 'brand',
+          dropzone : {
+            acceptedFiles: '.jpg,.png,.jpeg,.webp,.bmp,.gif'
+          }
       });
   </script>
 @endsection

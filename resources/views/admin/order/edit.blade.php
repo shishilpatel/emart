@@ -714,9 +714,9 @@
 									[{{ $o->order->payment_method }}] </label>&nbsp;&nbsp;
 								@if($order->user->banks->count()>0)
 								<label><input onclick="showBank('{{ $o->id }}')" id="source_check_b{{ $o->id }}" required
-										type="radio" value="bank" name="source" />{{_("In Bank")}} </label>
+										type="radio" value="bank" name="source" />{{__("In Bank")}} </label>
 								@else
-								<label><input disabled="disabled" type="radio" /> {{_("In Bank")}} <i class="fa fa-question-circle"
+								<label><input disabled="disabled" type="radio" /> {{__("In Bank")}} <i class="fa fa-question-circle"
 										data-toggle="tooltip" data-placement="right"
 										title="{{ __("Add a bank account in My Bank Account") }}" aria-hidden="true"></i></label>
 								@endif

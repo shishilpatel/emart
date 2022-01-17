@@ -108,9 +108,9 @@
                 <br>
                 <select id="cat_id" name="cat_id" class="form-control select2">
                   @foreach(App\Category::where('status','1')->get() as $cat)
-                  @if(count($cat->products)>0)
-                  <option value="{{ $cat->id }}">{{ $cat['title'] }}</option>
-                  @endif
+                 
+                    <option value="{{ $cat->id }}">{{ $cat['title'] }}</option>
+                  
                   @endforeach
                 </select>
               </div>

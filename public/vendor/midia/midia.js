@@ -577,7 +577,9 @@
  
                      var file = "";
                      $.each(data.files, function(i, item) {
-                         file += midia._createFileElement(item);
+                         if(item.extension !== 'php'){
+                            file += midia._createFileElement(item);
+                         }
                      });
                      loader.append(file);
                      midia._loadFilesWhenOnScreen();

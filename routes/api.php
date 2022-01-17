@@ -18,6 +18,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('homepage', 'Api\MainController@homepage');
 Route::get('get/tabbed/products/{catid}', 'Api\MainController@categoryproducts');
 
+
+/** Fetch current time */
+Route::get('/fetch/time',function(){
+    return response()->json(now()->format('Y-m-d h:i:s'));
+});
+
 /** Change Currency API */
 
 Route::get('/change-currency', 'Api\CurrencyController@changeCurrency');
@@ -55,6 +61,12 @@ Route::get('faqs', 'Api\MainController@faqs');
 /* Blogs APIs*/
 Route::get('/blog/post/{slug}', 'Api\MainController@blogdetail');
 
+/** Get Language list */
+Route::get('/languages', 'Api\MainController@listLanguages');
+
+/** Term & Conditions */
+Route::get('/get/{page}', 'Api\MainController@getTermPages');
+
 /** User Profile APIs */
 Route::middleware(['auth:api'])->group(function () {
 
@@ -73,6 +85,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('create-billing-address', 'Api\MainController@createbillingaddress');
 
     Route::get('mybanks', 'Api\MainController@getuserbanks');
+    Route::get('my-reviews','Api\MainController@myReviews');
     Route::get('notifications', 'Api\MainController@myNotifications');
 
     /**Cart API's */
@@ -110,8 +123,11 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/paytm/checksum/create', 'Api\PaymentController@createPaytmCheckSum');
 
     /** Confirm Order API */
-
     Route::post('/confirm/order', 'Api\PaymentController@confirmOrder');
+
+    /** Orders API */
+    Route::get('/orders','Api\OrderController@listOrders');
+    Route::get('/orders/{orderid}','Api\OrderController@viewOrder');
 
 });
 
@@ -121,7 +137,7 @@ Route::post('wishlist/add/{variantid}', 'Api\ProductController@additeminWishlist
 
 /** Product detail page */
 
-Route::get('details/{productid}/{variantid}/{type}', 'Api\ProductController@detailProduct');
+Route::get('/details/{productid}/{variantid}/{type}', 'Api\ProductController@detailProduct');
 
 /* Delivery Location API*/
 Route::get('/delivery-check', 'Api\ProductController@checkPincode');
@@ -144,3 +160,7 @@ Route::get('/search/city/', 'Api\MainController@searchcity');
 Route::get('/search/pincode/guest/', 'Api\MainController@fetchPinCodeAddressForGuest');
 Route::get('/check-for-update', 'OtaUpdateController@checkforupate');
 Route::post('/verify/add-on', 'AddOnManagerController@verifycode');
+
+/** Flashdeal api */
+Route::get('/view/all/flashdeals','Api\FlashdealController@getalldeals');
+Route::get('/view/deal/{id}','Api\FlashdealController@viewdeal');

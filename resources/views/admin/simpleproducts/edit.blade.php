@@ -1,7 +1,7 @@
 @extends('admin.layouts.master-soyuz')
 @section('title',__('Edit Product :product | ',['product' => $product->product_name]))
 @section('stylesheet')
-<link rel="stylesheet" href="{{ url("/css/lightbox.min.css") }}">
+    <link rel="stylesheet" href="{{ url("/css/lightbox.min.css") }}">
 @endsection
 @section('body')
 @component('admin.component.breadcumb',['thirdactive' => 'active'])
@@ -9,21 +9,23 @@
     @slot('heading')
         {{ __('Edit Product') }}
     @endslot
+
     @slot('menu1')
         {{ __("Product") }}
     @endslot
+
     @slot('menu2')
         {{ __("Edit Product") }}
     @endslot
 
 @slot('button')
-<div class="col-md-6">
-    <div class="widgetbar">
-        <a href="{{ route('simple-products.index') }}" class="btn btn-primary-rgba">
-            <i class="feather icon-arrow-left mr-2"></i>{{ __("Back")}}
-        </a>
+    <div class="col-md-6">
+        <div class="widgetbar">
+            <a href="{{ route('simple-products.index') }}" class="btn btn-primary-rgba">
+                <i class="feather icon-arrow-left mr-2"></i>{{ __("Back")}}
+            </a>
+        </div>
     </div>
-</div>
 @endslot
 @endcomponent
 <div class="contentbar">
@@ -1568,12 +1570,18 @@
 
     $(".midia-toggle").midia({
         base_url: '{{url('')}}',
-        directory_name: 'simple_products'
+        directory_name: 'simple_products',
+        dropzone : {
+            acceptedFiles: '.jpg,.png,.jpeg,.webp,.bmp,.gif'
+        }
     });
 
     $(".file-toggle").midia({
         base_url: '{{url('')}}',
-        directory_name: 'product_files'
+        directory_name: 'product_files',
+        dropzone : {
+            acceptedFiles: '.jpg,.png,.jpeg,.webp,.bmp,.gif,.pdf,.docx,.doc'
+        }
     });
 </script>
 

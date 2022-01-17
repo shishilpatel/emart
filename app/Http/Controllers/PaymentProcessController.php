@@ -24,6 +24,7 @@ class PaymentProcessController extends Controller
 
     public function processPayement(Request $request){
 
+
         $amount         = round(Crypt::decrypt($request->amount),2);
         $actualtotal    = $request->actualtotal;
         $order_id       = uniqid();
@@ -84,6 +85,13 @@ class PaymentProcessController extends Controller
         if($payment_method == 'DPOPayment' && Module::has('DPOPayment') && Module::find('DPOPayment')->isEnabled()){
             $dpo = new \Modules\DPOPayment\Http\Controllers\DPOPaymentController;
             return $dpo->createToken($order_id,$amount,$name,$email,$phone,$purpose,$error = route("order.review"));
+        }
+
+        if($payment_method == 'Onepay' && Module::has('Onepay') && Module::find('onepay')->isEnabled()){
+            
+            $onepay = new \Modules\Onepay\Http\Controllers\OnepayController;
+            return $onepay->dopayment($order_id,$amount,$name,$email,$phone,$purpose,$error = route("order.review"));
+
         }
 
 

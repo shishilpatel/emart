@@ -5,7 +5,7 @@
 **********************************************************************************************************  -->
 <!--
   Template Name: emart - Laravel Multi-Vendor Ecommerce Advanced CMS
-  Version: 3.1.0
+  Version: 3.2.0
   Author: Media City
 -->
 

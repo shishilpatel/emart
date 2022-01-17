@@ -94,7 +94,7 @@
             
                             <div class="custom-file">
             
-                              <input type="file" name="addon_file" id="inputGroupFile01" class="inputfile inputfile-1"
+                              <input required type="file" name="addon_file" id="inputGroupFile01" class="inputfile inputfile-1"
                                 aria-describedby="inputGroupFileAddon01">
                               <label class="custom-file-label" for="inputGroupFile01">
                                   {{__('Choose file')}}

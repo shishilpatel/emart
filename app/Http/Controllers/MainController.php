@@ -1326,7 +1326,7 @@ class MainController extends Controller
 
                                 $all_brands_products = $products
                                                         ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                                        ->where('tags', 'LIKE', '%' . $search . '%')
+                                                        ->orWhere('tags', 'LIKE', '%' . $search . '%')
                                                         ->whereIn('brand_id', $brand_names)
                                                         ->where('featured', '=', '1')
                                                         ->where('grand_id', $chid)
@@ -1334,7 +1334,7 @@ class MainController extends Controller
 
                                 $simple_products = $s_product
                                                     ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                                    ->where('product_tags', 'LIKE', '%' . $search . '%')->whereIn('brand_id', $brand_names)
+                                                    ->orWhere('product_tags', 'LIKE', '%' . $search . '%')->whereIn('brand_id', $brand_names)
                                                     ->where('featured', '=', '1')
                                                     ->where('child_id', $chid);
 
@@ -1342,14 +1342,14 @@ class MainController extends Controller
 
                                 $all_brands_products = $products
                                                         ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                                        ->where('tags', 'LIKE', '%' . $search . '%')
+                                                        ->orWhere('tags', 'LIKE', '%' . $search . '%')
                                                         ->whereIn('brand_id', $brand_names)
                                                         ->where('grand_id', $chid)
                                                         ->get();
 
                                 $simple_products = $s_product
                                                     ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                                    ->where('product_tags', 'LIKE', '%' . $search . '%')->whereIn('brand_id', $brand_names)
+                                                    ->orWhere('product_tags', 'LIKE', '%' . $search . '%')->whereIn('brand_id', $brand_names)
                                                     ->where('featured', '=', '1');
 
                             }
@@ -1411,14 +1411,15 @@ class MainController extends Controller
 
                                 $all_brands_products = $products
                                                         ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                                        ->where('tags', 'LIKE', '%' . $search . '%')
+                                                        ->orWhere('tags', 'LIKE', '%' . $search . '%')
                                                         ->whereIn('brand_id', $brand_names)
                                                         ->where('grand_id', $chid)
                                                         ->get();
 
                                 $simple_products = $s_product
                                                     ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                                    ->where('product_tags', 'LIKE', '%' . $search . '%')->whereIn('brand_id', $brand_names)
+                                                    ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                    ->whereIn('brand_id', $brand_names)
                                                     ->where('featured', '=', '1')
                                                     ->where('child_id', $chid);
                             }
@@ -1458,13 +1459,13 @@ class MainController extends Controller
                             } else {
                                 $tag_products = $products
                                                 ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                                ->where('tags', 'LIKE', '%' . $search . '%')
+                                                ->orWhere('tags', 'LIKE', '%' . $search . '%')
                                                 ->where('grand_id', $chid)
                                                 ->get();
 
                                 $simple_products = $s_product
                                                     ->orwhere('product_name', 'LIKE', '%' . $search . '%')
-                                                    ->where('product_tags', 'LIKE', '%' . $search . '%')->where('child_id', $chid);
+                                                    ->orWhere('product_tags', 'LIKE', '%' . $search . '%')->where('child_id', $chid);
                             }
 
                             foreach ($tag_products as $pro) {
@@ -1521,31 +1522,32 @@ class MainController extends Controller
                             if ($featured == 1) {
 
                                 $tag_products = $products
-                                ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                ->where('tags', 'LIKE', '%' . $search . '%')
-                                ->where('featured', '=', '1')
-                                ->where('grand_id', $chid)
-                                ->get();
+                                                ->orWhere('name', 'LIKE', '%' . $search . '%')
+                                                ->orWhere('tags', 'LIKE', '%' . $search . '%')
+                                                ->where('featured', '=', '1')
+                                                ->where('grand_id', $chid)
+                                                ->get();
 
                                 $featured_pros = $tag_products;
 
                                 $simple_products = $s_product
-                                ->orwhere('product_name', 'LIKE', '%' . $search . '%')
-                                ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                ->where('featured', '1')
-                                ->where('child_id', $chid);
+                                                ->orwhere('product_name', 'LIKE', '%' . $search . '%')
+                                                ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                ->where('featured', '1')
+                                                ->where('child_id', $chid);
 
                             } else {
                                 $tag_products = $products
-                                ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                ->where('tags', 'LIKE', '%' . $search . '%')
-                                ->where('grand_id', $chid)->get();
+                                                ->orWhere('name', 'LIKE', '%' . $search . '%')
+                                                ->orWhere('tags', 'LIKE', '%' . $search . '%')
+                                                ->where('grand_id', $chid)
+                                                ->get();
 
                                 $simple_products = $s_product
-                                ->orwhere('product_name', 'LIKE', '%' . $search . '%')
-                                ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                ->where('featured', '1')
-                                ->where('child_id', $chid);
+                                                    ->orwhere('product_name', 'LIKE', '%' . $search . '%')
+                                                    ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                    ->where('featured', '1')
+                                                    ->where('child_id', $chid);
 
                             }
 
@@ -1616,32 +1618,33 @@ class MainController extends Controller
                                 if ($featured == 1) {
 
                                     $all_brands_products = $products
-                                        ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                        ->where('tags', 'LIKE', '%' . $search . '%')
-                                        ->whereIn('brand_id', $brand_names)
-                                        ->where('featured', '=', '1')
-                                        ->where('child', $sid)->get();
+                                                            ->orWhere('name', 'LIKE', '%' . $search . '%')
+                                                            ->orWhere('tags', 'LIKE', '%' . $search . '%')
+                                                            ->whereIn('brand_id', $brand_names)
+                                                            ->where('featured', '=', '1')
+                                                            ->where('child', $sid)
+                                                            ->get();
 
                                     $simple_products = $s_product
-                                    ->orwhere('product_name', 'LIKE', '%' . $search . '%')
-                                    ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                    ->whereIn('brand_id', $brand_names)
-                                    ->where('featured', '1')
-                                    ->where('subcategory_id', $sid);
+                                                        ->orwhere('product_name', 'LIKE', '%' . $search . '%')
+                                                        ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                        ->whereIn('brand_id', $brand_names)
+                                                        ->where('featured', '1')
+                                                        ->where('subcategory_id', $sid);
 
                                 } else {
 
                                     $all_brands_products = $products
                                                             ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                                            ->where('tags', 'LIKE', '%' . $search . '%')->whereIn('brand_id', $brand_names)
+                                                            ->orWhere('tags', 'LIKE', '%' . $search . '%')->whereIn('brand_id', $brand_names)
                                                             ->where('child', $sid)
                                                             ->get();
 
                                     $simple_products = $s_product
-                                    ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                    ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                    ->whereIn('brand_id', $brand_names)
-                                    ->where('subcategory_id', $sid);
+                                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                        ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                        ->whereIn('brand_id', $brand_names)
+                                                        ->where('subcategory_id', $sid);
 
                                 }
 
@@ -1651,32 +1654,32 @@ class MainController extends Controller
 
                                         $all_brands_products = $products
                                                                 ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                                                ->where('tags', 'LIKE', '%' . $search . '%')->whereIn('brand_id', $brand_names)
+                                                                ->orWhere('tags', 'LIKE', '%' . $search . '%')->whereIn('brand_id', $brand_names)
                                                                 ->where('featured', '=', '1')
                                                                 ->where('child', $sid)
                                                                 ->get();
 
                                         $simple_products = $s_product
-                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                        ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                        ->whereIn('brand_id', $brand_names)
-                                        ->where('featured', '1')
-                                        ->where('subcategory_id', $sid);
+                                                            ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                            ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                            ->whereIn('brand_id', $brand_names)
+                                                            ->where('featured', '1')
+                                                            ->where('subcategory_id', $sid);
 
                                     } else {
 
                                         $all_brands_products = $products
-                                        ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                        ->where('tags', 'LIKE', '%' . $search . '%')
-                                        ->whereIn('brand_id', $brand_names)
-                                        ->where('child', $sid)
-                                        ->get();
+                                                                ->orWhere('name', 'LIKE', '%' . $search . '%')
+                                                                ->orWhere('tags', 'LIKE', '%' . $search . '%')
+                                                                ->whereIn('brand_id', $brand_names)
+                                                                ->where('child', $sid)
+                                                                ->get();
 
                                         $simple_products = $s_product
-                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                        ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                        ->whereIn('brand_id', $brand_names)
-                                        ->where('subcategory_id', $sid);
+                                                            ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                            ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                            ->whereIn('brand_id', $brand_names)
+                                                            ->where('subcategory_id', $sid);
                                     }
 
                                     foreach ($all_brands_products as $pro) {
@@ -1732,17 +1735,17 @@ class MainController extends Controller
 
                                 } else {
                                     $all_brands_products = $products
-                                        ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                        ->where('tags', 'LIKE', '%' . $search . '%')
-                                        ->whereIn('brand_id', $brand_names)
-                                        ->where('child', $sid)
-                                        ->get();
+                                                            ->orWhere('name', 'LIKE', '%' . $search . '%')
+                                                            ->orWhere('tags', 'LIKE', '%' . $search . '%')
+                                                            ->whereIn('brand_id', $brand_names)
+                                                            ->where('child', $sid)
+                                                            ->get();
 
                                     $simple_products = $s_product
-                                    ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                    ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                    ->whereIn('brand_id', $brand_names)
-                                    ->where('subcategory_id', $sid);
+                                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                        ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                        ->whereIn('brand_id', $brand_names)
+                                                        ->where('subcategory_id', $sid);
                                 }
 
                                 foreach ($all_brands_products as $pro) {
@@ -1777,28 +1780,30 @@ class MainController extends Controller
                                 if ($featured == 1) {
 
                                     $tag_products = $products
-                                        ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                        ->where('tags', 'LIKE', '%' . $search . '%')
-                                        ->where('featured', '=', '1')
-                                        ->where('child', $sid)->get();
+                                                    ->orWhere('name', 'LIKE', '%' . $search . '%')
+                                                    ->orWhere('tags', 'LIKE', '%' . $search . '%')
+                                                    ->where('featured', '=', '1')
+                                                    ->where('child', $sid)
+                                                    ->get();
 
                                     $simple_products = $s_product
-                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                        ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                        ->where('featured', '1')
-                                        ->where('subcategory_id', $sid);
+                                                    ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                    ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                    ->where('featured', '1')
+                                                    ->where('subcategory_id', $sid);
 
                                 } else {
 
                                     $tag_products = $products
-                                        ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                        ->where('tags', 'LIKE', '%' . $search . '%')
-                                        ->where('child', $sid)->get();
+                                                    ->orWhere('name', 'LIKE', '%' . $search . '%')
+                                                    ->orWhere('tags', 'LIKE', '%' . $search . '%')
+                                                    ->where('child', $sid)
+                                                    ->get();
 
                                     $simple_products = $s_product
-                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                        ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                        ->where('subcategory_id', $sid);
+                                                    ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                    ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                    ->where('subcategory_id', $sid);
                                 }
 
                                 foreach ($tag_products as $pro) {
@@ -1855,28 +1860,28 @@ class MainController extends Controller
                                 if ($featured == 1) {
                                     $tag_products = $products
                                                     ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                                    ->where('tags', 'LIKE', '%' . $search . '%')
+                                                    ->orWhere('tags', 'LIKE', '%' . $search . '%')
                                                     ->where('featured', '=', '1')
                                                     ->where('child', $sid)
                                                     ->get();
 
                                     $simple_products = $s_product
-                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                        ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                        ->where('featured', 1)
-                                        ->where('subcategory_id', $sid);
+                                                    ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                    ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                    ->where('featured', 1)
+                                                    ->where('subcategory_id', $sid);
 
                                 } else {
                                     $tag_products = $products
-                                            ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                            ->where('tags', 'LIKE', '%' . $search . '%')
-                                            ->where('child', $sid)
-                                            ->get();
+                                                    ->orWhere('name', 'LIKE', '%' . $search . '%')
+                                                    ->orWhere('tags', 'LIKE', '%' . $search . '%')
+                                                    ->where('child', $sid)
+                                                    ->get();
 
                                     $simple_products = $s_product
-                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                        ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                        ->where('subcategory_id', $sid);
+                                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                        ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                        ->where('subcategory_id', $sid);
                                 }
                             }
 
@@ -1944,7 +1949,8 @@ class MainController extends Controller
                                 if ($featured == 1) {
                                     $all_brands_products = $products
                                                             ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                                            ->where('tags', 'LIKE', '%' . $search . '%')->whereIn('brand_id', $brand_names)
+                                                            ->orWhere('tags', 'LIKE', '%' . $search . '%')
+                                                            ->whereIn('brand_id', $brand_names)
                                                             ->where('featured', '=', '1')
                                                             ->orWhereJsonContains('other_cats', request()->catID)
                                                             ->where('category_id', $catid)
@@ -1953,29 +1959,29 @@ class MainController extends Controller
                                     $featured_pros = $all_brands_products;
 
                                     $simple_products = $s_product
-                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                        ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                        ->whereIn('brand_id', $brand_names)
-                                        ->where('featured', '1')
-                                        ->orWhereJsonContains('other_cats', request()->catID)
-                                        ->where('category_id', $catid);
+                                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                        ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                        ->whereIn('brand_id', $brand_names)
+                                                        ->where('featured', '1')
+                                                        ->orWhereJsonContains('other_cats', request()->catID)
+                                                        ->where('category_id', $catid);
 
                                 } else {
 
                                     $all_brands_products = $products
-                                    ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                    ->where('tags', 'LIKE', '%' . $search . '%')
-                                    ->whereIn('brand_id', $brand_names)
-                                    ->orWhereJsonContains('other_cats', request()->catID)
-                                    ->where('category_id', $catid)
-                                    ->get();
+                                                            ->orWhere('name', 'LIKE', '%' . $search . '%')
+                                                            ->orWhere('tags', 'LIKE', '%' . $search . '%')
+                                                            ->whereIn('brand_id', $brand_names)
+                                                            ->orWhereJsonContains('other_cats', request()->catID)
+                                                            ->where('category_id', $catid)
+                                                            ->get();
 
                                     $simple_products = $s_product
-                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                        ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                        ->whereIn('brand_id', $brand_names)
-                                        ->orWhereJsonContains('other_cats', request()->catID)
-                                        ->where('category_id', $catid);
+                                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                        ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                        ->whereIn('brand_id', $brand_names)
+                                                        ->orWhereJsonContains('other_cats', request()->catID)
+                                                        ->where('category_id', $catid);
                                 }
 
                                 if ($vararray != null) {
@@ -1984,36 +1990,36 @@ class MainController extends Controller
 
                                         $all_brands_products = $products
                                                                 ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                                                ->where('tags', 'LIKE', '%' . $search . '%')->whereIn('brand_id', $brand_names)
+                                                                ->orWhere('tags', 'LIKE', '%' . $search . '%')->whereIn('brand_id', $brand_names)
                                                                 ->where('featured', '=', '1')
                                                                 ->orWhereJsonContains('other_cats', request()->catID)
                                                                 ->where('category_id', $catid)
                                                                 ->get();
 
                                         $simple_products = $s_product
-                                            ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                            ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                            ->whereIn('brand_id', $brand_names)
-                                            ->where('featured', '1')
-                                            ->orWhereJsonContains('other_cats', request()->catID)
-                                            ->where('category_id', $catid);
+                                                            ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                            ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                            ->whereIn('brand_id', $brand_names)
+                                                            ->where('featured', '1')
+                                                            ->orWhereJsonContains('other_cats', request()->catID)
+                                                            ->where('category_id', $catid);
 
                                     } else {
 
                                         $all_brands_products = $products
-                                        ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                        ->where('tags', 'LIKE', '%' . $search . '%')
-                                        ->whereIn('brand_id', $brand_names)
-                                        ->orWhereJsonContains('other_cats', request()->catID)
-                                        ->where('category_id', $catid)
-                                        ->get();
+                                                                ->orWhere('name', 'LIKE', '%' . $search . '%')
+                                                                ->orWhere('tags', 'LIKE', '%' . $search . '%')
+                                                                ->whereIn('brand_id', $brand_names)
+                                                                ->orWhereJsonContains('other_cats', request()->catID)
+                                                                ->where('category_id', $catid)
+                                                                ->get();
 
                                         $simple_products = $s_product
-                                            ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                            ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                            ->whereIn('brand_id', $brand_names)
-                                            ->orWhereJsonContains('other_cats', request()->catID)
-                                            ->where('category_id', $catid);
+                                                            ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                            ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                            ->whereIn('brand_id', $brand_names)
+                                                            ->orWhereJsonContains('other_cats', request()->catID)
+                                                            ->where('category_id', $catid);
 
                                     }
 
@@ -2071,19 +2077,19 @@ class MainController extends Controller
                                 } else {
 
                                     $all_brands_products = $products
-                                        ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                        ->where('tags', 'LIKE', '%' . $search . '%')
-                                        ->whereIn('brand_id', $brand_names)
-                                        ->orWhereJsonContains('other_cats', request()->catID)
-                                        ->where('category_id', $catid)
-                                        ->get();
+                                                            ->orWhere('name', 'LIKE', '%' . $search . '%')
+                                                            ->orWhere('tags', 'LIKE', '%' . $search . '%')
+                                                            ->whereIn('brand_id', $brand_names)
+                                                            ->orWhereJsonContains('other_cats', request()->catID)
+                                                            ->where('category_id', $catid)
+                                                            ->get();
 
                                     $simple_products = $s_product
-                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                        ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                        ->whereIn('brand_id', $brand_names)
-                                        ->orWhereJsonContains('other_cats', request()->catID)
-                                        ->where('category_id', $catid);
+                                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                        ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                        ->whereIn('brand_id', $brand_names)
+                                                        ->orWhereJsonContains('other_cats', request()->catID)
+                                                        ->where('category_id', $catid);
                                 }
 
                                 foreach ($all_brands_products as $pro) {
@@ -2119,33 +2125,33 @@ class MainController extends Controller
 
                                     $tag_products = $products
                                                     ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                                    ->where('tags', 'LIKE', '%' . $search . '%')
+                                                    ->orWhere('tags', 'LIKE', '%' . $search . '%')
                                                     ->where('featured', '=', '1')
                                                     ->orWhereJsonContains('other_cats', request()->catID)
                                                     ->where('category_id', $catid)
                                                     ->get();
 
                                     $simple_products = $s_product
-                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                        ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                        ->where('featured', 1)
-                                        ->orWhereJsonContains('other_cats', request()->catID)
-                                        ->where('category_id', $catid);
+                                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                        ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                        ->where('featured', 1)
+                                                        ->orWhereJsonContains('other_cats', request()->catID)
+                                                        ->where('category_id', $catid);
 
                                 } else {
 
                                     $tag_products = $products
-                                            ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                            ->where('tags', 'LIKE', '%' . $search . '%')
-                                            ->orWhereJsonContains('other_cats', request()->catID)
-                                            ->where('category_id', $catid)
-                                            ->get();
+                                                    ->orWhere('name', 'LIKE', '%' . $search . '%')
+                                                    ->orWhere('tags', 'LIKE', '%' . $search . '%')
+                                                    ->orWhereJsonContains('other_cats', request()->catID)
+                                                    ->where('category_id', $catid)
+                                                    ->get();
 
                                     $simple_products = $s_product
-                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                        ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                        ->orWhereJsonContains('other_cats', request()->catID)
-                                        ->where('category_id', $catid);
+                                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                        ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                        ->orWhereJsonContains('other_cats', request()->catID)
+                                                        ->where('category_id', $catid);
 
                                 }
 
@@ -2204,33 +2210,33 @@ class MainController extends Controller
                                 if ($featured == 1) {
 
                                     $featured_pros = $products
-                                        ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                        ->where('tags', 'LIKE', '%' . $search . '%')
-                                        ->where('featured', '=', '1')
-                                        ->orWhereJsonContains('other_cats', request()->catID)
-                                        ->where('category_id', $catid)->get();
+                                                    ->orWhere('name', 'LIKE', '%' . $search . '%')
+                                                    ->orWhere('tags', 'LIKE', '%' . $search . '%')
+                                                    ->where('featured', '=', '1')
+                                                    ->orWhereJsonContains('other_cats', request()->catID)
+                                                    ->where('category_id', $catid)->get();
 
                                     $tag_products = $featured_pros;
 
                                     $simple_products = $s_product
-                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                        ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                        ->where('featured', 1)
-                                        ->orWhereJsonContains('other_cats', request()->catID)
-                                        ->where('category_id', $catid);
+                                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                        ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                        ->where('featured', 1)
+                                                        ->orWhereJsonContains('other_cats', request()->catID)
+                                                        ->where('category_id', $catid);
 
                                 } else {
 
                                     $tag_products = $products
                                                     ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                                    ->where('tags', 'LIKE', '%' . $search . '%')
+                                                    ->orWhere('tags', 'LIKE', '%' . $search . '%')
                                                     ->orWhereJsonContains('other_cats', request()->catID)
                                                     ->where('category_id', $catid)
                                                     ->get();
 
                                     $simple_products = $s_product
                                                         ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                                        ->where('product_tags', 'LIKE', '%' . $search . '%')
+                                                        ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
                                                         ->orWhereJsonContains('other_cats', request()->catID)
                                                         ->where('category_id', $catid);
                                 }
@@ -2316,14 +2322,14 @@ class MainController extends Controller
 
                                 $all_brands_products = $products
                                                     ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                                    ->where('tags', 'LIKE', '%' . $search . '%')
+                                                    ->orWhere('tags', 'LIKE', '%' . $search . '%')
                                                     ->whereIn('brand_id', $brand_names)
                                                     ->where('featured', '=', '1')
                                                     ->where('grand_id', $chid)->get();
 
                                 $simple_products = $s_product
                                     ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                    ->where('product_tags', 'LIKE', '%' . $search . '%')
+                                    ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
                                     ->whereIn('brand_id', $brand_names)
                                     ->where('featured', 1)
                                     ->where('child_id', $chid);
@@ -2332,16 +2338,16 @@ class MainController extends Controller
 
                                 $all_brands_products = $products
                                                         ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                                        ->where('tags', 'LIKE', '%' . $search . '%')
+                                                        ->orWhere('tags', 'LIKE', '%' . $search . '%')
                                                         ->whereIn('brand_id', $brand_names)
                                                         ->where('grand_id', $chid)
                                                         ->get();
 
                                 $simple_products = $s_product
-                                    ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                    ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                    ->whereIn('brand_id', $brand_names)
-                                    ->where('child_id', $chid);
+                                                ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                ->whereIn('brand_id', $brand_names)
+                                                ->where('child_id', $chid);
 
                             }
 
@@ -2450,28 +2456,28 @@ class MainController extends Controller
 
                             $strings = $products
                                         ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                        ->where('tags', 'LIKE', '%' . $search . '%')
+                                        ->orWhere('tags', 'LIKE', '%' . $search . '%')
                                         ->where('featured', '=', '1')
                                         ->where('grand_id', $request->chid)
                                         ->get();
 
                             $simple_products = $s_product
-                                ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                ->where('featured', '1')
-                                ->where('child_id', $request->chid);
+                                            ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                            ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                            ->where('featured', '1')
+                                            ->where('child_id', $request->chid);
 
                         } else {
 
                             $strings = $products
                                         ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                        ->where('tags', 'LIKE', '%' . $search . '%')
+                                        ->orWhere('tags', 'LIKE', '%' . $search . '%')
                                         ->where('grand_id', $request->chid)
                                         ->get();
 
                             $simple_products = $s_product
                                                 ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                                ->where('product_tags', 'LIKE', '%' . $search . '%')
+                                                ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
                                                 ->where('child_id', $request->chid);
                         }
 
@@ -2591,7 +2597,7 @@ class MainController extends Controller
 
                                     $all_brands_products = $products
                                             ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                            ->where('tags', 'LIKE', '%' . $search . '%')
+                                            ->orWhere('tags', 'LIKE', '%' . $search . '%')
                                             ->whereIn('brand_id', $brand_names)
                                             ->where('featured', '=', '1')
                                             ->where('child', $sid)
@@ -2599,7 +2605,7 @@ class MainController extends Controller
 
                                     $simple_products = $s_product
                                         ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                        ->where('product_tags', 'LIKE', '%' . $search . '%')
+                                        ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
                                         ->whereIn('brand_id', $brand_names)
                                         ->where('featured', '=', '1')
                                         ->where('subcategory_id', $sid);
@@ -2607,13 +2613,13 @@ class MainController extends Controller
                                 } else {
                                     $all_brands_products = $products
                                                             ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                                            ->where('tags', 'LIKE', '%' . $search . '%')->whereIn('brand_id', $brand_names)
+                                                            ->orWhere('tags', 'LIKE', '%' . $search . '%')->whereIn('brand_id', $brand_names)
                                                             ->where('child', $sid)
                                                             ->get();
 
                                     $simple_products = $s_product
                                         ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                        ->where('product_tags', 'LIKE', '%' . $search . '%')
+                                        ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
                                         ->whereIn('brand_id', $brand_names)
                                         ->where('subcategory_id', $sid);
                                 }
@@ -2725,27 +2731,27 @@ class MainController extends Controller
                             if ($featured == 1) {
                                 $strings = $products
                                             ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                            ->where('tags', 'LIKE', '%' . $search . '%')
+                                            ->orWhere('tags', 'LIKE', '%' . $search . '%')
                                             ->where('featured', '=', '1')
                                             ->where('child', $sid)
                                             ->get();
 
                                 $simple_products = $s_product
                                     ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                    ->where('product_tags', 'LIKE', '%' . $search . '%')
+                                    ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
                                     ->where('featured', '=', '1')
                                     ->where('subcategory_id', $sid);
 
                             } else {
                                 $strings = $products
                                             ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                            ->where('tags', 'LIKE', '%' . $search . '%')
+                                            ->orWhere('tags', 'LIKE', '%' . $search . '%')
                                             ->where('child', $sid)
                                             ->get();
 
                                 $simple_products = $s_product
                                     ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                    ->where('product_tags', 'LIKE', '%' . $search . '%')
+                                    ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
                                     ->where('subcategory_id', $sid);
 
                             }
@@ -2851,7 +2857,7 @@ class MainController extends Controller
                                 if ($featured == 1) {
                                     $all_brands_products = $products
                                                             ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                                            ->where('tags', 'LIKE', '%' . $search . '%')->whereIn('brand_id', $brand_names)
+                                                            ->orWhere('tags', 'LIKE', '%' . $search . '%')->whereIn('brand_id', $brand_names)
                                                             ->where('featured', '=', '1')
                                                             ->orWhereJsonContains('other_cats', request()->catID)
                                                             ->where('category_id', $catid)
@@ -2859,7 +2865,7 @@ class MainController extends Controller
 
                                     $simple_products = $s_product
                                         ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                        ->where('product_tags', 'LIKE', '%' . $search . '%')
+                                        ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
                                         ->whereIn('brand_id', $brand_names)
                                         ->where('featured', '=', '1')
                                         ->orWhereJsonContains('other_cats', request()->catID)
@@ -2869,7 +2875,7 @@ class MainController extends Controller
 
                                     $all_brands_products = $products
                                             ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                            ->where('tags', 'LIKE', '%' . $search . '%')
+                                            ->orWhere('tags', 'LIKE', '%' . $search . '%')
                                             ->whereIn('brand_id', $brand_names)
                                             ->orWhereJsonContains('other_cats', request()->catID)
                                             ->where('category_id', $catid)
@@ -2877,7 +2883,7 @@ class MainController extends Controller
 
                                     $simple_products = $s_product
                                         ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                        ->where('product_tags', 'LIKE', '%' . $search . '%')
+                                        ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
                                         ->whereIn('brand_id', $brand_names)
                                         ->orWhereJsonContains('other_cats', request()->catID)
                                         ->where('category_id', $catid);
@@ -2991,7 +2997,7 @@ class MainController extends Controller
 
                                 $strings = $products
                                             ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                            ->where('tags', 'LIKE', '%' . $search . '%')
+                                            ->orWhere('tags', 'LIKE', '%' . $search . '%')
                                             ->where('featured', '=', '1')
                                             ->orWhereJsonContains('other_cats', request()->catID)
                                             ->where('category_id', $catid)
@@ -2999,7 +3005,7 @@ class MainController extends Controller
 
                                 $simple_products = $s_product
                                         ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                        ->where('product_tags', 'LIKE', '%' . $search . '%')
+                                        ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
                                         ->where('featured', '=', '1')
                                         ->orWhereJsonContains('other_cats', request()->catID)
                                         ->where('category_id', $catid);
@@ -3007,14 +3013,14 @@ class MainController extends Controller
                             } else {
                                 $strings = $products
                                             ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                            ->where('tags', 'LIKE', '%' . $search . '%')
+                                            ->orWhere('tags', 'LIKE', '%' . $search . '%')
                                             ->orWhereJsonContains('other_cats', request()->catID)
                                             ->where('category_id', $catid)
                                             ->get();
 
                                 $simple_products = $s_product
                                                     ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                                    ->where('product_tags', 'LIKE', '%' . $search . '%')
+                                                    ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
                                                     ->orWhereJsonContains('other_cats', request()->catID)
                                                     ->where('category_id', $catid);
                             }
@@ -3508,11 +3514,13 @@ class MainController extends Controller
 
                             if ($featured == 1) {
 
-                                $strings = $products->where('featured', '=', '1')
-                                    ->where('child', $sid)->get();
+                                $strings = $products
+                                            ->where('featured', '=', '1')
+                                            ->where('child', $sid)->get();
 
-                                $simple_products = $s_product->where('featured', '=', '1')
-                                    ->where('subcategory_id', $sid);
+                                $simple_products = $s_product
+                                                    ->where('featured', '=', '1')
+                                                    ->where('subcategory_id', $sid);
 
                             } else {
 
@@ -3773,11 +3781,13 @@ class MainController extends Controller
 
                             } else {
 
-                                $strings = $products->where('category_id', $catid)->orWhereJsonContains('other_cats', request()->catID)->get();
+                                $strings = $products->where('category_id', $catid)
+                                            ->orWhereJsonContains('other_cats', request()->catID)
+                                            ->get();
 
                                 $simple_products = $s_product
-                                    ->orWhereJsonContains('other_cats', request()->catID)
-                                    ->where('category_id', $catid);
+                                                    ->orWhereJsonContains('other_cats', request()->catID)
+                                                    ->where('category_id', $catid);
                             }
 
                             foreach ($request->tag as $url) {
@@ -3887,8 +3897,10 @@ class MainController extends Controller
 
                             if ($featured == 1) {
 
-                                $all_brands_products = $products->whereIn('brand_id', $brand_names)->where('featured', '=', '1')
-                                    ->where('grand_id', $chid)->get();
+                                $all_brands_products = $products
+                                                        ->whereIn('brand_id', $brand_names)->where('featured', '=', '1')
+                                                        ->where('grand_id', $chid)
+                                                        ->get();
 
                                 $simple_products = $s_product
                                     ->whereIn('brand_id', $brand_names)
@@ -4950,17 +4962,17 @@ class MainController extends Controller
                             if ($featured == 1) {
 
                                 $all_brands_products = $products->orWhere('name', 'LIKE', '%' . $search . '%')
-                                                        ->where('tags', 'LIKE', '%' . $search . '%')
-                                                        ->whereIn('brand_id', $brand_names)
-                                                        ->where('featured', '=', '1')
-                                                        ->where('grand_id', $chid)
-                                                        ->get();
+                                                                ->orWhere('tags', 'LIKE', '%' . $search . '%')
+                                                                ->whereIn('brand_id', $brand_names)
+                                                                ->where('featured', '=', '1')
+                                                                ->where('grand_id', $chid)
+                                                                ->get();
 
                                 $simple_products =  $s_product->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                                    ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                                    ->whereIn('brand_id', $brand_names)
-                                                    ->where('featured', '=', '1')
-                                                    ->where('child_id', $chid);
+                                                                ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                                ->whereIn('brand_id', $brand_names)
+                                                                ->where('featured', '=', '1')
+                                                                ->where('child_id', $chid);
 
                                 $testingarr = $all_brands_products;
 
@@ -4968,14 +4980,14 @@ class MainController extends Controller
 
                                 $all_brands_products = $products
                                         ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                        ->where('tags', 'LIKE', '%' . $search . '%')
+                                        ->orWhere('tags', 'LIKE', '%' . $search . '%')
                                         ->whereIn('brand_id', $brand_names)
                                         ->where('grand_id', $chid)
                                         ->get();
                                 
                                 $simple_products = $s_product
                                 ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                ->where('product_tags', 'LIKE', '%' . $search . '%')
+                                ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
                                 ->whereIn('brand_id', $brand_names)
                                 ->where('child_id', $chid);
 
@@ -5048,28 +5060,28 @@ class MainController extends Controller
 
                                 $tag_products = $products
                                                 ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                                ->where('tags', 'LIKE', '%' . $search . '%')
+                                                ->orWhere('tags', 'LIKE', '%' . $search . '%')
                                                 ->where('grand_id', $chid)->where('featured', '=', '1')
                                                 ->get();
 
                                 
                                 $simple_products = $s_product
-                                ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                ->where('featured', '=', '1')
-                                ->where('child_id', $chid);
+                                                    ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                    ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                    ->where('featured', '=', '1')
+                                                    ->where('child_id', $chid);
 
                             } else {
 
                                 $tag_products = $products
-                                ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                ->where('tags', 'LIKE', '%' . $search . '%')
-                                ->where('grand_id', $chid)->get();
+                                                ->orWhere('name', 'LIKE', '%' . $search . '%')
+                                                ->orWhere('tags', 'LIKE', '%' . $search . '%')
+                                                ->where('grand_id', $chid)->get();
 
                                 $simple_products = $s_product
-                                ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                ->where('child_id', $chid);
+                                                    ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                    ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                    ->where('child_id', $chid);
                             }
 
                             foreach ($tag_products as $pro) {
@@ -5126,14 +5138,14 @@ class MainController extends Controller
 
                                 $tag_products = $products
                                                 ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                                ->where('tags', 'LIKE', '%' . $search . '%')
+                                                ->orWhere('tags', 'LIKE', '%' . $search . '%')
                                                 ->where('grand_id', $chid)
                                                 ->where('featured', '1')
                                                 ->get();
 
                                                 $simple_products = $s_product
                                                 ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                                ->where('product_tags', 'LIKE', '%' . $search . '%')
+                                                ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
                                                 ->where('featured', '=', '1')
                                                 ->where('child_id', $chid);
 
@@ -5141,13 +5153,13 @@ class MainController extends Controller
 
                                 $tag_products = $products
                                                 ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                                ->where('tags', 'LIKE', '%' . $search . '%')
+                                                ->orWhere('tags', 'LIKE', '%' . $search . '%')
                                                 ->where('grand_id', $chid)
                                                 ->get();
 
                                 $simple_products = $s_product
                                 ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                ->where('product_tags', 'LIKE', '%' . $search . '%')
+                                ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
                                 ->where('child_id', $chid);
 
                             }
@@ -5164,12 +5176,14 @@ class MainController extends Controller
 
                                     $all_brands_products = $products
                                                             ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                                            ->where('tags', 'LIKE', '%' . $search . '%')->whereIn('brand_id', $brand_names)->where('featured', '=', '1')
+                                                            ->orWhere('tags', 'LIKE', '%' . $search . '%')
+                                                            ->whereIn('brand_id', $brand_names)
+                                                            ->where('featured', '=', '1')
                                                             ->where('child', $sid)->get();
 
                                     $simple_products = $s_product
                                         ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                        ->where('product_tags', 'LIKE', '%' . $search . '%')
+                                        ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
                                         ->whereIn('brand_id', $brand_names)
                                         ->where('featured', '=', '1')
                                         ->where('subcategory_id', $sid);
@@ -5178,13 +5192,13 @@ class MainController extends Controller
                                 } else {
                                     $all_brands_products = $products
                                                             ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                                            ->where('tags', 'LIKE', '%' . $search . '%')->whereIn('brand_id', $brand_names)
+                                                            ->orWhere('tags', 'LIKE', '%' . $search . '%')->whereIn('brand_id', $brand_names)
                                                             ->where('child', $sid)
                                                             ->get();
 
                                     $simple_products = $s_product
                                     ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                    ->where('product_tags', 'LIKE', '%' . $search . '%')
+                                    ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
                                     ->whereIn('brand_id', $brand_names)
                                     ->where('subcategory_id', $sid);
 
@@ -5257,28 +5271,28 @@ class MainController extends Controller
                                     
                                     $tag_products = $products
                                                     ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                                    ->where('tags', 'LIKE', '%' . $search . '%')
+                                                    ->orWhere('tags', 'LIKE', '%' . $search . '%')
                                                     ->where('child', $sid)
                                                     ->where('featured', '=', '1')
                                                     ->get();
 
                                     $simple_products = $s_product
-                                    ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                    ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                    ->where('featured', '=', '1')
-                                    ->where('subcategory_id', $sid);
+                                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                        ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                        ->where('featured', '=', '1')
+                                                        ->where('subcategory_id', $sid);
 
                                 } else {
                                     $tag_products = $products
                                                     ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                                    ->where('tags', 'LIKE', '%' . $search . '%')
+                                                    ->orWhere('tags', 'LIKE', '%' . $search . '%')
                                                     ->where('child', $sid)
                                                     ->get();
 
                                     $simple_products = $s_product
-                                    ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                    ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                    ->where('subcategory_id', $sid);
+                                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                        ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                        ->where('subcategory_id', $sid);
                                 }
 
                                 foreach ($tag_products as $pro) {
@@ -5336,26 +5350,26 @@ class MainController extends Controller
 
                                     $tag_products = $products
                                                     ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                                    ->where('tags', 'LIKE', '%' . $search . '%')
+                                                    ->orWhere('tags', 'LIKE', '%' . $search . '%')
                                                     ->where('child', $sid)->where('featured', '=', "1")
                                                     ->get();
 
                                     $featured_pros = $tag_products;
 
                                     $simple_products = $s_product
-                                    ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                    ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                    ->where('featured', '=', '1')
-                                    ->where('subcategory_id', $sid);
+                                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                        ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                        ->where('featured', '=', '1')
+                                                        ->where('subcategory_id', $sid);
 
                                 } else {
                                    
                                     $tag_products = $products->where('tags', 'LIKE', '%' . $search . '%')->orWhere('name', 'LIKE', '%' . $search . '%')->where('child', $sid)->get();
 
                                     $simple_products = $s_product
-                                    ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                    ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                    ->where('subcategory_id', $sid);
+                                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                        ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                        ->where('subcategory_id', $sid);
                                 }
                             }
 
@@ -5368,40 +5382,40 @@ class MainController extends Controller
                                 if ($featured == 1) {
 
                                     $all_brands_products = $products
-                                        ->where('tags', 'LIKE', '%' . $search . '%')
-                                        ->whereIn('brand_id', $brand_names)
-                                        ->where('featured', '=', '1')
-                                        ->orWhereJsonContains('other_cats', request()->category)
-                                        ->where('category_id', $catid)
-                                        ->get();
+                                                        ->where('tags', 'LIKE', '%' . $search . '%')
+                                                        ->whereIn('brand_id', $brand_names)
+                                                        ->where('featured', '=', '1')
+                                                        ->orWhereJsonContains('other_cats', request()->category)
+                                                        ->where('category_id', $catid)
+                                                        ->get();
 
                                     $testingarr = $all_brands_products;
 
                                     $simple_products = $s_product
-                                    ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                    ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                    ->where('featured', '=', '1')
-                                    ->whereIn('brand_id', $brand_names)
-                                    ->orWhereJsonContains('other_cats', request()->category)
-                                    ->where('category_id', $catid);
+                                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                        ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                        ->where('featured', '=', '1')
+                                                        ->whereIn('brand_id', $brand_names)
+                                                        ->orWhereJsonContains('other_cats', request()->category)
+                                                        ->where('category_id', $catid);
 
                                 } else {
 
                                     $all_brands_products = $products
-                                        ->where('tags', 'LIKE', '%' . $search . '%')
-                                        ->whereIn('brand_id', $brand_names)
-                                        ->orWhereJsonContains('other_cats', request()->category)
-                                        ->where('category_id', $catid)
-                                        ->get();
+                                                        ->where('tags', 'LIKE', '%' . $search . '%')
+                                                        ->whereIn('brand_id', $brand_names)
+                                                        ->orWhereJsonContains('other_cats', request()->category)
+                                                        ->where('category_id', $catid)
+                                                        ->get();
 
                                     $testingarr = $all_brands_products;
 
                                     $simple_products = $s_product
-                                    ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                    ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                    ->whereIn('brand_id', $brand_names)
-                                    ->orWhereJsonContains('other_cats', request()->category)
-                                    ->where('category_id', $catid);
+                                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                        ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                        ->whereIn('brand_id', $brand_names)
+                                                        ->orWhereJsonContains('other_cats', request()->category)
+                                                        ->where('category_id', $catid);
                                 }
 
                                 if ($varValue != null) {
@@ -5470,32 +5484,32 @@ class MainController extends Controller
 
                                     $tag_products = $products
                                                     ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                                    ->where('tags', 'LIKE', '%' . $search . '%')
+                                                    ->orWhere('tags', 'LIKE', '%' . $search . '%')
                                                     ->where('featured', '=', '1')
                                                     ->orWhereJsonContains('other_cats', request()->category)
                                                     ->where('category_id', $catid)
                                                     ->get();
 
                                     $simple_products = $s_product
-                                    ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                    ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                    ->where('featured', '=', '1')
-                                    ->orWhereJsonContains('other_cats', request()->category)
-                                    ->where('category_id', $catid);
+                                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                        ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                        ->where('featured', '=', '1')
+                                                        ->orWhereJsonContains('other_cats', request()->category)
+                                                        ->where('category_id', $catid);
 
                                 } else {
 
-                                    $tag_products = $products->where('tags', 'LIKE', '%' . $search . '%')
-                                                    ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                                    ->orWhereJsonContains('other_cats', request()->category)
-                                                    ->where('category_id', $catid)
-                                                    ->get();
+                                    $tag_products = $products->orWhere('tags', 'LIKE', '%' . $search . '%')
+                                                            ->orWhere('name', 'LIKE', '%' . $search . '%')
+                                                            ->orWhereJsonContains('other_cats', request()->category)
+                                                            ->where('category_id', $catid)
+                                                            ->get();
 
                                     $simple_products = $s_product
-                                    ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                    ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                    ->orWhereJsonContains('other_cats', request()->category)
-                                    ->where('category_id', $catid);
+                                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                        ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                        ->orWhereJsonContains('other_cats', request()->category)
+                                                        ->where('category_id', $catid);
                                 }
 
                                 foreach ($tag_products as $pro) {
@@ -5551,34 +5565,35 @@ class MainController extends Controller
 
                                 if ($featured == 1) {
 
-                                    $tag_products = $products->where('tags', 'LIKE', '%' . $search . '%')
-                                                                ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                                                ->where('category_id', $catid)
-                                                                ->orWhereJsonContains('other_cats', request()->category)
-                                                                ->where('featured', '=', '1')
-                                                                ->get();
+                                    $tag_products = $products
+                                                    ->orWhere('tags', 'LIKE', '%' . $search . '%')
+                                                    ->orWhere('name', 'LIKE', '%' . $search . '%')
+                                                    ->where('category_id', $catid)
+                                                    ->orWhereJsonContains('other_cats', request()->category)
+                                                    ->where('featured', '=', '1')
+                                                    ->get();
 
                                     $featured_pros = $tag_products;
 
                                     $simple_products = $s_product
                                                         ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                                        ->where('product_tags', 'LIKE', '%' . $search . '%')
+                                                        ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
                                                         ->where('featured', '=', '1')
                                                         ->orWhereJsonContains('other_cats', request()->category)
                                                         ->where('category_id', $catid);
 
                                 } else {
-                                    $tag_products = $products->where('tags', 'LIKE', '%' . $search . '%')
-                                                            ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                                            ->orWhereJsonContains('other_cats', request()->category)
-                                                            ->where('category_id', $catid)
-                                                            ->get();
+                                    $tag_products = $products->orWhere('tags', 'LIKE', '%' . $search . '%')
+                                                                ->orWhere('name', 'LIKE', '%' . $search . '%')
+                                                                ->orWhereJsonContains('other_cats', request()->category)
+                                                                ->where('category_id', $catid)
+                                                                ->get();
 
                                     $simple_products = $s_product
-                                    ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                    ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                    ->orWhereJsonContains('other_cats', request()->category)
-                                    ->where('category_id', $catid);
+                                                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                        ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                        ->orWhereJsonContains('other_cats', request()->category)
+                                                        ->where('category_id', $catid);
                                 }
 
                             }
@@ -5607,7 +5622,7 @@ class MainController extends Controller
 
                             $all_brands_products = $products
                             ->orWhere('name', 'LIKE', '%' . $search . '%')
-                            ->where('tags', 'LIKE', '%' . $search . '%')
+                            ->orWhere('tags', 'LIKE', '%' . $search . '%')
                             ->whereIn('brand_id', $brand_names)
                             ->where('featured', '=', '1')
                             ->where('grand_id', $chid)
@@ -5615,7 +5630,7 @@ class MainController extends Controller
 
                             $simple_products = $s_product
                             ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                            ->where('product_tags', 'LIKE', '%' . $search . '%')
+                            ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
                             ->where('featured', '=', '1')
                             ->whereIn('brand_id', $brand_names)
                             ->where('grand_id', $chid);
@@ -5624,14 +5639,14 @@ class MainController extends Controller
 
                             $all_brands_products = $products
                             ->orWhere('name', 'LIKE', '%' . $search . '%')
-                            ->where('tags', 'LIKE', '%' . $search . '%')
+                            ->orWhere('tags', 'LIKE', '%' . $search . '%')
                             ->whereIn('brand_id', $brand_names)
                             ->where('grand_id', $chid)
                             ->get();
 
                             $simple_products = $s_product
                             ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                            ->where('product_tags', 'LIKE', '%' . $search . '%')
+                            ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
                             ->whereIn('brand_id', $brand_names)
                             ->where('grand_id', $chid);
 
@@ -5724,25 +5739,28 @@ class MainController extends Controller
                     if ($featured == 1) {
                         $tag_products = $products
                         ->orWhere('name', 'LIKE', '%' . $search . '%')
-                        ->where('tags', 'LIKE', '%' . $search . '%')
+                        ->orWhere('tags', 'LIKE', '%' . $search . '%')
                         ->where('featured', '=', '1')
                         ->where('grand_id', $request->chid)
                         ->get();
 
                         $simple_products = $s_product
                         ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                        ->where('product_tags', 'LIKE', '%' . $search . '%')
+                        ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
                         ->where('featured', '1')
                         ->where('grand_id', $request->chid);
 
                     } else {
-                        $tag_products = $products->where('tags', 'LIKE', '%' . $search . '%')->orWhere('name', 'LIKE', '%' . $search . '%')->where('grand_id', $request->chid)
-                            ->get();
+                        $tag_products = $products
+                                        ->orWhere('tags', 'LIKE', '%' . $search . '%')
+                                        ->orWhere('name', 'LIKE', '%' . $search . '%')
+                                        ->where('grand_id', $request->chid)
+                                        ->get();
 
                         $simple_products = $s_product
-                        ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                        ->where('product_tags', 'LIKE', '%' . $search . '%')
-                        ->where('grand_id', $request->chid);
+                                            ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                            ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                            ->where('grand_id', $request->chid);
                     }
 
                     $all_tags = explode(',', $request->tag);
@@ -5834,7 +5852,7 @@ class MainController extends Controller
                             if ($featured == 1) {
                                 $all_brands_products = $products
                                 ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                ->where('tags', 'LIKE', '%' . $search . '%')
+                                ->orWhere('tags', 'LIKE', '%' . $search . '%')
                                 ->whereIn('brand_id', $brand_names)
                                 ->where('featured', '=', '1')
                                 ->where('child', $sid)
@@ -5842,7 +5860,7 @@ class MainController extends Controller
 
                                 $simple_products = $s_product
                                 ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                ->where('product_tags', 'LIKE', '%' . $search . '%')
+                                ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
                                 ->whereIn('brand_id', $brand_names)
                                 ->where('featured', '1')
                                 ->where('subcategory_id', $sid);
@@ -5851,14 +5869,14 @@ class MainController extends Controller
 
                                 $all_brands_products = $products
                                 ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                ->where('tags', 'LIKE', '%' . $search . '%')
+                                ->orWhere('tags', 'LIKE', '%' . $search . '%')
                                 ->whereIn('brand_id', $brand_names)
                                 ->where('child', $sid)
                                 ->get();
 
                                 $simple_products = $s_product
                                 ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                ->where('product_tags', 'LIKE', '%' . $search . '%')
+                                ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
                                 ->whereIn('brand_id', $brand_names)
                                 ->where('subcategory_id', $sid);
                             }
@@ -5949,14 +5967,14 @@ class MainController extends Controller
 
                             $tag_products = $products
                             ->orWhere('name', 'LIKE', '%' . $search . '%')
-                            ->where('tags', 'LIKE', '%' . $search . '%')
+                            ->orWhere('tags', 'LIKE', '%' . $search . '%')
                             ->where('child', $sid)
                             ->where('featured', '=', '1')
                             ->get();
 
                             $simple_products = $s_product
                             ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                            ->where('product_tags', 'LIKE', '%' . $search . '%')
+                            ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
                             ->where('featured', '1')
                             ->where('subcategory_id', $sid);
 
@@ -5965,7 +5983,7 @@ class MainController extends Controller
 
                             $simple_products = $s_product
                             ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                            ->where('product_tags', 'LIKE', '%' . $search . '%')
+                            ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
                             ->where('subcategory_id', $sid);
                         }
 
@@ -6059,26 +6077,27 @@ class MainController extends Controller
                             if ($featured == 1) {
 
                                 $all_brands_products = $products
-                                ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                ->where('tags', 'LIKE', '%' . $search . '%')
-                                ->whereIn('brand_id', $brand_names)
-                                ->where('featured', '=', '1')
-                                ->orWhereJsonContains('other_cats', request()->category)
-                                ->where('category_id', $catid)
-                                ->get();
+                                                    ->orWhere('name', 'LIKE', '%' . $search . '%')
+                                                    ->orWhere('tags', 'LIKE', '%' . $search . '%')
+                                                    ->whereIn('brand_id', $brand_names)
+                                                    ->where('featured', '=', '1')
+                                                    ->orWhereJsonContains('other_cats', request()->category)
+                                                    ->where('category_id', $catid)
+                                                    ->get();
 
                                 $simple_products = $s_product
-                                ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                ->whereIn('brand_id', $brand_names)
-                                ->where('featured', '1')
-                                ->orWhereJsonContains('other_cats', request()->category)
-                                ->where('category_id', $catid);
+                                                    ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                    ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                    ->whereIn('brand_id', $brand_names)
+                                                    ->where('featured', '1')
+                                                    ->orWhereJsonContains('other_cats', request()->category)
+                                                    ->where('category_id', $catid);
                                 
 
                             } else {
 
-                                $all_brands_products = $products->where('tags', 'LIKE', '%' . $search . '%')
+                                $all_brands_products = $products
+                                                        ->orWhere('tags', 'LIKE', '%' . $search . '%')
                                                         ->orWhere('name', 'LIKE', '%' . $search . '%')
                                                         ->whereIn('brand_id', $brand_names)
                                                         ->where('category_id', $catid)
@@ -6086,11 +6105,11 @@ class MainController extends Controller
                                                         ->get();
 
                                 $simple_products = $s_product
-                                ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                ->where('product_tags', 'LIKE', '%' . $search . '%')
-                                ->whereIn('brand_id', $brand_names)
-                                ->where('category_id', $catid)
-                                ->orWhereJsonContains('other_cats', request()->category);
+                                                    ->orWhere('product_name', 'LIKE', '%' . $search . '%')
+                                                    ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
+                                                    ->whereIn('brand_id', $brand_names)
+                                                    ->where('category_id', $catid)
+                                                    ->orWhereJsonContains('other_cats', request()->category);
                             }
 
                             $all_tags = explode(',', $request->tag);
@@ -6179,7 +6198,7 @@ class MainController extends Controller
 
                             $tag_products = $products
                                             ->orWhere('name', 'LIKE', '%' . $search . '%')
-                                            ->where('tags', 'LIKE', '%' . $search . '%')
+                                            ->orWhere('tags', 'LIKE', '%' . $search . '%')
                                             ->where('featured', '=', "1")
                                             ->orWhereJsonContains('other_cats', request()->category)
                                             ->where('category_id', '=', $catid)
@@ -6187,7 +6206,7 @@ class MainController extends Controller
 
                             $simple_products = $s_product
                                                 ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                                ->where('product_tags', 'LIKE', '%' . $search . '%')
+                                                ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
                                                 ->where('featured', '1')
                                                 ->orWhereJsonContains('other_cats', request()->category)
                                                 ->where('category_id', $catid);
@@ -6195,7 +6214,7 @@ class MainController extends Controller
 
                         } else {
 
-                            $tag_products = $products->where('tags', 'LIKE', '%' . $search . '%')
+                            $tag_products = $products->orWhere('tags', 'LIKE', '%' . $search . '%')
                                                     ->orWhere('name', 'LIKE', '%' . $search . '%')
                                                     ->where('category_id', $catid)
                                                     ->orWhereJsonContains('other_cats', request()->category)
@@ -6203,7 +6222,7 @@ class MainController extends Controller
 
                             $simple_products = $s_product
                                 ->orWhere('product_name', 'LIKE', '%' . $search . '%')
-                                ->where('product_tags', 'LIKE', '%' . $search . '%')
+                                ->orWhere('product_tags', 'LIKE', '%' . $search . '%')
                                 ->where('category_id', $catid)
                                 ->orWhereJsonContains('other_cats', request()->category);
                         }
@@ -6306,26 +6325,26 @@ class MainController extends Controller
                         if ($featured == 1) {
 
                             $all_brands_products = $products
-                            ->whereIn('brand_id', $brand_names)
-                            ->where('featured', '=', '1')
-                            ->where('grand_id', $chid)
-                            ->get();
+                                                ->whereIn('brand_id', $brand_names)
+                                                ->where('featured', '=', '1')
+                                                ->where('grand_id', $chid)
+                                                ->get();
 
                             $simple_products = $s_product
-                            ->whereIn('brand_id', $brand_names)
-                            ->where('featured', '1')
-                            ->where('grand_id', $chid);
+                                            ->whereIn('brand_id', $brand_names)
+                                            ->where('featured', '1')
+                                            ->where('grand_id', $chid);
 
                         } else {
 
                             $all_brands_products = $products
-                            ->whereIn('brand_id', $brand_names)
-                            ->where('grand_id', $chid)
-                            ->get();
+                                                    ->whereIn('brand_id', $brand_names)
+                                                    ->where('grand_id', $chid)
+                                                    ->get();
 
                             $simple_products = $s_product
-                            ->whereIn('brand_id', $brand_names)
-                            ->where('grand_id', $chid);
+                                                ->whereIn('brand_id', $brand_names)
+                                                ->where('grand_id', $chid);
 
                         }
 
@@ -6413,8 +6432,8 @@ class MainController extends Controller
 
                     if ($featured == 1) {
                         $tag_products = $products->where('featured', '=', '1')
-                            ->where('grand_id', $request->chid)
-                            ->get();
+                                        ->where('grand_id', $request->chid)
+                                        ->get();
 
                         $simple_products = $s_product
                         ->where('featured', '1')
@@ -6835,9 +6854,9 @@ class MainController extends Controller
                                             ->get();
 
                             $simple_products = $s_product
-                            ->where('featured','1')
-                            ->orWhereJsonContains('other_cats', request()->category)
-                            ->where('category_id', $catid);
+                                                ->where('featured','1')
+                                                ->orWhereJsonContains('other_cats', request()->category)
+                                                ->where('category_id', $catid);
                             
 
                         } else {

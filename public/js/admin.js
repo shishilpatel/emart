@@ -31,8 +31,7 @@ $(function () {
         }
       },
       'csvHtml5',
-      'excelHtml5',
-      'colvis',
+      'excelHtml5'
     ],
   
     'deferRender': true,

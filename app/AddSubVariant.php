@@ -44,4 +44,8 @@ class AddSubVariant extends Model
         return $this->hasMany('App\FlashSaleItem','product_id');
     }
 
+    public function addedInWish(){
+        return $this->hasMany(Wishlist::class,'pro_id');
+    }
+
 }

@@ -35089,3 +35089,19 @@ table.focus-on tfoot tr.focused td {
 .object-fit{
   object-fit: scale-down !important;
 }
+
+.form-control::placeholder{
+  color: #959ca6;
+}
+
+.form-control{
+  color: #495057;
+}
+
+.form-control,.select2, .custom-file-label, .input-group-text{
+  border: 1px solid #ccd3e8;
+}
+
+.select2-container .select2-selection--single .select2-selection__rendered{
+  color : #444;
+}

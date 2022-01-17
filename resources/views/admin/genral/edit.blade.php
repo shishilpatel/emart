@@ -722,7 +722,10 @@
 
   $(".midia-toggle").midia({
 		base_url: '{{url('')}}',
-    directory_name : 'logo'
+    directory_name : 'logo',
+    dropzone : {
+      acceptedFiles: '.jpg,.png,.jpeg,.webp,.bmp,.gif'
+    }
 	});
 </script>
 @endsection

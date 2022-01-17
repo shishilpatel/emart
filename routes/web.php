@@ -8,12 +8,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use JoeDixon\Translation\Http\Controllers\LanguageController;
 use JoeDixon\Translation\Translation;
+use Spatie\Permission\Models\Role;
 
 /** Development Routes */
 
 Route::get('/phpinfo',function(){
     return phpinfo();
 });
+
 
 
 /** Should Removed in Production mode -- start */

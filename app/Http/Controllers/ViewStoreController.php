@@ -18,12 +18,14 @@ class ViewStoreController extends Controller
 
         require_once 'price.php';
 
-        $store = Store::whereHas('products',function($q){
+        $store = Store::where('name',$title)
+                ->where('uuid','=',$uuid)
+                ->orWhereHas('simple_products',function($q){
                     return $q->where('status','=','1');
                 })
-                ->whereHas('products.subvariants')
-                ->where('name',$title)
-                ->where('uuid','=',$uuid)
+                ->whereHas('products',function($q){
+                    return $q->where('status','=','1');
+                })
                 ->with(['products','simple_products','products.subvariants'])
                 ->first();
 

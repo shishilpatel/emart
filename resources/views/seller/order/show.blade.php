@@ -1,5 +1,8 @@
 @extends("admin.layouts.sellermastersoyuz")
-@section('title',{{ __('View order',['orderid' => $inv_cus->order_prefix.$order->order_id]) }})
+@section('title',__('View order',['orderid' => $inv_cus->order_prefix.$order->order_id]))
+@section('stylesheet')
+	<link rel="stylesheet" href="{{ url("/css/lightbox.min.css") }}">
+@endsection
 @section('body')
 
 @component('seller.components.breadcumb',['secondactive' => 'active'])
@@ -44,11 +47,11 @@
 					<!-- Check if manual payment done -->
 
 					@if($order->manual_payment == '1')
-					<div class="alert alert-info p-1">
+					<div class="alert alert-info p-3">
 						<i class="fa fa-info-circle"></i> {{__("This order is placed using")}}
 						{{ ucfirst($order->payment_method) }} {{__("method and purchase proof you can view")}} <a
 							href="{{ url('images/purchase_proof/'.$order->purchase_proof) }}" data-lightbox="image-1"
-							data-title="{{__("Purchase proof for")}} {{ $order->order_id }}">{{ __("here") }}</a>
+							data-title="{{__("Purchase proof for")}} {{ $order->order_id }}"> <b>{{ __("here") }}</b> </a>
 						{{__("and")}} {{__("after verify you can change the order status")}}.
 					</div>
 					@endif
@@ -628,6 +631,7 @@
 
 
 @section('custom-script')
+<script src='{{ url('js/lightbox.min.js') }}' type='text/javascript'></script>
 <script>
 	var url = @json(url('/update/orderstatus'));
 	var userrole = @json(auth()->user()->role_id);

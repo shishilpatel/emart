@@ -3,10 +3,16 @@
 namespace App\Http\Controllers\Api;
 
 use App\Address;
+use App\Allcity;
+use App\Allcountry;
+use App\Allstate;
 use App\BillingAddress;
 use App\Cart;
+use App\City;
 use App\Genral;
 use App\Http\Controllers\Controller;
+use App\Invoice;
+use App\Order;
 use App\Shipping;
 use App\ShippingWeight;
 use App\Store;
@@ -1044,6 +1050,172 @@ class OrderController extends Controller
         }
 
         return $this->orderReview($request);
+
+    }
+
+    public function listOrders(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+
+            $errors = $validator->errors();
+
+            if ($errors->first('secret')) {
+                return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
+            }
+        }
+
+        $invoice = Invoice::first();
+
+        $orders = Order::whereHas('shippingaddress')
+                    ->whereHas('user')
+                    ->where('user_id',auth()->id())
+                    ->orderBy('id','DESC')
+                    ->get()
+                    ->transform(function($order) use($invoice) {
+
+                        $item['id']             = $order->id;
+                        $item['order_id']       = $invoice->order_prefix.$order->order_id;
+                        $item['total_qty']      = $order->qty_total;
+                        $item['payment_method'] = $order->payment_method;
+                        $item['transaction_id'] = $order->transaction_id;
+                        $item['total_items']     = $order->invoices()->count();
+                        $item['currency']       = $order->paid_in_currency;
+                        
+                        $item['order_total']    = (float) sprintf("%.2f",($order->order_total - $order->shipping - $order->tax_amount - $order->gift_charge));
+                        $item['tax_amount']     = (float) $order->tax_amount;
+                        $item['shipping']       = (float) $order->shipping;
+                        $item['handlingcharge'] = (float) $order->handlingcharge;
+                        $item['gift_charge']    = (float) $order->gift_charge;
+                        $item['grand_total']    = (float) $order->order_total + $order->handlingcharge;
+
+                        return $item;
+
+                    });
+
+        return response()->json(['orders' => $orders,'status' => 'success'],200);
+
+    }
+
+    public function viewOrder(Request $request,$order_id){
+
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+
+            $errors = $validator->errors();
+
+            if ($errors->first('secret')) {
+                return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
+            }
+        }
+
+        $order = Order::whereHas('invoices')
+                ->whereHas('user')
+                ->whereHas('shippingaddress')
+                ->with(['shippingaddress'])
+                ->find($order_id);
+
+        if(!$order){
+            return response()->json([
+                'msg'    => "Order not found !",
+                'status' => 'fail'
+            ]);
+        }
+
+        $invoice_fix = Invoice::first();
+
+        $shipping_address = array(
+            "name"         =>  $order->shippingaddress->name,
+            "phone"        =>  $order->shippingaddress->phone,
+            "email"        =>  $order->shippingaddress->email,
+            "address"      =>  $order->shippingaddress->address,
+            "city"         =>  $order->shippingaddress->getcity->name ?? '-',
+            "state"        =>  $order->shippingaddress->getstate->name ?? '-',
+            "country"      =>  $order->shippingaddress->getCountry->nicename ?? '-',
+            "pin_code"     =>  $order->shippingaddress->pin_code,
+        );
+
+        $billing_address = array(
+            "name"         =>  $order->billing_address['firstname'],
+            "phone"        =>  $order->billing_address['mobile'],
+            "email"        =>  $order->billing_address['email'],
+            "address"      =>  $order->billing_address['address'],
+            "city"         =>  Allcity::find($order->billing_address['city']) ? Allcity::find($order->billing_address['city'])->name : '-',
+            "state"        =>  Allstate::find($order->billing_address['state']) ? Allstate::find($order->billing_address['state'])->name : '-',
+            "country"      =>  Allcountry::find($order->billing_address['country_id']) ? Allcountry::find($order->billing_address['country_id'])->nicename : '-',
+            "pin_code"     =>  $order->billing_address['pincode'],
+        );
+
+        $orderitems = array();
+
+        foreach($order->invoices as $invoice){
+
+            if(isset($invoice->variant) && isset($invoice->variant->products)){
+                $pname = $invoice->variant->products->getTranslations('name');
+            }else{
+                $pname = $invoice->simple_product->getTranslations('product_name');
+            }
+
+            if(isset($invoice->variant) && isset($invoice->variant->products)){
+                $image      = $invoice->variant->variantimages->main_image;
+                $thumbpath  = url('/variantimages/');
+            }else{
+                $image      = $invoice->simple_products->thumbnail;
+                $thumbpath  = url('/images/simple_products/');
+            }
+
+            $orderitems[] = array(
+                'invoice_no'        => $invoice_fix->prefix.$invoice->inv_no.$invoice_fix->postfix,
+                'qty'               => $invoice->qty,
+                'price'             => $invoice->price,
+                'igst'              => $invoice->igst,
+                'cgst'              => $invoice->cgst,
+                'sgst'              => $invoice->sgst,
+                'total_tax'         => (float) $invoice->tax_amount * $invoice->qty,
+                'product_name'      => $pname,
+                'product_thumb'     => $image,
+                'thumb_path'        => $thumbpath,
+                'shipping'          => $invoice->shipping,
+                'handlingcharge'    => $invoice->handlingcharge,
+                'gift_charge'       => $invoice->gift_charge,
+                'status'            => ucfirst($invoice->status),
+                'tracking_id'       => $invoice->tracking_id,
+                'courier_channel'   => $invoice->courier_channel,
+                'tracking_link'     => $invoice->tracking_link,
+                'exp_delivery_date' => $invoice->exp_delivery_date,
+                'cashback'          => $invoice->cashback
+            );
+
+        }
+
+        $order = array(
+            'id'                => (int) $order->id,
+            'total_qty'         => (int) $order->qty_total,
+            'order_id'          => $invoice_fix->order_prefix.$order->order_id,
+            'shipping_address'  => $shipping_address,
+            'billing_address'   => $billing_address,
+            'orderitems'        => $orderitems,
+            'transaction_id'    => $order->transaction_id,
+            'payment_method'    => $order->payment_method,
+            'currency'          => $order->paid_in_currency,
+            'subtotal'          => (float) sprintf("%.2f",($order->order_total - $order->shipping - $order->tax_amount - $order->gift_charge)),
+            'tax'               => (float) sprintf("%.2f",$order->tax_amount),
+            'shipping'          => (float) sprintf("%.2f",$order->shipping),
+            'handlingcharge'    => (float) sprintf("%.2f",$order->handlingcharge),
+            'gift_charge'       => (float) sprintf("%.2f",$order->gift_charge),
+            'grand_total'       => (float) $order->order_total + $order->handlingcharge,
+        );
+
+        return response()->json([
+            'order'     => $order,
+            'status'    => 'success'
+        ],200);
 
     }
 

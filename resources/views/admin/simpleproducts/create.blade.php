@@ -600,12 +600,18 @@
 
     $(".midia-toggle").midia({
         base_url: '{{url('')}}',
-        directory_name: 'simple_products'
+        directory_name: 'simple_products',
+        dropzone : {
+            acceptedFiles: '.jpg,.png,.jpeg,.webp,.bmp,.gif'
+        }
     });
 
     $(".file-toggle").midia({
         base_url: '{{url('')}}',
-        directory_name: 'product_files'
+        directory_name: 'product_files',
+        dropzone : {
+            acceptedFiles: '.jpg,.png,.jpeg,.webp,.bmp,.gif,.pdf,.docx,.doc'
+        }
     });
 </script>
 @endsection

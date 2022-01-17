@@ -1,5 +1,5 @@
 @extends('admin.layouts.sellermastersoyuz')
-@section('title',__('Show Return Order Detail # :order',['order' => $inv_cus->order_prefix$orderid]))
+@section('title',__('Show Return Order Detail # :order',['order' => $inv_cus->order_prefix.$orderid]))
 @section('title','Returned Orders |')
 
 @section('body')

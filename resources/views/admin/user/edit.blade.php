@@ -197,15 +197,17 @@
 
               </div>
 
-              @if(env('ENABLE_SELLER_SUBS_SYSTEM') == 1)
+              @if(in_array('Seller', auth()->user()->getRoleNames()->toArray()) && Module::has('SellerSubscription') && Module::find('sellersubscription')->isEnabled())
                 <div class="col-md-6">
                   <div class="form-group">
                     <label>{{ __('Select seller plan:') }}</label>
-                    <select name="seller_plan" class="form-control select2" data-placeholder="Please select plan" >
+                    <select name="seller_plan" class="form-control select2" data-placeholder="{{ __('Please select seller plan') }}" >
                       <option value="">{{ __('Please select seller plan') }}</option>
-                      @foreach ($plans as $plan)
-                          <option {{ isset($user->activeSubscription) && $user->activeSubscription->plan->id == $plan->id ? "selected" : "" }} value="{{ $plan->id }}"> {{ $plan->name }} ({{ $defCurrency->currency->symbol.$plan->price }})</option>
-                      @endforeach
+                      @if(isset($plans))
+                        @foreach ($plans as $plan)
+                            <option {{ isset($user->activeSubscription) && $user->activeSubscription->plan->id == $plan->id ? "selected" : "" }} value="{{ $plan->id }}"> {{ $plan->name }} ({{ $defCurrency->currency->symbol.$plan->price }})</option>
+                        @endforeach
+                      @endif
                     </select>
                   </div>
                 </div>

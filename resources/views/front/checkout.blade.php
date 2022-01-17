@@ -22,6 +22,8 @@
 \Session::forget('from-order-review-page');
 \Session::forget('from-pay-page');
 \Session::forget('re-verify');
+\Session::forget('indiantax');
+
 $per_shipping = 0;
 $tax_amount = 0;
 $total_tax_amount = 0;
@@ -699,8 +701,8 @@ $count = $cart_table->count();
                                                            }catch(\Exception $e){
                                                              
                                                              ?>
-                                     <i class="{{ session()->get('currency')['value'] }}"></i>
-                                     <?php
+                                                              <i class="{{ session()->get('currency')['value'] }}"></i>
+                                                              <?php
                                                                $after_tax_amount = 0;
                                                              break;
                                                            }
@@ -731,14 +733,20 @@ $count = $cart_table->count();
                                        @endif
    
                                      <!-- CGST + SGST Apply IF STORE ADDRESS STATE AND SHIPPING ADDRESS STATE WILL BE SAME -->
-                                     
+                                    
    
                                      @if($row->product->store->state['id'] == $selectedaddress->getstate->id)
                                        @php
+                                       
                                          $diviedtax = $after_tax_amount/2;
-                                         Session::forget('igst');
-                                         Session::push('indiantax', ['sgst' => $diviedtax*$row->qty, 'cgst' =>
-                                         $diviedtax*$row->qty]);
+
+                                          Session::forget('igst');
+
+                                          Session::push('indiantax', [
+                                            'sgst' => $diviedtax*$row->qty, 
+                                            'cgst' => $diviedtax*$row->qty
+                                          ]);
+
                                        @endphp
                                        {{ price_format($diviedtax) }} <b>[SGST]</b> &nbsp; | &nbsp;
                                          <i class="fa {{ Session::get('currency')['value'] }}"></i>
@@ -748,7 +756,7 @@ $count = $cart_table->count();
    
    
                                      @else
-                                     {{ price_format($after_tax_amount) }}
+                                      {{ price_format($after_tax_amount) }}
                                      @endif
    
                                      @endforeach
@@ -760,21 +768,23 @@ $count = $cart_table->count();
                                      <i class="fa {{ Session::get('currency')['value'] }}"></i>
                                      @if($row->product->vender_offer_price != 0)
    
-                                     @php
-                                       $p=100;
-                                       $taxrate_db = $row->product->tax_r;
-                                       $vp = $p+$taxrate_db;
-                                       $tamount = $row->product->offer_price/$vp*$taxrate_db;
-                                       $tamount = sprintf("%.2f",$tamount*$conversion_rate);
-                                     @endphp
+                                        @php
+                                          $p=100;
+                                          $taxrate_db = $row->product->tax_r;
+                                          $vp = $p+$taxrate_db;
+                                          $tamount = $row->product->offer_price/$vp*$taxrate_db;
+                                          $tamount = sprintf("%.2f",$tamount*$conversion_rate);
+                                        @endphp
+
                                      @else
-                                     @php
-                                       $p=100;
-                                       $taxrate_db = $row->product->tax_r;
-                                       $vp = $p+$taxrate_db;
-                                       $tamount = $row->product->price/$vp*$taxrate_db;
-                                       $tamount = sprintf("%.2f",$tamount*$conversion_rate);
-                                     @endphp
+
+                                        @php
+                                          $p=100;
+                                          $taxrate_db = $row->product->tax_r;
+                                          $vp = $p+$taxrate_db;
+                                          $tamount = $row->product->price/$vp*$taxrate_db;
+                                          $tamount = sprintf("%.2f",$tamount*$conversion_rate);
+                                        @endphp
    
                                      @endif
    
@@ -795,15 +805,22 @@ $count = $cart_table->count();
                                      @endif
    
                                      <!-- CGST + SGST Apply IF STORE ADDRESS STATE AND SHIPPING ADDRESS STATE WILL BE DIFFERENT -->
-   
+                                      
    
                                      @if($row->product->store->state['id'] == $selectedaddress->getstate->id)
                                        @php
+
                                          $diviedtax = $tamount/2;
+
                                          Session::forget('igst');
-                                         Session::push('indiantax', ['sgst' => $diviedtax*$row->qty, 'cgst' =>
-                                         $diviedtax*$row->qty]);
+
+                                          Session::push('indiantax', [
+                                            'sgst' => $diviedtax*$row->qty, 
+                                            'cgst' => $diviedtax*$row->qty
+                                          ]);
+
                                        @endphp
+
                                        {{ price_format($diviedtax) }} <b>[SGST]</b> &nbsp; | &nbsp;
                                        <i class="fa {{ Session::get('currency')['value'] }}"></i>
                                        {{ price_format($diviedtax) }} <b>[CGST]</b>
@@ -1722,6 +1739,12 @@ $count = $cart_table->count();
                     @if(config('senangpay.ENABLE') == 1 && Module::has('Senangpay') && Module::find('Senangpay')->isEnabled())
                       
                       @include("senangpay::front.list")
+
+                    @endif
+
+                    @if(config('onepay.ENABLE') == 1 && Module::has('Onepay') && Module::find('Onepay')->isEnabled())
+                      
+                      @include("onepay::front.list")
 
                     @endif
 
@@ -3360,6 +3383,12 @@ $count = $cart_table->count();
                     @if(config('senangpay.ENABLE') == 1 && Module::has('Senangpay') && Module::find('Senangpay')->isEnabled())
                       
                       @include("senangpay::front.tab")
+
+                    @endif
+
+                    @if(config('onepay.ENABLE') == 1 && Module::has('Onepay') && Module::find('Onepay')->isEnabled())
+                      
+                      @include("onepay::front.tab")
 
                     @endif
 

@@ -126,7 +126,7 @@
                     @endcan
                     <li class="{{ Nav::isResource('category') }} {{ Nav::isResource('subcategory') }}
                     {{ Nav::isResource('grandcategory') }}"">
-                      <a href="javaScript:void();"> {{__('Categories')}}
+                      <a href="javaScript:void();">{{__('Categories')}}
                         <i class="feather icon-chevron-right"></i>
                       </a>
                       <ul class="vertical-submenu">

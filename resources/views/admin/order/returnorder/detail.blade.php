@@ -1,5 +1,5 @@
 @extends('admin.layouts.master-soyuz')
-@section('title',__('Show Return Order Detail # :orderid | ',['orderid' => $inv_cus->order_prefix$orderid]))
+@section('title',__('Show Return Order Detail # :orderid | ',['orderid' => $inv_cus->order_prefix.$orderid]))
 @section('title','Returned Orders |')
 
 @section('body')

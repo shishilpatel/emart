@@ -1,5 +1,8 @@
 @extends("admin.layouts.sellermastersoyuz")
-@section('title',{{ __('Edit Order - #:orderid',['orderid' => $inv_cus->order_prefix$order->order_id]) }})
+@section('title',__('Edit Order - #:orderid',['orderid' => $inv_cus->order_prefix.$order->order_id]))
+@section('stylesheet')
+	<link rel="stylesheet" href="{{ url("/css/lightbox.min.css") }}">
+@endsection
 @section('body')
 
 @component('seller.components.breadcumb',['secondactive' => 'active'])
@@ -30,7 +33,7 @@
 					<a title="{{ __('Print Order') }}" href="{{ route('seller.print.order',$order->id) }}"
 						class="btn btn-primary-rgba float-right"><i class="fa fa-print"></i> {{__ ('Print') }}</a>
 
-					<h5 class="card-title">{{ __('Edit Order - #:orderid',['orderid' => $inv_cus->order_prefix$order->order_id]) }}</h5>
+					<h5 class="card-title">{{ __('Edit Order - #:orderid',['orderid' => $inv_cus->order_prefix.$order->order_id]) }}</h5>
 
 					
 
@@ -39,11 +42,11 @@
 				<div class="card-body">
 
 					@if($order->manual_payment == '1')
-						<div class="bg-success p-1 text-white rounded">
+						<div class="alert alert-info p-3">
 							<i class="fa fa-info-circle"></i> {{__("This order is placed using")}}
 							{{ ucfirst($order->payment_method) }} {{__("method and purchase proof you can view")}} <a
 								href="{{ url('images/purchase_proof/'.$order->purchase_proof) }}" data-lightbox="image-1"
-								data-title="{{__("Purchase proof for")}} {{ $order->order_id }}">{{ __("here") }}</a>
+								data-title="{{__("Purchase proof for")}} {{ $order->order_id }}"> <b>{{ __("here") }}</b> </a>
 							{{__("and")}} {{__("after verify you can change the order status")}}.
 						</div>
 					@endif
@@ -299,12 +302,12 @@
 								</small></b> @endif @if($invoice->simple_products)
 							{{ $invoice->simple_products->product_name }} @endif {{__('Customer has choosen Local Pickup.')}}
 							@if($invoice->status != 'delivered')
-							{{__("Estd Delivery date")}}: <span id="estddate{{ $invoice->id }}">
-								{{ $invoice->loc_deliv_date == '' ? {{__("Yet to update")}} : date('d-m-Y',strtotime($invoice->loc_deliv_date)) }}
+								{{__("Estd Delivery date")}}: <span id="estddate{{ $invoice->id }}">
+								{{ $invoice->loc_deliv_date == '' ? __("Yet to update") : date('d-m-Y',strtotime($invoice->loc_deliv_date)) }}
 
 								@else
-								{{__("Item Delivered On")}}: <span id="estddate{{ $invoice->id }}">
-									{{ $invoice->loc_deliv_date == '' ? {{__("Yet to update")}} : date('d-m-Y',strtotime($invoice->loc_deliv_date)) }}
+									{{ __("Item Delivered On") }} : <span id="estddate{{ $invoice->id }}">
+									{{ $invoice->loc_deliv_date == '' ? __("Yet to update") : date('d-m-Y',strtotime($invoice->loc_deliv_date)) }}
 									@endif
 								</span>
 						</div>
@@ -327,7 +330,7 @@
 									@endif
 
 									@if($invoice->simple_product)
-									{{ $invoice->simple_product->product_name }}
+										{{ $invoice->simple_product->product_name }}
 									@endif
 								</div>
 
@@ -867,6 +870,7 @@ $o->status !='refunded' && $o->variant->products->cancel_avl != 0)
 
 
 @section('custom-script')
+<script src='{{ url('js/lightbox.min.js') }}' type='text/javascript'></script>
 <script>
 	var url = @json(url('/update/orderstatus'));
 	var userrole = @json(auth()->user()->role_id);

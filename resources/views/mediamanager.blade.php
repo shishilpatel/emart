@@ -107,7 +107,10 @@
             inline: true,
             base_url: '{{url('')}}',
             title : 'Brand Media Manager',
-            directory_name : 'brand'
+            directory_name : 'brand',
+            dropzone : {
+              acceptedFiles: '.jpg,.png,.jpeg,.webp,.bmp,.gif,.pdf,.docx,.doc'
+            }
         });
 
         $("#media2").midia({
@@ -121,49 +124,70 @@
             inline: true,
             base_url: '{{url('')}}',
             title : 'Simple Products Media Manager',
-            directory_name : 'simple_products'
+            directory_name : 'simple_products',
+            dropzone : {
+              acceptedFiles: '.jpg,.png,.jpeg,.webp,.bmp,.gif,.pdf,.docx,.doc'
+            }
         });
 
         $("#media4").midia({
             inline: true,
             base_url: '{{url('')}}',
             title : 'Digital Product Files Media Manager',
-            directory_name : 'product_files'
+            directory_name : 'product_files',
+            dropzone : {
+              acceptedFiles: '.jpg,.png,.jpeg,.webp,.bmp,.gif,.pdf,.docx,.doc'
+            }
         });
 
         $("#media5").midia({
             inline: true,
             base_url: '{{url('')}}',
             title : 'Category Files Media Manager',
-            directory_name : 'category'
+            directory_name : 'category',
+            dropzone : {
+              acceptedFiles: '.jpg,.png,.jpeg,.webp,.bmp,.gif,.pdf,.docx,.doc'
+            }
         });
 
         $("#media6").midia({
             inline: true,
             base_url: '{{url('')}}',
             title : 'Subcategory Files Media Manager',
-            directory_name : 'subcategory'
+            directory_name : 'subcategory',
+            dropzone : {
+              acceptedFiles: '.jpg,.png,.jpeg,.webp,.bmp,.gif,.pdf,.docx,.doc'
+            }
         });
 
         $("#media7").midia({
             inline: true,
             base_url: '{{url('')}}',
             title : 'Blog Files Media Manager',
-            directory_name : 'blog'
+            directory_name : 'blog',
+            dropzone : {
+              acceptedFiles: '.jpg,.png,.jpeg,.webp,.bmp,.gif,.pdf,.docx,.doc'
+            }
         });
 
         $("#media8").midia({
             inline: true,
             base_url: '{{url('')}}',
             title : 'Manual Payment Files Media Manager',
-            directory_name : 'manual_payment'
+            directory_name : 'manual_payment',
+            dropzone : {
+              acceptedFiles: '.jpg,.png,.jpeg,.webp,.bmp,.gif,.pdf,.docx,.doc'
+            }
         });
 
         $("#media9").midia({
             inline: true,
             base_url: '{{url('')}}',
             title : 'Simple Products Gallery Files Media Manager',
-            directory_name : 'simple_products_gallery'
+            directory_name : 'simple_products_gallery',
+            dropzone : {
+              acceptedFiles: '.jpg,.png,.jpeg,.webp,.bmp,.gif,.pdf,.docx,.doc'
+            }
         });
     </script> 
   @endsection

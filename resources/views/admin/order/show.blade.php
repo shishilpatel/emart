@@ -577,8 +577,11 @@
 									<td></td>
 									<td></td>
 									<td><b>{{ __("Subtotal") }}</b></td>
-									<td><b><i
-												class="{{ $invoice->order->paid_in }}"></i>{{ round($order->order_total+$order->discount,2) }}</b>
+									<td>
+										<b>
+											<i class="{{ $invoice->order->paid_in }}"></i>
+											{{ round(($order->order_total+$order->discount) - $order->gift_charge,2) }}
+										</b>
 									</td>
 									<td></td>
 								</tr>

@@ -22,6 +22,7 @@ use App\Genral;
 use App\Grandcategory;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Controller;
+use App\Language;
 use App\Menu;
 use App\Page;
 use App\Product;
@@ -31,6 +32,7 @@ use App\SimpleProduct;
 use App\Slider;
 use App\SpecialOffer;
 use App\Subcategory;
+use App\TermsSettings;
 use App\Testimonial;
 use App\UserReview;
 use App\UserWallet;
@@ -100,7 +102,7 @@ class MainController extends Controller
             'logopath' => $response->logopath,
             'logo' => $response->logo,
             'current_lang' => app()->getLocale(),
-            'current_time' => date('Y-m-d H:i:s'),
+            'current_time' => now()->format('Y-m-d h:i:s'),
         );
         /** End */
 
@@ -186,10 +188,29 @@ class MainController extends Controller
 
 
         $flashdeals = array(
-            'sort' => 1,
-            'status' => Flashsale::count() ? true : false, // to be change dynamic 
-            'images' => Flashsale::select('background_image')->inRandomOrder()->get(),
+
+            'status' => Flashsale::count() ? true : false,
+            
+            'deals' => Flashsale::where('status','=','1')
+                ->where('start_date', '<=', now())
+                ->where('end_date', '>=', now())
+                ->inRandomOrder()
+                ->get()
+                ->transform(function($value){
+                
+                    $deal['title'] = $value->title;
+                    $deal['id'] = $value->id;
+                    $deal['start_time'] = $value->start_date;
+                    $deal['end_time'] = $value->end_date;
+                    $deal['background_image'] = $value->background_image;
+                    $deal['api_url'] = url('/api/view/deal/'.$value->id);
+                    
+                    return $deal;
+
+                }),
+
             'path'   => url('/images/flashdeals')
+
         );
 
         // Final Response //
@@ -212,40 +233,27 @@ class MainController extends Controller
             'newProducts' => $this->tabbedProducts(),
         ];
 
-        $h2 = array();
 
         // Table fetch of keys
 
         $section = AppSection::orderBy('sort','ASC')->get();
 
-        $arr2 = array(); // the second array
+        $homepage_sections = array(); // the second array
+
         // a variable to count the number of iterations
-            foreach ($section as $key => $value) {
 
-                 $value->name;
+        foreach ($section as $key => $value) {
 
-                $x =  array_key_exists($value->name,$homepage);
+            
+            $key_exist = array_key_exists($value->name,$homepage);
 
-                if($x == true){
-                    $arr2[$value->name] = $homepage[$value->name];
-                }
-
-                // foreach($homepage as $key => $val){
-                //     $name = $value->name;
-                //     if($name != $key) break;
-                //     // if(++$num > 3) break; // we don’t need more than three iterations
-                //     $arr2[$key] = $val; // copy the key and value from the first array to the second
-                //     unset($homepage[$key]); // remove the key and value from the first
-                // }
+            if($key_exist == true){
+                $homepage_sections[$value->name] = $homepage[$value->name];
             }
             
-            return $arr2;
+        }
 
-        // loop thorugh that table
-
-        // push value according to table key
-
-        return response()->json($homepage, 200);
+        return response()->json($homepage_sections, 200);
 
     }
 
@@ -1088,11 +1096,11 @@ class MainController extends Controller
             }
 
         })
-            ->where('status', '=', '1')
-            ->where('featured', '=', '1')
-            ->orderBy('id', 'DESC')
-            ->take(20)
-            ->get();
+        ->where('status', '=', '1')
+        ->where('featured', '=', '1')
+        ->orderBy('id', 'DESC')
+        ->take(20)
+        ->get();
 
         $featured_simple_products = $featured_simple_products->map(function ($sp) {
 
@@ -1114,10 +1122,10 @@ class MainController extends Controller
                 return trim(strip_tags($v));
             }, $sp->getTranslations('product_detail'));
             $item['tax_info'] = $sp->tax_r == '' ? __("Exclusive of tax") : __("Inclusive of all taxes");
-            $item['mainprice'] = (float) sprintf("%.2f", $sp->price * $this->rate->exchange_rate);
-            $item['offerprice'] = (float) sprintf("%.2f", $sp->offer_price * $this->rate->exchange_rate);
-            $item['pricein'] = $this->rate->code;
-            $item['symbol'] = $this->rate->symbol;
+            $item['mainprice']   = (float) sprintf("%.2f", $sp->price * $this->rate->exchange_rate);
+            $item['offerprice']  = (float) sprintf("%.2f", $sp->offer_price * $this->rate->exchange_rate);
+            $item['pricein']     = $this->rate->code;
+            $item['symbol']      = $this->rate->symbol;
             $item['off_percent'] = (int) round($offamount);
             $item['rating'] = (double) simple_product_rating($sp->id);
             $item['thumbnail_path'] = url('/images/simple_products/');
@@ -2214,7 +2222,12 @@ class MainController extends Controller
             return response()->json(['msg' => 'Invalid Secret Key !', 'status' => 'fail']);
         }
 
-        $page = Page::where('slug', '=', $slug)->first();
+        $page = Page::where('slug', '=', $slug)->where('status','=','1')->first();
+
+        if(!$page){
+            return response()->json(['msg' => __("Page not found !"),'status' => 'fail']);
+        }
+
         return response()->json($page);
 
     }
@@ -2391,7 +2404,8 @@ class MainController extends Controller
         }
 
         $userbanklist = Auth::user()->banks;
-        return response()->json($userbanklist);
+
+        return response()->json(['banks' => $userbanklist],200);
     }
 
     public function faqs(Request $request)
@@ -2507,9 +2521,22 @@ class MainController extends Controller
             return response()->json(['msg' => "You're not logged in !", 'status' => 'fail']);
         }
 
-        $notifications = auth()->user()->unreadNotifications->where('n_type', '!=', 'order_v');
+        $notifications = auth()->user()
+                         ->unreadNotifications
+                         ->where('n_type', '!=', 'order_v')
+                         ->transform(function($value){
 
-        $notificationsCount = auth()->user()->unreadNotifications->where('n_type', '!=', 'order_v')->count();
+                            $item['data'] = $value->data;
+                            $item['created_at'] = $value->created_at;
+                            return $item;
+
+                         });
+                         
+        $notifications = $notifications->values();
+
+        $notificationsCount = auth()->user()->unreadNotifications
+                              ->where('n_type', '!=', 'order_v')
+                              ->count();
 
         return response()->json(['notifications' => $notifications, 'count' => $notificationsCount]);
     }
@@ -3262,6 +3289,132 @@ class MainController extends Controller
         }
 
         return response()->json($result);
+    }
+
+    public function listLanguages(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+
+            $errors = $validator->errors();
+
+            if ($errors->first('secret')) {
+                return response()->json(['msg' => $errors->first('secret'), 'status' => 'fail']);
+            }
+        }
+
+        $languages = Language::orderBy('def','desc')->get();
+
+        return response()->json(['languages' => $languages,'status' => 'success']);
+
+    }
+
+    public function myReviews(){
+
+        $reviews = UserReview::where('status','1')->where('user',auth()->id())->get();
+
+        $reviews = $reviews->transform(function($value){
+
+            $user_count = count([$value]);
+            $user_sub_total = 0;
+            $user_review_t = $value->price * 5;
+            $user_price_t = $value->price * 5;
+            $user_value_t = $value->value * 5;
+            $user_sub_total = $user_sub_total + $user_review_t + $user_price_t + $user_value_t;
+
+            $user_count   = ($user_count * 3) * 5;
+            $rat1         = $user_sub_total / $user_count;
+            
+
+
+            if(isset($value->pro)){
+
+                $item['product_name'] = $value->pro->getTranslations('name');
+                $item['review']       = $value->review;
+                $item['rating']       = $rat1;
+
+                return $item;
+
+            }
+
+            if(isset($value->simple_product)){
+
+                $item['product_name'] = $value->simple_product->getTranslations('product_name');
+                $item['review']       = $value->review;
+                $item['rating']       = $rat1;
+
+                return $item;
+
+            }
+
+        });
+
+        return response()->json(['reviews' => $reviews,'status' => 'success'],200);
+
+    }
+
+    public function getTermPages($provider){
+
+        if(!$provider){
+            return response()->json(['msg' => 'Provider must be specified eg: tos, privacy']);
+        }
+
+        if($provider == 'tos'){
+
+            $result = Page::where('slug','=','terms-condition')
+                      ->orWhere('slug','=','tos')
+                      ->orWhere('slug','=','termscondition')
+                      ->orWhere('slug','=','termsconditions')
+                      ->orWhere('slug','=','terms-conditions')
+                      ->first();
+
+            return response()->json($result);
+        }
+
+        if($provider == 'privacy'){
+
+            $result = Page::where('slug','=','privacypolicy')
+                      ->orWhere('slug','=','privacy-policy')
+                      ->orWhere('slug','=','privacy')
+                      ->first();
+
+            return response()->json($result);
+
+        }
+
+        if($provider == 'user_term'){
+
+            $result = TermsSettings::where('key','=','user-register-term')
+                      ->first();
+
+            return response()->json($result);
+
+        }
+
+        if($provider == 'seller_term'){
+
+            $result = TermsSettings::where('key','=','seller-register-term')
+                      ->first();
+
+            return response()->json($result);
+
+        }
+
+        if($provider == 'about_us'){
+
+            $result = Page::where('slug','=','about-us')
+                      ->orWhere('slug','=','aboutus')
+                      ->orWhere('slug','=','about')
+                      ->orWhere('slug','=','about_us')
+                      ->first();
+
+            return response()->json($result);
+
+        }
+
     }
 
 }

@@ -18,7 +18,7 @@ class Cart extends Model
      }
 
      public function simple_product(){
-        return $this->belongsTo('App\SimpleProduct','simple_pro_id','id')->withTrashed();  
+        return $this->belongsTo(SimpleProduct::class,'simple_pro_id','id')->withTrashed();  
      }
 
      public function variant()

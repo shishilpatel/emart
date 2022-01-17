@@ -88,6 +88,7 @@ class AddOnManagerController extends Controller
         $validator = Validator::make(
             [
                 'purchase_code' => 'required',
+                'addon_file' => 'required',
                 'file' => $request->addon_file,
                 'extension' => strtolower($request->addon_file->getClientOriginalExtension()),
             ],

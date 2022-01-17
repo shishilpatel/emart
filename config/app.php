@@ -80,7 +80,7 @@ return [
 
     'locale' => 'en',
 
-    'version' => '3.1',
+    'version' => '3.2',
 
     /*
     |--------------------------------------------------------------------------
@@ -110,7 +110,7 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
-    'ota_url' => 'https://raw.githubusercontent.com/thegr8dev/emart/',
+    'ota_url' => 'https://raw.githubusercontent.com/mediacity/emart/',
 
     /*
     |--------------------------------------------------------------------------

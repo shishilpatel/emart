@@ -809,32 +809,11 @@ if(Auth::check()){
                         
                       @endphp
 
-                      @if($genrals_settings->cart_amount != 0 && $genrals_settings->cart_amount != '')
-
-
-                        @if($total*$conversion_rate >= $genrals_settings->cart_amount*$conversion_rate)
-
-                          @php
-
-                            $shipping = 0;
-
-                          @endphp
-
-                        @endif
-
-                      @endif
-
                     @endif
 
-                    @if($genrals_settings->cart_amount != 0 && $genrals_settings->cart_amount != '')
-                      
-                      @if($total*$conversion_rate >= $genrals_settings->cart_amount*$conversion_rate)
-                        @php
-                          $shipping = 0;
-                        @endphp
-                      @endif
+                   
 
-                    @endif
+                    
 
                     @if(isset($cart->simple_product) && $cart->simple_product->free_shipping == 0)
                      
@@ -846,6 +825,8 @@ if(Auth::check()){
                             $shipping = shippingprice($cart);
 
                           }else{
+
+                           
                             
                             $shipping += shippingprice($cart);
 
@@ -857,6 +838,18 @@ if(Auth::check()){
                     @endif
 
                   @endforeach
+
+                  @if($genrals_settings->cart_amount != 0 && $genrals_settings->cart_amount != '')
+                      
+                    @if($total*$conversion_rate >= $genrals_settings->cart_amount*$conversion_rate)
+                  
+                      @php
+                        $shipping = 0;
+                      @endphp
+                    @endif
+
+                  @endif
+                          
                   @else
                   <?php if(!empty($value)){  ?>
 

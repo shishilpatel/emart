@@ -103,8 +103,7 @@
                 'excel',
                 'csv',
                 'pdf',
-                'print',
-                'colvis'
+                'print'
             ],
             order: [
                 [1, 'ASC']

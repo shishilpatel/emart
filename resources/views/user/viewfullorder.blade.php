@@ -1105,13 +1105,13 @@ $sellerac = App\Store::where('user_id','=', $user->id)->first();
             <div class="card-footer">
 
               <p class="btmText"><b>{{ __('staticwords.Total') }}:</b> <i
-                  class="{{ $order->paid_in }}"></i>{{ price_format($order->order_total,2) }}</p>
+                  class="{{ $order->paid_in }}"></i>{{ price_format($order->order_total - $order->gift_charge ) }}</p>
 
               <p class="btmText"><b>{{ __('staticwords.TotalGiftCharge') }}:</b> <i
-                    class="{{ $order->paid_in }}"></i>{{ price_format($order->gift_charge,2) }}</p>
+                    class="{{ $order->paid_in }}"></i>{{ price_format($order->gift_charge) }}</p>
 
               <p class="btmText"><b>{{ __('staticwords.HandlingCharge') }}:</b> <i
-                  class="{{ $order->paid_in }}"></i>{{ price_format($order->handlingcharge,2) }}</p>
+                  class="{{ $order->paid_in }}"></i>{{ price_format($order->handlingcharge) }}</p>
 
               <p class="btmText"><b>{{ __('staticwords.OrderTotal') }}:</b> <i
                   class="{{ $order->paid_in }}"></i>{{ price_format(($order->order_total+$order->handlingcharge),2) }}</p>
